@@ -4,6 +4,9 @@ import 'package:mismedidasb/data/_shared_prefs.dart';
 import 'package:mismedidasb/data/api/remote/network_handler.dart';
 import 'package:mismedidasb/ui/_base/bloc_base.dart';
 import 'package:mismedidasb/ui/home/home_bloc.dart';
+import 'package:mismedidasb/ui/measure_health/measure_health_bloc.dart';
+import 'package:mismedidasb/ui/measure_value/measure_value_bloc.dart';
+import 'package:mismedidasb/ui/measure_wellness/measure_wellness_bloc.dart';
 import 'package:mismedidasb/ui/splash/splash_bloc.dart';
 import 'package:mismedidasb/utils/logger.dart';
 
@@ -71,6 +74,9 @@ class Injector {
   _registerBloCs() {
     container.registerFactory((c) => SplashBloC());
     container.registerFactory((c) => HomeBloC());
+    container.registerFactory((c) => MeasureHealthBloC());
+    container.registerFactory((c) => MeasureValueBloC());
+    container.registerFactory((c) => MeasureWellnessBloC());
   }
 
   _registerCommon() {

@@ -7,18 +7,18 @@ class StringsEn implements StringsBase {
   @override
   TextDirection get textDirection => TextDirection.ltr;
 
-  String get appName => "Where To Have Lunch?";
+  String get appName => "My Measures B";
 
-  String get loginWithGoogle => "Login With Google";
+  @override
+  String get foodDishes => "My food dishes";
 
-  String get welcomeMessageBody =>
-      "The easiest way of choosing where to have a nice meal with colleges";
+  @override
+  String get myMeasureHealth => "My health measures";
 
-  String get welcomeMessageTitle => "Welcome to \"$appName\"";
+  @override
+  String get myMeasureValues => "My values measures";
 
-  String get places => "Places";
+  @override
+  String get myMeasureWellness => "My wellness measures";
 
-  String get settings => "Settings";
-
-  String get choose => "Choose!";
 }

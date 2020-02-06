@@ -7,18 +7,17 @@ class StringsEs implements StringsBase {
   @override
   TextDirection get textDirection => TextDirection.ltr;
 
-  String get appName => "Donde Almorzar?";
+  String get appName => "Mis Medidas B";
 
-  String get loginWithGoogle => "Entra con Google";
+  @override
+  String get foodDishes => "Mis platos";
 
-  String get welcomeMessageBody =>
-      "La forma mas facil de escoger donde tener un buen almuerzo con tus colegas";
+  @override
+  String get myMeasureHealth => "Mis medidas de salud";
 
-  String get welcomeMessageTitle => "Bienvenido a \"$appName\"";
+  @override
+  String get myMeasureValues => "Mis medidas de valores";
 
-  String get places => "Lugares";
-
-  String get settings => "Configuracion";
-
-  String get choose => "Elegir!";
+  @override
+  String get myMeasureWellness => "Mis medidas de bienestar";
 }

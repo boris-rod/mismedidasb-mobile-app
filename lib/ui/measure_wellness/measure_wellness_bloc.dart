@@ -2,9 +2,10 @@ import 'package:mismedidasb/ui/_base/bloc_base.dart';
 import 'package:mismedidasb/ui/_base/bloc_error_handler.dart';
 import 'package:mismedidasb/ui/_base/bloc_loading.dart';
 
-class HomeBloC with LoadingBloC, ErrorHandlerBloC implements BaseBloC {
-
-  void loadHomeData() async {
+class MeasureWellnessBloC
+    with LoadingBloC, ErrorHandlerBloC
+    implements BaseBloC {
+  void loadMeasures() async {
     isLoading = true;
     try {
       Future.delayed(Duration(seconds: 2), () {
@@ -19,6 +20,5 @@ class HomeBloC with LoadingBloC, ErrorHandlerBloC implements BaseBloC {
   void dispose() {
     disposeLoadingBloC();
     disposeErrorHandlerBloC();
-//    _loadingController.close();
   }
 }

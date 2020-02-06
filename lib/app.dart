@@ -19,7 +19,7 @@ class _MyMeasuresBState extends State<MyMeasuresBApp>{
     final localizationDelegate = CustomLocalizationsDelegate();
     return MaterialApp(
       title: R.string.appName,
-      debugShowCheckedModeBanner: Injector.instance.isInDebugMode(),
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         appBarTheme: AppBarTheme(iconTheme: IconThemeData(color: Colors.black)),
         brightness: Brightness.light,
