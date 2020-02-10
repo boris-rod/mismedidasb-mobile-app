@@ -18,7 +18,6 @@ class _MyMeasuresBState extends State<MyMeasuresBApp>{
   Widget build(BuildContext context) {
     final localizationDelegate = CustomLocalizationsDelegate();
     return MaterialApp(
-      title: R.string.appName,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         appBarTheme: AppBarTheme(iconTheme: IconThemeData(color: Colors.black)),
@@ -50,6 +49,7 @@ class _MyMeasuresBState extends State<MyMeasuresBApp>{
         fallback: Locale("en"),
       ),
       home: widget.initPage,
+      title: R.string.appName,
 //      initialRoute: AppRoutes.SPLASH,
 //      routes: AppRoutes.routes(),
     );

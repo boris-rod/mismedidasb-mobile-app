@@ -3,6 +3,7 @@ import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/bloc_state.dart';
 import 'package:mismedidasb/ui/_base/navigation_utils.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_icon_button_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_main_app_bar_widget.dart';
 import 'package:mismedidasb/ui/measure_wellness/measure_wellness_bloc.dart';
 
@@ -14,16 +15,28 @@ class MeasureWellnessPage extends StatefulWidget {
 class _MeasureWellnessState
     extends StateWithBloC<MeasureWellnessPage, MeasureWellnessBloC> {
   @override
+  void initState() {
+    super.initState();
+    bloc.loadMeasures();
+  }
+
+  @override
   Widget buildWidget(BuildContext context) {
     return TXMainAppBarWidget(
       leading: TXIconButtonWidget(
         icon: Icon(Icons.arrow_back),
-        onPressed: (){
+        onPressed: () {
           NavigationUtils.pop(context);
         },
       ),
       title: R.string.myMeasureWellness,
-      body: Container(),
+      body: Stack(
+        children: <Widget>[
+          TXLoadingWidget(
+            loadingStream: bloc.isLoadingStream,
+          )
+        ],
+      ),
     );
   }
 }

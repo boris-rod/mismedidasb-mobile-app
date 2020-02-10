@@ -25,8 +25,8 @@ class TXTextWidget extends StatelessWidget {
       text ?? "",
       textAlign: textAlign ?? TextAlign.start,
       style: TextStyle(
-        color: color ?? R.color.gray,
-        fontSize: size,
+        color: color ?? Colors.black,
+        fontSize: size ?? 14,
         fontWeight: fontWeight ?? FontWeight.normal,
       ),
       maxLines: maxLines,

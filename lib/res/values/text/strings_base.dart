@@ -11,4 +11,10 @@ abstract class StringsBase implements WidgetsLocalizations {
   String get myMeasureWellness;
 
   String get foodDishes;
+
+  String get next;
+
+  String get previous;
+
+  String get update;
 }

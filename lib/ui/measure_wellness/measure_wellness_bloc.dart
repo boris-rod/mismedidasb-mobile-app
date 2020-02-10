@@ -8,7 +8,7 @@ class MeasureWellnessBloC
   void loadMeasures() async {
     isLoading = true;
     try {
-      Future.delayed(Duration(seconds: 2), () {
+      Future.delayed(Duration(seconds: 1), () {
         isLoading = false;
       });
     } catch (ex) {

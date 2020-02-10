@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/bloc_state.dart';
 import 'package:mismedidasb/ui/_base/navigation_utils.dart';
@@ -27,7 +28,7 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
   @override
   Widget buildWidget(BuildContext context) {
     return TXMainAppBarWidget(
-      title: "Mis medidas B",
+      title: R.string.appName,
       leading: TXIconButtonWidget(
         icon: Image.asset(
           R.image.logo,
@@ -46,6 +47,7 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
       body: Stack(
         children: <Widget>[
           GridView.count(
+            padding: EdgeInsets.symmetric(vertical: 10),
             crossAxisCount:
                 MediaQuery.of(context).orientation == Orientation.portrait
                     ? 2

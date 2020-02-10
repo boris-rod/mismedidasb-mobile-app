@@ -1,34 +1,32 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mismedidasb/res/R.dart';
 
 class TXButtonWidget extends StatelessWidget {
-  final VoidCallback action;
+  final VoidCallback onPressed;
   final String title;
   final Color mainColor;
   final Color splashColor;
   final Color textColor;
   final FontWeight fontWeight;
   final double fontSize;
-  final bool avoidPadding;
 
   const TXButtonWidget({
-    @required this.action,
+    @required this.onPressed,
     @required this.title,
-    @required this.mainColor,
+    this.mainColor,
     this.splashColor,
     this.fontWeight = FontWeight.normal,
     this.textColor = Colors.white,
     this.fontSize = 14,
-    this.avoidPadding = false
   });
 
   @override
   Widget build(BuildContext context) {
     return RaisedButton(
-      padding: avoidPadding ? EdgeInsets.all(0): null,
-      color: mainColor,
+      color: mainColor ?? R.color.primary_color,
       splashColor: splashColor,
-      onPressed: action,
+      onPressed: onPressed,
       child: Text(
         title,
         style: TextStyle(
@@ -37,7 +35,6 @@ class TXButtonWidget extends StatelessWidget {
           fontSize: fontSize,
         ),
       ),
-
       disabledColor: Colors.grey,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(2.0)),
     );

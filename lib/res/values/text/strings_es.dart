@@ -7,7 +7,7 @@ class StringsEs implements StringsBase {
   @override
   TextDirection get textDirection => TextDirection.ltr;
 
-  String get appName => "Mis Medidas B";
+  String get appName => "Mis Medidas Bienestar";
 
   @override
   String get foodDishes => "Mis platos";
@@ -20,4 +20,13 @@ class StringsEs implements StringsBase {
 
   @override
   String get myMeasureWellness => "Mis medidas de bienestar";
+
+  @override
+  String get next => "Siguiente";
+
+  @override
+  String get previous => "Anterior";
+
+  @override
+  String get update => "Actualizar";
 }

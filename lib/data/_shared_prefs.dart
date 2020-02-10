@@ -2,16 +2,35 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesManager {
   final _accessToken = "access_token";
+  final _refreshToken = "refresh_token";
   final _userEmail = "user_email";
   final _password = "password";
   final _userId = "user_id";
+  final _saveCredentials = "save_credentials";
 
   Future<bool> cleanAll() async {
     setUserEmail('');
     setAccessToken('');
     setUserId(-1);
     setPassword('');
+    setSaveCredentials(false);
     return true;
+  }
+
+  Future<bool> getSaveCredentials() async {
+    var value =
+    (await SharedPreferences.getInstance()).getBool(_saveCredentials);
+    if (value == null) {
+      value = false;
+      setSaveCredentials(value);
+    }
+    return value;
+  }
+
+  Future<bool> setSaveCredentials(bool newValue) async {
+    var res = (await SharedPreferences.getInstance())
+        .setBool(_saveCredentials, newValue);
+    return res;
   }
 
   Future<String> getUserEmail() async {
@@ -56,6 +75,22 @@ class SharedPreferencesManager {
   Future<bool> setAccessToken(String newValue) async {
     var res = (await SharedPreferences.getInstance())
         .setString(_accessToken, newValue);
+    return res;
+  }
+
+  Future<String> getRefreshToken() async {
+    var value =
+    (await SharedPreferences.getInstance()).getString(_refreshToken);
+    if (value == null) {
+      value = '';
+      setAccessToken(value);
+    }
+    return value;
+  }
+
+  Future<bool> setRefreshToken(String newValue) async {
+    var res = (await SharedPreferences.getInstance())
+        .setString(_refreshToken, newValue);
     return res;
   }
 
