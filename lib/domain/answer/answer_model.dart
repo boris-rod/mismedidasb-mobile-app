@@ -45,11 +45,11 @@ class AnswerModel {
           weight: 1,
           order: 1),
       AnswerModel(
-          id: 7, questionId: 1, title: "Algunas veces", weight: 2, order: 2),
+          id: 7, questionId: 2, title: "Algunas veces", weight: 2, order: 2),
       AnswerModel(
-          id: 8, questionId: 1, title: "Muchas veces", weight: 3, order: 3),
+          id: 8, questionId: 2, title: "Muchas veces", weight: 3, order: 3),
       AnswerModel(
-          id: 9, questionId: 1, title: "Casi siempre", weight: 4, order: 4),
+          id: 9, questionId: 2, title: "Casi siempre", weight: 4, order: 4),
       AnswerModel(id: 5, questionId: 1, title: "Siempre", weight: 5, order: 5),
     ];
 

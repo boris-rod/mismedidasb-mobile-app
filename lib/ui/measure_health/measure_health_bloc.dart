@@ -19,7 +19,7 @@ class MeasureHealthBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   Stream<HealthMeasureResultModel> get measureResult =>
       _measureController.stream;
 
-  int currentPage = 0;
+    int currentPage = 0;
   HealthMeasureResultModel healthMeasureResultModel;
 
   void iniDataResult() {
@@ -33,10 +33,10 @@ class MeasureHealthBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
           sex: 1,
           physicalExercise: 1,
           physicalExerciseValue: exercises[0].title,
-          diet: List.generate(QuestionModel.getDiets().length, (index) {
+          diet: List.generate(diets.length, (index) {
             return diets[0].id;
           }),
-          dietValue: List.generate(QuestionModel.getDiets().length, (index) {
+          dietValue: List.generate(diets.length, (index) {
             return diets[0].title;
           }));
     }
@@ -46,8 +46,49 @@ class MeasureHealthBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     _measureController.sinkAddSafe(model);
   }
 
+  void setAge(int data) async {
+    healthMeasureResultModel.age = data;
+    _measureController.sinkAddSafe(healthMeasureResultModel);
+  }
+
+  void setWeight(int data) async {
+    healthMeasureResultModel.weight = data;
+    _measureController.sinkAddSafe(healthMeasureResultModel);
+  }
+
+  void setHeight(int data) async {
+    healthMeasureResultModel.height = data;
+    _measureController.sinkAddSafe(healthMeasureResultModel);
+  }
+
+  void setSex(int data) async {
+    healthMeasureResultModel.sex = data;
+    _measureController.sinkAddSafe(healthMeasureResultModel);
+  }
+
+  void setPhysicalExercise(int data, String name) async {
+    healthMeasureResultModel.physicalExercise = data;
+    healthMeasureResultModel.physicalExerciseValue = name;
+    _measureController.sinkAddSafe(healthMeasureResultModel);
+  }
+
+  void setDiet(int data, String name, int index) async {
+    healthMeasureResultModel.diet[index] = data;
+    healthMeasureResultModel.dietValue[index] = name;
+    _measureController.sinkAddSafe(healthMeasureResultModel);
+  }
+
+  void setResult()async{
+    HealthResult.getResult(healthMeasureResultModel);
+    _measureController.sinkAddSafe(healthMeasureResultModel);
+  }
+
   void changePage(bool isNext) async {
-    if (isNext && currentPage < 2) {
+    if (isNext && currentPage < 3) {
+      if (currentPage == 2) {
+        HealthResult.getResult(healthMeasureResultModel);
+        _measureController.sinkAddSafe(healthMeasureResultModel);
+      }
       currentPage += 1;
     } else if (currentPage > 0) {
       currentPage -= 1;
@@ -64,14 +105,6 @@ class MeasureHealthBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     } catch (ex) {
       onError(ex);
     }
-  }
-
-  void generateResults() async {
-    final model = (await measureResult.first);
-
-    final String result = HealthResult.getResult(model);
-    model.result = result;
-    _measureController.sinkAddSafe(model);
   }
 
   @override

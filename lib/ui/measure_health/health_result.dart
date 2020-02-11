@@ -613,6 +613,8 @@ class HealthResult {
       model.result =
           "IMC $IMCString Kg/m2 (OBESIDAD MÓRBIDA): ¡Consulte a un médico!";
     }
+
+    result = model.result;
     return result;
   }
 }

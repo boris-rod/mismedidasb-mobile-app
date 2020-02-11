@@ -33,6 +33,15 @@ class _MeasureValueState extends StateWithBloC<MeasureValuePage, MeasureValueBlo
       title: R.string.myMeasureValues,
       body: Stack(
         children: <Widget>[
+          Container(
+            padding: EdgeInsets.symmetric(vertical: 20),
+            child: Column(
+              children: <Widget>[
+                Expanded(),
+
+              ],
+            ),
+          ),
           TXLoadingWidget(
             loadingStream: bloc.isLoadingStream,
           )

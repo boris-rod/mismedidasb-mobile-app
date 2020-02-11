@@ -35,24 +35,23 @@ class _MeasureHealthState
     bloc.loadMeasures();
     bloc.pageResult.listen((onData) {
       pageController.animateToPage(onData,
-          duration: Duration(milliseconds: 100), curve: Curves.linear);
+          duration: Duration(milliseconds: 300), curve: Curves.linear);
     });
   }
 
   @override
   Widget buildWidget(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    return TXMainAppBarWidget(
-      leading: TXIconButtonWidget(
-        icon: Icon(Icons.arrow_back),
-        onPressed: () {
-          NavigationUtils.pop(context);
-        },
-      ),
-      title: R.string.myMeasureHealth,
-      body: Stack(
-        children: <Widget>[
-          Container(
+    return Stack(
+      children: <Widget>[
+        TXMainAppBarWidget(
+          leading: TXIconButtonWidget(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              NavigationUtils.pop(context);
+            },
+          ),
+          title: R.string.myMeasureHealth,
+          body: Container(
             padding: EdgeInsets.symmetric(vertical: 20),
             child: Column(
               children: <Widget>[
@@ -64,11 +63,12 @@ class _MeasureHealthState
                       List<Widget> list = [
                         getPersonalDataView(context),
                         getPeriodForPhysicalExerciseView(context),
-                        getDietView(context)
+                        getDietView(context),
+                        getResultView(context)
                       ];
                       return list[index];
                     },
-                    itemCount: 3,
+                    itemCount: 4,
                   ),
                 ),
                 Container(
@@ -78,12 +78,11 @@ class _MeasureHealthState
                     initialData: 0,
                     builder: (ctx, snapshot) {
                       return TXButtonPaginateWidget(
-                        onNext: () {
-                          if (snapshot.data == 2)
-                            bloc.generateResults();
-                          else
-                            bloc.changePage(true);
-                        },
+                        onNext: snapshot.data == 3
+                            ? null
+                            : () {
+                                bloc.changePage(true);
+                              },
                         onPrevious: snapshot.data > 0
                             ? () {
                                 bloc.changePage(false);
@@ -99,11 +98,11 @@ class _MeasureHealthState
               ],
             ),
           ),
-          TXLoadingWidget(
-            loadingStream: bloc.isLoadingStream,
-          )
-        ],
-      ),
+        ),
+        TXLoadingWidget(
+          loadingStream: bloc.isLoadingStream,
+        )
+      ],
     );
   }
 
@@ -135,8 +134,7 @@ class _MeasureHealthState
                             height: 200,
                             list: SingleSelectionModel.getAgeRange(),
                             onItemSelected: (model) {
-                              bloc.healthMeasureResultModel.age = model.id;
-                              bloc.setDataResult(bloc.healthMeasureResultModel);
+                              bloc.setAge(model.id);
                             },
                             title: "Edad",
                             initialId: bloc.healthMeasureResultModel.age,
@@ -163,8 +161,7 @@ class _MeasureHealthState
                             height: 200,
                             list: SingleSelectionModel.getWeight(),
                             onItemSelected: (model) {
-                              bloc.healthMeasureResultModel.weight = model.id;
-                              bloc.setDataResult(bloc.healthMeasureResultModel);
+                              bloc.setWeight(model.id);
                             },
                             title: "Peso",
                             initialId: bloc.healthMeasureResultModel.weight,
@@ -191,8 +188,7 @@ class _MeasureHealthState
                             height: 200,
                             list: SingleSelectionModel.getHeight(),
                             onItemSelected: (model) {
-                              bloc.healthMeasureResultModel.height = model.id;
-                              bloc.setDataResult(bloc.healthMeasureResultModel);
+                              bloc.setHeight(model.id);
                             },
                             title: "Talla",
                             initialId: bloc.healthMeasureResultModel.height,
@@ -219,8 +215,7 @@ class _MeasureHealthState
                             height: 200,
                             list: SingleSelectionModel.getSex(),
                             onItemSelected: (model) {
-                              bloc.healthMeasureResultModel.sex = model.id;
-                              bloc.setDataResult(bloc.healthMeasureResultModel);
+                              bloc.setSex(model.id);
                             },
                             title: "Sexo",
                             initialId: bloc.healthMeasureResultModel.sex,
@@ -282,13 +277,8 @@ class _MeasureHealthState
                                   list: SingleSelectionModel
                                       .getPhysicalExercise(),
                                   onItemSelected: (model) {
-                                    bloc.healthMeasureResultModel
-                                        .physicalExercise = model.id;
-                                    bloc.healthMeasureResultModel
-                                            .physicalExerciseValue =
-                                        model.displayName;
-                                    bloc.setDataResult(
-                                        bloc.healthMeasureResultModel);
+                                    bloc.setPhysicalExercise(
+                                        model.id, model.displayName);
                                   },
                                   title: poll.name,
                                   initialId: bloc.healthMeasureResultModel
@@ -358,12 +348,8 @@ class _MeasureHealthState
                                   height: 200,
                                   list: SingleSelectionModel.getDiet(),
                                   onItemSelected: (model) {
-                                    bloc.healthMeasureResultModel.diet[index] =
-                                        model.id;
-                                    bloc.healthMeasureResultModel
-                                        .dietValue[index] = model.displayName;
-                                    bloc.setDataResult(
-                                        bloc.healthMeasureResultModel);
+                                    bloc.setDiet(
+                                        model.id, model.displayName, index);
                                   },
                                   title: poll.name,
                                   initialId:
@@ -405,8 +391,20 @@ class _MeasureHealthState
           stream: bloc.measureResult,
           initialData: bloc.healthMeasureResultModel,
           builder: (ctx, snapshot) {
-            return TXTextWidget(
-              text: snapshot.data.result,
+            return Column(
+              children: <Widget>[
+                Container(
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.all(20),
+                  child: TXTextWidget(
+                    text: "Resultados",
+                    size: 20,
+                  ),
+                ),
+                TXTextWidget(
+                  text: snapshot.data.result,
+                )
+              ],
             );
           }),
     );

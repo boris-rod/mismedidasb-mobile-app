@@ -31,7 +31,7 @@ class SingleSelectionModel {
     List<SingleSelectionModel> list = [];
     for (int i = 100; i <= 230; i++) {
       list.add(SingleSelectionModel(
-          index: i - 120, id: i, displayName: i.toString(), isSelected: false));
+          index: i - 100, id: i, displayName: i.toString(), isSelected: false));
     }
     return list;
   }
@@ -70,6 +70,28 @@ class SingleSelectionModel {
     List<SingleSelectionModel> list = [];
     int index = 0;
     AnswerModel.getAnswers().forEach((data) {
+      list.add(SingleSelectionModel(
+          id: data.weight, index: index, displayName: data.title));
+      index += 1;
+    });
+    return list;
+  }
+
+  static List<SingleSelectionModel> getWellness() {
+    List<SingleSelectionModel> list = [];
+    int index = 0;
+    AnswerModel.getAnswers().forEach((data) {
+      list.add(SingleSelectionModel(
+          id: data.weight, index: index, displayName: data.title));
+      index += 1;
+    });
+    return list;
+  }
+
+  static List<SingleSelectionModel> getValues() {
+    List<SingleSelectionModel> list = [];
+    int index = 0;
+    AnswerModel.getAnswers2().forEach((data) {
       list.add(SingleSelectionModel(
           id: data.weight, index: index, displayName: data.title));
       index += 1;
