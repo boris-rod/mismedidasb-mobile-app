@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:mismedidasb/data/api/_base_api.dart';
 import 'package:mismedidasb/data/api/remote/endpoints.dart';
 import 'package:mismedidasb/data/api/remote/exceptions.dart';
 import 'package:mismedidasb/data/api/remote/network_handler.dart';
@@ -8,7 +9,7 @@ import 'package:mismedidasb/domain/health_concept/health_concept.dart';
 import 'package:mismedidasb/domain/health_concept/i_health_concept_api.dart';
 import 'package:mismedidasb/domain/health_concept/i_health_concept_converter.dart';
 
-class HealthConceptApi implements IHealthConceptApi {
+class HealthConceptApi extends BaseApi implements IHealthConceptApi {
   final IHealthConceptConverter _iHealthConceptConverter;
   final NetworkHandler _networkHandler;
 
@@ -22,7 +23,7 @@ class HealthConceptApi implements IHealthConceptApi {
       return l
           .map((model) => _iHealthConceptConverter.fromJson(model))
           .toList();
-    }
-    throw ServerException.fromJson(res.statusCode, json.decode(res.body));
+    } else
+      throw serverException(res);
   }
 }

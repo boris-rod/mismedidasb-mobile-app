@@ -25,6 +25,7 @@ class MeasureHealthBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   void iniDataResult() {
     if (healthMeasureResultModel == null) {
       final diets = AnswerModel.getAnswers();
+      final dietsQuestion = QuestionModel.getDiets();
       final exercises = AnswerModel.getPhysicalExercise();
       healthMeasureResultModel = HealthMeasureResultModel(
           age: 18,
@@ -33,10 +34,10 @@ class MeasureHealthBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
           sex: 1,
           physicalExercise: 1,
           physicalExerciseValue: exercises[0].title,
-          diet: List.generate(diets.length, (index) {
-            return diets[0].id;
+          diet: List.generate(dietsQuestion.length, (index) {
+            return 1;
           }),
-          dietValue: List.generate(diets.length, (index) {
+          dietValue: List.generate(dietsQuestion.length, (index) {
             return diets[0].title;
           }));
     }

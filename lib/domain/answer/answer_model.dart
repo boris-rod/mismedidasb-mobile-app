@@ -59,35 +59,35 @@ class AnswerModel {
   static List<AnswerModel> getAnswers2() {
     List<AnswerModel> list = [
       AnswerModel(
-          id: 6,
+          id: 10,
           questionId: 2,
           title: "Opuesto a mis principios",
           weight: -1,
           order: 1),
       AnswerModel(
-          id: 2, questionId: 1, title: "Nada importante", weight: 0, order: 2),
+          id: 1, questionId: 1, title: "Nada importante", weight: 0, order: 2),
       AnswerModel(
-          id: 3,
+          id: 12,
           questionId: 1,
           title: "Escasamente importante",
           weight: 1,
           order: 3),
       AnswerModel(
-          id: 4, questionId: 1, title: "Poco importante", weight: 2, order: 4),
+          id: 13, questionId: 1, title: "Poco importante", weight: 2, order: 4),
       AnswerModel(
-          id: 5, questionId: 1, title: "Algo importante", weight: 3, order: 1),
+          id: 14, questionId: 1, title: "Algo importante", weight: 3, order: 1),
       AnswerModel(
-          id: 5,
+          id: 15,
           questionId: 1,
           title: "Medianamente importante",
           weight: 4,
           order: 1),
       AnswerModel(
-          id: 5, questionId: 1, title: "Importante", weight: 5, order: 1),
+          id: 16, questionId: 1, title: "Importante", weight: 5, order: 1),
       AnswerModel(
-          id: 5, questionId: 1, title: "Muy importante", weight: 6, order: 1),
+          id: 17, questionId: 1, title: "Muy importante", weight: 6, order: 1),
       AnswerModel(
-          id: 5,
+          id: 18,
           questionId: 1,
           title: "Importancia suprema",
           weight: 7,

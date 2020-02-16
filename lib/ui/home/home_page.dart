@@ -8,6 +8,7 @@ import 'package:mismedidasb/ui/_tx_widget/tx_icon_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_main_app_bar_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
+import 'package:mismedidasb/ui/habit/habit_page.dart';
 import 'package:mismedidasb/ui/home/home_bloc.dart';
 import 'package:mismedidasb/ui/measure_health/measure_health_page.dart';
 import 'package:mismedidasb/ui/measure_value/measure_value_page.dart';
@@ -69,19 +70,26 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
                   }),
               _getHomeButton(
                   context: context,
-                  icon: Icons.place,
+                  icon: Icons.local_florist,
                   title: R.string.myMeasureWellness,
                   onTap: () {
                     NavigationUtils.push(context, MeasureWellnessPage());
                   }),
               _getHomeButton(
                   context: context,
-                  icon: Icons.fastfood,
+                  icon: Icons.local_offer,
                   title: R.string.foodDishes,
                   onTap: () {
                     Fluttertoast.showToast(
                         msg: "Ir a la vista de Platos",
                         toastLength: Toast.LENGTH_LONG);
+                  }),
+              _getHomeButton(
+                  context: context,
+                  icon: Icons.bubble_chart,
+                  title: R.string.healthHabits,
+                  onTap: () {
+                    NavigationUtils.push(context, HabitPage());
                   }),
             ],
           ),

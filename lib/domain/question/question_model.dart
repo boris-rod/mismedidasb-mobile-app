@@ -141,6 +141,11 @@ class QuestionModel {
           pollId: 4,
           order: 9,
           title: "Estatus / Prestigio"),
+      QuestionModel(
+          id: 23,
+          pollId: 4,
+          order: 9,
+          title: "Segurida / Armonia / Estabilidad"),
     ];
 
     return list;

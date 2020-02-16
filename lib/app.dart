@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:mismedidasb/di/injector.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/res/values/text/custom_localizations_delegate.dart';
 

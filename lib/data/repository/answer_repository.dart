@@ -1,9 +1,10 @@
 import 'package:mismedidasb/data/api/remote/result.dart';
+import 'package:mismedidasb/data/repository/_base_repository.dart';
 import 'package:mismedidasb/domain/answer/answer_model.dart';
 import 'package:mismedidasb/domain/answer/i_answer_api.dart';
 import 'package:mismedidasb/domain/answer/i_answer_repository.dart';
 
-class AnswerRepository implements IAnswerRepository {
+class AnswerRepository extends BaseRepository implements IAnswerRepository {
   final IAnswerApi _iAnswerApi;
 
   AnswerRepository(this._iAnswerApi);
@@ -14,7 +15,7 @@ class AnswerRepository implements IAnswerRepository {
       final result = await _iAnswerApi.getAnswerList(questionId);
       return Result.success(value: result);
     } catch (ex) {
-      return Result.error(error: ex);
+      return resultError(ex);
     }
   }
 }

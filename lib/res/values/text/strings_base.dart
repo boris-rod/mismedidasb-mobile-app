@@ -17,4 +17,41 @@ abstract class StringsBase implements WidgetsLocalizations {
   String get previous;
 
   String get update;
+
+  String get valuesConcept;
+
+  String get healthHabits;
+
+  String get checkNetworkConnection;
+
+  String get failedOperation;
+
+  String get forgotPassword;
+
+  String get login;
+
+  String get register;
+
+  String get remember;
+
+  String get password;
+
+  String get userName;
+
+  String get email;
+
+  String get invalidEmail;
+
+  String get requiredField;
+
+  String get minCharsLength;
+
+  String get especialCharRequired;
+
+  String get upperLetterCharRequired;
+
+  String get passwordMatch;
+
+  String get recover;
+  String get code;
 }

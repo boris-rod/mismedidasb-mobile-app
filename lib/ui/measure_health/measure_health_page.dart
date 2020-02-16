@@ -333,6 +333,7 @@ class _MeasureHealthState
                 ),
               ),
               ListView.builder(
+                physics: BouncingScrollPhysics(),
                 shrinkWrap: true,
                 itemBuilder: (ctx, index) {
                   final element = elementList[index];

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:mismedidasb/data/api/_base_api.dart';
 import 'package:mismedidasb/data/api/remote/endpoints.dart';
 import 'package:mismedidasb/data/api/remote/exceptions.dart';
 import 'package:mismedidasb/data/api/remote/network_handler.dart';
@@ -8,7 +9,7 @@ import 'package:mismedidasb/domain/question/i_question_api.dart';
 import 'package:mismedidasb/domain/question/i_question_converter.dart';
 import 'package:mismedidasb/domain/question/question_model.dart';
 
-class QuestionApi implements IQuestionApi {
+class QuestionApi extends BaseApi implements IQuestionApi {
   final IQuestionConverter _iQuestionConverter;
   final NetworkHandler _networkHandler;
 
@@ -22,6 +23,6 @@ class QuestionApi implements IQuestionApi {
       Iterable l = json.decode(res.body)[RemoteConstants.result];
       return l.map((model) => _iQuestionConverter.fromJson(model)).toList();
     }
-    throw ServerException.fromJson(res.statusCode, json.decode(res.body));
+    throw serverException(res);
   }
 }

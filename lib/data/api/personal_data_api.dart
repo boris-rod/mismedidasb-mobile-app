@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:mismedidasb/data/api/_base_api.dart';
 import 'package:mismedidasb/data/api/remote/endpoints.dart';
 import 'package:mismedidasb/data/api/remote/exceptions.dart';
 import 'package:mismedidasb/data/api/remote/network_handler.dart';
@@ -8,7 +9,7 @@ import 'package:mismedidasb/domain/personal_data/i_personal_data_api.dart';
 import 'package:mismedidasb/domain/personal_data/i_personal_data_converter.dart';
 import 'package:mismedidasb/domain/personal_data/personal_data_model.dart';
 
-class PersonalDataApi implements IPersonalDataApi {
+class PersonalDataApi extends BaseApi implements IPersonalDataApi {
   final IPersonalDataConverter _iPersonalDataConverter;
   final NetworkHandler _networkHandler;
 
@@ -21,7 +22,7 @@ class PersonalDataApi implements IPersonalDataApi {
     if (res.statusCode == RemoteConstants.code_success) {
       Iterable l = json.decode(res.body)[RemoteConstants.result];
       return l.map((model) => _iPersonalDataConverter.fromJson(model)).toList();
-    }
-    throw ServerException.fromJson(res.statusCode, json.decode(res.body));
+    } else
+      throw serverException(res);
   }
 }

@@ -50,6 +50,7 @@ import 'package:mismedidasb/domain/user/i_user_api.dart';
 import 'package:mismedidasb/domain/user/i_user_converter.dart';
 import 'package:mismedidasb/domain/user/i_user_repository.dart';
 import 'package:mismedidasb/ui/_base/bloc_base.dart';
+import 'package:mismedidasb/ui/habit/habit_bloc.dart';
 import 'package:mismedidasb/ui/home/home_bloc.dart';
 import 'package:mismedidasb/ui/login/login_bloc.dart';
 import 'package:mismedidasb/ui/measure_health/measure_health_bloc.dart';
@@ -119,27 +120,28 @@ class Injector {
 
   _registerMappers() {
     container.registerSingleton<IAccountConverter, AccountConverter>(
-            (c) => AccountConverter());
+        (c) => AccountConverter());
 
-    container.registerSingleton<ISessionConverter, SessionConverter>((c) => SessionConverter());
+    container.registerSingleton<ISessionConverter, SessionConverter>(
+        (c) => SessionConverter());
 
     container.registerSingleton<IUserConverter, UserConverter>(
-            (c) => UserConverter());
+        (c) => UserConverter());
 
     container.registerSingleton<IAnswerConverter, AnswerConverter>(
-            (c) => AnswerConverter());
+        (c) => AnswerConverter());
 
-    container.registerSingleton<IHealthConceptConverter, HealthConceptConverter>(
-            (c) => HealthConceptConverter());
+    container.registerSingleton<IHealthConceptConverter,
+        HealthConceptConverter>((c) => HealthConceptConverter());
 
     container.registerSingleton<IPersonalDataConverter, PersonalDataConverter>(
-            (c) => PersonalDataConverter());
+        (c) => PersonalDataConverter());
 
     container.registerSingleton<IPollConverter, PollConverter>(
-            (c) => PollConverter());
+        (c) => PollConverter());
 
     container.registerSingleton<IQuestionConverter, QuestionConverter>(
-            (c) => QuestionConverter());
+        (c) => QuestionConverter());
   }
 
   _registerApiLayer() {
@@ -201,11 +203,13 @@ class Injector {
   _registerBloCs() {
     container.registerFactory(
         (c) => SplashBloC(container.resolve(), container.resolve()));
-    container.registerFactory(
-        (c) => LoginBloC(container.resolve(), container.resolve()));
+    container.registerFactory((c) => LoginBloC(
+        container.resolve(), container.resolve(), container.resolve()));
     container.registerFactory((c) => RecoverPasswordBloC());
-    container.registerFactory((c) => RegisterBloC());
+    container.registerFactory((c) => RegisterBloC(
+        container.resolve(), container.resolve(), container.resolve()));
     container.registerFactory((c) => HomeBloC());
+    container.registerFactory((c) => HabitBloC());
     container.registerFactory((c) => MeasureHealthBloC());
     container.registerFactory((c) => MeasureValueBloC());
     container.registerFactory((c) => MeasureWellnessBloC());

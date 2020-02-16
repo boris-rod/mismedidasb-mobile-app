@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mismedidasb/res/R.dart';
+import 'package:mismedidasb/res/values/colors.dart';
 import 'package:mismedidasb/ui/_base/bloc_state.dart';
 import 'package:mismedidasb/ui/_base/navigation_utils.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_buttons_paginate_widget.dart';
@@ -148,20 +149,28 @@ class _MeasureWellnessState
               ),
             ),
             ListView(
+              physics: BouncingScrollPhysics(),
               shrinkWrap: true,
               children: model.answers
-                  .map((m) => RadioListTile(
-                        groupValue: model.selectedAnswer.weight,
-                        title: TXTextWidget(
-                          text: m.title,
-                        ),
-                        value: m.weight,
-                        onChanged: (val) {
-                          setState(() {
-                            bloc.setAnswerValue(pageIndex, m);
-                          });
-                        },
-                      ))
+                  .map((m) => Column(
+                children: <Widget>[
+                  RadioListTile(
+                    groupValue: model.selectedAnswer.weight,
+                    title: TXTextWidget(
+                      text: m.title,
+                    ),
+                    value: m.weight,
+                    onChanged: (val) {
+                      setState(() {
+                        bloc.setAnswerValue(pageIndex, m);
+                      });
+                    },
+                  ),
+                  Divider(
+                    height: 1,
+                  ),
+                ],
+              ))
                   .toList(),
             )
           ],

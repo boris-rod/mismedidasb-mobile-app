@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mismedidasb/res/R.dart';
 
 class TXTextLinkWidget extends StatelessWidget {
-  final VoidCallback opTap;
+  final VoidCallback onTap;
   final String title;
   final Color splashColor;
   final Color textColor;
@@ -10,7 +10,7 @@ class TXTextLinkWidget extends StatelessWidget {
   final double fontSize;
 
   const TXTextLinkWidget({
-    @required this.opTap,
+    @required this.onTap,
     @required this.title,
     this.splashColor,
     this.fontWeight = FontWeight.normal,
@@ -21,7 +21,7 @@ class TXTextLinkWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FlatButton(
-      onPressed: opTap,
+      onPressed: onTap,
       child: Text(
         title ?? "",
         style: TextStyle(

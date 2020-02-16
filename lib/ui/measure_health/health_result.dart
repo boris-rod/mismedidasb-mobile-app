@@ -4,41 +4,46 @@ class HealthResult {
   static String getResult(HealthMeasureResultModel model) {
     String result = "";
 
-    double dailyKal = 0.0;
-    final IMC = model.weight / ((model.height / 100) * ((model.height / 100)));
-    final TMB_PROV = 10 * model.weight + 6.25 * model.height - 5 * model.age;
+    final IMC = model.weight.toDouble() / ((model.height.toDouble() / 100) * ((model.height.toDouble() / 100)));
+    final TMB_PROV = 10 * model.weight.toDouble() + 6.25 * model.height.toDouble() - 5 * model.age;
     int dietSummary = 0;
+
     model.diet.forEach((value) {
       dietSummary += value;
     });
 
+    double dailyKalDouble = 0.0;
     if (model.sex == 1) {
       if (model.physicalExercise == 1) {
-        dailyKal = (TMB_PROV + 5) * 1.2;
+        dailyKalDouble = (TMB_PROV + 5) * 1.2;
       } else if (model.physicalExercise == 2) {
-        dailyKal = (TMB_PROV + 5) * 1.375;
+        dailyKalDouble = (TMB_PROV + 5) * 1.375;
       } else if (model.physicalExercise == 3) {
-        dailyKal = (TMB_PROV + 5) * 1.55;
+        dailyKalDouble = (TMB_PROV + 5) * 1.55;
       } else if (model.physicalExercise == 4) {
-        dailyKal = (TMB_PROV + 5) * 1.725;
+        dailyKalDouble = (TMB_PROV + 5) * 1.725;
       } else {
-        dailyKal = (TMB_PROV + 5) * 1.9;
+        dailyKalDouble = (TMB_PROV + 5) * 1.9;
       }
     } else {
       if (model.physicalExercise == 1) {
-        dailyKal = (TMB_PROV - 161) * 1.2;
+        dailyKalDouble = (TMB_PROV - 161) * 1.2;
       } else if (model.physicalExercise == 2) {
-        dailyKal = (TMB_PROV - 161) * 1.375;
+        dailyKalDouble = (TMB_PROV - 161) * 1.375;
       } else if (model.physicalExercise == 3) {
-        dailyKal = (TMB_PROV - 161) * 1.55;
+        dailyKalDouble = (TMB_PROV - 161) * 1.55;
       } else if (model.physicalExercise == 4) {
-        dailyKal = (TMB_PROV - 161) * 1.725;
+        dailyKalDouble = (TMB_PROV - 161) * 1.725;
       } else {
-        dailyKal = (TMB_PROV - 161) * 1.9;
+        dailyKalDouble = (TMB_PROV - 161) * 1.9;
       }
     }
 
     String IMCString = IMC.toStringAsFixed(2);
+
+    String dailyKal = "";
+    dailyKal = dailyKalDouble.toStringAsFixed(2);
+
     if (IMC < 15) {
       model.result =
           "Usted presenta BAJO PESO EXTREMO ( $IMCString Kg/m2) ¡Consulte a un médico!";

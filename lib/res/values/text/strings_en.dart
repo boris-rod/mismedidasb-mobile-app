@@ -28,6 +28,63 @@ class StringsEn implements StringsBase {
   String get previous => "Previous";
 
   @override
-  String get update => "Update";
+  String get update => "Analize";
+
+  @override
+  String get valuesConcept => "Los valores son ideas o principios universales que dirigen nuestra conducta.";
+
+  @override
+  String get healthHabits => "10 Hábitos Saludables";
+
+  @override
+  String get checkNetworkConnection => "Please check your network connection";
+
+  @override
+  String get failedOperation => "Operation failed";
+
+  @override
+  String get forgotPassword => "Forgot password?";
+
+  @override
+  String get login => "Login";
+
+  @override
+  String get password => "Password";
+
+  @override
+  String get register => "Register";
+
+  @override
+  String get remember => "Remember";
+
+  @override
+  String get userName => "User Name";
+
+  @override
+  String get email => "Email";
+
+  @override
+  String get invalidEmail => "Invalid email";
+
+  @override
+  String get minCharsLength => "At least 6 characters";
+
+  @override
+  String get requiredField => "Required field";
+
+  @override
+  String get especialCharRequired => "At least 1 especial character";
+
+  @override
+  String get upperLetterCharRequired => "At least 1 upper case letter";
+
+  @override
+  String get passwordMatch => "Password doesn't match";
+
+  @override
+  String get recover => "Recover";
+
+  @override
+  String get code => "Code";
 
 }

@@ -22,7 +22,7 @@ class LoginPage extends StatefulWidget {
 class _LoginState extends StateWithBloC<LoginPage, LoginBloC> {
   TextEditingController emailTextController = TextEditingController();
   TextEditingController passwordTextController = TextEditingController();
-  final _keyForm = new GlobalKey<FormState>();
+  final _keyFormLogin = new GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -36,87 +36,110 @@ class _LoginState extends StateWithBloC<LoginPage, LoginBloC> {
 
   @override
   Widget buildWidget(BuildContext context) {
-    return Stack(children: <Widget>[
-      Scaffold(
-        body: StreamBuilder<UserCredentialsModel>(
-            stream: bloc.userInitResult,
-            initialData: UserCredentialsModel(),
-            builder: (ctx, snapshot) {
-              emailTextController.text = snapshot.data.email;
-              passwordTextController.text = snapshot.data.password;
-              return Form(
-                key: _keyForm,
-                child: TXGestureHideKeyBoard(
-                  child: SingleChildScrollView(
-                    child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 30, vertical: 30),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          SizedBox(
-                            height: 30,
-                          ),
-                          Image.asset(
-                            R.image.logo,
-                            width: 100,
-                            height: 100,
-                            color: R.color.primary_color,
-                          ),
-                          SizedBox(
-                            height: 30,
-                          ),
-                          TXTextFieldWidget(
-                            label: "User Name",
-                          ),
-                          SizedBox(
-                            height: 30,
-                          ),
-                          TXTextFieldWidget(
-                            label: "Password",
-                          ),
-                          StreamBuilder<bool>(
-                            stream: bloc.saveCredentialsResult,
-                            initialData: snapshot.data.saveCredentials,
-                            builder: (saveCtx, snapshotSave) {
-                              return TXCheckBoxWidget(
-                                text: "Remember",
-                                leading: true,
-                                textColor: R.color.accent_color,
-                                value: snapshotSave.data,
-                                onChange: (value) {
-                                  bloc.saveCredentials(value);
+    return Stack(
+      children: <Widget>[
+        Scaffold(
+          body: StreamBuilder<UserCredentialsModel>(
+              stream: bloc.userInitResult,
+              initialData: UserCredentialsModel(),
+              builder: (ctx, snapshot) {
+                emailTextController.text = snapshot.data.email;
+                passwordTextController.text = snapshot.data.password;
+                return Form(
+                  key: _keyFormLogin,
+                  child: TXGestureHideKeyBoard(
+                    child: SingleChildScrollView(
+                      child: Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 30, vertical: 30),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            SizedBox(
+                              height: 30,
+                            ),
+                            Image.asset(
+                              R.image.logo,
+                              width: 100,
+                              height: 100,
+                              color: R.color.primary_color,
+                            ),
+                            SizedBox(
+                              height: 30,
+                            ),
+                            TXTextFieldWidget(
+                              label: R.string.email,
+                              iconData: Icons.email,
+                              controller: emailTextController,
+                              validator: bloc.email(),
+                              textInputType: TextInputType.emailAddress,
+                              textInputAction: TextInputAction.done,
+                            ),
+                            SizedBox(
+                              height: 30,
+                            ),
+                            TXTextFieldWidget(
+                              label: R.string.password,
+                              validator: bloc.password(),
+                              obscureText: true,
+                              controller: passwordTextController,
+                              textInputAction: TextInputAction.done,
+                              textInputType: TextInputType.emailAddress,
+                            ),
+                            StreamBuilder<bool>(
+                              stream: bloc.saveCredentialsResult,
+                              initialData: snapshot.data.saveCredentials,
+                              builder: (saveCtx, snapshotSave) {
+                                return TXCheckBoxWidget(
+                                  text: R.string.remember,
+                                  leading: true,
+                                  textColor: R.color.accent_color,
+                                  value: snapshotSave.data,
+                                  onChange: (value) {
+                                    bloc.saveCredentials(value);
+                                  },
+                                );
+                              },
+                            ),
+                            SizedBox(height: 30),
+                            TXButtonWidget(
+                                onPressed: () {
+                                  if (_keyFormLogin.currentState.validate()) {
+                                    bloc.login(emailTextController.text,
+                                        passwordTextController.text);
+                                  }
                                 },
-                              );
-                            },
-                          ),
-                          SizedBox(height: 30),
-                          TXButtonWidget(onPressed: () {
-                            bloc.login();
-                          }, title: "Entrar"),
-                          TXTextLinkWidget(
-                            title: "Forgot Password",
-                            opTap: () {
-                              NavigationUtils.push(
-                                  context, RecoverPasswordPage());
-                            },
-                          ),
-                          TXTextLinkWidget(
-                            title: "Register",
-                            opTap: () {
-                              NavigationUtils.push(context, RegisterPage());
-                            },
-                          ),
-                        ],
+                                title: R.string.login),
+                            TXTextLinkWidget(
+                              title: R.string.forgotPassword,
+                              onTap: () {
+                                NavigationUtils.push(
+                                    context, RecoverPasswordPage());
+                              },
+                            ),
+                            TXTextLinkWidget(
+                              title: R.string.register,
+                              onTap: () async {
+                                final result = await NavigationUtils.push(
+                                    context, RegisterPage());
+
+                                if (result is bool && result) {
+                                  bloc.initView();
+                                }
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              );
-            }),
-      ),
-      TXLoadingWidget(
-        loadingStream: bloc.isLoadingStream,
-      )
-    ],);
+                );
+              }),
+        ),
+        TXLoadingWidget(
+          loadingStream: bloc.isLoadingStream,
+        )
+      ],
+    );
   }
 }

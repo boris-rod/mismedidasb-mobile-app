@@ -1,9 +1,10 @@
 import 'package:mismedidasb/data/api/remote/result.dart';
+import 'package:mismedidasb/data/repository/_base_repository.dart';
 import 'package:mismedidasb/domain/personal_data/i_personal_data_api.dart';
 import 'package:mismedidasb/domain/personal_data/i_personal_data_repository.dart';
 import 'package:mismedidasb/domain/personal_data/personal_data_model.dart';
 
-class PersonalDataRepository implements IPersonalDataRepository {
+class PersonalDataRepository  extends BaseRepository implements IPersonalDataRepository {
   final IPersonalDataApi _iPersonalDataApi;
 
   PersonalDataRepository(this._iPersonalDataApi);
@@ -14,7 +15,7 @@ class PersonalDataRepository implements IPersonalDataRepository {
       final result = await _iPersonalDataApi.getPersonalData();
       return Result.success(value: result);
     } catch (ex) {
-      return Result.error(error: ex);
+      return resultError(ex);
     }
   }
 }

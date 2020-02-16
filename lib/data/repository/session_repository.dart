@@ -1,10 +1,11 @@
 import 'package:mismedidasb/data/api/remote/result.dart';
+import 'package:mismedidasb/data/repository/_base_repository.dart';
 import 'package:mismedidasb/domain/session/i_session_api.dart';
 import 'package:mismedidasb/domain/session/i_session_repository.dart';
 import 'package:mismedidasb/domain/session/session_model.dart';
 import 'package:mismedidasb/domain/user/user_model.dart';
 
-class SessionRepository implements ISessionRepository {
+class SessionRepository extends BaseRepository implements ISessionRepository {
   final ISessionApi _iSessionApi;
 
   SessionRepository(this._iSessionApi);
@@ -15,7 +16,7 @@ class SessionRepository implements ISessionRepository {
       final result = await _iSessionApi.login(loginModel);
       return Result.success(value: result);
     } catch (ex) {
-      return Result.error(error: ex);
+      return resultError(ex);
     }
   }
 
@@ -25,7 +26,7 @@ class SessionRepository implements ISessionRepository {
       final result = await _iSessionApi.logout();
       return Result.success(value: result);
     } catch (ex) {
-      return Result.error(error: ex);
+      return resultError(ex);
     }
   }
 
@@ -35,7 +36,7 @@ class SessionRepository implements ISessionRepository {
       final result = await _iSessionApi.validateToken(token);
       return Result.success(value: result);
     } catch (ex) {
-      return Result.error(error: ex);
+      return resultError(ex);
     }
   }
 }

@@ -7,6 +7,7 @@ class SharedPreferencesManager {
   final _password = "password";
   final _userId = "user_id";
   final _saveCredentials = "save_credentials";
+  final _activeAccount = "save_credentials";
 
   Future<bool> cleanAll() async {
     setUserEmail('');
@@ -14,12 +15,29 @@ class SharedPreferencesManager {
     setUserId(-1);
     setPassword('');
     setSaveCredentials(false);
+    setActivateAccount(false);
     return true;
+  }
+
+  Future<bool> getActivateAccount() async {
+    var value =
+        (await SharedPreferences.getInstance()).getBool(_saveCredentials);
+    if (value == null) {
+      value = false;
+      setActivateAccount(value);
+    }
+    return value;
+  }
+
+  Future<bool> setActivateAccount(bool newValue) async {
+    var res = (await SharedPreferences.getInstance())
+        .setBool(_saveCredentials, newValue);
+    return res;
   }
 
   Future<bool> getSaveCredentials() async {
     var value =
-    (await SharedPreferences.getInstance()).getBool(_saveCredentials);
+        (await SharedPreferences.getInstance()).getBool(_saveCredentials);
     if (value == null) {
       value = false;
       setSaveCredentials(value);
@@ -59,7 +77,7 @@ class SharedPreferencesManager {
 
   Future<bool> setPassword(String newValue) async {
     var res =
-    (await SharedPreferences.getInstance()).setString(_password, newValue);
+        (await SharedPreferences.getInstance()).setString(_password, newValue);
     return res;
   }
 
@@ -80,7 +98,7 @@ class SharedPreferencesManager {
 
   Future<String> getRefreshToken() async {
     var value =
-    (await SharedPreferences.getInstance()).getString(_refreshToken);
+        (await SharedPreferences.getInstance()).getString(_refreshToken);
     if (value == null) {
       value = '';
       setAccessToken(value);

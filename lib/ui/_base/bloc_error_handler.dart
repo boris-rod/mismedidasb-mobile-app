@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:mismedidasb/data/api/remote/result.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:mismedidasb/utils/extensions.dart';
 
@@ -7,6 +9,11 @@ class ErrorHandlerBloC {
   BehaviorSubject<String> _errorMessageController = new BehaviorSubject();
 
   Stream<String> get errorMessageStream => _errorMessageController.stream;
+
+  void showErrorMessage(Result res) {
+    String errorMessage = (res as ResultError).error;
+    Fluttertoast.showToast(msg: errorMessage, toastLength: Toast.LENGTH_LONG);
+  }
 
   onError(dynamic error) {
     if (error != null)

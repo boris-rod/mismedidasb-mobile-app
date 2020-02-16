@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "306011458886",
+    "firebase_url": "https://mismedidasb.firebaseio.com",
+    "project_id": "mismedidasb",
+    "storage_bucket": "mismedidasb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:306011458886:android:0f5345d9f1525b1ab82947",
+        "android_client_info": {
+          "package_name": "com.metriri.mismedidasb"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "306011458886-dg8krs36dp4raeq4hpf2dfa0s4frh39v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA0oEtB8_3Wv1wC4jRzgPaENnaw2yzw3kY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "306011458886-dg8krs36dp4raeq4hpf2dfa0s4frh39v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

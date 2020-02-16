@@ -1,7 +1,11 @@
+import 'package:mismedidasb/domain/answer/answer_model.dart';
+import 'package:mismedidasb/domain/question/question_model.dart';
 import 'package:mismedidasb/ui/_base/bloc_base.dart';
 import 'package:mismedidasb/ui/_base/bloc_error_handler.dart';
 import 'package:mismedidasb/ui/_base/bloc_loading.dart';
+import 'package:mismedidasb/ui/measure_value/measure_value_model.dart';
 import 'package:rxdart/subjects.dart';
+import 'package:mismedidasb/utils/extensions.dart';
 
 class MeasureValueBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
@@ -10,6 +14,39 @@ class MeasureValueBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   Stream<int> get pageResult => _pageController.stream;
 
   int currentPage = 0;
+
+  ValueResultModel valueResultModel;
+
+  void iniDataResult() {
+    if (valueResultModel == null)
+      valueResultModel = ValueResultModel(results: [], values: []);
+
+    List<QuestionModel> questions = QuestionModel.getValues();
+    List<AnswerModel> answers = AnswerModel.getAnswers2();
+
+    questions.forEach((q) {
+      final measureW = MeasureValueModel(
+          question: q, answers: answers, selectedAnswer: answers[0]);
+      valueResultModel.values.add(measureW);
+    });
+    valueResultModel.results =
+        ValueResult.getResult(valueResultModel);
+  }
+
+  void setAnswerValue(int questionIndex, AnswerModel answer) async {
+    valueResultModel.values[questionIndex].selectedAnswer = answer;
+    valueResultModel.results =
+        ValueResult.getResult(valueResultModel);
+  }
+
+  void changePage(int value) async {
+    if (value > 0 && currentPage < valueResultModel.values.length) {
+      currentPage += value;
+    } else if (value < 0 && currentPage > 0) {
+      currentPage += value;
+    }
+    _pageController.sinkAddSafe(currentPage);
+  }
 
   void loadMeasures() async {
     isLoading = true;

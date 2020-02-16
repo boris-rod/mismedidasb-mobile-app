@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:mismedidasb/data/api/_base_api.dart';
 import 'package:mismedidasb/data/api/remote/endpoints.dart';
 import 'package:mismedidasb/data/api/remote/exceptions.dart';
 import 'package:mismedidasb/data/api/remote/network_handler.dart';
@@ -8,7 +9,7 @@ import 'package:mismedidasb/domain/account/account_model.dart';
 import 'package:mismedidasb/domain/account/i_account_api.dart';
 import 'package:mismedidasb/domain/account/i_account_converter.dart';
 
-class AccountApi implements IAccountApi {
+class AccountApi extends BaseApi implements IAccountApi {
   final IAccountConverter _iAccountConverter;
   final NetworkHandler _networkHandler;
 
@@ -23,7 +24,7 @@ class AccountApi implements IAccountApi {
     if (res.statusCode == RemoteConstants.code_success_created)
       return RemoteConstants.code_success_created;
     else
-      throw ServerException.fromJson(res.statusCode, json.decode(res.body));
+      throw serverException(res);
   }
 
   @override
@@ -36,7 +37,7 @@ class AccountApi implements IAccountApi {
     if (res.statusCode == RemoteConstants.code_success)
       return RemoteConstants.code_success;
     else
-      throw ServerException.fromJson(res.statusCode, json.decode(res.body));
+      throw serverException(res);
   }
 
   @override
@@ -46,7 +47,7 @@ class AccountApi implements IAccountApi {
     if (res.statusCode == RemoteConstants.code_success)
       return RemoteConstants.code_success;
     else
-      throw ServerException.fromJson(res.statusCode, json.decode(res.body));
+      throw serverException(res);
   }
 
   @override
@@ -57,7 +58,7 @@ class AccountApi implements IAccountApi {
     if (res.statusCode == RemoteConstants.code_success_created)
       return RemoteConstants.code_success_created;
     else
-      throw ServerException.fromJson(res.statusCode, json.decode(res.body));
+      throw serverException(res);
   }
 
   @override
@@ -67,6 +68,6 @@ class AccountApi implements IAccountApi {
     if (res.statusCode == RemoteConstants.code_success)
       return RemoteConstants.code_success;
     else
-      throw ServerException.fromJson(res.statusCode, json.decode(res.body));
+      throw serverException(res);
   }
 }
