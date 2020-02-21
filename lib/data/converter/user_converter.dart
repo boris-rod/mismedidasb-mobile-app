@@ -18,4 +18,20 @@ class UserConverter implements IUserConverter {
       roleId: json[RemoteConstants.role_id],
     );
   }
+
+  @override
+  Map<String, dynamic> toJson(UserModel userModel) {
+    return {
+      RemoteConstants.id: userModel.id,
+      RemoteConstants.full_name: userModel.fullName,
+      RemoteConstants.email: userModel.email,
+      RemoteConstants.phone: userModel.phone,
+      RemoteConstants.status_id: userModel.statusId,
+      RemoteConstants.status: userModel.status,
+      RemoteConstants.avatar: userModel.avatar,
+      RemoteConstants.avatar_mime_type: userModel.avatarMimeType,
+      RemoteConstants.role: userModel.role,
+      RemoteConstants.role_id: userModel.roleId
+    };
+  }
 }

@@ -53,5 +53,32 @@ abstract class StringsBase implements WidgetsLocalizations {
   String get passwordMatch;
 
   String get recover;
+
   String get code;
+
+  String get activateAccount;
+
+  String get reSendCode;
+
+  String get checkEmail;
+
+  String get profile;
+
+  String get logout;
+
+  String get changePassword;
+
+  String get oldPassword;
+
+  String get newPassword;
+
+  String get confirmPassword;
+
+  String get ok;
+
+  String get cancel;
+
+  String get emailWillBeReceived;
+
+  String get logoutContent;
 }

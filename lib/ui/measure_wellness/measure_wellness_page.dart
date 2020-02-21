@@ -3,6 +3,7 @@ import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/res/values/colors.dart';
 import 'package:mismedidasb/ui/_base/bloc_state.dart';
 import 'package:mismedidasb/ui/_base/navigation_utils.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_background_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_buttons_paginate_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_icon_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';
@@ -46,8 +47,7 @@ class _MeasureWellnessState
             stream: bloc.pageResult,
             initialData: 0,
             builder: (ctx, snapshot) {
-              return Container(
-                padding: EdgeInsets.symmetric(vertical: 20),
+              return TXBackgroundWidget(
                 child: Column(
                   children: <Widget>[
                     Expanded(
@@ -68,7 +68,6 @@ class _MeasureWellnessState
                       ),
                     ),
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
                       child: TXButtonPaginateWidget(
                         onNext: snapshot.data ==
                                 bloc.wellnessResultModel.wellness.length
@@ -104,12 +103,14 @@ class _MeasureWellnessState
   Widget _getPageViewResult(BuildContext context) {
     return Container(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Container(
+            width: double.infinity,
             alignment: Alignment.center,
             padding: EdgeInsets.all(20),
             child: TXTextWidget(
+              textAlign: TextAlign.center,
               text: bloc.wellnessResultModel.result[0],
               size: 20,
             ),
@@ -138,12 +139,11 @@ class _MeasureWellnessState
     return Container(
       child: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
-              alignment: Alignment.center,
               padding: EdgeInsets.all(20),
               child: TXTextWidget(
+                textAlign: TextAlign.center,
                 text: model.question.title,
                 size: 20,
               ),

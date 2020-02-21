@@ -10,7 +10,7 @@ class SharedPreferencesManager {
   final _activeAccount = "save_credentials";
 
   Future<bool> cleanAll() async {
-    setUserEmail('');
+//    setUserEmail('');
     setAccessToken('');
     setUserId(-1);
     setPassword('');

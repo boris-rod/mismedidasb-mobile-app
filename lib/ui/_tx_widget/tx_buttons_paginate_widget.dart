@@ -19,7 +19,11 @@ class TXButtonPaginateWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: EdgeInsets.symmetric(horizontal: 20),
       width: double.infinity,
+      height: 80,
+      color: R.color.gray_light,
+      alignment: Alignment.center,
       child: Row(
         children: <Widget>[
           Expanded(

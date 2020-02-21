@@ -10,9 +10,11 @@ import 'package:mismedidasb/ui/_tx_widget/tx_main_app_bar_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
 import 'package:mismedidasb/ui/habit/habit_page.dart';
 import 'package:mismedidasb/ui/home/home_bloc.dart';
+import 'package:mismedidasb/ui/login/login_page.dart';
 import 'package:mismedidasb/ui/measure_health/measure_health_page.dart';
 import 'package:mismedidasb/ui/measure_value/measure_value_page.dart';
 import 'package:mismedidasb/ui/measure_wellness/measure_wellness_page.dart';
+import 'package:mismedidasb/ui/profile/profile_page.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -38,10 +40,13 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
       actions: <Widget>[
         TXIconButtonWidget(
           icon: Icon(Icons.settings),
-          onPressed: () {
-            Fluttertoast.showToast(
-                msg: "Ir a la vista de Ajustes",
-                toastLength: Toast.LENGTH_LONG);
+          onPressed: () async {
+            final res = await NavigationUtils.push(context, ProfilePage());
+            if (res is profileAction) {
+              if (res == profileAction.logout) {
+                NavigationUtils.pushReplacement(context, LoginPage());
+              }
+            }
           },
         )
       ],
@@ -106,12 +111,13 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
     return Container(
       padding: EdgeInsets.all(20),
       child: InkWell(
+        borderRadius: BorderRadius.all(Radius.circular(45)),
         onTap: onTap,
         child: Container(
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
               border: Border.all(color: R.color.primary_color, width: .5),
-              borderRadius: BorderRadius.all(Radius.circular(10))),
+              borderRadius: BorderRadius.all(Radius.circular(45))),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -124,9 +130,13 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
               SizedBox(
                 height: 10,
               ),
-              TXTextWidget(
-                text: title,
-                textAlign: TextAlign.center,
+              Expanded(
+                child: TXTextWidget(
+                  text: title,
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  textOverflow: TextOverflow.ellipsis,
+                ),
               )
             ],
           ),

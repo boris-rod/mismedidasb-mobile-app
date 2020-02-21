@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
@@ -71,6 +73,7 @@ class NetworkHandler {
     @required String path,
     String params = '',
     String body = "",
+    bool  doRefreshToken = true
   }) async {
     final _url = Endpoint.apiBaseUrl + path + params;
     final _headers = await _commonHeaders();
@@ -82,7 +85,7 @@ class NetworkHandler {
       final res = await http.post(_url, headers: _headers, body: body);
       _logger.log("<- RESPONSE CODE: ${res.statusCode}");
       _logger.log("<- RESPONSE BODY: ${res.body}");
-      if (res.statusCode == RemoteConstants.code_un_authorized) {
+      if (doRefreshToken && res.statusCode == RemoteConstants.code_un_authorized) {
         final refreshResult = await _refreshToken();
         if (refreshResult.statusCode == RemoteConstants.code_success) {
           final _newHeaders = await _commonHeaders();
@@ -197,6 +200,53 @@ class NetworkHandler {
 
       return res;
     } catch (ex) {
+      throw ex;
+    }
+  }
+
+  Future<Response> postFile({
+    @required String path,
+    String baseUrl,
+    Map<String, String> body = const {},
+    Map<String, String> headers = const {},
+    @required File files,
+  }) async {
+    final _url = (baseUrl ?? Endpoint.apiBaseUrl) + path;
+    final _headers = await _commonHeaders();
+    _headers.addAll(headers);
+    _headers.addAll({"Content-Type": "multipart/form-data"});
+    _headers.addAll({"type": "image/jpeg"});
+
+    try {
+      _logger.log("-> POST: $_url");
+      _logger.log("-> HEADERS: $_headers");
+      _logger.log("-> BODY: $body");
+
+      FormData formData = FormData();
+
+      if (files != null) {
+        var pathParts = files.path.split('/');
+        String name = pathParts[pathParts.length - 1];
+        print('NAME -> $name');
+        formData.add(
+            'file',
+            new UploadFileInfo(files, name,
+                contentType: ContentType('image', 'jpeg')));
+      }
+      Dio dio = new Dio();
+      final res = await dio.post(_url,
+          data: formData,
+          options: Options(
+            method: 'POST',
+            responseType: ResponseType.json,
+            headers: _headers,
+          ));
+
+      _logger.log("<- RESPONSE CODE: ${res.statusCode}");
+      _logger.log("<- RESPONSE BODY: ${res.toString()}");
+      return res;
+    } catch (ex) {
+      _logger.log("<- EXEPTION: $ex");
       throw ex;
     }
   }

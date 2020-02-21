@@ -5,6 +5,7 @@ import 'package:mismedidasb/domain/account/account_model.dart';
 import 'package:mismedidasb/domain/account/i_account_repository.dart';
 import 'package:mismedidasb/domain/session/i_session_repository.dart';
 import 'package:mismedidasb/domain/user/user_model.dart';
+import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/bloc_base.dart';
 import 'package:mismedidasb/ui/_base/bloc_error_handler.dart';
 import 'package:mismedidasb/ui/_base/bloc_form_validator.dart';
@@ -69,7 +70,7 @@ class RegisterBloC extends BaseBloC
     final res = await _iAccountRepository.resendCode(email);
     if (res is ResultSuccess<int>) {
       Fluttertoast.showToast(
-          msg: "Revise su email", toastLength: Toast.LENGTH_LONG);
+          msg: R.string.checkEmail, toastLength: Toast.LENGTH_LONG);
     } else {
       showErrorMessage(res);
     }

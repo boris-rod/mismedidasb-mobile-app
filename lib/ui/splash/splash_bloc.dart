@@ -34,13 +34,11 @@ class SplashBloC extends BaseBloC{
           refreshToken.isEmpty)
         _navigateController.sinkAddSafe(true);
       else {
-        Future.delayed(Duration(seconds: 1), (){
+        final res = await _iSessionRepository.validateToken();
+        if (res is ResultSuccess<bool>)
+          _navigateController.sink.add(!res.value);
+        else
           _navigateController.sinkAddSafe(true);
-        });
-//        final res = await _iSessionRepository.validateToken();
-//        if (res is ResultSuccess<bool>) _navigateController.sink.add(!res.value);
-//        else
-//          _navigateController.sinkAddSafe(true);
       }
     } else {
       _navigateController.sinkAddSafe(true);

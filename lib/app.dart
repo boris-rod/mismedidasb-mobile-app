@@ -25,7 +25,7 @@ class _MyMeasuresBState extends State<MyMeasuresBApp>{
         fontFamily: "Fira",
         primaryColor: R.color.primary_color,
         primaryColorDark: R.color.primary_dark_color,
-        accentColor: R.color.accent_color
+        accentColor: R.color.accent_color,
       ),
       darkTheme: ThemeData(
         appBarTheme: AppBarTheme(iconTheme: IconThemeData(color: Colors.white)),

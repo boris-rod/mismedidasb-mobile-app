@@ -50,13 +50,15 @@ import 'package:mismedidasb/domain/user/i_user_api.dart';
 import 'package:mismedidasb/domain/user/i_user_converter.dart';
 import 'package:mismedidasb/domain/user/i_user_repository.dart';
 import 'package:mismedidasb/ui/_base/bloc_base.dart';
+import 'package:mismedidasb/ui/change_password/change_password_bloc.dart';
 import 'package:mismedidasb/ui/habit/habit_bloc.dart';
 import 'package:mismedidasb/ui/home/home_bloc.dart';
 import 'package:mismedidasb/ui/login/login_bloc.dart';
 import 'package:mismedidasb/ui/measure_health/measure_health_bloc.dart';
 import 'package:mismedidasb/ui/measure_value/measure_value_bloc.dart';
 import 'package:mismedidasb/ui/measure_wellness/measure_wellness_bloc.dart';
-import 'package:mismedidasb/ui/recover_change_password/recover_password_bloc.dart';
+import 'package:mismedidasb/ui/profile/profile_bloc.dart';
+import 'package:mismedidasb/ui/recover_password/recover_password_bloc.dart';
 import 'package:mismedidasb/ui/register/register_bloc.dart';
 import 'package:mismedidasb/ui/splash/splash_bloc.dart';
 import 'package:mismedidasb/utils/logger.dart';
@@ -149,7 +151,10 @@ class Injector {
         (c) => AccountApi(container.resolve(), container.resolve()));
 
     container.registerSingleton<ISessionApi, SessionApi>((c) => SessionApi(
-        container.resolve(), container.resolve(), container.resolve()));
+        container.resolve(),
+        container.resolve(),
+        container.resolve(),
+        container.resolve()));
 
     container.registerSingleton<IUserApi, UserApi>(
         (c) => UserApi(container.resolve(), container.resolve()));
@@ -177,7 +182,7 @@ class Injector {
         (c) => AccountRepository(container.resolve()));
 
     container.registerSingleton<ISessionRepository, SessionRepository>(
-        (c) => SessionRepository(container.resolve()));
+        (c) => SessionRepository(container.resolve(), container.resolve()));
 
     container.registerSingleton<IUserRepository, UserRepository>(
         (c) => UserRepository(container.resolve()));
@@ -205,7 +210,7 @@ class Injector {
         (c) => SplashBloC(container.resolve(), container.resolve()));
     container.registerFactory((c) => LoginBloC(
         container.resolve(), container.resolve(), container.resolve()));
-    container.registerFactory((c) => RecoverPasswordBloC());
+    container.registerFactory((c) => RecoverPasswordBloC(container.resolve()));
     container.registerFactory((c) => RegisterBloC(
         container.resolve(), container.resolve(), container.resolve()));
     container.registerFactory((c) => HomeBloC());
@@ -213,6 +218,9 @@ class Injector {
     container.registerFactory((c) => MeasureHealthBloC());
     container.registerFactory((c) => MeasureValueBloC());
     container.registerFactory((c) => MeasureWellnessBloC());
+    container.registerFactory((c) => ChangePasswordBloC(container.resolve(), container.resolve()));
+    container.registerFactory((c) => ProfileBloC(container.resolve(),
+        container.resolve(), container.resolve(), container.resolve()));
   }
 
   _registerCommon() {

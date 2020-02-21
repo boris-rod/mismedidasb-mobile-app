@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
 
 class TXCheckBoxWidget extends StatelessWidget {
@@ -33,10 +34,13 @@ class TXCheckBoxWidget extends StatelessWidget {
           Expanded(
             child: TXTextWidget(
               text: text,
-              color: textColor,
+              color: R.color.primary_color,
             ),
           ),
           Checkbox(
+            checkColor: R.color.primary_color,
+            activeColor: R.color.primary_color,
+            focusColor: R.color.primary_color,
             onChanged: (value) {
               onChange(value);
             },

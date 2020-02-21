@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/bloc_state.dart';
 import 'package:mismedidasb/ui/_base/navigation_utils.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_background_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_buttons_paginate_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_icon_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';
@@ -45,8 +46,8 @@ class _MeasureValueState
               stream: bloc.pageResult,
               initialData: 0,
               builder: (ctx, snapshot) {
-                return Container(
-                  padding: EdgeInsets.symmetric(vertical: 20),
+                return TXBackgroundWidget(
+                  icon: Icons.videogame_asset,
                   child: Column(
                     children: <Widget>[
                       Expanded(
@@ -65,7 +66,6 @@ class _MeasureValueState
                         ),
                       ),
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
                         child: TXButtonPaginateWidget(
                           onNext: snapshot.data ==
                                   bloc.valueResultModel.values.length
@@ -100,7 +100,7 @@ class _MeasureValueState
   Widget _getPageViewResult(BuildContext context) {
     return Container(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Container(
             alignment: Alignment.center,
@@ -136,7 +136,7 @@ class _MeasureValueState
       BuildContext context, MeasureValueModel model, int pageIndex) {
     return Container(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Container(
             alignment: Alignment.center,

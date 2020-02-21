@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:mismedidasb/domain/session/session_model.dart';
 import 'package:mismedidasb/domain/user/user_model.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/bloc_state.dart';
 import 'package:mismedidasb/ui/_base/navigation_utils.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_background_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_checkbox_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_gesture_hide_key_board.dart';
@@ -11,7 +14,8 @@ import 'package:mismedidasb/ui/_tx_widget/tx_textfield_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_textlink_widget.dart';
 import 'package:mismedidasb/ui/home/home_page.dart';
 import 'package:mismedidasb/ui/login/login_bloc.dart';
-import 'package:mismedidasb/ui/recover_change_password/recover_password_page.dart';
+import 'package:mismedidasb/ui/recover_password/recover_password_page.dart';
+import 'package:mismedidasb/ui/register/register_confirmation_page.dart';
 import 'package:mismedidasb/ui/register/register_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -27,9 +31,19 @@ class _LoginState extends StateWithBloC<LoginPage, LoginBloC> {
   @override
   void initState() {
     super.initState();
-    bloc.loginResult.listen((onData) {
+    bloc.loginResult.listen((onData) async {
       if (onData is UserModel)
         NavigationUtils.pushReplacement(context, HomePage());
+      else {
+        final res = await NavigationUtils.push(
+            context,
+            RegisterConfirmationPage(
+              email: emailTextController.text,
+              password: passwordTextController.text,
+            ));
+
+        if (res is bool && res) bloc.initView();
+      }
     });
     bloc.initView();
   }
@@ -49,9 +63,9 @@ class _LoginState extends StateWithBloC<LoginPage, LoginBloC> {
                   key: _keyFormLogin,
                   child: TXGestureHideKeyBoard(
                     child: SingleChildScrollView(
+                      padding:
+                      EdgeInsets.symmetric(horizontal: 30, vertical: 30),
                       child: Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 30, vertical: 30),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
@@ -84,7 +98,6 @@ class _LoginState extends StateWithBloC<LoginPage, LoginBloC> {
                               obscureText: true,
                               controller: passwordTextController,
                               textInputAction: TextInputAction.done,
-                              textInputType: TextInputType.emailAddress,
                             ),
                             StreamBuilder<bool>(
                               stream: bloc.saveCredentialsResult,
@@ -110,23 +123,51 @@ class _LoginState extends StateWithBloC<LoginPage, LoginBloC> {
                                   }
                                 },
                                 title: R.string.login),
-                            TXTextLinkWidget(
-                              title: R.string.forgotPassword,
-                              onTap: () {
-                                NavigationUtils.push(
-                                    context, RecoverPasswordPage());
-                              },
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                TXTextLinkWidget(
+                                  textColor: R.color.accent_color,
+                                  title: R.string.forgotPassword,
+                                  onTap: () async {
+                                    final res = await NavigationUtils.push(
+                                        context, RecoverPasswordPage());
+                                    if (res is bool && res)
+                                      Fluttertoast.showToast(
+                                          msg: R.string.checkEmail,
+                                          toastLength: Toast.LENGTH_SHORT);
+                                  },
+                                ),
+                                Icon(
+                                  Icons.arrow_forward,
+                                  size: 10,
+                                  color: R.color.accent_color,
+                                )
+                              ],
                             ),
-                            TXTextLinkWidget(
-                              title: R.string.register,
-                              onTap: () async {
-                                final result = await NavigationUtils.push(
-                                    context, RegisterPage());
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                TXTextLinkWidget(
+                                  title: R.string.register,
+                                  textColor: R.color.accent_color,
+                                  onTap: () async {
+                                    final result = await NavigationUtils.push(
+                                        context, RegisterPage());
 
-                                if (result is bool && result) {
-                                  bloc.initView();
-                                }
-                              },
+                                    if (result is bool && result) {
+                                      bloc.initView();
+                                    }
+                                  },
+                                ),
+                                Icon(
+                                  Icons.arrow_forward,
+                                  size: 10,
+                                  color: R.color.accent_color,
+                                )
+                              ],
                             ),
                           ],
                         ),

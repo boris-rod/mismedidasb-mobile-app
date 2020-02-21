@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/bloc_state.dart';
+import 'package:mismedidasb/ui/_base/navigation_utils.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_gesture_hide_key_board.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_textfield_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_textlink_widget.dart';
 import 'package:mismedidasb/ui/register/register_bloc.dart';
 
 class RegisterConfirmationPage extends StatefulWidget {
@@ -24,6 +26,17 @@ class _RegisterConfirmationState
   final _keyFormActivate = new GlobalKey<FormState>();
 
   @override
+  void initState() {
+    super.initState();
+
+    bloc.confirmedResult.listen((onData) {
+      if (onData != null && onData) {
+        NavigationUtils.pop(context, result: true);
+      }
+    });
+  }
+
+  @override
   Widget buildWidget(BuildContext context) {
     return Stack(
       children: <Widget>[
@@ -32,8 +45,9 @@ class _RegisterConfirmationState
           key: _keyFormActivate,
           child: TXGestureHideKeyBoard(
               child: SingleChildScrollView(
+                padding:
+                EdgeInsets.symmetric(horizontal: 30, vertical: 30),
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 30, vertical: 30),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
@@ -51,6 +65,7 @@ class _RegisterConfirmationState
                     ),
                     TXTextFieldWidget(
                       label: R.string.code,
+                      controller: codeTextController,
                       iconData: Icons.confirmation_number,
                       validator: bloc.required(),
                       textInputType: TextInputType.number,
@@ -59,7 +74,7 @@ class _RegisterConfirmationState
                       height: 30,
                     ),
                     TXButtonWidget(
-                      title: R.string.recover,
+                      title: R.string.activateAccount,
                       onPressed: () {
                         if (_keyFormActivate.currentState.validate()) {
                           bloc.activateAccount(widget.email, widget.password,
@@ -67,6 +82,13 @@ class _RegisterConfirmationState
                         }
                       },
                     ),
+                    TXTextLinkWidget(
+                      title: R.string.reSendCode,
+                      textColor: R.color.accent_color,
+                      onTap: () {
+                        bloc.resendCode(widget.email);
+                      },
+                    )
                   ]),
             ),
           )),

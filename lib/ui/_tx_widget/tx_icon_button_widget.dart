@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:mismedidasb/res/R.dart';
 
-class TXIconButtonWidget extends StatelessWidget{
+class TXIconButtonWidget extends StatelessWidget {
   final Widget icon;
   final Function onPressed;
   final double iconSize;
+  final Color backgroundColor;
 
-  const TXIconButtonWidget({Key key, this.icon, this.onPressed, this.iconSize}) : super(key: key);
+  const TXIconButtonWidget(
+      {Key key, this.icon, this.onPressed, this.iconSize, this.backgroundColor})
+      : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return IconButton(
@@ -15,5 +20,4 @@ class TXIconButtonWidget extends StatelessWidget{
       color: Colors.white,
     );
   }
-
 }

@@ -37,10 +37,10 @@ class StringsEs implements StringsBase {
   String get healthHabits => "10 Hábitos Saludables";
 
   @override
-  String get checkNetworkConnection => "Por favor revise su conexión de red";
+  String get checkNetworkConnection => "Por favor revise su conexión de red.";
 
   @override
-  String get failedOperation => "Falló la operación";
+  String get failedOperation => "Falló la operación.";
 
   @override
   String get forgotPassword => "Olvidó su contraseña?";
@@ -64,22 +64,22 @@ class StringsEs implements StringsBase {
   String get email => "Correo";
 
   @override
-  String get invalidEmail => "Correo inválido";
+  String get invalidEmail => "Correo inválido.";
 
   @override
-  String get minCharsLength => "Al menos 6 caractéres";
+  String get minCharsLength => "Al menos 6 caractéres.";
 
   @override
-  String get requiredField => "Campo requerido";
+  String get requiredField => "Campo requerido.";
 
   @override
-  String get especialCharRequired => "Al menos 1 caractér especial";
+  String get especialCharRequired => "Al menos 1 caractér especial.";
 
   @override
-  String get upperLetterCharRequired => "Al menos 1 caractér en mayúscula";
+  String get upperLetterCharRequired => "Al menos 1 caractér en mayúscula.";
 
   @override
-  String get passwordMatch => "La contraseña no coincide";
+  String get passwordMatch => "La contraseña no coincide.";
 
   @override
   String get recover => "Recuperar";
@@ -87,4 +87,44 @@ class StringsEs implements StringsBase {
   @override
   String get code => "Código";
 
+  @override
+  String get activateAccount => "Activar cuenta";
+
+  @override
+  String get reSendCode => "Enviar código otra vez";
+
+  @override
+  String get checkEmail =>
+      "Revise su correo para obtener el código de activación.";
+
+  @override
+  String get profile => "Perfil";
+
+  @override
+  String get logout => "Salir";
+
+  @override
+  String get changePassword => "Cambiar contraseña";
+
+  @override
+  String get confirmPassword => "Confirmar contraseña";
+
+  @override
+  String get newPassword => "Nueva contraseña";
+
+  @override
+  String get oldPassword => "Contraseña anterior";
+
+  @override
+  String get cancel => "Cancelar";
+
+  @override
+  String get emailWillBeReceived =>
+      "Recibirá un correo con la nueva contraseña.";
+
+  @override
+  String get ok => "Ok";
+
+  @override
+  String get logoutContent => "Está seguro que desea salir?";
 }

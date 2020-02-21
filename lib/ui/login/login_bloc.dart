@@ -1,4 +1,6 @@
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mismedidasb/data/_shared_prefs.dart';
+import 'package:mismedidasb/data/api/remote/remote_constanst.dart';
 import 'package:mismedidasb/data/api/remote/result.dart';
 import 'package:mismedidasb/domain/session/i_session_repository.dart';
 import 'package:mismedidasb/domain/session/session_model.dart';
@@ -45,16 +47,23 @@ class LoginBloC extends BaseBloC
 
   void saveCredentials(bool value) async {
     (await userInitResult.first).saveCredentials = value;
+    await _sharedPreferencesManager.setSaveCredentials(value);
     _saveCredentialsController.sinkAddSafe(value);
   }
 
   void login(String email, String password) async {
     isLoading = true;
-    final res = await _iSessionRepository
-        .login(LoginModel(email: email, password: password));
+    final saveCredentials =
+        await _sharedPreferencesManager.getSaveCredentials();
+    final res = await _iSessionRepository.login(
+        LoginModel(email: email, password: password), saveCredentials);
     if (res is ResultSuccess<UserModel>) {
+      _loginController.sinkAddSafe(res.value);
     } else {
-      showErrorMessage(res);
+      if ((res as ResultError).code == RemoteConstants.code_forbidden) {
+        _loginController.sinkAddSafe(null);
+      } else
+        showErrorMessage(res);
     }
     isLoading = false;
   }

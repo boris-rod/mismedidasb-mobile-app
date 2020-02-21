@@ -7,6 +7,7 @@ import 'package:mismedidasb/domain/single_selection_model.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/bloc_state.dart';
 import 'package:mismedidasb/ui/_base/navigation_utils.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_background_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_bottom_sheet.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_buttons_paginate_widget.dart';
@@ -51,8 +52,8 @@ class _MeasureHealthState
             },
           ),
           title: R.string.myMeasureHealth,
-          body: Container(
-            padding: EdgeInsets.symmetric(vertical: 20),
+          body: TXBackgroundWidget(
+            icon: Icons.thumb_up,
             child: Column(
               children: <Widget>[
                 Expanded(
@@ -72,7 +73,6 @@ class _MeasureHealthState
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
                   child: StreamBuilder<int>(
                     stream: bloc.pageResult,
                     initialData: 0,
@@ -114,7 +114,7 @@ class _MeasureHealthState
           initialData: bloc.healthMeasureResultModel,
           builder: (ctx, snapshot) {
             return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Container(
                   alignment: Alignment.center,
@@ -250,7 +250,7 @@ class _MeasureHealthState
           final elementList = QuestionModel.getPhysicalExerciseList();
           final poll = PollModel.getPollPhysicalExercise();
           return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Container(
                 alignment: Alignment.center,
@@ -322,7 +322,7 @@ class _MeasureHealthState
           final elementList = QuestionModel.getDiets();
           final poll = PollModel.getPollDiet();
           return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Container(
                 alignment: Alignment.center,
@@ -393,6 +393,7 @@ class _MeasureHealthState
           initialData: bloc.healthMeasureResultModel,
           builder: (ctx, snapshot) {
             return Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Container(
                   alignment: Alignment.center,

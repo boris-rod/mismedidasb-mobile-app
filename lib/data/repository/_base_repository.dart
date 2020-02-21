@@ -8,11 +8,13 @@ import 'package:mismedidasb/res/R.dart';
 class BaseRepository {
   ResultError<T> resultError<T>(dynamic ex) {
     String message = R.string.failedOperation;
+    int code = -1;
     if (ex is ServerException) {
       message = ex.message;
+      code = ex.statusCode;
     } else if (ex is SocketException) {
       message = R.string.checkNetworkConnection;
     }
-    return Result.error(error: message);
+    return Result.error(error: message, code: code);
   }
 }

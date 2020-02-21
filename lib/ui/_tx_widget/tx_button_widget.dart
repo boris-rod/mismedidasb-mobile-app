@@ -36,7 +36,7 @@ class TXButtonWidget extends StatelessWidget {
         ),
       ),
       disabledColor: Colors.grey,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(2.0)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(45)),
     );
   }
 }

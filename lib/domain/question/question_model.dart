@@ -100,7 +100,7 @@ class QuestionModel {
           id: 15,
           pollId: 4,
           order: 1,
-          title: "Confirmmismo / Obediencia"),
+          title: "Conformmismo / Obediencia"),
       QuestionModel(
           id: 16,
           pollId: 4,

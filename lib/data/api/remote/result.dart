@@ -12,8 +12,10 @@ abstract class Result<T> {
 
   static ResultError<T> error<T>({
     @required dynamic error,
+    @required int code
   }) =>
       ResultError(
+        code: code,
         error: error,
       );
 }
@@ -30,8 +32,9 @@ class ResultSuccess<T> extends Result<T> {
 
 class ResultError<T> extends Result<T> {
   final dynamic error;
-
+  final int code;
   ResultError({
+    @required this.code,
     @required this.error,
   });
 }

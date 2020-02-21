@@ -8,17 +8,17 @@ class UserModel {
   String avatar;
   String avatarMimeType;
   String role;
-  String roleId;
+  int roleId;
 
   UserModel(
       {this.id,
-      this.fullName,
-      this.email,
+      this.fullName = "",
+      this.email = "",
       this.phone,
       this.statusId,
       this.status,
-      this.avatar,
-      this.avatarMimeType,
+      this.avatar = "",
+      this.avatarMimeType = "",
       this.role,
       this.roleId});
 }

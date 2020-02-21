@@ -122,11 +122,19 @@ class _RegisterState extends StateWithBloC<RegisterPage, RegisterBloC> {
                         }
                       },
                     ),
-                    TXTextLinkWidget(
-                      title: R.string.login,
-                      onTap: () {
-                        NavigationUtils.pop(context);
-                      },
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Icon(Icons.arrow_back, size: 10, color: R.color.accent_color,),
+                        TXTextLinkWidget(
+                          title: R.string.login,
+                          textColor: R.color.accent_color,
+                          onTap: () {
+                            NavigationUtils.pop(context);
+                          },
+                        )
+                      ],
                     )
                   ],
                 ),
