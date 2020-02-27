@@ -27,4 +27,7 @@ class Endpoint {
   static const String update_profile = "/api/account/update-profile";
   static const String upload_avatar = "/api/account/upload-avatar";
   static const String profile = "/api/account/User";
+
+
+  static const String dish = "/api/dish";
 }

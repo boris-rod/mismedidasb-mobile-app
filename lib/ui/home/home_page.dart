@@ -8,6 +8,7 @@ import 'package:mismedidasb/ui/_tx_widget/tx_icon_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_main_app_bar_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
+import 'package:mismedidasb/ui/food_dish/food_dish_page.dart';
 import 'package:mismedidasb/ui/habit/habit_page.dart';
 import 'package:mismedidasb/ui/home/home_bloc.dart';
 import 'package:mismedidasb/ui/login/login_page.dart';
@@ -85,9 +86,7 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
                   icon: Icons.local_offer,
                   title: R.string.foodDishes,
                   onTap: () {
-                    Fluttertoast.showToast(
-                        msg: "Ir a la vista de Platos",
-                        toastLength: Toast.LENGTH_LONG);
+                    NavigationUtils.push(context, FoodDishPage());
                   }),
               _getHomeButton(
                   context: context,

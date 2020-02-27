@@ -13,6 +13,11 @@ class CalendarUtils {
     return "${now.year}_${now.month}_${now.day}_${now.hour}_${now.minute}_${now.second}";
   }
 
+  static String getTimeIdBasedDay() {
+    final DateTime now = DateTime.now();
+    return "${now.year}_${now.month}_${now.day}}";
+  }
+
   static bool isWeekEnd(DateTime datetime) {
     return datetime.weekday == DateTime.saturday ||
         datetime.weekday == DateTime.sunday;
