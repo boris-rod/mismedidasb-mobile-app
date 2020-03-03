@@ -30,4 +30,5 @@ class Endpoint {
 
 
   static const String dish = "/api/dish";
+  static const String dish_tags = "/api/tag";
 }

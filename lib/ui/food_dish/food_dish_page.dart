@@ -1,15 +1,18 @@
+import 'package:charts_flutter/flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mismedidasb/domain/dish/dish_model.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/bloc_state.dart';
 import 'package:mismedidasb/ui/_base/navigation_utils.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_action_chip_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_bottom_sheet.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_icon_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_main_app_bar_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_network_image.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
+import 'package:mismedidasb/ui/food/food_page.dart';
 import 'package:mismedidasb/ui/food_dish/food_dish_bloc.dart';
 
 class FoodDishPage extends StatefulWidget {
@@ -46,9 +49,38 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                       padding:
                           EdgeInsets.symmetric(vertical: 20, horizontal: 5),
                       child: Container(
-                        child: Column(
-                          children: _getDailyActivityFood(
-                              context, snapshot.data.dailyActivityFoodModel),
+                        child: StreamBuilder<DailyFoodPlanModel>(
+                          stream: bloc.dailyPlanResult,
+                          initialData: null,
+                          builder: (context, snapshotPlan) {
+                            final planModel = snapshotPlan.data;
+                            return planModel == null
+                                ? Container()
+                                : Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: <Widget>[
+                                      TXTextWidget(
+                                        text: planModel.kCalStr,
+                                      ),
+                                      TXTextWidget(
+                                        text: planModel.kCalRange,
+                                      ),
+                                      TXTextWidget(
+                                        text: planModel.imcStr,
+                                      ),
+                                      snapshotPlan == null
+                                          ? Container()
+                                          : Column(
+                                              children: _getDailyActivityFood(
+                                                  context,
+                                                  snapshot.data
+                                                      .dailyActivityFoodModel,
+                                                  planModel),
+                                            )
+                                    ],
+                                  );
+                          },
                         ),
                       ),
                     );
@@ -62,43 +94,62 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
     );
   }
 
-  List<Widget> _getDailyActivityFood(
-      BuildContext context, List<DailyActivityFoodModel> modelList) {
+  List<Widget> _getDailyActivityFood(BuildContext context,
+      List<DailyActivityFoodModel> modelList, DailyFoodPlanModel plan) {
     List<Widget> list = [];
+    int pos = 1;
     modelList.forEach((model) {
       final w = Container(
         width: double.infinity,
         child: Card(
           child: Column(
             children: <Widget>[
-              InkWell(
-                onTap: () {
-                  bloc.expCollDailyFood(model);
-                },
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 10,
-                  ),
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: TXTextWidget(
-                          text: model.name,
-                          fontWeight: FontWeight.bold,
-                          color: R.color.primary_dark_color,
-                          size: 16,
-                        ),
+              Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 10,
+                ),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Row(
+                        children: <Widget>[
+                          TXTextWidget(
+                            text: "${model.name}",
+                            fontWeight: FontWeight.bold,
+                            color: R.color.primary_dark_color,
+                            size: 16,
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          TXTextWidget(
+                            text:
+                                "${pos == 1 ? plan.breakfastCalStr : (pos == 2 ? plan.snack1CalStr : (pos == 3 ? plan.lunchCalStr : (pos == 4 ? plan.snack2CalStr : plan.dinnerCalStr)))}",
+                            color: Colors.black,
+                            size: 16,
+                          )
+                        ],
                       ),
-                      TXIconButtonWidget(
-                        icon: Icon(
-                          model.isExpanded
-                              ? Icons.arrow_drop_down
-                              : Icons.arrow_drop_up,
-                          color: R.color.primary_dark_color,
-                        ),
-                      )
-                    ],
-                  ),
+                    ),
+                    TXIconButtonWidget(
+                      onPressed: () async {
+                        final resultList = await NavigationUtils.push(
+                            context,
+                            FoodPage(
+                              selectedItems: model.foods,
+                            ));
+                        if (resultList is List<FoodModel>) {
+                          model.isExpanded = resultList.isNotEmpty;
+                          model.foods = resultList;
+                          bloc.setFoodList(model);
+                        }
+                      },
+                      icon: Icon(
+                        Icons.add,
+                        color: R.color.primary_dark_color,
+                      ),
+                    )
+                  ],
                 ),
               ),
               Container(
@@ -107,93 +158,161 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                 height: .5,
                 margin: EdgeInsets.only(left: 10),
               ),
-              model.isExpanded
-                  ? Column(
-                      children: <Widget>[
-                        ..._getFoodGroup(context, modelList.indexOf(model),
-                            model.foodGroupList),
-                        SizedBox(
-                          height: 5,
-                        )
-                      ],
-                    )
-                  : Container()
-            ],
-          ),
-        ),
-      );
-      list.add(w);
-    });
-    return list;
-  }
-
-  List<Widget> _getFoodGroup(BuildContext context, int dailyFoodModelIndex,
-      List<FoodGroupModel> modelList) {
-    List<Widget> list = [];
-    modelList.forEach((model) {
-      final w = Container(
-        padding: EdgeInsets.symmetric(horizontal: 5),
-        width: double.infinity,
-        child: Card(
-          child: Column(
-            children: <Widget>[
-              InkWell(
-                onTap: () async {
-                  final list = await bloc.loadFoods("Proteins", "");
-                  _showFoodList(context, list);
-                },
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: TXTextWidget(
-                          text: model.name,
-                        ),
-                      ),
-                      TXIconButtonWidget(
-                        onPressed: () {
-                          bloc.expCollGroup(dailyFoodModelIndex, model);
-                        },
-                        icon: Icon(
-                          model.isExpanded
-                              ? Icons.arrow_drop_down
-                              : Icons.arrow_drop_up,
-                          color: R.color.primary_dark_color,
-                        ),
-                      )
-                    ],
-                  ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 5),
+                child: Wrap(
+                  spacing: 3,
+                  runSpacing: 0,
+                  alignment: WrapAlignment.start,
+                  children: <Widget>[..._getChips(model)],
                 ),
               ),
-              model.isExpanded
-                  ? Column(
-                      children: _getFoods(model.foods),
-                    )
-                  : Container()
+              Column(
+                children: <Widget>[
+                  SizedBox(
+                    height: 10,
+                  ),
+                  ..._getFoods(model, model.foods),
+                  SizedBox(
+                    height: 5,
+                  )
+                ],
+              ),
+//              Container(
+//                padding: EdgeInsets.only(right: 10),
+//                child: Align(
+//                  alignment: Alignment.centerRight,
+//                  child: TXIconButtonWidget(
+//                    onPressed: () async {
+//                      final resultList = await NavigationUtils.push(
+//                          context,
+//                          FoodPage(
+//                            selectedItems: model.foods,
+//                          ));
+//                      if (resultList is List<FoodModel>) {
+//                        model.isExpanded = resultList.isNotEmpty;
+//                        model.foods = resultList;
+//                        bloc.setFoodList(model);
+//                      }
+//                    },
+//                    icon: Icon(
+//                      Icons.add,
+//                      color: R.color.primary_dark_color,
+//                    ),
+//                  ),
+//                ),
+//              )
             ],
           ),
         ),
       );
       list.add(w);
+      pos += 1;
+      list.add(Container(
+        height: 15,
+        margin: EdgeInsets.symmetric(horizontal: 5),
+        child: Divider(
+          color: R.color.primary_color,
+        ),
+      ));
     });
     return list;
   }
 
-  List<Widget> _getFoods(List<FoodModel> modelList) {
+  List<Widget> _getChips(DailyActivityFoodModel model) {
+    List<Widget> resultList = [];
+
+    if (model.calories > 0) {
+      final cal = Chip(
+        label: TXTextWidget(
+          size: 10,
+          color: Colors.black,
+          text: "Calorías: ${model.calories.toStringAsFixed(2)}",
+        ),
+      );
+      resultList.add(cal);
+    }
+
+    if (model.carbohydrates > 0) {
+      final car = Chip(
+        label: TXTextWidget(
+          size: 10,
+          color: Colors.black,
+          text: "Carbohidratos: ${model.carbohydrates.toStringAsFixed(2)}",
+        ),
+      );
+      resultList.add(car);
+    }
+
+    if (model.proteins > 0) {
+      final pro = Chip(
+        label: TXTextWidget(
+          size: 10,
+          color: Colors.black,
+          text: "Proteinas: ${model.proteins.toStringAsFixed(2)}",
+        ),
+      );
+      resultList.add(pro);
+    }
+
+    if (model.fat > 0) {
+      final fat = Chip(
+        label: TXTextWidget(
+          size: 10,
+          color: Colors.black,
+          text: "Grasas: ${model.fat.toStringAsFixed(2)}",
+        ),
+      );
+      resultList.add(fat);
+    }
+
+    if (model.fiber > 0) {
+      final fib = Chip(
+        label: TXTextWidget(
+          size: 10,
+          color: Colors.black,
+          text: "Fibras ${model.fiber.toStringAsFixed(2)}",
+        ),
+      );
+      resultList.add(fib);
+    }
+
+    return resultList;
+  }
+
+  List<Widget> _getFoods(DailyActivityFoodModel dailyActivityFoodModel,
+      List<FoodModel> modelList) {
     List<Widget> list = [];
     modelList.forEach((model) {
       final w = ListTile(
+        contentPadding: EdgeInsets.only(left: 10, right: 10),
         leading: TXNetworkImage(
-          width: 60,
-          height: 60,
+          width: 40,
+          height: 40,
           imageUrl: model.image,
           placeholderImage: R.image.logo,
         ),
         title: TXTextWidget(
           text: model.name,
         ),
+        trailing: TXIconButtonWidget(
+          onPressed: () {
+            modelList.remove(model);
+            dailyActivityFoodModel.isExpanded = modelList.isNotEmpty;
+            bloc.setFoodList(dailyActivityFoodModel);
+          },
+          icon: Icon(
+            Icons.close,
+            color: R.color.primary_color,
+          ),
+        ),
       );
+      list.add(Container(
+        width: double.infinity,
+        height: .2,
+        color: R.color.gray,
+        margin: EdgeInsets.only(left: 10),
+      ));
       list.add(w);
     });
     return list;

@@ -1,5 +1,43 @@
 import 'package:mismedidasb/utils/calendar_utils.dart';
 
+class DailyFoodPlanModel {
+  DateTime dateTime;
+  double dailyKCal;
+  double imc;
+
+  DailyFoodPlanModel({this.dateTime, this.dailyKCal = 1, this.imc = 1});
+
+  double get breakFastCalVal => dailyKCal * 20 / 100;
+
+  double get snack1CalVal => dailyKCal * 5 / 100;
+
+  double get lunchCalVal => dailyKCal * 53 / 100;
+
+  double get snack2CalVal => dailyKCal * 5 / 100;
+
+  double get dinnerCalVal => dailyKCal * 25 / 100;
+
+  String get breakfastCalStr => "$breakFastCalVal calorías";
+
+  String get snack1CalStr => "$snack1CalVal calorías";
+
+  String get lunchCalStr => "$lunchCalVal calorías";
+
+  String get snack2CalStr => "$snack2CalVal calorías";
+
+  String get dinnerCalStr => "$dinnerCalVal calorías";
+
+  String get imcStr => "Índice de masa corporal ${imc.toStringAsFixed(2)}";
+
+  String get kCalStr => "Calorías diarias $dailyKCal";
+
+  String get kCalRange => imc <= 18.5
+      ? "Calorías entre $dailyKCal <-> ${dailyKCal + 500}"
+      : (imc > 18.5 && imc < 25
+          ? "Calorías entre ${dailyKCal - 100} <-> ${dailyKCal + 100}"
+          : "Calorías entre $dailyKCal <-> ${dailyKCal - 500}");
+}
+
 class DailyFoodModel {
   DateTime dateTime;
   List<DailyActivityFoodModel> dailyActivityFoodModel;
@@ -17,56 +55,32 @@ class DailyFoodModel {
 class DailyActivityFoodModel {
   int id;
   String name;
-  List<FoodGroupModel> foodGroupList;
-  bool isExpanded;
-
-  DailyActivityFoodModel(
-      {this.id, this.name, this.foodGroupList, this.isExpanded = false});
-
-  static List<DailyActivityFoodModel> getDailyActivityFoodModelList() {
-    return [
-      DailyActivityFoodModel(
-          id: 1,
-          name: "Desayuno",
-          foodGroupList: FoodGroupModel.getFoodGroupModel()),
-      DailyActivityFoodModel(
-          id: 2,
-          name: "Merienda",
-          foodGroupList: FoodGroupModel.getFoodGroupModel()),
-      DailyActivityFoodModel(
-          id: 3,
-          name: "Almuerzo",
-          foodGroupList: FoodGroupModel.getFoodGroupModel()),
-      DailyActivityFoodModel(
-          id: 4,
-          name: "Merienda",
-          foodGroupList: FoodGroupModel.getFoodGroupModel()),
-      DailyActivityFoodModel(
-          id: 5,
-          name: "Cena",
-          foodGroupList: FoodGroupModel.getFoodGroupModel()),
-    ];
-  }
-}
-
-class FoodGroupModel {
-  int id;
-  String name;
   List<FoodModel> foods;
   bool isExpanded;
+  double calories;
+  double carbohydrates;
+  double proteins;
+  double fat;
+  double fiber;
 
-  FoodGroupModel(
+  DailyActivityFoodModel(
       {this.id,
       this.name,
       this.foods,
-      this.isExpanded = false});
+      this.isExpanded = false,
+      this.calories = 0,
+      this.carbohydrates = 0,
+      this.proteins = 0,
+      this.fat = 0,
+      this.fiber = 0});
 
-  static List<FoodGroupModel> getFoodGroupModel() {
+  static List<DailyActivityFoodModel> getDailyActivityFoodModelList() {
     return [
-      FoodGroupModel(id: 1, name: "Proteinas", foods: [], isExpanded: false),
-      FoodGroupModel(id: 1, name: "Vegetales", foods: [], isExpanded: false),
-      FoodGroupModel(id: 1, name: "Fibras", foods: [], isExpanded: false),
-      FoodGroupModel(id: 1, name: "Bebidas", foods: [], isExpanded: false)
+      DailyActivityFoodModel(id: 1, name: "Desayuno", foods: []),
+      DailyActivityFoodModel(id: 2, name: "Merienda", foods: []),
+      DailyActivityFoodModel(id: 3, name: "Almuerzo", foods: []),
+      DailyActivityFoodModel(id: 4, name: "Merienda", foods: []),
+      DailyActivityFoodModel(id: 5, name: "Cena", foods: []),
     ];
   }
 }
@@ -74,31 +88,37 @@ class FoodGroupModel {
 class FoodModel {
   int id;
   String name;
-  int calories;
+  double calories;
   double carbohydrates;
   double proteins;
   double fat;
   double fiber;
   String image;
   String imageMimeType;
-  List<FoodTagModel> tags;
+  bool isSelected;
+  List<TagModel> tags;
 
-  FoodModel(
-      {this.id,
-      this.name,
-      this.calories,
-      this.carbohydrates,
-      this.proteins,
-      this.fat,
-      this.fiber,
-        this.image,
-        this.imageMimeType,
-      this.tags});
+  TagModel get tag => tags.isNotEmpty ? tags[0] : TagModel();
+
+  FoodModel({
+    this.id,
+    this.name,
+    this.calories,
+    this.carbohydrates,
+    this.proteins,
+    this.fat,
+    this.fiber,
+    this.image,
+    this.imageMimeType,
+    this.tags,
+    this.isSelected = false,
+  });
 }
 
-class FoodTagModel {
+class TagModel {
   int id;
   String name;
+  bool isSelected;
 
-  FoodTagModel({this.id, this.name});
+  TagModel({this.id, this.name, this.isSelected = true});
 }

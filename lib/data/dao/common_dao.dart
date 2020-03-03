@@ -11,8 +11,10 @@ class CommonDao implements ICommonDao {
   Future<bool> cleanDB() async {
     try {
       await _appDatabase.deleteAll(DBConstants.food_table);
+      await _appDatabase.deleteAll(DBConstants.food_tag_table);
       await _appDatabase.deleteAll(DBConstants.daily_food_activity_table);
       await _appDatabase.deleteAll(DBConstants.measure_health_table);
+      await _appDatabase.deleteAll(DBConstants.health_result_table);
 
       ///Add here all lines for complete data remove by each table...
       return true;

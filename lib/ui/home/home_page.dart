@@ -85,8 +85,14 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
                   context: context,
                   icon: Icons.local_offer,
                   title: R.string.foodDishes,
-                  onTap: () {
-                    NavigationUtils.push(context, FoodDishPage());
+                  onTap: () async {
+                    final res = await bloc.canNavigateToFoodPage();
+                    if (res)
+                      NavigationUtils.push(context, FoodDishPage());
+                    else
+                      Fluttertoast.showToast(
+                          msg:
+                              "Debe completar el cuestionario de Medidas de Salud");
                   }),
               _getHomeButton(
                   context: context,

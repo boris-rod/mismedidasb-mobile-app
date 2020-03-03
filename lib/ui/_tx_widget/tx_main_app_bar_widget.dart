@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_icon_button_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
 
 class TXMainAppBarWidget extends StatelessWidget {
   final Widget body;
@@ -27,9 +28,10 @@ class TXMainAppBarWidget extends StatelessWidget {
             TXIconButtonWidget(
               icon: Image.asset(R.image.logo),
             ),
-        title: Text(
-          title,
-          style: TextStyle(color: Colors.white, fontSize: 18),
+        title: TXTextWidget(
+          text: title,
+          color: Colors.white,
+          size: 18,
         ),
         actions: actions,
       ),

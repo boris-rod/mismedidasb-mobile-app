@@ -23,4 +23,16 @@ class DishApi extends BaseApi implements IDishApi {
     } else
       throw serverException(res);
   }
+
+  @override
+  Future<List<TagModel>> getTagList() async {
+    final res = await _networkHandler.get(path: Endpoint.dish_tags);
+    if (res.statusCode == RemoteConstants.code_success) {
+      Iterable l = json.decode(res.body)[RemoteConstants.result];
+      return l
+          .map((model) => _foodConverter.fromJsonFoodTagModel(model))
+          .toList();
+    } else
+      throw serverException(res);
+  }
 }

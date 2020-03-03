@@ -4,6 +4,7 @@ import 'package:mismedidasb/domain/dish/dish_model.dart';
 import 'package:mismedidasb/domain/dish/i_dish_api.dart';
 import 'package:mismedidasb/domain/dish/i_dish_dao.dart';
 import 'package:mismedidasb/domain/dish/i_dish_repository.dart';
+import 'package:mismedidasb/domain/personal_data/i_personal_data_dao.dart';
 import 'package:mismedidasb/utils/calendar_utils.dart';
 
 class DishRepository extends BaseRepository implements IDishRepository {
@@ -19,7 +20,8 @@ class DishRepository extends BaseRepository implements IDishRepository {
       List<FoodModel> list = [];
       if (!forceReload) {
         list = await _iDishDao.getFoodModeList();
-      } else {
+      }
+      if(list.isEmpty){
         list = await _dishApi.getFoodModelList();
         final rem = await _iDishDao.clearFoodModelList();
         final saved = await _iDishDao.saveFoodModelList(list);
@@ -44,6 +46,24 @@ class DishRepository extends BaseRepository implements IDishRepository {
       return model;
     } catch (ex) {
       return DailyFoodModel.getDailyFoodModel();
+    }
+  }
+
+  @override
+  Future<Result<List<TagModel>>> getTagList({bool forceReload: false}) async {
+    try {
+      List<TagModel> list = [];
+      if (!forceReload) {
+        list = await _iDishDao.getFoodTagList();
+      }
+      if (list.isEmpty) {
+        list = await _dishApi.getTagList();
+        final rem = await _iDishDao.clearFoodTagList();
+        final saved = await _iDishDao.saveFoodTagList(list);
+      }
+      return Result.success(value: list);
+    } catch (ex) {
+      return resultError(ex);
     }
   }
 }

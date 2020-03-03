@@ -84,8 +84,7 @@ class DishDao extends IDishDao {
       list.forEach((model) async {
         final map = {
           DBConstants.id_key: model.id,
-          DBConstants.data_key:
-              json.encode(_foodConverter.toJsonFoodModel(model)),
+          DBConstants.data_key:jsonEncode(_foodConverter.toJsonFoodModel(model)),
           DBConstants.parent_key: model.id,
         };
         await db.insert(DBConstants.food_table, map,
@@ -109,8 +108,48 @@ class DishDao extends IDishDao {
   }
 
   @override
-  Future<List<FoodModel>> getFoodModelList() {
-    // TODO: implement getFoodModelList
-    return null;
+  Future<List<TagModel>> getFoodTagList() async {
+    List<TagModel> list = [];
+    try {
+      Database db = await _appDatabase.db;
+      final data = await db.query(DBConstants.food_tag_table);
+      data.forEach((map) {
+        final value = map[DBConstants.data_key];
+        final TagModel obj =
+            _foodConverter.fromJsonFoodTagModel(jsonDecode(value));
+        list.add(obj);
+      });
+    } catch (ex) {}
+    return list;
+  }
+
+  @override
+  Future<bool> saveFoodTagList(List<TagModel> list) async {
+    try {
+      Database db = await _appDatabase.db;
+      list.forEach((model) async {
+        final map = {
+          DBConstants.id_key: model.id,
+          DBConstants.data_key:jsonEncode(_foodConverter.toJsonFoodModelTag(model)),
+          DBConstants.parent_key: model.id,
+        };
+        await db.insert(DBConstants.food_tag_table, map,
+            conflictAlgorithm: ConflictAlgorithm.replace);
+      });
+      return true;
+    } catch (ex) {
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> clearFoodTagList() async {
+    try {
+      Database db = await _appDatabase.db;
+      await db.delete(DBConstants.food_tag_table);
+      return true;
+    } catch (ex) {
+      return false;
+    }
   }
 }

@@ -1,7 +1,14 @@
 import 'package:mismedidasb/ui/measure_health/health_measure_result_model.dart';
 
 class HealthResult {
-  static String getResult(HealthMeasureResultModel model) {
+  double imc;
+  double tmb;
+  double kCal;
+  String result;
+
+  HealthResult({this.imc = 1, this.tmb = 1, this.kCal = 1, this.result = ""});
+
+  static HealthResult getResult(HealthMeasureResultModel model) {
     String result = "";
 
     final IMC = model.weight.toDouble() / ((model.height.toDouble() / 100) * ((model.height.toDouble() / 100)));
@@ -620,6 +627,6 @@ class HealthResult {
     }
 
     result = model.result;
-    return result;
+    return HealthResult(imc: IMC, tmb: TMB_PROV, kCal: dailyKalDouble, result: result);
   }
 }

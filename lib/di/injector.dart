@@ -20,8 +20,9 @@ import 'package:mismedidasb/data/converter/question_converter.dart';
 import 'package:mismedidasb/data/converter/session_converter.dart';
 import 'package:mismedidasb/data/converter/user_converter.dart';
 import 'package:mismedidasb/data/dao/_base/app_database.dart';
-import 'package:mismedidasb/data/dao/_base/dish_dao.dart';
+import 'package:mismedidasb/data/dao/dish_dao.dart';
 import 'package:mismedidasb/data/dao/common_dao.dart';
+import 'package:mismedidasb/data/dao/personal_data_dao.dart';
 import 'package:mismedidasb/data/repository/account_repository.dart';
 import 'package:mismedidasb/data/repository/answer_repository.dart';
 import 'package:mismedidasb/data/repository/dish_repository.dart';
@@ -47,6 +48,7 @@ import 'package:mismedidasb/domain/health_concept/i_health_concept_converter.dar
 import 'package:mismedidasb/domain/health_concept/i_health_concept_repository.dart';
 import 'package:mismedidasb/domain/personal_data/i_personal_data_api.dart';
 import 'package:mismedidasb/domain/personal_data/i_personal_data_converter.dart';
+import 'package:mismedidasb/domain/personal_data/i_personal_data_dao.dart';
 import 'package:mismedidasb/domain/personal_data/i_personal_data_repository.dart';
 import 'package:mismedidasb/domain/poll_model/i_poll_api.dart';
 import 'package:mismedidasb/domain/poll_model/i_poll_converter.dart';
@@ -62,6 +64,7 @@ import 'package:mismedidasb/domain/user/i_user_converter.dart';
 import 'package:mismedidasb/domain/user/i_user_repository.dart';
 import 'package:mismedidasb/ui/_base/bloc_base.dart';
 import 'package:mismedidasb/ui/change_password/change_password_bloc.dart';
+import 'package:mismedidasb/ui/food/food_bloc.dart';
 import 'package:mismedidasb/ui/food_dish/food_dish_bloc.dart';
 import 'package:mismedidasb/ui/habit/habit_bloc.dart';
 import 'package:mismedidasb/ui/home/home_bloc.dart';
@@ -201,6 +204,9 @@ class Injector {
 
     container.registerSingleton<IDishDao, DishDao>(
         (c) => DishDao(container.resolve(), container.resolve()));
+
+    container.registerSingleton<IPersonalDataDao, PersonalDataDao>(
+            (c) => PersonalDataDao(container.resolve(), container.resolve()));
   }
 
   _registerRepositoryLayer() {
@@ -222,7 +228,7 @@ class Injector {
 
     container
         .registerSingleton<IPersonalDataRepository, PersonalDataRepository>(
-            (c) => PersonalDataRepository(container.resolve()));
+            (c) => PersonalDataRepository(container.resolve(), container.resolve()));
 
     container.registerSingleton<IPollRepository, PollRepository>(
         (c) => PollRepository(container.resolve()));
@@ -242,12 +248,13 @@ class Injector {
     container.registerFactory((c) => RecoverPasswordBloC(container.resolve()));
     container.registerFactory((c) => RegisterBloC(
         container.resolve(), container.resolve(), container.resolve()));
-    container.registerFactory((c) => HomeBloC());
+    container.registerFactory((c) => HomeBloC(container.resolve()));
     container.registerFactory((c) => HabitBloC());
-    container.registerFactory((c) => MeasureHealthBloC());
+    container.registerFactory((c) => MeasureHealthBloC(container.resolve()));
     container.registerFactory((c) => MeasureValueBloC());
     container.registerFactory((c) => MeasureWellnessBloC());
-    container.registerFactory((c) => FoodDishBloC(c.resolve()));
+    container.registerFactory((c) => FoodDishBloC(c.resolve(), c.resolve()));
+    container.registerFactory((c) => FoodBloC(c.resolve()));
     container.registerFactory(
         (c) => ChangePasswordBloC(container.resolve(), container.resolve()));
     container.registerFactory((c) => ProfileBloC(container.resolve(),

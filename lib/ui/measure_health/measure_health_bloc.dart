@@ -1,4 +1,5 @@
 import 'package:mismedidasb/domain/answer/answer_model.dart';
+import 'package:mismedidasb/domain/personal_data/i_personal_data_repository.dart';
 import 'package:mismedidasb/domain/question/question_model.dart';
 import 'package:mismedidasb/ui/_base/bloc_base.dart';
 import 'package:mismedidasb/ui/_base/bloc_error_handler.dart';
@@ -9,7 +10,12 @@ import 'package:rxdart/subjects.dart';
 import 'package:mismedidasb/utils/extensions.dart';
 
 class MeasureHealthBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
+  final IPersonalDataRepository _iPersonalDataRepository;
+
+  MeasureHealthBloC(this._iPersonalDataRepository);
+
   BehaviorSubject<int> _pageController = new BehaviorSubject();
+
 
   Stream<int> get pageResult => _pageController.stream;
 
@@ -79,15 +85,11 @@ class MeasureHealthBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     _measureController.sinkAddSafe(healthMeasureResultModel);
   }
 
-  void setResult()async{
-    HealthResult.getResult(healthMeasureResultModel);
-    _measureController.sinkAddSafe(healthMeasureResultModel);
-  }
-
   void changePage(bool isNext) async {
     if (isNext && currentPage < 3) {
       if (currentPage == 2) {
-        HealthResult.getResult(healthMeasureResultModel);
+        final HealthResult result = HealthResult.getResult(healthMeasureResultModel);
+        await _iPersonalDataRepository.saveHealthResult(result);
         _measureController.sinkAddSafe(healthMeasureResultModel);
       }
       currentPage += 1;

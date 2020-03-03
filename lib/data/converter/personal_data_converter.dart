@@ -1,6 +1,7 @@
 import 'package:mismedidasb/data/api/remote/remote_constanst.dart';
 import 'package:mismedidasb/domain/personal_data/i_personal_data_converter.dart';
 import 'package:mismedidasb/domain/personal_data/personal_data_model.dart';
+import 'package:mismedidasb/ui/measure_health/health_result.dart';
 
 class PersonalDataConverter implements IPersonalDataConverter {
   @override
@@ -14,5 +15,24 @@ class PersonalDataConverter implements IPersonalDataConverter {
       type: json[RemoteConstants.type],
       typeId: json[RemoteConstants.type_id],
     );
+  }
+
+  @override
+  HealthResult fromJsonHealthResult(Map<String, dynamic> json) {
+    return HealthResult(
+        imc: json["imc"],
+        tmb: json["tmb"],
+        kCal: json["kCal"],
+        result: json["result"]);
+  }
+
+  @override
+  Map<String, dynamic> toJsonHealthResult(HealthResult model) {
+    return {
+      "imc": model.imc,
+      "tmb": model.tmb,
+      "kCal": model.kCal,
+      "result": model.result
+    };
   }
 }
