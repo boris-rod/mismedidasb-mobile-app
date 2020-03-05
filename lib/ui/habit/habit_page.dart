@@ -63,6 +63,7 @@ class _HabitState extends StateWithBloC<HabitPage, HabitBloC> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 TXTextWidget(
+                                  textAlign: TextAlign.justify,
                                   text: habit.title,
                                   color: R.color.primary_color,
                                 ),
@@ -72,8 +73,10 @@ class _HabitState extends StateWithBloC<HabitPage, HabitBloC> {
                                   itemBuilder: (context, subIndex) {
                                     final subTitle = habit.subtitle[subIndex];
                                     return Container(
+                                      padding: EdgeInsets.only(left: 10),
                                       child: TXTextWidget(
-                                        text: subTitle,
+                                        text: "- $subTitle",
+                                        textAlign: TextAlign.justify,
                                         color: R.color.accent_color,
                                       ),
                                     );

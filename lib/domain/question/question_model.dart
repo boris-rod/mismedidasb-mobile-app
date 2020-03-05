@@ -100,52 +100,52 @@ class QuestionModel {
           id: 15,
           pollId: 4,
           order: 1,
-          title: "Conformmismo / Obediencia"),
+          title: "Tendencia hacia el control de acciones, inclinaciones o impulsos que puedan perturbar o dañar a otros, violar las normas o un comportamiento socialmente esperado."),
       QuestionModel(
           id: 16,
           pollId: 4,
           order: 2,
-          title: "Aceptar las costumbres y tradiciones"),
+          title: "Orientación hacia el respeto, compromiso y aceptación de las costumbres y las ideas promovidas por la propia cultura o religión."),
       QuestionModel(
           id: 17,
           pollId: 4,
           order: 3,
-          title: "Benevolencia / Servicio / Compasión"),
+          title: "Orientación hacia el cuidado del bienestar de aquellos con los que se tiene un contacto interpersonal frecuente."),
       QuestionModel(
           id: 18,
           pollId: 4,
           order: 4,
-          title: "Proteger la naturaleza y la vida"),
+          title: "Orientación hacia la comprensión, apreciación, tolerancia y protección del bienestar de todas las personas y la naturaleza."),
       QuestionModel(
           id: 19,
           pollId: 4,
           order: 5,
-          title: "Independencia / Creatividad"),
+          title: "Orientación hacia la independencia de pensamiento y acción, para elegir, crear y explorar."),
       QuestionModel(
           id: 20,
           pollId: 4,
           order: 6,
-          title: "Riesgo / Aventura"),
+          title: "Orientación hacia la búsqueda constante de vivencias novedosas, excitantes y retos."),
       QuestionModel(
           id: 21,
           pollId: 4,
           order: 7,
-          title: "Placer / Disfrute / Ocio"),
+          title: "Orientación hacia el placer y la gratificación sensorial."),
       QuestionModel(
           id: 22,
           pollId: 4,
           order: 8,
-          title: "Trabajo / Esfuerzo / Sacrificio"),
+          title: "Orientación hacia el éxito individual mediante la demostración de competencias, adecuadas con los estándares sociales."),
       QuestionModel(
           id: 23,
           pollId: 4,
           order: 9,
-          title: "Estatus / Prestigio"),
+          title: "Orientación hacia la búsqueda de estatus social y prestigio, implica ejercer el control o la dominación sobre personas y recursos."),
       QuestionModel(
           id: 23,
           pollId: 4,
           order: 9,
-          title: "Segurida / Armonia / Estabilidad"),
+          title: "Orientación hacia la búsqueda de seguridad, armonía y estabilidad tanto individual como en las relaciones interpersonales."),
     ];
 
     return list;

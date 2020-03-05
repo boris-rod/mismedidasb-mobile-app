@@ -8,7 +8,6 @@ import 'package:rxdart/subjects.dart';
 import 'package:mismedidasb/utils/extensions.dart';
 
 class MeasureValueBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
-
   BehaviorSubject<int> _pageController = new BehaviorSubject();
 
   Stream<int> get pageResult => _pageController.stream;
@@ -29,14 +28,15 @@ class MeasureValueBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
           question: q, answers: answers, selectedAnswer: answers[0]);
       valueResultModel.values.add(measureW);
     });
-    valueResultModel.results =
-        ValueResult.getResult(valueResultModel);
+    valueResultModel.results = ValueResult.getResult(valueResultModel);
   }
 
-  void setAnswerValue(int questionIndex, AnswerModel answer) async {
-    valueResultModel.values[questionIndex].selectedAnswer = answer;
-    valueResultModel.results =
-        ValueResult.getResult(valueResultModel);
+  void setAnswerValue(int questionIndex, int answerId) async {
+    valueResultModel.values[questionIndex].selectedAnswer = valueResultModel
+        .values[questionIndex].answers
+        .firstWhere((a) => a.id == answerId);
+    valueResultModel.results = ValueResult.getResult(valueResultModel);
+    _pageController.sinkAddSafe(currentPage);
   }
 
   void changePage(int value) async {
@@ -57,6 +57,13 @@ class MeasureValueBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     } catch (ex) {
       onError(ex);
     }
+  }
+
+  void saveMeasures()async{
+    isLoading = true;
+    Future.delayed(Duration(seconds: 2), (){
+      isLoading = false;
+    });
   }
 
   @override

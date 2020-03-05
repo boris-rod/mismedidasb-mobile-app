@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:mismedidasb/domain/single_selection_model.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/res/values/colors.dart';
 import 'package:mismedidasb/ui/_base/bloc_state.dart';
 import 'package:mismedidasb/ui/_base/navigation_utils.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_background_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_bottom_sheet.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_bottomsheet_selector_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_buttons_paginate_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_icon_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';
@@ -50,31 +53,57 @@ class _MeasureWellnessState
               return TXBackgroundWidget(
                 child: Column(
                   children: <Widget>[
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      child: TXTextWidget(
+                        color: R.color.primary_color,
+                        textAlign: TextAlign.justify,
+                        text:
+                            "Las medidas de bienestar...",
+                      ),
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    TXTextWidget(
+                      color: R.color.gray,
+                      textAlign: TextAlign.justify,
+                      text:
+                          "${bloc.currentPage + 1} / ${bloc.wellnessResultModel.wellness.length}",
+                    ),
                     Expanded(
                       child: PageView.builder(
                         physics: NeverScrollableScrollPhysics(),
                         itemBuilder: (ctx, index) {
-                          if (index ==
-                              bloc.wellnessResultModel.wellness.length) {
-                            return _getPageViewResult(ctx);
-                          } else {
-                            final model =
-                                bloc.wellnessResultModel.wellness[index];
-                            return _getPageView(ctx, model, index);
-                          }
+                          final model =
+                              bloc.wellnessResultModel.wellness[index];
+                          return _getPageView(ctx, model, index);
                         },
                         controller: pageController,
-                        itemCount: bloc.wellnessResultModel.wellness.length + 1,
+                        itemCount: bloc.wellnessResultModel.wellness.length,
                       ),
                     ),
                     Container(
                       child: TXButtonPaginateWidget(
-                        onNext: snapshot.data ==
-                                bloc.wellnessResultModel.wellness.length
-                            ? null
-                            : () {
-                                bloc.changePage(1);
-                              },
+                        onNext: () {
+                          snapshot.data ==
+                                  bloc.wellnessResultModel.wellness.length - 1
+                              ? showTXModalBottomSheet(
+                                  context: context,
+                                  builder: (ctx) {
+                                    bloc.saveMeasures();
+                                    return Container(
+                                      height: 300,
+                                      child: TXTextWidget(
+                                        text: "Gracias",
+                                      ),
+                                    );
+                                  })
+                              : bloc.changePage(1);
+                        },
                         onPrevious: snapshot.data > 0
                             ? () {
                                 bloc.changePage(-1);
@@ -100,81 +129,30 @@ class _MeasureWellnessState
     );
   }
 
-  Widget _getPageViewResult(BuildContext context) {
+  Widget _getPageView(
+      BuildContext context, MeasureWellnessModel model, int pageIndex) {
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Container(
-            width: double.infinity,
             alignment: Alignment.center,
             padding: EdgeInsets.all(20),
             child: TXTextWidget(
-              textAlign: TextAlign.center,
-              text: bloc.wellnessResultModel.result[0],
-              size: 20,
+              text: model.question.title,
+              textAlign: TextAlign.justify,
+              size: 16,
             ),
           ),
-          Expanded(
-            child: ListView.builder(
-              itemBuilder: (ctx, index) {
-                final model = bloc.wellnessResultModel.result[index + 1];
-                return Container(
-                  padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                  child: TXTextWidget(
-                    text: model,
-                  ),
-                );
-              },
-              itemCount: bloc.wellnessResultModel.result.length - 1,
-            ),
-          )
+          TXBottomSheetSelectorWidget(
+            list: SingleSelectionModel.getWellness(),
+            onItemSelected: (value) {
+              bloc.setAnswerValue(pageIndex, value.id);
+            },
+            title: "Respuesta",
+            initialId: model.selectedAnswer.id,
+          ),
         ],
-      ),
-    );
-  }
-
-  Widget _getPageView(
-      BuildContext context, MeasureWellnessModel model, int pageIndex) {
-    return Container(
-      child: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            Container(
-              padding: EdgeInsets.all(20),
-              child: TXTextWidget(
-                textAlign: TextAlign.center,
-                text: model.question.title,
-                size: 20,
-              ),
-            ),
-            ListView(
-              physics: BouncingScrollPhysics(),
-              shrinkWrap: true,
-              children: model.answers
-                  .map((m) => Column(
-                children: <Widget>[
-                  RadioListTile(
-                    groupValue: model.selectedAnswer.weight,
-                    title: TXTextWidget(
-                      text: m.title,
-                    ),
-                    value: m.weight,
-                    onChanged: (val) {
-                      setState(() {
-                        bloc.setAnswerValue(pageIndex, m);
-                      });
-                    },
-                  ),
-                  Divider(
-                    height: 1,
-                  ),
-                ],
-              ))
-                  .toList(),
-            )
-          ],
-        ),
       ),
     );
   }

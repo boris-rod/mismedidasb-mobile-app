@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mismedidasb/domain/single_selection_model.dart';
+import 'package:mismedidasb/res/R.dart';
+import 'package:mismedidasb/ui/_base/navigation_utils.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_textlink_widget.dart';
 import 'package:sqflite/utils/utils.dart';
 
 class TXCupertinoPickerWidget extends StatelessWidget {
@@ -24,32 +27,52 @@ class TXCupertinoPickerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     int index = list.firstWhere((ele) {
-      return ele.id == initialId;
-    }, orElse: () {
-      return null;
-    })?.index;
-
+          return ele.id == initialId;
+        }, orElse: () {
+          return null;
+        })?.index ??
+        0;
+    SingleSelectionModel current = list[index];
     return Container(
       height: height,
       child: Column(
         children: <Widget>[
           Container(
-            color: Colors.white,
-            padding: EdgeInsets.only(left: 10, top: 10),
+            padding: EdgeInsets.only(left: 10),
             alignment: Alignment.topLeft,
-            child: TXTextWidget(
-              text: title ?? "",
-              size: 18,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Expanded(
+                  child: TXTextWidget(
+                    text: title ?? "",
+                    maxLines: 2,
+                    textOverflow: TextOverflow.ellipsis,
+                    size: 18,
+                  ),
+                ),
+                Container(
+                  width: 50,
+                  child: TXTextLinkWidget(
+                    title: R.string.ok,
+                    textColor: R.color.primary_color,
+                    onTap: () {
+                      if (onItemSelected != null) onItemSelected(current);
+                      NavigationUtils.pop(context);
+                    },
+                  ),
+                )
+              ],
             ),
           ),
           Expanded(
             child: CupertinoPicker(
               scrollController:
-                  FixedExtentScrollController(initialItem: index ?? 0),
+              FixedExtentScrollController(initialItem: index ?? 0),
               itemExtent: 30,
               backgroundColor: Colors.white,
               onSelectedItemChanged: (int index) {
-                if (onItemSelected != null) onItemSelected(list[index]);
+                current = list[index];
               },
               children: List<Widget>.generate(list.length, (int index) {
                 return Center(

@@ -13,7 +13,7 @@ class HabitBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
   void loadData() async {
     isLoading = true;
-    await Future.delayed(Duration(seconds: 1), () {
+    await Future.delayed(Duration(milliseconds: 500), () {
       List<HabitModel> list = HabitModel.getHabits();
       _habitsController.sinkAddSafe(list);
       isLoading = false;

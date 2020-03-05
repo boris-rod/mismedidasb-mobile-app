@@ -7,7 +7,7 @@ class HabitModel{
 
   static List<HabitModel> getHabits(){
     return [
-      HabitModel(id: 1, title: "Planifique 5 comidas por dia", subtitle: ["Desayuno/Merienda/Comida/Merienda/Cena."]),
+      HabitModel(id: 1, title: "1. Planifique 5 comidas por dia", subtitle: ["Desayuno/Merienda/Comida/Merienda/Cena."]),
       HabitModel(id: 2, title: "2. Distribuya su consumo calórico diario:", subtitle: ["50-60% Hidratos de Carbono.", "30-35% Grasas.", "10-15% Proteínas."]),
       HabitModel(id: 3, title: "3. Ingiera furtas y vegetales a diario:", subtitle: ["Ej. naranja, fresas, lechuga o tomate."]),
       HabitModel(id: 4, title: "4. Comea despacio y mastique bien los alimentos:", subtitle: ["Evite ver Tv o revisar el móvil mientras come."]),

@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:mismedidasb/domain/single_selection_model.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/bloc_state.dart';
 import 'package:mismedidasb/ui/_base/navigation_utils.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_background_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_bottom_sheet.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_bottomsheet_selector_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_buttons_paginate_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_icon_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';
@@ -50,29 +54,68 @@ class _MeasureValueState
                   icon: Icons.videogame_asset,
                   child: Column(
                     children: <Widget>[
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: TXTextWidget(
+                          color: R.color.primary_color,
+                          textAlign: TextAlign.justify,
+                          text:
+                              "Los valores son ideas o principios universales que dirigen nuestra conducta.",
+                        ),
+                      ),
+                      SizedBox(
+                        height: 35,
+                      ),
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: TXTextWidget(
+                          color: R.color.accent_color,
+                          textAlign: TextAlign.justify,
+                          text:
+                              "Por favor, indique grado de importancia otorga usted a los siguientes valores",
+                        ),
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      TXTextWidget(
+                        color: R.color.gray,
+                        textAlign: TextAlign.justify,
+                        text:
+                            "${bloc.currentPage + 1} / ${bloc.valueResultModel.values.length}",
+                      ),
                       Expanded(
                         child: PageView.builder(
                           physics: NeverScrollableScrollPhysics(),
                           itemBuilder: (ctx, index) {
-                            if (index == bloc.valueResultModel.values.length) {
-                              return _getPageViewResult(ctx);
-                            } else {
-                              final model = bloc.valueResultModel.values[index];
-                              return _getPageView(ctx, model, index);
-                            }
+                            final model = bloc.valueResultModel.values[index];
+                            return _getPageView(ctx, model, index);
                           },
                           controller: pageController,
-                          itemCount: bloc.valueResultModel.values.length + 1,
+                          itemCount: bloc.valueResultModel.values.length,
                         ),
                       ),
                       Container(
                         child: TXButtonPaginateWidget(
-                          onNext: snapshot.data ==
-                                  bloc.valueResultModel.values.length
-                              ? null
-                              : () {
-                                  bloc.changePage(1);
-                                },
+                          onNext: () {
+                            snapshot.data ==
+                                    bloc.valueResultModel.values.length - 1
+                                ? showTXModalBottomSheet(
+                                    context: context,
+                                    builder: (ctx) {
+                                      bloc.saveMeasures();
+                                      return Container(
+                                        height: 300,
+                                        child: TXTextWidget(
+                                          text: "Gracias",
+                                        ),
+                                      );
+                                    })
+                                : bloc.changePage(1);
+                          },
                           onPrevious: snapshot.data > 0
                               ? () {
                                   bloc.changePage(-1);
@@ -97,41 +140,6 @@ class _MeasureValueState
     );
   }
 
-  Widget _getPageViewResult(BuildContext context) {
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Container(
-            alignment: Alignment.center,
-            padding: EdgeInsets.all(20),
-            child: TXTextWidget(
-              text: R.string.valuesConcept,
-              size: 20,
-            ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemBuilder: (ctx, index) {
-                final model = bloc.valueResultModel.results[index];
-                return Container(
-                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                  child: TXTextWidget(
-                    text: model,
-                    color: index % 2 == 0
-                        ? R.color.primary_color
-                        : R.color.accent_color,
-                  ),
-                );
-              },
-              itemCount: bloc.valueResultModel.results.length,
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
   Widget _getPageView(
       BuildContext context, MeasureValueModel model, int pageIndex) {
     return Container(
@@ -143,36 +151,18 @@ class _MeasureValueState
             padding: EdgeInsets.all(20),
             child: TXTextWidget(
               text: model.question.title,
-              size: 20,
+              textAlign: TextAlign.justify,
+              size: 16,
             ),
           ),
-          Expanded(
-            child: ListView(
-              shrinkWrap: true,
-              physics: BouncingScrollPhysics(),
-              children: model.answers
-                  .map((m) => Column(
-                children: <Widget>[
-                  RadioListTile(
-                    groupValue: model.selectedAnswer.weight,
-                    title: TXTextWidget(
-                      text: m.title,
-                    ),
-                    value: m.weight,
-                    onChanged: (val) {
-                      setState(() {
-                        bloc.setAnswerValue(pageIndex, m);
-                      });
-                    },
-                  ),
-                  Divider(
-                    height: 1,
-                  ),
-                ],
-              ))
-                  .toList(),
-            ),
-          )
+          TXBottomSheetSelectorWidget(
+            list: SingleSelectionModel.getValues(),
+            onItemSelected: (value) {
+              bloc.setAnswerValue(pageIndex, value.id);
+            },
+            title: "Respuesta",
+            initialId: model.selectedAnswer.id,
+          ),
         ],
       ),
     );

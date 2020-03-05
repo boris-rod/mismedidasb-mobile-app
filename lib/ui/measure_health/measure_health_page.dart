@@ -9,6 +9,7 @@ import 'package:mismedidasb/ui/_base/bloc_state.dart';
 import 'package:mismedidasb/ui/_base/navigation_utils.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_background_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_bottom_sheet.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_bottomsheet_selector_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_buttons_paginate_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_cupertino_widget.dart';
@@ -56,6 +57,20 @@ class _MeasureHealthState
             icon: Icons.thumb_up,
             child: Column(
               children: <Widget>[
+                SizedBox(
+                  height: 30,
+                ),
+                StreamBuilder<int>(
+                  stream: bloc.pageResult,
+                  initialData: bloc.currentPage,
+                  builder: (context, snapshot) {
+                    return TXTextWidget(
+                      color: R.color.gray,
+                      textAlign: TextAlign.justify,
+                      text: "${snapshot.data + 1} / 3",
+                    );
+                  },
+                ),
                 Expanded(
                   child: PageView.builder(
                     physics: NeverScrollableScrollPhysics(),
@@ -78,11 +93,21 @@ class _MeasureHealthState
                     initialData: 0,
                     builder: (ctx, snapshot) {
                       return TXButtonPaginateWidget(
-                        onNext: snapshot.data == 3
-                            ? null
-                            : () {
-                                bloc.changePage(true);
-                              },
+                        onNext: () {
+                          snapshot.data == 2
+                              ? showTXModalBottomSheet(
+                                  context: context,
+                                  builder: (ctx) {
+                                    bloc.saveMeasures();
+                                    return Container(
+                                      height: 300,
+                                      child: TXTextWidget(
+                                        text: "Gracias",
+                                      ),
+                                    );
+                                  })
+                              : bloc.changePage(true);
+                        },
                         onPrevious: snapshot.data > 0
                             ? () {
                                 bloc.changePage(false);
@@ -124,111 +149,47 @@ class _MeasureHealthState
                     size: 20,
                   ),
                 ),
-                ListTile(
-                  trailing: Icon(Icons.arrow_forward_ios),
-                  onTap: () {
-                    showTXModalBottomSheet(
-                        context: context,
-                        builder: (ctx) {
-                          return TXCupertinoPickerWidget(
-                            height: 200,
-                            list: SingleSelectionModel.getAgeRange(),
-                            onItemSelected: (model) {
-                              bloc.setAge(model.id);
-                            },
-                            title: "Edad",
-                            initialId: bloc.healthMeasureResultModel.age,
-                          );
-                        });
+                TXBottomSheetSelectorWidget(
+                  list: SingleSelectionModel.getAgeRange(),
+                  onItemSelected: (model) {
+                    bloc.setAge(model.id);
                   },
-                  title: Container(
-                    padding: EdgeInsets.all(10),
-                    child: TXTextWidget(
-                      text: "Edad: ${snapshot.data.age}años",
-                    ),
-                  ),
+                  title: "Edad - (Años)",
+                  initialId: bloc.healthMeasureResultModel.age,
                 ),
                 Divider(
                   height: 1,
                 ),
-                ListTile(
-                  trailing: Icon(Icons.arrow_forward_ios),
-                  onTap: () {
-                    showTXModalBottomSheet(
-                        context: context,
-                        builder: (ctx) {
-                          return TXCupertinoPickerWidget(
-                            height: 200,
-                            list: SingleSelectionModel.getWeight(),
-                            onItemSelected: (model) {
-                              bloc.setWeight(model.id);
-                            },
-                            title: "Peso",
-                            initialId: bloc.healthMeasureResultModel.weight,
-                          );
-                        });
+                TXBottomSheetSelectorWidget(
+                  list: SingleSelectionModel.getWeight(),
+                  onItemSelected: (model) {
+                    bloc.setWeight(model.id);
                   },
-                  title: Container(
-                    padding: EdgeInsets.all(10),
-                    child: TXTextWidget(
-                      text: "Peso: ${snapshot.data.weight}kg",
-                    ),
-                  ),
+                  title: "Peso - (Kilogramos)",
+                  initialId: bloc.healthMeasureResultModel.weight,
                 ),
                 Divider(
                   height: 1,
                 ),
-                ListTile(
-                  trailing: Icon(Icons.arrow_forward_ios),
-                  onTap: () {
-                    showTXModalBottomSheet(
-                        context: context,
-                        builder: (ctx) {
-                          return TXCupertinoPickerWidget(
-                            height: 200,
-                            list: SingleSelectionModel.getHeight(),
-                            onItemSelected: (model) {
-                              bloc.setHeight(model.id);
-                            },
-                            title: "Talla",
-                            initialId: bloc.healthMeasureResultModel.height,
-                          );
-                        });
+                TXBottomSheetSelectorWidget(
+                  list: SingleSelectionModel.getHeight(),
+                  onItemSelected: (model) {
+                    bloc.setHeight(model.id);
                   },
-                  title: Container(
-                    padding: EdgeInsets.all(10),
-                    child: TXTextWidget(
-                      text: "Talla: ${snapshot.data.height}cm",
-                    ),
-                  ),
+                  title: "Estatura - (Centímetros)",
+                  initialId: bloc.healthMeasureResultModel.height,
                 ),
                 Divider(
                   height: 1,
                 ),
-                ListTile(
-                  trailing: Icon(Icons.arrow_forward_ios),
-                  onTap: () {
-                    showTXModalBottomSheet(
-                        context: context,
-                        builder: (ctx) {
-                          return TXCupertinoPickerWidget(
-                            height: 200,
-                            list: SingleSelectionModel.getSex(),
-                            onItemSelected: (model) {
-                              bloc.setSex(model.id);
-                            },
-                            title: "Sexo",
-                            initialId: bloc.healthMeasureResultModel.sex,
-                          );
-                        });
+                TXBottomSheetSelectorWidget(
+                  list: SingleSelectionModel.getSex(),
+                  bottomSheetHeight: 200,
+                  onItemSelected: (model) {
+                    bloc.setSex(model.id);
                   },
-                  title: Container(
-                    padding: EdgeInsets.all(10),
-                    child: TXTextWidget(
-                      text:
-                          "Sexo: ${snapshot.data.sex == 1 ? "Hombre" : "Mujer"}",
-                    ),
-                  ),
+                  title: "Sexo",
+                  initialId: bloc.healthMeasureResultModel.sex,
                 ),
                 Divider(
                   height: 1,
@@ -266,37 +227,14 @@ class _MeasureHealthState
                   final element = elementList[index];
                   return Column(
                     children: <Widget>[
-                      ListTile(
-                        trailing: Icon(Icons.arrow_forward_ios),
-                        onTap: () {
-                          showTXModalBottomSheet(
-                              context: context,
-                              builder: (ctx) {
-                                return TXCupertinoPickerWidget(
-                                  height: 200,
-                                  list: SingleSelectionModel
-                                      .getPhysicalExercise(),
-                                  onItemSelected: (model) {
-                                    bloc.setPhysicalExercise(
-                                        model.id, model.displayName);
-                                  },
-                                  title: poll.name,
-                                  initialId: bloc.healthMeasureResultModel
-                                      .physicalExercise,
-                                );
-                              });
+                      TXBottomSheetSelectorWidget(
+                        list: SingleSelectionModel.getPhysicalExercise(),
+                        onItemSelected: (model) {
+                          bloc.setPhysicalExercise(model.id, model.displayName);
                         },
-                        title: TXTextWidget(
-                          text: element.title,
-                        ),
-                        dense: true,
-                        subtitle: Container(
-                          child: TXTextWidget(
-                            text: snapshot.data.physicalExerciseValue,
-                            color: R.color.gray_darkest,
-                            size: 20,
-                          ),
-                        ),
+                        title: element.title,
+                        initialId:
+                            bloc.healthMeasureResultModel.physicalExercise,
                       ),
                       Divider(
                         height: 1,
@@ -339,36 +277,13 @@ class _MeasureHealthState
                   final element = elementList[index];
                   return Column(
                     children: <Widget>[
-                      ListTile(
-                        trailing: Icon(Icons.arrow_forward_ios),
-                        onTap: () {
-                          showTXModalBottomSheet(
-                              context: context,
-                              builder: (ctx) {
-                                return TXCupertinoPickerWidget(
-                                  height: 200,
-                                  list: SingleSelectionModel.getDiet(),
-                                  onItemSelected: (model) {
-                                    bloc.setDiet(
-                                        model.id, model.displayName, index);
-                                  },
-                                  title: poll.name,
-                                  initialId:
-                                      bloc.healthMeasureResultModel.diet[index],
-                                );
-                              });
+                      TXBottomSheetSelectorWidget(
+                        list: SingleSelectionModel.getDiet(),
+                        onItemSelected: (model) {
+                          bloc.setDiet(model.id, model.displayName, index);
                         },
-                        title: TXTextWidget(
-                          text: element.title,
-                        ),
-                        dense: true,
-                        subtitle: Container(
-                          child: TXTextWidget(
-                            text: snapshot.data.dietValue[index],
-                            color: R.color.gray_darkest,
-                            size: 20,
-                          ),
-                        ),
+                        title: element.title,
+                        initialId: bloc.healthMeasureResultModel.diet[index],
                       ),
                       Divider(
                         height: 1,

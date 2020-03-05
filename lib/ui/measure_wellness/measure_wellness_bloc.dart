@@ -34,10 +34,13 @@ class MeasureWellnessBloC
         WellnessResult.getResult(wellnessResultModel);
   }
 
-  void setAnswerValue(int questionIndex, AnswerModel answer) async {
-    wellnessResultModel.wellness[questionIndex].selectedAnswer = answer;
+  void setAnswerValue(int questionIndex, int answerId) async {
+    wellnessResultModel.wellness[questionIndex].selectedAnswer = wellnessResultModel
+        .wellness[questionIndex].answers
+        .firstWhere((a) => a.id == answerId);
     wellnessResultModel.result =
         WellnessResult.getResult(wellnessResultModel);
+    _pageController.sinkAddSafe(currentPage);
   }
 
   void changePage(int value) async {
@@ -58,6 +61,13 @@ class MeasureWellnessBloC
     } catch (ex) {
       onError(ex);
     }
+  }
+
+  void saveMeasures()async{
+    isLoading = true;
+    Future.delayed(Duration(seconds: 2), (){
+      isLoading = false;
+    });
   }
 
   @override

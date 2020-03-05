@@ -16,7 +16,6 @@ class MeasureHealthBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
   BehaviorSubject<int> _pageController = new BehaviorSubject();
 
-
   Stream<int> get pageResult => _pageController.stream;
 
   BehaviorSubject<HealthMeasureResultModel> _measureController =
@@ -25,7 +24,7 @@ class MeasureHealthBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   Stream<HealthMeasureResultModel> get measureResult =>
       _measureController.stream;
 
-    int currentPage = 0;
+  int currentPage = 0;
   HealthMeasureResultModel healthMeasureResultModel;
 
   void iniDataResult() {
@@ -34,9 +33,9 @@ class MeasureHealthBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
       final dietsQuestion = QuestionModel.getDiets();
       final exercises = AnswerModel.getPhysicalExercise();
       healthMeasureResultModel = HealthMeasureResultModel(
-          age: 18,
-          weight: 40,
-          height: 100,
+          age: 40,
+          weight: 70,
+          height: 170,
           sex: 1,
           physicalExercise: 1,
           physicalExerciseValue: exercises[0].title,
@@ -88,7 +87,8 @@ class MeasureHealthBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   void changePage(bool isNext) async {
     if (isNext && currentPage < 3) {
       if (currentPage == 2) {
-        final HealthResult result = HealthResult.getResult(healthMeasureResultModel);
+        final HealthResult result =
+            HealthResult.getResult(healthMeasureResultModel);
         await _iPersonalDataRepository.saveHealthResult(result);
         _measureController.sinkAddSafe(healthMeasureResultModel);
       }
@@ -108,6 +108,16 @@ class MeasureHealthBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     } catch (ex) {
       onError(ex);
     }
+  }
+
+  void saveMeasures() async {
+    isLoading = true;
+    final HealthResult result =
+        HealthResult.getResult(healthMeasureResultModel);
+    await _iPersonalDataRepository.saveHealthResult(result);
+    Future.delayed(Duration(seconds: 2), () {
+      isLoading = false;
+    });
   }
 
   @override

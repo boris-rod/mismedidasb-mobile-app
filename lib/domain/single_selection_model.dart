@@ -82,7 +82,7 @@ class SingleSelectionModel {
     int index = 0;
     AnswerModel.getAnswers().forEach((data) {
       list.add(SingleSelectionModel(
-          id: data.weight, index: index, displayName: data.title));
+          id: data.id, index: index, displayName: data.title));
       index += 1;
     });
     return list;
@@ -92,6 +92,17 @@ class SingleSelectionModel {
     List<SingleSelectionModel> list = [];
     int index = 0;
     AnswerModel.getAnswers2().forEach((data) {
+      list.add(SingleSelectionModel(
+          id: data.id, index: index, displayName: data.title));
+      index += 1;
+    });
+    return list;
+  }
+
+  static List<SingleSelectionModel> getMeasures() {
+    List<SingleSelectionModel> list = [];
+    int index = 0;
+    AnswerModel.getAnswers().forEach((data) {
       list.add(SingleSelectionModel(
           id: data.weight, index: index, displayName: data.title));
       index += 1;
