@@ -9,11 +9,11 @@ class DailyFoodPlanModel {
 
   double get breakFastCalVal => dailyKCal * 20 / 100;
 
-  double get snack1CalVal => dailyKCal * 5 / 100;
+  double get snack1CalVal => dailyKCal * 10 / 100;
 
-  double get lunchCalVal => dailyKCal * 53 / 100;
+  double get lunchCalVal => dailyKCal * 35 / 100;
 
-  double get snack2CalVal => dailyKCal * 5 / 100;
+  double get snack2CalVal => dailyKCal * 10 / 100;
 
   double get dinnerCalVal => dailyKCal * 25 / 100;
 

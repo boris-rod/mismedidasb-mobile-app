@@ -14,10 +14,22 @@ import 'package:mismedidasb/ui/_tx_widget/tx_network_image.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
 import 'package:mismedidasb/ui/food/food_page.dart';
 import 'package:mismedidasb/ui/food_dish/food_dish_bloc.dart';
+import 'package:charts_flutter/flutter.dart' as charts;
 
 class FoodDishPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _FoodDishState();
+}
+
+class SubscriberSeries {
+  final String year;
+  final int subscribers;
+  final charts.Color barColor;
+
+  SubscriberSeries(
+      {@required this.year,
+      @required this.subscribers,
+      @required this.barColor});
 }
 
 class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
@@ -29,6 +41,35 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
 
   @override
   Widget buildWidget(BuildContext context) {
+    final List<SubscriberSeries> data = [
+//      SubscriberSeries(
+//        year: "1",
+//        subscribers: 2,
+//        barColor: charts.ColorUtil.fromDartColor(Colors.blue),
+//      ),
+      SubscriberSeries(
+        year: "2",
+        subscribers: 12,
+        barColor: charts.ColorUtil.fromDartColor(R.color.accent_color),
+      ),
+      SubscriberSeries(
+        year: "2",
+        subscribers: 4,
+        barColor: charts.ColorUtil.fromDartColor(R.color.primary_color),
+      ),
+    ];
+
+    List<charts.Series<SubscriberSeries, String>> series = [
+      charts.Series(
+          id: "Subscribers",
+          data: data,
+          displayName: "Pie",
+          domainFn: (SubscriberSeries series, _) => series.year,
+          measureFn: (SubscriberSeries series, _) => series.subscribers,
+          colorFn: (SubscriberSeries series, _) => series.barColor)
+    ];
+
+    charts.SeriesLegend();
     return Stack(
       children: <Widget>[
         TXMainAppBarWidget(
@@ -60,6 +101,19 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: <Widget>[
+                                      Container(
+                                        padding: EdgeInsets.all(1),
+                                        height: 100,
+                                        width: 100,
+                                        child: charts.PieChart(
+                                          series,
+                                          layoutConfig: LayoutConfig(topMarginSpec: MarginSpec.fixedPixel(0),
+                                              leftMarginSpec: MarginSpec.fixedPixel(0),
+                                              rightMarginSpec: MarginSpec.fixedPixel(0),
+                                              bottomMarginSpec: MarginSpec.fixedPixel(0)),
+                                          animate: true,
+                                        ),
+                                      ),
                                       TXTextWidget(
                                         text: planModel.kCalStr,
                                       ),
