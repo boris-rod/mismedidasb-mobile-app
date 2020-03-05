@@ -1,11 +1,11 @@
+import 'package:mismedidasb/ui/measure_health/health_result.dart';
 import 'package:mismedidasb/utils/calendar_utils.dart';
 
 class DailyFoodPlanModel {
-  DateTime dateTime;
   double dailyKCal;
   double imc;
 
-  DailyFoodPlanModel({this.dateTime, this.dailyKCal = 1, this.imc = 1});
+  DailyFoodPlanModel({this.dailyKCal = 1, this.imc = 1});
 
   double get breakFastCalVal => dailyKCal * 20 / 100;
 
@@ -41,14 +41,19 @@ class DailyFoodPlanModel {
 class DailyFoodModel {
   DateTime dateTime;
   List<DailyActivityFoodModel> dailyActivityFoodModel;
+  DailyFoodPlanModel dailyFoodPlanModel;
 
-  DailyFoodModel({this.dateTime, this.dailyActivityFoodModel});
+  DailyFoodModel(
+      {this.dateTime, this.dailyActivityFoodModel, this.dailyFoodPlanModel});
 
-  static DailyFoodModel getDailyFoodModel() {
+  static DailyFoodModel getDailyFoodModel(HealthResult healthResult) {
+    final plan =
+        DailyFoodPlanModel(imc: healthResult.imc, dailyKCal: healthResult.kCal);
     return DailyFoodModel(
         dateTime: DateTime.now(),
+        dailyFoodPlanModel: plan,
         dailyActivityFoodModel:
-            DailyActivityFoodModel.getDailyActivityFoodModelList());
+            DailyActivityFoodModel.getDailyActivityFoodModelList(plan));
   }
 }
 
@@ -62,6 +67,7 @@ class DailyActivityFoodModel {
   double proteins;
   double fat;
   double fiber;
+  DailyFoodPlanModel plan;
 
   DailyActivityFoodModel(
       {this.id,
@@ -72,15 +78,22 @@ class DailyActivityFoodModel {
       this.carbohydrates = 0,
       this.proteins = 0,
       this.fat = 0,
-      this.fiber = 0});
+      this.fiber = 0,
+      this.plan});
 
-  static List<DailyActivityFoodModel> getDailyActivityFoodModelList() {
+  static List<DailyActivityFoodModel> getDailyActivityFoodModelList(
+      DailyFoodPlanModel dailyFoodPlanModel) {
     return [
-      DailyActivityFoodModel(id: 1, name: "Desayuno", foods: []),
-      DailyActivityFoodModel(id: 2, name: "Merienda", foods: []),
-      DailyActivityFoodModel(id: 3, name: "Almuerzo", foods: []),
-      DailyActivityFoodModel(id: 4, name: "Merienda", foods: []),
-      DailyActivityFoodModel(id: 5, name: "Cena", foods: []),
+      DailyActivityFoodModel(
+          id: 1, name: "Desayuno", foods: [], plan: dailyFoodPlanModel),
+      DailyActivityFoodModel(
+          id: 2, name: "Merienda", foods: [], plan: dailyFoodPlanModel),
+      DailyActivityFoodModel(
+          id: 3, name: "Almuerzo", foods: [], plan: dailyFoodPlanModel),
+      DailyActivityFoodModel(
+          id: 4, name: "Merienda", foods: [], plan: dailyFoodPlanModel),
+      DailyActivityFoodModel(
+          id: 5, name: "Cena", foods: [], plan: dailyFoodPlanModel),
     ];
   }
 }

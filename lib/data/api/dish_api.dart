@@ -18,7 +18,7 @@ class DishApi extends BaseApi implements IDishApi {
   Future<List<FoodModel>> getFoodModelList() async {
     final res = await _networkHandler.get(path: Endpoint.dish);
     if (res.statusCode == RemoteConstants.code_success) {
-      Iterable l = json.decode(res.body)[RemoteConstants.result];
+      Iterable l = jsonDecode(res.body)[RemoteConstants.result];
       return l.map((model) => _foodConverter.fromJsonFoodModel(model)).toList();
     } else
       throw serverException(res);
@@ -28,7 +28,7 @@ class DishApi extends BaseApi implements IDishApi {
   Future<List<TagModel>> getTagList() async {
     final res = await _networkHandler.get(path: Endpoint.dish_tags);
     if (res.statusCode == RemoteConstants.code_success) {
-      Iterable l = json.decode(res.body)[RemoteConstants.result];
+      Iterable l = jsonDecode(res.body)[RemoteConstants.result];
       return l
           .map((model) => _foodConverter.fromJsonFoodTagModel(model))
           .toList();

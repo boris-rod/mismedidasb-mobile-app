@@ -19,7 +19,7 @@ class HealthConceptApi extends BaseApi implements IHealthConceptApi {
   Future<List<HealthConceptModel>> getHealthConceptList() async {
     final res = await _networkHandler.get(path: Endpoint.health_concept);
     if (res.statusCode == RemoteConstants.code_success) {
-      Iterable l = json.decode(res.body)[RemoteConstants.result];
+      Iterable l = jsonDecode(res.body)[RemoteConstants.result];
       return l
           .map((model) => _iHealthConceptConverter.fromJson(model))
           .toList();

@@ -20,7 +20,7 @@ class QuestionApi extends BaseApi implements IQuestionApi {
     final res = await _networkHandler.get(
         path: Endpoint.question, params: "?${RemoteConstants.poll_id}=$pollId");
     if (res.statusCode == RemoteConstants.code_success) {
-      Iterable l = json.decode(res.body)[RemoteConstants.result];
+      Iterable l = jsonDecode(res.body)[RemoteConstants.result];
       return l.map((model) => _iQuestionConverter.fromJson(model)).toList();
     }
     throw serverException(res);

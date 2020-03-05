@@ -84,58 +84,44 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
             stream: bloc.dailyFoodResult,
             initialData: null,
             builder: (ctx, snapshot) {
-              return snapshot.data == null
+              final dailyModel = snapshot.data;
+              return dailyModel == null
                   ? Container()
                   : SingleChildScrollView(
                       padding:
                           EdgeInsets.symmetric(vertical: 20, horizontal: 5),
-                      child: Container(
-                        child: StreamBuilder<DailyFoodPlanModel>(
-                          stream: bloc.dailyPlanResult,
-                          initialData: null,
-                          builder: (context, snapshotPlan) {
-                            final planModel = snapshotPlan.data;
-                            return planModel == null
-                                ? Container()
-                                : Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: <Widget>[
-                                      Container(
-                                        padding: EdgeInsets.all(1),
-                                        height: 100,
-                                        width: 100,
-                                        child: charts.PieChart(
-                                          series,
-                                          layoutConfig: LayoutConfig(topMarginSpec: MarginSpec.fixedPixel(0),
-                                              leftMarginSpec: MarginSpec.fixedPixel(0),
-                                              rightMarginSpec: MarginSpec.fixedPixel(0),
-                                              bottomMarginSpec: MarginSpec.fixedPixel(0)),
-                                          animate: true,
-                                        ),
-                                      ),
-                                      TXTextWidget(
-                                        text: planModel.kCalStr,
-                                      ),
-                                      TXTextWidget(
-                                        text: planModel.kCalRange,
-                                      ),
-                                      TXTextWidget(
-                                        text: planModel.imcStr,
-                                      ),
-                                      snapshotPlan == null
-                                          ? Container()
-                                          : Column(
-                                              children: _getDailyActivityFood(
-                                                  context,
-                                                  snapshot.data
-                                                      .dailyActivityFoodModel,
-                                                  planModel),
-                                            )
-                                    ],
-                                  );
-                          },
-                        ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          TXTextWidget(
+                            text: dailyModel.dailyFoodPlanModel.kCalStr,
+                          ),
+                          TXTextWidget(
+                            text: dailyModel.dailyFoodPlanModel.kCalRange,
+                          ),
+                          TXTextWidget(
+                            text: dailyModel.dailyFoodPlanModel.imcStr,
+                          ),
+
+                          Container(
+                            padding: EdgeInsets.all(1),
+                            height: 100,
+                            width: 100,
+                            child: charts.PieChart(
+                              series,
+                              layoutConfig: LayoutConfig(
+                                  topMarginSpec: MarginSpec.fixedPixel(0),
+                                  leftMarginSpec: MarginSpec.fixedPixel(0),
+                                  rightMarginSpec: MarginSpec.fixedPixel(0),
+                                  bottomMarginSpec: MarginSpec.fixedPixel(0)),
+                              animate: true,
+                            ),
+                          ),
+                          Column(
+                            children: _getDailyActivityFood(
+                                context, snapshot.data.dailyActivityFoodModel),
+                          )
+                        ],
                       ),
                     );
             },
@@ -148,8 +134,8 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
     );
   }
 
-  List<Widget> _getDailyActivityFood(BuildContext context,
-      List<DailyActivityFoodModel> modelList, DailyFoodPlanModel plan) {
+  List<Widget> _getDailyActivityFood(
+      BuildContext context, List<DailyActivityFoodModel> modelList) {
     List<Widget> list = [];
     int pos = 1;
     modelList.forEach((model) {
@@ -178,7 +164,7 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                           ),
                           TXTextWidget(
                             text:
-                                "${pos == 1 ? plan.breakfastCalStr : (pos == 2 ? plan.snack1CalStr : (pos == 3 ? plan.lunchCalStr : (pos == 4 ? plan.snack2CalStr : plan.dinnerCalStr)))}",
+                                "${pos == 1 ? model.plan.breakfastCalStr : (pos == 2 ? model.plan.snack1CalStr : (pos == 3 ? model.plan.lunchCalStr : (pos == 4 ? model.plan.snack2CalStr : model.plan.dinnerCalStr)))}",
                             color: Colors.black,
                             size: 16,
                           )

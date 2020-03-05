@@ -5,6 +5,7 @@ import 'package:mismedidasb/data/dao/_base/db_constants.dart';
 import 'package:mismedidasb/domain/dish/dish_model.dart';
 import 'package:mismedidasb/domain/dish/i_dish_converter.dart';
 import 'package:mismedidasb/domain/dish/i_dish_dao.dart';
+import 'package:mismedidasb/utils/calendar_utils.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DishDao extends IDishDao {
@@ -22,7 +23,7 @@ class DishDao extends IDishDao {
       data.forEach((map) {
         final value = map[DBConstants.data_key];
         final DailyFoodModel obj =
-            _foodConverter.fromJsonDailyFoodModel(json.decode(value));
+            _foodConverter.fromJsonDailyFoodModel(jsonDecode(value));
         list.add(obj);
       });
     } catch (ex) {}
@@ -45,15 +46,16 @@ class DishDao extends IDishDao {
   Future<bool> saveDailyFoodModel(DailyFoodModel model) async {
     try {
       Database db = await _appDatabase.db;
-      final data = jsonEncode(model);
+      final data = jsonEncode(_foodConverter.toJsonDailyFoodModel(model));
       if (data.isNotEmpty) {
         final map = {
-          DBConstants.id_key: model.dateTime.toIso8601String(),
+          DBConstants.id_key: CalendarUtils.getTimeIdBasedDay(),
           DBConstants.data_key: data,
-          DBConstants.parent_key: model.dateTime.toIso8601String()
+          DBConstants.parent_key: CalendarUtils.getTimeIdBasedDay()
         };
-        await db.insert(DBConstants.daily_food_activity_table, map,
+        final inserted = await db.insert(DBConstants.daily_food_activity_table, map,
             conflictAlgorithm: ConflictAlgorithm.replace);
+        print(inserted.toString());
       }
       return true;
     } catch (ex) {
@@ -70,7 +72,7 @@ class DishDao extends IDishDao {
       data.forEach((map) {
         final value = map[DBConstants.data_key];
         final FoodModel obj =
-            _foodConverter.fromJsonFoodModel(json.decode(value));
+            _foodConverter.fromJsonFoodModel(jsonDecode(value));
         list.add(obj);
       });
     } catch (ex) {}
@@ -84,7 +86,8 @@ class DishDao extends IDishDao {
       list.forEach((model) async {
         final map = {
           DBConstants.id_key: model.id,
-          DBConstants.data_key:jsonEncode(_foodConverter.toJsonFoodModel(model)),
+          DBConstants.data_key:
+              jsonEncode(_foodConverter.toJsonFoodModel(model)),
           DBConstants.parent_key: model.id,
         };
         await db.insert(DBConstants.food_table, map,
@@ -130,7 +133,8 @@ class DishDao extends IDishDao {
       list.forEach((model) async {
         final map = {
           DBConstants.id_key: model.id,
-          DBConstants.data_key:jsonEncode(_foodConverter.toJsonFoodModelTag(model)),
+          DBConstants.data_key:
+              jsonEncode(_foodConverter.toJsonFoodModelTag(model)),
           DBConstants.parent_key: model.id,
         };
         await db.insert(DBConstants.food_tag_table, map,

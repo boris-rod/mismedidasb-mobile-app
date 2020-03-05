@@ -5,6 +5,7 @@ import 'package:mismedidasb/domain/dish/i_dish_api.dart';
 import 'package:mismedidasb/domain/dish/i_dish_dao.dart';
 import 'package:mismedidasb/domain/dish/i_dish_repository.dart';
 import 'package:mismedidasb/domain/personal_data/i_personal_data_dao.dart';
+import 'package:mismedidasb/ui/measure_health/health_result.dart';
 import 'package:mismedidasb/utils/calendar_utils.dart';
 
 class DishRepository extends BaseRepository implements IDishRepository {
@@ -21,7 +22,7 @@ class DishRepository extends BaseRepository implements IDishRepository {
       if (!forceReload) {
         list = await _iDishDao.getFoodModeList();
       }
-      if(list.isEmpty){
+      if (list.isEmpty) {
         list = await _dishApi.getFoodModelList();
         final rem = await _iDishDao.clearFoodModelList();
         final saved = await _iDishDao.saveFoodModelList(list);
@@ -33,19 +34,30 @@ class DishRepository extends BaseRepository implements IDishRepository {
   }
 
   @override
-  Future<DailyFoodModel> getDailyFoodModel() async {
+  Future<DailyFoodModel> getDailyFoodModel(HealthResult healthResult) async {
     List<DailyFoodModel> list = [];
     try {
       list = await _iDishDao.getDailyFoodModelList();
       DailyFoodModel model = list.isNotEmpty
           ? (CalendarUtils.compare(list.last.dateTime, DateTime.now()) != 0
-              ? DailyFoodModel.getDailyFoodModel()
+              ? DailyFoodModel.getDailyFoodModel(healthResult)
               : list.last)
-          : DailyFoodModel.getDailyFoodModel();
+          : DailyFoodModel.getDailyFoodModel(healthResult);
+
+      if (model.dailyFoodPlanModel == null) {
+        final plan = DailyFoodPlanModel(
+            imc: healthResult.imc, dailyKCal: healthResult.kCal);
+        model.dailyFoodPlanModel = DailyFoodPlanModel(
+            imc: healthResult.imc, dailyKCal: healthResult.kCal);
+        model.dailyActivityFoodModel.forEach((dA) {
+          if (dA.plan == null) dA.plan = plan;
+        });
+      }
+
       await _iDishDao.saveDailyFoodModel(model);
       return model;
     } catch (ex) {
-      return DailyFoodModel.getDailyFoodModel();
+      return DailyFoodModel.getDailyFoodModel(healthResult);
     }
   }
 
@@ -64,6 +76,15 @@ class DishRepository extends BaseRepository implements IDishRepository {
       return Result.success(value: list);
     } catch (ex) {
       return resultError(ex);
+    }
+  }
+
+  @override
+  Future<bool> saveDailyFoodModel(DailyFoodModel dailyFoodModel) async {
+    try {
+      return await _iDishDao.saveDailyFoodModel(dailyFoodModel);
+    } catch (ex) {
+      return false;
     }
   }
 }

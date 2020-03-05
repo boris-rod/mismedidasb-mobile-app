@@ -22,7 +22,7 @@ class PersonalDataDao implements IPersonalDataDao {
       data.forEach((map) {
         final value = map[DBConstants.data_key];
         final HealthResult obj =
-            _iPersonalDataConverter.fromJsonHealthResult(json.decode(value));
+            _iPersonalDataConverter.fromJsonHealthResult(jsonDecode(value));
         model = obj;
       });
     } catch (ex) {}

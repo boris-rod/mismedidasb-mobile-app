@@ -21,7 +21,7 @@ class PollApi extends BaseApi implements IPollApi {
         path:
             "${Endpoint.health_concept}/$healthConceptId${Endpoint.health_concept_polls}");
     if (res.statusCode == RemoteConstants.code_success) {
-      Iterable l = json.decode(res.body)[RemoteConstants.result];
+      Iterable l = jsonDecode(res.body)[RemoteConstants.result];
       return l.map((model) => _iPollConverter.fromJson(model)).toList();
     }
     throw serverException(res);

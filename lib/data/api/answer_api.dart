@@ -21,7 +21,7 @@ class AnswerApi extends BaseApi implements IAnswerApi {
         path: Endpoint.question,
         params: "?${RemoteConstants.question_id}=$questionId");
     if (res.statusCode == RemoteConstants.code_success) {
-      Iterable l = json.decode(res.body)[RemoteConstants.result];
+      Iterable l = jsonDecode(res.body)[RemoteConstants.result];
       return l.map((model) => _iAnswerConverter.fromJson(model)).toList();
     }
     else

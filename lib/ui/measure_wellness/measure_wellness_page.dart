@@ -56,18 +56,6 @@ class _MeasureWellnessState
                     SizedBox(
                       height: 30,
                     ),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: TXTextWidget(
-                        color: R.color.primary_color,
-                        textAlign: TextAlign.justify,
-                        text:
-                            "Las medidas de bienestar...",
-                      ),
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
                     TXTextWidget(
                       color: R.color.gray,
                       textAlign: TextAlign.justify,

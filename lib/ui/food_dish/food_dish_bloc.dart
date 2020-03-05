@@ -24,30 +24,34 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
   Stream<List<FoodModel>> get foodsResult => _foodsController.stream;
 
-  BehaviorSubject<DailyFoodPlanModel> _dailyPlanController =
-      new BehaviorSubject();
-
-  Stream<DailyFoodPlanModel> get dailyPlanResult => _dailyPlanController.stream;
-
-  HealthResult healthResult;
-  DailyFoodPlanModel dailyFoodPlanModel;
-
   void loadInitialData() async {
     isLoading = true;
 
-    if (healthResult == null)
-      healthResult = await _iPersonalDataRepository.getHealthResult();
+    final healthResult = await _iPersonalDataRepository.getHealthResult();
 
-    if (dailyFoodPlanModel == null)
-      dailyFoodPlanModel = DailyFoodPlanModel(
-          imc: healthResult.imc,
-          dailyKCal: healthResult.kCal,
-          dateTime: DateTime.now());
+    final daily = await _iDishRepository.getDailyFoodModel(healthResult);
 
-    _dailyPlanController.sinkAddSafe(dailyFoodPlanModel);
+    daily.dailyActivityFoodModel.forEach((dA) {
+      double cal = 0;
+      double car = 0;
+      double fat = 0;
+      double fib = 0;
+      double pro = 0;
+      dA.foods.forEach((f) {
+        car += f.carbohydrates;
+        fat += f.fat;
+        fib += f.fiber;
+        pro += f.proteins;
+      });
+      cal = fat * 9 + pro * 4 + car * 4;
 
-    final daily = await _iDishRepository.getDailyFoodModel();
-    _dailyFoodController.sink.add(daily);
+      dA.calories = cal;
+      dA.proteins = pro;
+      dA.carbohydrates = car;
+      dA.fat = fat;
+      dA.fiber = fib;
+    });
+    _dailyFoodController.sinkAddSafe(daily);
 
     final res = await _iDishRepository.getFoodModelList(forceReload: true);
     if (res is ResultSuccess<List<FoodModel>>) {
@@ -79,42 +83,29 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
   void setFoodList(DailyActivityFoodModel model) async {
     final rootModel = await dailyFoodResult.first;
-    double cal = 0;
-    model.foods.forEach((f) {
-      cal += f.calories;
-    });
-    model.calories = cal;
-
     double car = 0;
+    double fat = 0;
+    double fib = 0;
+    double pro = 0;
+
     model.foods.forEach((f) {
       car += f.carbohydrates;
-    });
-    model.carbohydrates = car;
-
-    double fat = 0;
-    model.foods.forEach((f) {
       fat += f.fat;
-    });
-    model.fat = fat;
-
-    double pro = 0;
-    model.foods.forEach((f) {
       pro += f.proteins;
-    });
-    model.proteins = pro;
-
-    double fib = 0;
-    model.foods.forEach((f) {
       fib += f.fiber;
     });
+    model.carbohydrates = car;
+    model.fat = fat;
+    model.proteins = pro;
     model.fiber = fib;
+    model.calories = fat * 9 + pro * 4 + car * 4;
 
+    await _iDishRepository.saveDailyFoodModel(rootModel);
     _dailyFoodController.sink.add(rootModel);
   }
 
   @override
   void dispose() {
-    _dailyPlanController.close();
     _foodsController.close();
     _dailyFoodController.close();
     disposeErrorHandlerBloC();

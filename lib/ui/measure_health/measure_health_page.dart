@@ -12,11 +12,13 @@ import 'package:mismedidasb/ui/_tx_widget/tx_bottom_sheet.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_bottomsheet_selector_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_buttons_paginate_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_cupertino_dialog_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_cupertino_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_icon_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_main_app_bar_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_textlink_widget.dart';
 import 'package:mismedidasb/ui/measure_health/health_measure_result_model.dart';
 import 'package:mismedidasb/ui/measure_health/measure_health_bloc.dart';
 
@@ -93,20 +95,67 @@ class _MeasureHealthState
                     initialData: 0,
                     builder: (ctx, snapshot) {
                       return TXButtonPaginateWidget(
-                        onNext: () {
-                          snapshot.data == 2
-                              ? showTXModalBottomSheet(
-                                  context: context,
-                                  builder: (ctx) {
-                                    bloc.saveMeasures();
-                                    return Container(
-                                      height: 300,
-                                      child: TXTextWidget(
-                                        text: "Gracias",
+                        onNext: () async {
+                          if (snapshot.data == 2) {
+                            final result = await bloc.saveMeasures();
+                            showTXModalBottomSheet(
+                                context: context,
+                                builder: (ctx) {
+                                  bloc.saveMeasures();
+                                  return Container(
+                                    height: 300,
+                                    child: Container(
+                                      padding: EdgeInsets.only(left: 10),
+                                      alignment: Alignment.topLeft,
+                                      child: Column(
+                                        children: <Widget>[
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: <Widget>[
+                                              Expanded(
+                                                child: TXTextWidget(
+                                                  text: "Gracias",
+                                                  maxLines: 2,
+                                                  textOverflow:
+                                                      TextOverflow.ellipsis,
+                                                  size: 18,
+                                                ),
+                                              ),
+                                              Container(
+                                                width: 50,
+                                                child: TXTextLinkWidget(
+                                                  title: R.string.ok,
+                                                  textColor:
+                                                      R.color.primary_color,
+                                                  onTap: () {
+                                                    NavigationUtils.pop(
+                                                        context);
+                                                  },
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                          Expanded(
+                                            child: Container(
+                                              padding: EdgeInsets.only(
+                                                  left: 10, right: 20),
+                                              child: Center(
+                                                child: TXTextWidget(
+                                                    textAlign:
+                                                        TextAlign.justify,
+                                                    text: result.result),
+                                              ),
+                                            ),
+                                          )
+                                        ],
                                       ),
-                                    );
-                                  })
-                              : bloc.changePage(true);
+                                    ),
+                                  );
+                                });
+                          } else {
+                            bloc.changePage(true);
+                          }
                         },
                         onPrevious: snapshot.data > 0
                             ? () {

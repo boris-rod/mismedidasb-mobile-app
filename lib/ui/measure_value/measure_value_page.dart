@@ -63,19 +63,7 @@ class _MeasureValueState
                           color: R.color.primary_color,
                           textAlign: TextAlign.justify,
                           text:
-                              "Los valores son ideas o principios universales que dirigen nuestra conducta.",
-                        ),
-                      ),
-                      SizedBox(
-                        height: 35,
-                      ),
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: TXTextWidget(
-                          color: R.color.accent_color,
-                          textAlign: TextAlign.justify,
-                          text:
-                              "Por favor, indique grado de importancia otorga usted a los siguientes valores",
+                              "Los valores son ideas o principios universales que dirigen nuestra conducta. Por favor, indique grado de importancia otorga usted a los siguientes valores",
                         ),
                       ),
                       SizedBox(

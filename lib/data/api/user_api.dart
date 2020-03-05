@@ -21,7 +21,7 @@ class UserApi extends BaseApi implements IUserApi {
     final res = await _networkHandler.get(path: Endpoint.profile,);
     if (res.statusCode == RemoteConstants.code_success)
       return _iUserConverter
-          .fromJson(json.decode(res.body)[RemoteConstants.result]);
+          .fromJson(jsonDecode(res.body)[RemoteConstants.result]);
     else
       throw serverException(res);
   }
@@ -33,7 +33,7 @@ class UserApi extends BaseApi implements IUserApi {
         path: Endpoint.update_profile, body: jsonEncode(body));
     if (res.statusCode == RemoteConstants.code_success)
       return _iUserConverter
-          .fromJson(json.decode(res.body)[RemoteConstants.result]);
+          .fromJson(jsonDecode(res.body)[RemoteConstants.result]);
     else
       throw serverException(res);
   }

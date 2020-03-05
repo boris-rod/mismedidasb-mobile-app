@@ -5,6 +5,6 @@ import 'package:mismedidasb/data/api/remote/network_handler.dart';
 
 class BaseApi {
   ServerException serverException(Response res) {
-    return ServerException.fromJson(json.decode(res.body));
+    return ServerException.fromJson(jsonDecode(res.body));
   }
 }

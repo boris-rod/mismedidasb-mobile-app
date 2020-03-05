@@ -110,7 +110,7 @@ class MeasureHealthBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     }
   }
 
-  void saveMeasures() async {
+  Future<HealthResult> saveMeasures() async {
     isLoading = true;
     final HealthResult result =
         HealthResult.getResult(healthMeasureResultModel);
@@ -118,6 +118,7 @@ class MeasureHealthBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     Future.delayed(Duration(seconds: 2), () {
       isLoading = false;
     });
+    return result;
   }
 
   @override

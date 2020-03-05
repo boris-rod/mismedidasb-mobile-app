@@ -20,7 +20,7 @@ class PersonalDataApi extends BaseApi implements IPersonalDataApi {
     final res =
         await _networkHandler.get(path: Endpoint.personal_data_current_data);
     if (res.statusCode == RemoteConstants.code_success) {
-      Iterable l = json.decode(res.body)[RemoteConstants.result];
+      Iterable l = jsonDecode(res.body)[RemoteConstants.result];
       return l.map((model) => _iPersonalDataConverter.fromJson(model)).toList();
     } else
       throw serverException(res);

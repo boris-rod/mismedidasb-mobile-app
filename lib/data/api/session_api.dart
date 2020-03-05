@@ -31,7 +31,7 @@ class SessionApi extends BaseApi implements ISessionApi {
       _sharedPreferencesManager.setAccessToken(token);
       _sharedPreferencesManager.setRefreshToken(refreshToken);
       return _iUserConverter
-          .fromJson(json.decode(res.body)[RemoteConstants.result]);
+          .fromJson(jsonDecode(res.body)[RemoteConstants.result]);
     } else
       throw serverException(res);
   }
