@@ -74,6 +74,8 @@ class DishConverter extends IDishConverter {
       "calories": model.calories,
       "carbohydrates": model.carbohydrates,
       "proteins": model.proteins,
+      "image": model.image,
+      "imageMimeType": model.imageMimeType,
       "fat": model.fat,
       "fiber": model.fiber,
       "tags": model.tags.map((model) => toJsonFoodModelTag(model)).toList()
