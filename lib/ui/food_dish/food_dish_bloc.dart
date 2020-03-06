@@ -1,3 +1,6 @@
+import 'dart:ui';
+
+import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mismedidasb/data/api/remote/result.dart';
 import 'package:mismedidasb/domain/dish/dish_model.dart';
@@ -31,6 +34,7 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
     final daily = await _iDishRepository.getDailyFoodModel(healthResult);
 
+    daily.currentCaloriesSum = 0;
     daily.dailyActivityFoodModel.forEach((dA) {
       double cal = 0;
       double car = 0;
@@ -44,6 +48,8 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
         pro += f.proteins;
       });
       cal = fat * 9 + pro * 4 + car * 4;
+
+      daily.currentCaloriesSum += cal;
 
       dA.calories = cal;
       dA.proteins = pro;
@@ -69,6 +75,56 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     isLoading = false;
   }
 
+  double getCurrentCaloriesPercentage(DailyFoodModel dailyModel) {
+    return dailyModel.currentCaloriesSum *
+        100 /
+        dailyModel.dailyFoodPlanModel.kCalMax;
+  }
+
+  double getActivityFoodCalories(
+      DailyActivityFoodModel dailyActivityFoodModel) {
+    return dailyActivityFoodModel.id == 1
+        ? dailyActivityFoodModel.plan.breakFastCalVal
+        : (dailyActivityFoodModel.id == 2
+            ? dailyActivityFoodModel.plan.snack1CalVal
+            : (dailyActivityFoodModel.id == 3
+                ? dailyActivityFoodModel.plan.lunchCalVal
+                : (dailyActivityFoodModel.id == 4
+                    ? dailyActivityFoodModel.plan.snack2CalVal
+                    : dailyActivityFoodModel.plan.dinnerCalVal)));
+  }
+
+  double getCurrentCaloriesPercentageByFood(
+      DailyActivityFoodModel dailyActivityFoodModel) {
+    return dailyActivityFoodModel.calories *
+        100 /
+        (getActivityFoodCalories(dailyActivityFoodModel) + getActivityFoodCaloriesOffSet(dailyActivityFoodModel));
+  }
+
+  double getActivityFoodCaloriesOffSet(
+      DailyActivityFoodModel dailyActivityFoodModel) {
+    return dailyActivityFoodModel.id == 1
+        ? dailyActivityFoodModel.plan.breakFastCalValExtra
+        : (dailyActivityFoodModel.id == 2
+            ? dailyActivityFoodModel.plan.snack1CalValExtra
+            : (dailyActivityFoodModel.id == 3
+                ? dailyActivityFoodModel.plan.lunchCalValExtra
+                : (dailyActivityFoodModel.id == 4
+                    ? dailyActivityFoodModel.plan.snack2CalValExtra
+                    : dailyActivityFoodModel.plan.dinnerCalValExtra)));
+  }
+
+  Color getProgressColor(DailyFoodModel dailyModel) {
+    return dailyModel.currentCaloriesSum < dailyModel.dailyFoodPlanModel.kCalMin
+        ? Colors.yellowAccent
+        : (dailyModel.currentCaloriesSum >=
+                    dailyModel.dailyFoodPlanModel.kCalMin &&
+                dailyModel.currentCaloriesSum <=
+                    dailyModel.dailyFoodPlanModel.kCalMax
+            ? Colors.greenAccent
+            : Colors.redAccent);
+  }
+
 //  void expCollDailyFood(DailyActivityFoodModel model) async {
 //    final rootModel = await dailyFoodResult.first;
 //    rootModel.dailyActivityFoodModel.forEach((m) {
@@ -83,6 +139,10 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
   void setFoodList(DailyActivityFoodModel model) async {
     final rootModel = await dailyFoodResult.first;
+
+    rootModel.currentCaloriesSum =
+        rootModel.currentCaloriesSum - model.calories;
+
     double car = 0;
     double fat = 0;
     double fib = 0;
@@ -99,6 +159,9 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     model.proteins = pro;
     model.fiber = fib;
     model.calories = fat * 9 + pro * 4 + car * 4;
+
+    rootModel.currentCaloriesSum =
+        rootModel.currentCaloriesSum + model.calories;
 
     await _iDishRepository.saveDailyFoodModel(rootModel);
     _dailyFoodController.sink.add(rootModel);

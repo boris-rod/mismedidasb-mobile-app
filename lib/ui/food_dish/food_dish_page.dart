@@ -1,5 +1,7 @@
 import 'package:charts_flutter/flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rounded_progress_bar/flutter_rounded_progress_bar.dart';
+import 'package:flutter_rounded_progress_bar/rounded_progress_bar_style.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mismedidasb/domain/dish/dish_model.dart';
 import 'package:mismedidasb/res/R.dart';
@@ -7,6 +9,7 @@ import 'package:mismedidasb/ui/_base/bloc_state.dart';
 import 'package:mismedidasb/ui/_base/navigation_utils.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_action_chip_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_bottom_sheet.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_combo_progress_bar_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_icon_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_main_app_bar_widget.dart';
@@ -33,6 +36,9 @@ class SubscriberSeries {
 }
 
 class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
+  List<charts.Series<SubscriberSeries, String>> series = [];
+  List<charts.Series<SubscriberSeries, String>> series1 = [];
+
   @override
   void initState() {
     super.initState();
@@ -42,27 +48,54 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
   @override
   Widget buildWidget(BuildContext context) {
     final List<SubscriberSeries> data = [
-//      SubscriberSeries(
-//        year: "1",
-//        subscribers: 2,
-//        barColor: charts.ColorUtil.fromDartColor(Colors.blue),
-//      ),
       SubscriberSeries(
-        year: "2",
-        subscribers: 12,
-        barColor: charts.ColorUtil.fromDartColor(R.color.accent_color),
+        year: "1",
+        subscribers: 2,
+        barColor: charts.ColorUtil.fromDartColor(Colors.red[400]),
       ),
       SubscriberSeries(
         year: "2",
         subscribers: 4,
-        barColor: charts.ColorUtil.fromDartColor(R.color.primary_color),
+        barColor: charts.ColorUtil.fromDartColor(Colors.blue[400]),
+      ),
+      SubscriberSeries(
+        year: "3",
+        subscribers: 4,
+        barColor: charts.ColorUtil.fromDartColor(Colors.green[400]),
+      ),
+    ];
+    final List<SubscriberSeries> data1 = [
+      SubscriberSeries(
+        year: "1",
+        subscribers: 2,
+        barColor: charts.ColorUtil.fromDartColor(Colors.red[400]),
+      ),
+      SubscriberSeries(
+        year: "2",
+        subscribers: 3,
+        barColor: charts.ColorUtil.fromDartColor(Colors.blue[400]),
+      ),
+      SubscriberSeries(
+        year: "3",
+        subscribers: 5,
+        barColor: charts.ColorUtil.fromDartColor(Colors.green[400]),
       ),
     ];
 
-    List<charts.Series<SubscriberSeries, String>> series = [
+    series = [
       charts.Series(
           id: "Subscribers",
           data: data,
+          displayName: "Pie",
+          domainFn: (SubscriberSeries series, _) => series.year,
+          measureFn: (SubscriberSeries series, _) => series.subscribers,
+          colorFn: (SubscriberSeries series, _) => series.barColor)
+    ];
+
+    series1 = [
+      charts.Series(
+          id: "Subscribers",
+          data: data1,
           displayName: "Pie",
           domainFn: (SubscriberSeries series, _) => series.year,
           measureFn: (SubscriberSeries series, _) => series.subscribers,
@@ -87,42 +120,56 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
               final dailyModel = snapshot.data;
               return dailyModel == null
                   ? Container()
-                  : SingleChildScrollView(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 20, horizontal: 5),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          TXTextWidget(
-                            text: dailyModel.dailyFoodPlanModel.kCalStr,
-                          ),
-                          TXTextWidget(
-                            text: dailyModel.dailyFoodPlanModel.kCalRange,
-                          ),
-                          TXTextWidget(
-                            text: dailyModel.dailyFoodPlanModel.imcStr,
-                          ),
-
-                          Container(
-                            padding: EdgeInsets.all(1),
-                            height: 100,
-                            width: 100,
-                            child: charts.PieChart(
-                              series,
-                              layoutConfig: LayoutConfig(
-                                  topMarginSpec: MarginSpec.fixedPixel(0),
-                                  leftMarginSpec: MarginSpec.fixedPixel(0),
-                                  rightMarginSpec: MarginSpec.fixedPixel(0),
-                                  bottomMarginSpec: MarginSpec.fixedPixel(0)),
-                              animate: true,
-                            ),
-                          ),
-                          Column(
+                  : Stack(
+                      children: <Widget>[
+                        SingleChildScrollView(
+                          padding: EdgeInsets.only(top: 100, left: 5, right: 5),
+                          child: Column(
                             children: _getDailyActivityFood(
                                 context, snapshot.data.dailyActivityFoodModel),
-                          )
-                        ],
-                      ),
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.symmetric(vertical: 10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              TXTextWidget(
+                                text: dailyModel.dailyFoodPlanModel.kCalStr,
+                              ),
+                              TXTextWidget(
+                                text: dailyModel.dailyFoodPlanModel.kCalRange,
+                              ),
+                              TXTextWidget(
+                                text: dailyModel.dailyFoodPlanModel.imcStr,
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Container(
+                                padding: EdgeInsets.symmetric(horizontal: 5),
+                                child: TXComboProgressBarWidget(
+                                  showValueInBar: true,
+                                  title: "Calorías",
+                                  titleSize: 12,
+                                  percentage: bloc
+                                      .getCurrentCaloriesPercentage(dailyModel),
+                                  mark1: dailyModel.dailyFoodPlanModel.kCalMin,
+                                  mark2: dailyModel.dailyFoodPlanModel.kCalMax,
+                                  value: dailyModel.currentCaloriesSum,
+                                ),
+                              ),
+                              Container(
+                                color: R.color.gray,
+                                height: .5,
+                                margin: EdgeInsets.only(top: 5),
+                              )
+                            ],
+                          ),
+                          height: 105,
+                          color: Colors.white,
+                        )
+                      ],
                     );
             },
           ),
@@ -151,43 +198,61 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                 child: Row(
                   children: <Widget>[
                     Expanded(
-                      child: Row(
-                        children: <Widget>[
-                          TXTextWidget(
-                            text: "${model.name}",
-                            fontWeight: FontWeight.bold,
-                            color: R.color.primary_dark_color,
-                            size: 16,
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          TXTextWidget(
-                            text:
-                                "${pos == 1 ? model.plan.breakfastCalStr : (pos == 2 ? model.plan.snack1CalStr : (pos == 3 ? model.plan.lunchCalStr : (pos == 4 ? model.plan.snack2CalStr : model.plan.dinnerCalStr)))}",
-                            color: Colors.black,
-                            size: 16,
-                          )
-                        ],
+                      child: TXTextWidget(
+                        text: "${model.name}",
+                        maxLines: 1,
+                        textOverflow: TextOverflow.ellipsis,
+                        fontWeight: FontWeight.bold,
+                        color: R.color.primary_dark_color,
+                        size: 16,
                       ),
                     ),
-                    TXIconButtonWidget(
-                      onPressed: () async {
-                        final resultList = await NavigationUtils.push(
-                            context,
-                            FoodPage(
-                              selectedItems: model.foods,
-                            ));
-                        if (resultList is List<FoodModel>) {
-                          model.isExpanded = resultList.isNotEmpty;
-                          model.foods = resultList;
-                          bloc.setFoodList(model);
-                        }
-                      },
-                      icon: Icon(
-                        Icons.add,
-                        color: R.color.primary_dark_color,
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        SizedBox(
+                          width: 5,
+                        ),
+                        TXTextWidget(
+                          size: 8,
+                          text:
+                              "+-${bloc.getActivityFoodCaloriesOffSet(model).toStringAsFixed(2)}",
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Container(
+                          width: 150,
+                          child: TXComboProgressBarWidget(
+                            title: "${bloc.getActivityFoodCalories(model)}",
+                            percentage:
+                                bloc.getCurrentCaloriesPercentageByFood(model),
+                            mark1: bloc.getActivityFoodCalories(model) - bloc.getActivityFoodCaloriesOffSet(model),
+                            mark2: bloc.getActivityFoodCalories(model) + bloc.getActivityFoodCaloriesOffSet(model),
+                            height: 15,
+                            value: model.calories,
+                          ),
+                        ),
+                        TXIconButtonWidget(
+                          onPressed: () async {
+                            final resultList = await NavigationUtils.push(
+                                context,
+                                FoodPage(
+                                  selectedItems: model.foods,
+                                ));
+                            if (resultList is List<FoodModel>) {
+                              model.isExpanded = resultList.isNotEmpty;
+                              model.foods = resultList;
+                              bloc.setFoodList(model);
+                            }
+                          },
+                          icon: Icon(
+                            Icons.add,
+                            color: R.color.primary_dark_color,
+                          ),
+                        )
+                      ],
                     )
                   ],
                 ),
@@ -199,16 +264,147 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                 margin: EdgeInsets.only(left: 10),
               ),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 5),
-                child: Wrap(
-                  spacing: 3,
-                  runSpacing: 0,
-                  alignment: WrapAlignment.start,
-                  children: <Widget>[..._getChips(model)],
+                padding: EdgeInsets.only(left: 10, top: 5),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    (model.id != 2 && model.id != 4)
+                        ? Column(
+                            children: <Widget>[
+                              TXTextWidget(
+                                text: "Ideal",
+                                size: 10,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              Container(
+                                padding: EdgeInsets.all(1),
+                                height: 80,
+                                width: 80,
+                                child: charts.PieChart(
+                                  model.id == 5 ? series1 : series,
+                                  layoutConfig: LayoutConfig(
+                                      topMarginSpec: MarginSpec.fixedPixel(0),
+                                      leftMarginSpec: MarginSpec.fixedPixel(0),
+                                      rightMarginSpec: MarginSpec.fixedPixel(0),
+                                      bottomMarginSpec:
+                                          MarginSpec.fixedPixel(0)),
+                                  animate: true,
+                                ),
+                              )
+                            ],
+                          )
+                        : Container(),
+                    Expanded(
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 5),
+                        child: Wrap(
+                          spacing: 3,
+                          runSpacing: 0,
+                          alignment: WrapAlignment.start,
+                          children: <Widget>[..._getChips(model)],
+                        ),
+                      ),
+                    )
+                  ],
                 ),
               ),
               Column(
                 children: <Widget>[
+                  (model.id == -1)
+                      ? Column(
+                          children: <Widget>[
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Container(
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              child: Row(
+                                children: <Widget>[
+                                  Expanded(
+                                    flex: 4,
+                                    child: Container(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 2),
+                                      child: Column(
+                                        children: <Widget>[
+                                          TXComboProgressBarWidget(
+                                            titleSize: 9,
+                                            height: 14,
+                                            percentage: 30,
+                                            title: "",
+                                            mark1: 50,
+                                            mark2: 70,
+                                            value: 80,
+                                          ),
+                                          TXTextWidget(
+                                            text: "Vegetales",
+                                            maxLines: 1,
+                                            size: 10,
+                                            textOverflow: TextOverflow.ellipsis,
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 4,
+                                    child: Container(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 2),
+                                      child: Column(
+                                        children: <Widget>[
+                                          TXComboProgressBarWidget(
+                                            titleSize: 9,
+                                            height: 14,
+                                            percentage: 30,
+                                            title: "",
+                                            mark1: 50,
+                                            mark2: 70,
+                                            value: 80,
+                                          ),
+                                          TXTextWidget(
+                                            text: "Carbohidratos",
+                                            size: 10,
+                                            maxLines: 1,
+                                            textOverflow: TextOverflow.ellipsis,
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 2,
+                                    child: Container(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 2),
+                                      child: Column(
+                                        children: <Widget>[
+                                          TXComboProgressBarWidget(
+                                            titleSize: 9,
+                                            height: 14,
+                                            percentage: 30,
+                                            title: "",
+                                            mark1: 50,
+                                            mark2: 70,
+                                            value: 80,
+                                          ),
+                                          TXTextWidget(
+                                            text: "Proteínas",
+                                            size: 10,
+                                            maxLines: 1,
+                                            textOverflow: TextOverflow.ellipsis,
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        )
+                      : Container(),
                   SizedBox(
                     height: 10,
                   ),
@@ -218,30 +414,6 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                   )
                 ],
               ),
-//              Container(
-//                padding: EdgeInsets.only(right: 10),
-//                child: Align(
-//                  alignment: Alignment.centerRight,
-//                  child: TXIconButtonWidget(
-//                    onPressed: () async {
-//                      final resultList = await NavigationUtils.push(
-//                          context,
-//                          FoodPage(
-//                            selectedItems: model.foods,
-//                          ));
-//                      if (resultList is List<FoodModel>) {
-//                        model.isExpanded = resultList.isNotEmpty;
-//                        model.foods = resultList;
-//                        bloc.setFoodList(model);
-//                      }
-//                    },
-//                    icon: Icon(
-//                      Icons.add,
-//                      color: R.color.primary_dark_color,
-//                    ),
-//                  ),
-//                ),
-//              )
             ],
           ),
         ),
@@ -264,8 +436,9 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
 
     if (model.calories > 0) {
       final cal = Chip(
+        labelPadding: EdgeInsets.all(0),
         label: TXTextWidget(
-          size: 10,
+          size: 9,
           color: Colors.black,
           text: "Calorías: ${model.calories.toStringAsFixed(2)}",
         ),
@@ -276,7 +449,7 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
     if (model.carbohydrates > 0) {
       final car = Chip(
         label: TXTextWidget(
-          size: 10,
+          size: 9,
           color: Colors.black,
           text: "Carbohidratos: ${model.carbohydrates.toStringAsFixed(2)}",
         ),
@@ -287,7 +460,7 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
     if (model.proteins > 0) {
       final pro = Chip(
         label: TXTextWidget(
-          size: 10,
+          size: 9,
           color: Colors.black,
           text: "Proteinas: ${model.proteins.toStringAsFixed(2)}",
         ),
@@ -298,7 +471,7 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
     if (model.fat > 0) {
       final fat = Chip(
         label: TXTextWidget(
-          size: 10,
+          size: 9,
           color: Colors.black,
           text: "Grasas: ${model.fat.toStringAsFixed(2)}",
         ),
@@ -309,7 +482,7 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
     if (model.fiber > 0) {
       final fib = Chip(
         label: TXTextWidget(
-          size: 10,
+          size: 9,
           color: Colors.black,
           text: "Fibras ${model.fiber.toStringAsFixed(2)}",
         ),
@@ -333,7 +506,7 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
           placeholderImage: R.image.logo,
         ),
         title: TXTextWidget(
-          text: model.name,
+          text: "${model.name} ${model.calories.toStringAsFixed(2)}kCal",
         ),
         trailing: TXIconButtonWidget(
           onPressed: () {

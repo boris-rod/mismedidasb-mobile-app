@@ -7,15 +7,35 @@ class DailyFoodPlanModel {
 
   DailyFoodPlanModel({this.dailyKCal = 1, this.imc = 1});
 
+  double get kCalOffSetVal => (imc > 18.5 && imc < 25) ? 100 : 500;
+
   double get breakFastCalVal => dailyKCal * 20 / 100;
+
+  double get breakFastCalValExtra => kCalOffSetVal * 20 / 100;
 
   double get snack1CalVal => dailyKCal * 10 / 100;
 
+  double get snack1CalValExtra => kCalOffSetVal * 10 / 100;
+
   double get lunchCalVal => dailyKCal * 35 / 100;
+
+  double get lunchCalValExtra => kCalOffSetVal * 35 / 100;
 
   double get snack2CalVal => dailyKCal * 10 / 100;
 
+  double get snack2CalValExtra => kCalOffSetVal * 10 / 100;
+
   double get dinnerCalVal => dailyKCal * 25 / 100;
+
+  double get dinnerCalValExtra => kCalOffSetVal * 25 / 100;
+
+  double get kCalMin => imc <= 18.5
+      ? dailyKCal
+      : (imc > 18.5 && imc < 25 ? dailyKCal - 100 : dailyKCal - 500);
+
+  double get kCalMax => imc <= 18.5
+      ? dailyKCal + 500
+      : (imc > 18.5 && imc < 25 ? dailyKCal + 100 : dailyKCal);
 
   String get breakfastCalStr => "$breakFastCalVal calorías";
 
@@ -32,23 +52,28 @@ class DailyFoodPlanModel {
   String get kCalStr => "Calorías diarias $dailyKCal";
 
   String get kCalRange => imc <= 18.5
-      ? "Calorías entre $dailyKCal <-> ${dailyKCal + 500}"
+      ? "Calorías entre $kCalMin <-> $kCalMax"
       : (imc > 18.5 && imc < 25
-          ? "Calorías entre ${dailyKCal - 100} <-> ${dailyKCal + 100}"
-          : "Calorías entre $dailyKCal <-> ${dailyKCal - 500}");
+          ? "Calorías entre $kCalMin <-> $kCalMax"
+          : "Calorías entre $kCalMin <-> $kCalMax");
 }
 
 class DailyFoodModel {
   DateTime dateTime;
   List<DailyActivityFoodModel> dailyActivityFoodModel;
   DailyFoodPlanModel dailyFoodPlanModel;
+  double currentCaloriesSum;
 
   DailyFoodModel(
-      {this.dateTime, this.dailyActivityFoodModel, this.dailyFoodPlanModel});
+      {this.dateTime,
+      this.dailyActivityFoodModel,
+      this.dailyFoodPlanModel,
+      this.currentCaloriesSum = 0});
 
   static DailyFoodModel getDailyFoodModel(HealthResult healthResult) {
     final plan =
         DailyFoodPlanModel(imc: healthResult.imc, dailyKCal: healthResult.kCal);
+
     return DailyFoodModel(
         dateTime: DateTime.now(),
         dailyFoodPlanModel: plan,
@@ -68,6 +93,10 @@ class DailyActivityFoodModel {
   double fat;
   double fiber;
   DailyFoodPlanModel plan;
+
+//  List<FoodModel> get foodsProteins => foods.where((f) => f.tag.name.trim().toLowerCase() == "proteins");
+//  List<FoodModel> get foodsCarbohydrates => foods.where((f) => f.tag.name.trim().toLowerCase() == "carbohydrates");
+//  List<FoodModel> get foodsFiber => foods.where((f) => f.tag.name.trim().toLowerCase() == "fiber");
 
   DailyActivityFoodModel(
       {this.id,
