@@ -81,4 +81,10 @@ abstract class StringsBase implements WidgetsLocalizations {
   String get emailWillBeReceived;
 
   String get logoutContent;
+
+  String get foodCraving;
+
+  String get foodsInstructions;
+
+  String get app_clinical_warning;
 }

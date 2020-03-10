@@ -246,10 +246,10 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
         content: R.string.logoutContent,
         onOK: () {
           bloc.logout();
-          Navigator.pop(context, 'Allow');
+          Navigator.pop(context, 'Permitir');
         },
         onCancel: () {
-          Navigator.pop(context, 'Allow');
+          Navigator.pop(context, 'Denegar');
         },
       ),
     );

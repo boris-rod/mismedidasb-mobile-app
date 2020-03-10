@@ -94,8 +94,7 @@ class StringsEn implements StringsBase {
   String get reSendCode => "Send me the code again";
 
   @override
-  String get checkEmail =>
-      "Check your email in order to get activation code.";
+  String get checkEmail => "Check your email in order to get activation code.";
 
   @override
   String get profile => "Profile";
@@ -119,11 +118,22 @@ class StringsEn implements StringsBase {
   String get cancel => "Cancel";
 
   @override
-  String get emailWillBeReceived => "You will receive an email with a new password.";
+  String get emailWillBeReceived =>
+      "You will receive an email with a new password.";
 
   @override
   String get ok => "Ok";
 
   @override
   String get logoutContent => "Are you sure you want to logout?";
+
+  @override
+  String get foodCraving => "Food Craving";
+
+  @override
+  String get foodsInstructions =>
+      "Nuestra App te brinda la posibilidad de realizar una planificación de tu alimentación diaria ajustada a tus necesidades. Toma en cuenta para ello tu peso, estatura, edad, sexo y práctica de ejercicio físico. No se trata de una dieta, aunque se basa en la moderación en la ingestión de los alimentos. \n Te brindamos una guía visual de la adecuación de tu selección en cuanto a calorías y balance de proteínas, grasas, carbohidratos y fibra. Podrás visualizar si te acerca o alejas del porcentaje adecuado, pero no ofreceremos la cantidad de calorías o peso. Hemos observado en nuestra práctica clínica que numerosas personas pueden obsesionarse con estas cifras. \n Hemos calculado las porciones de forma sencilla, las puedes medir usando las dimensiones tu mano y sentido común. No significa que debas tomar los alimentos con tus manos, o en tus manos, para comerlos o servirlos. Se trata solo de una guía visual basada en un cálculo aproximado. \n Si estás interesado en obtener una dieta médica personalizada puedes ponerte en contacto con nosotros.";
+
+  @override
+  String get app_clinical_warning => "Factores como el embarazo o algunas enfermedades médicas podrian afectar la interpretación de los resultados.";
 }

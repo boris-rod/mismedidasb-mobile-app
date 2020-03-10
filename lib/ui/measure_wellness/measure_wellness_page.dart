@@ -51,6 +51,7 @@ class _MeasureWellnessState
             initialData: 0,
             builder: (ctx, snapshot) {
               return TXBackgroundWidget(
+                iconRes: R.image.wellness_home,
                 child: Column(
                   children: <Widget>[
                     SizedBox(

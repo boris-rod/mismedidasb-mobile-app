@@ -3,18 +3,13 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:mismedidasb/res/R.dart';
 
-class TXBackgroundWidget extends StatefulWidget {
+class TXBackgroundWidget extends StatelessWidget {
   final Widget child;
-  final IconData icon;
+  final String iconRes;
 
-  const TXBackgroundWidget({Key key, @required this.child, this.icon})
+  const TXBackgroundWidget({Key key, @required this.child, this.iconRes})
       : super(key: key);
 
-  @override
-  State<StatefulWidget> createState() => _TXBackgroundState();
-}
-
-class _TXBackgroundState extends State<TXBackgroundWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -23,15 +18,22 @@ class _TXBackgroundState extends State<TXBackgroundWidget> {
       child: Stack(
         children: <Widget>[
           Container(
-            child: Center(
-              child: Icon(
-                widget.icon ?? Icons.local_florist,
-                color: Colors.blueGrey[50],
-                size: MediaQuery.of(context).size.width,
-              ),
-            ),
-          ),
-          widget.child
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: ExactAssetImage(iconRes),
+                      colorFilter: new ColorFilter.mode(
+                          Colors.black.withOpacity(0.1), BlendMode.dstATop)))),
+//          Container(
+//            child: Center(
+//              child: Icon(
+//                widget.icon ?? Icons.local_florist,
+//                color: Colors.blueGrey[50],
+//                size: MediaQuery.of(context).size.width,
+//              ),
+//            ),
+//          ),
+          child
         ],
       ),
     );

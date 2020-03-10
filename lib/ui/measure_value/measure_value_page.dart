@@ -51,7 +51,7 @@ class _MeasureValueState
               initialData: 0,
               builder: (ctx, snapshot) {
                 return TXBackgroundWidget(
-                  icon: Icons.videogame_asset,
+                  iconRes: R.image.values_home,
                   child: Column(
                     children: <Widget>[
                       SizedBox(

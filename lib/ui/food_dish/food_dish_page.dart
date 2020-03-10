@@ -15,9 +15,11 @@ import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_main_app_bar_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_network_image.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_textlink_widget.dart';
 import 'package:mismedidasb/ui/food/food_page.dart';
 import 'package:mismedidasb/ui/food_dish/food_dish_bloc.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:mp_chart/mp/chart/pie_chart.dart';
 
 class FoodDishPage extends StatefulWidget {
   @override
@@ -113,6 +115,63 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
               NavigationUtils.pop(context);
             },
           ),
+          actions: <Widget>[
+            TXIconButtonWidget(
+              icon: Icon(
+                Icons.star,
+                color: Colors.yellow,
+              ),
+              onPressed: () {
+                showTXModalBottomSheet(
+                    context: context,
+                    builder: (context) {
+                      return Container(
+                        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                        child: Container(
+                          padding: EdgeInsets.only(left: 10),
+                          alignment: Alignment.topLeft,
+                          child: Column(
+                            children: <Widget>[
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: <Widget>[
+                                  Expanded(
+                                    child: TXTextWidget(
+                                      text: "Instrucciones",
+                                      maxLines: 2,
+                                      textOverflow: TextOverflow.ellipsis,
+                                      size: 18,
+                                    ),
+                                  ),
+                                  Container(
+                                    width: 50,
+                                    child: TXTextLinkWidget(
+                                      title: R.string.ok,
+                                      textColor: R.color.primary_color,
+                                      onTap: () {
+                                        NavigationUtils.pop(context);
+                                      },
+                                    ),
+                                  )
+                                ],
+                              ),
+                              Expanded(
+                                child: SingleChildScrollView(
+                                  child: TXTextWidget(
+                                    size: 16,
+                                    textAlign: TextAlign.justify,
+                                    text: R.string.foodsInstructions,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      );
+                    });
+              },
+            )
+          ],
           body: StreamBuilder<DailyFoodModel>(
             stream: bloc.dailyFoodResult,
             initialData: null,
@@ -134,22 +193,22 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
-                              TXTextWidget(
-                                text: dailyModel.dailyFoodPlanModel.kCalStr,
-                              ),
-                              TXTextWidget(
-                                text: dailyModel.dailyFoodPlanModel.kCalRange,
-                              ),
-                              TXTextWidget(
-                                text: dailyModel.dailyFoodPlanModel.imcStr,
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
+//                              TXTextWidget(
+//                                text: dailyModel.dailyFoodPlanModel.kCalStr,
+//                              ),
+//                              TXTextWidget(
+//                                text: dailyModel.dailyFoodPlanModel.kCalRange,
+//                              ),
+//                              TXTextWidget(
+//                                text: dailyModel.dailyFoodPlanModel.imcStr,
+//                              ),
+//                              SizedBox(
+//                                height: 5,
+//                              ),
                               Container(
-                                padding: EdgeInsets.symmetric(horizontal: 5),
+                                padding: EdgeInsets.symmetric(horizontal: 5, vertical: 20),
                                 child: TXComboProgressBarWidget(
-                                  showValueInBar: true,
+//                                  showValueInBar: true,
                                   title: "Calorías",
                                   titleSize: 12,
                                   percentage: bloc
@@ -214,22 +273,24 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                         SizedBox(
                           width: 5,
                         ),
-                        TXTextWidget(
-                          size: 8,
-                          text:
-                              "+-${bloc.getActivityFoodCaloriesOffSet(model).toStringAsFixed(2)}",
-                        ),
+//                        TXTextWidget(
+//                          size: 8,
+//                          text:
+//                              "+-${bloc.getActivityFoodCaloriesOffSet(model).toStringAsFixed(2)}",
+//                        ),
                         SizedBox(
                           width: 5,
                         ),
                         Container(
                           width: 150,
                           child: TXComboProgressBarWidget(
-                            title: "${bloc.getActivityFoodCalories(model)}",
+                            title: "",
                             percentage:
                                 bloc.getCurrentCaloriesPercentageByFood(model),
-                            mark1: bloc.getActivityFoodCalories(model) - bloc.getActivityFoodCaloriesOffSet(model),
-                            mark2: bloc.getActivityFoodCalories(model) + bloc.getActivityFoodCaloriesOffSet(model),
+                            mark1: bloc.getActivityFoodCalories(model) -
+                                bloc.getActivityFoodCaloriesOffSet(model),
+                            mark2: bloc.getActivityFoodCalories(model) +
+                                bloc.getActivityFoodCaloriesOffSet(model),
                             height: 15,
                             value: model.calories,
                           ),

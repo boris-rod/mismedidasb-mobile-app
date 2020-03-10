@@ -36,7 +36,9 @@ dependencies:
   cupertino_icons: ^0.1.2
   signalr_client: ^0.1.6
   charts_flutter: ^0.9.0
+  mp_chart: ^0.1.8
   flutter_rounded_progress_bar: ^0.1.2
+  device_info: ^0.4.1+5
 #  flutter_mailer: ^0.4.2
 
 #  cloud_firestore: ^0.13.0+1

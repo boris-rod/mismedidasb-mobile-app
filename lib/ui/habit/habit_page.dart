@@ -33,9 +33,9 @@ class _HabitState extends StateWithBloC<HabitPage, HabitBloC> {
               NavigationUtils.pop(context);
             },
           ),
-          title: R.string.myMeasureHealth,
+          title: "Hábitos Saludables",
           body: TXBackgroundWidget(
-            icon: Icons.bubble_chart,
+            iconRes: R.image.habits_home,
             child: Container(
               padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
               child: Column(
@@ -55,6 +55,7 @@ class _HabitState extends StateWithBloC<HabitPage, HabitBloC> {
                       initialData: [],
                       builder: (context, snapshot) {
                         return ListView.builder(
+                          physics: BouncingScrollPhysics(),
                           padding: EdgeInsets.only(bottom: 30),
                           shrinkWrap: true,
                           itemBuilder: (ctx, index) {

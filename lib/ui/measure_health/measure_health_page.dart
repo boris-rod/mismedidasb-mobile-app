@@ -56,7 +56,7 @@ class _MeasureHealthState
           ),
           title: R.string.myMeasureHealth,
           body: TXBackgroundWidget(
-            icon: Icons.thumb_up,
+            iconRes: R.image.health_home,
             child: Column(
               children: <Widget>[
                 SizedBox(
@@ -74,19 +74,31 @@ class _MeasureHealthState
                   },
                 ),
                 Expanded(
-                  child: PageView.builder(
-                    physics: NeverScrollableScrollPhysics(),
-                    controller: pageController,
-                    itemBuilder: (ctx, index) {
-                      List<Widget> list = [
-                        getPersonalDataView(context),
-                        getPeriodForPhysicalExerciseView(context),
-                        getDietView(context),
-                        getResultView(context)
-                      ];
-                      return list[index];
-                    },
-                    itemCount: 4,
+                  child: Column(
+                    children: <Widget>[
+                      Expanded(
+                        child: PageView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          controller: pageController,
+                          itemBuilder: (ctx, index) {
+                            List<Widget> list = [
+                              getPersonalDataView(context),
+                              getPeriodForPhysicalExerciseView(context),
+                              getDietView(context),
+                              getResultView(context)
+                            ];
+                            return list[index];
+                          },
+                          itemCount: 4,
+                        ),
+                      ),
+                      TXTextWidget(
+                        textAlign: TextAlign.center,
+                        text: R.string.app_clinical_warning,
+                        size: 12,
+                        color: R.color.accent_color,
+                      )
+                    ],
                   ),
                 ),
                 Container(

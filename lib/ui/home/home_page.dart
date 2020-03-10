@@ -7,7 +7,9 @@ import 'package:mismedidasb/ui/_base/navigation_utils.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_icon_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_main_app_bar_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_network_image.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
+import 'package:mismedidasb/ui/food_craving/food_craving_page.dart';
 import 'package:mismedidasb/ui/food_dish/food_dish_page.dart';
 import 'package:mismedidasb/ui/habit/habit_page.dart';
 import 'package:mismedidasb/ui/home/home_bloc.dart';
@@ -62,29 +64,37 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
             children: <Widget>[
               _getHomeButton(
                   context: context,
-                  icon: Icons.thumb_up,
+                  imgH: 100,
+                  imgW: 100,
+                  resDir: R.image.health_home,
                   title: R.string.myMeasureHealth,
                   onTap: () {
                     NavigationUtils.push(context, MeasureHealthPage());
                   }),
               _getHomeButton(
                   context: context,
-                  icon: Icons.videogame_asset,
+                  imgH: 100,
+                  imgW: 100,
+                  resDir: R.image.values_home,
                   title: R.string.myMeasureValues,
                   onTap: () {
                     NavigationUtils.push(context, MeasureValuePage());
                   }),
               _getHomeButton(
                   context: context,
-                  icon: Icons.local_florist,
+                  imgH: 100,
+                  imgW: 100,
+                  resDir: R.image.wellness_home,
                   title: R.string.myMeasureWellness,
                   onTap: () {
                     NavigationUtils.push(context, MeasureWellnessPage());
                   }),
               _getHomeButton(
                   context: context,
-                  icon: Icons.local_offer,
+                  resDir: R.image.dishes_home,
                   title: R.string.foodDishes,
+                  imgH: 110,
+                  imgW: 110,
                   onTap: () async {
                     final res = await bloc.canNavigateToFoodPage();
                     if (res)
@@ -96,10 +106,21 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
                   }),
               _getHomeButton(
                   context: context,
-                  icon: Icons.bubble_chart,
+                  resDir: R.image.habits_home,
+                  imgH: 100,
+                  imgW: 100,
                   title: R.string.healthHabits,
                   onTap: () {
                     NavigationUtils.push(context, HabitPage());
+                  }),
+              _getHomeButton(
+                  context: context,
+                  resDir: R.image.food_craving_home,
+                  title: R.string.foodCraving,
+                  imgH: 110,
+                  imgW: 110,
+                  onTap: () {
+                    NavigationUtils.push(context, FoodCravingPage());
                   }),
             ],
           ),
@@ -112,28 +133,26 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
   }
 
   Widget _getHomeButton(
-      {BuildContext context, IconData icon, String title, Function onTap}) {
+      {BuildContext context, String resDir, String title, Function onTap, double imgH = 120, double imgW = 120}) {
     return Container(
-      padding: EdgeInsets.all(20),
+      padding: EdgeInsets.all(10),
       child: InkWell(
-        borderRadius: BorderRadius.all(Radius.circular(45)),
+        borderRadius: BorderRadius.all(Radius.circular(10)),
         onTap: onTap,
         child: Container(
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
               border: Border.all(color: R.color.primary_color, width: .5),
-              borderRadius: BorderRadius.all(Radius.circular(45))),
+              borderRadius: BorderRadius.all(Radius.circular(10))),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Icon(
-                icon,
-                color: R.color.primary_color,
-                size: 60,
-              ),
-              SizedBox(
-                height: 10,
+              Container(
+                height: imgH,
+                width: imgW,
+                child: Image.asset(
+                  resDir,
+                  fit: BoxFit.contain,
+                ),
               ),
               Expanded(
                 child: TXTextWidget(
@@ -142,7 +161,7 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
                   maxLines: 2,
                   textOverflow: TextOverflow.ellipsis,
                 ),
-              )
+              ),
             ],
           ),
         ),
