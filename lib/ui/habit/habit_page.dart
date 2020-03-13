@@ -37,10 +37,16 @@ class _HabitState extends StateWithBloC<HabitPage, HabitBloC> {
           body: TXBackgroundWidget(
             iconRes: R.image.habits_home,
             child: Container(
-              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
+                  TXTextWidget(
+                    textAlign: TextAlign.center,
+                    text: R.string.appClinicalWarningForAdvice,
+                    size: 12,
+                    color: R.color.accent_color,
+                  ),
                   Container(
                     alignment: Alignment.center,
                     padding: EdgeInsets.all(20),

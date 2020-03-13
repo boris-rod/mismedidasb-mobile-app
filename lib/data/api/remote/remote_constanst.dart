@@ -11,6 +11,12 @@ class RemoteConstants {
 
   static const unable_host_massage = 'Failed host lookup:';
 
+  static const proteins_category_code = 12;
+  static const milk_category_code = 13;
+  static const fiber_category_code = 14;
+  static const carbohydrate_fat_category_code = 15;
+  static const soft_drinks_category_code = 16;
+
   static const result = 'result';
   static const authorization = 'authorization';
   static const refreshToken = 'refreshtoken';

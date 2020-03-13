@@ -86,5 +86,7 @@ abstract class StringsBase implements WidgetsLocalizations {
 
   String get foodsInstructions;
 
-  String get app_clinical_warning;
+  String get appClinicalWarning;
+
+  String get appClinicalWarningForAdvice;
 }

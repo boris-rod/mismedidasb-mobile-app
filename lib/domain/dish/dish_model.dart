@@ -94,9 +94,16 @@ class DailyActivityFoodModel {
   double fiber;
   DailyFoodPlanModel plan;
 
-//  List<FoodModel> get foodsProteins => foods.where((f) => f.tag.name.trim().toLowerCase() == "proteins");
-//  List<FoodModel> get foodsCarbohydrates => foods.where((f) => f.tag.name.trim().toLowerCase() == "carbohydrates");
-//  List<FoodModel> get foodsFiber => foods.where((f) => f.tag.name.trim().toLowerCase() == "fiber");
+  List<FoodModel> foodsProteins;
+  List<FoodModel> foodsCarbohydrates;
+  List<FoodModel> foodsFiber;
+
+  double foodsProteinsCalories;
+  int foodsProteinsPercentage;
+  double foodsCarbohydratesCalories;
+  int foodsCarbohydratesPercentage;
+  double foodsFiberCalories;
+  int foodsFiberPercentage;
 
   DailyActivityFoodModel(
       {this.id,

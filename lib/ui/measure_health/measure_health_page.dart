@@ -94,7 +94,7 @@ class _MeasureHealthState
                       ),
                       TXTextWidget(
                         textAlign: TextAlign.center,
-                        text: R.string.app_clinical_warning,
+                        text: R.string.appClinicalWarning,
                         size: 12,
                         color: R.color.accent_color,
                       )

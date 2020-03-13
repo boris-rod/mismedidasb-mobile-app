@@ -75,6 +75,12 @@ class _MeasureWellnessState
                         itemCount: bloc.wellnessResultModel.wellness.length,
                       ),
                     ),
+                    TXTextWidget(
+                      textAlign: TextAlign.center,
+                      text: R.string.appClinicalWarningForAdvice,
+                      size: 12,
+                      color: R.color.accent_color,
+                    ),
                     Container(
                       child: TXButtonPaginateWidget(
                         onNext: () {

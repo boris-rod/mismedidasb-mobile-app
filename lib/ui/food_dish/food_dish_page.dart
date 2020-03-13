@@ -14,6 +14,7 @@ import 'package:mismedidasb/ui/_tx_widget/tx_icon_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_main_app_bar_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_network_image.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_serie_progress_bar_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_textlink_widget.dart';
 import 'package:mismedidasb/ui/food/food_page.dart';
@@ -27,13 +28,13 @@ class FoodDishPage extends StatefulWidget {
 }
 
 class SubscriberSeries {
-  final String year;
-  final int subscribers;
+  final String nutritionKey;
+  final int partialValue;
   final charts.Color barColor;
 
   SubscriberSeries(
-      {@required this.year,
-      @required this.subscribers,
+      {@required this.nutritionKey,
+      @required this.partialValue,
       @required this.barColor});
 }
 
@@ -51,35 +52,35 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
   Widget buildWidget(BuildContext context) {
     final List<SubscriberSeries> data = [
       SubscriberSeries(
-        year: "1",
-        subscribers: 2,
+        nutritionKey: "1",
+        partialValue: 2,
         barColor: charts.ColorUtil.fromDartColor(Colors.red[400]),
       ),
       SubscriberSeries(
-        year: "2",
-        subscribers: 4,
+        nutritionKey: "2",
+        partialValue: 4,
         barColor: charts.ColorUtil.fromDartColor(Colors.blue[400]),
       ),
       SubscriberSeries(
-        year: "3",
-        subscribers: 4,
+        nutritionKey: "3",
+        partialValue: 4,
         barColor: charts.ColorUtil.fromDartColor(Colors.green[400]),
       ),
     ];
     final List<SubscriberSeries> data1 = [
       SubscriberSeries(
-        year: "1",
-        subscribers: 2,
+        nutritionKey: "1",
+        partialValue: 2,
         barColor: charts.ColorUtil.fromDartColor(Colors.red[400]),
       ),
       SubscriberSeries(
-        year: "2",
-        subscribers: 3,
+        nutritionKey: "2",
+        partialValue: 3,
         barColor: charts.ColorUtil.fromDartColor(Colors.blue[400]),
       ),
       SubscriberSeries(
-        year: "3",
-        subscribers: 5,
+        nutritionKey: "3",
+        partialValue: 5,
         barColor: charts.ColorUtil.fromDartColor(Colors.green[400]),
       ),
     ];
@@ -89,8 +90,8 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
           id: "Subscribers",
           data: data,
           displayName: "Pie",
-          domainFn: (SubscriberSeries series, _) => series.year,
-          measureFn: (SubscriberSeries series, _) => series.subscribers,
+          domainFn: (SubscriberSeries series, _) => series.nutritionKey,
+          measureFn: (SubscriberSeries series, _) => series.partialValue,
           colorFn: (SubscriberSeries series, _) => series.barColor)
     ];
 
@@ -99,8 +100,8 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
           id: "Subscribers",
           data: data1,
           displayName: "Pie",
-          domainFn: (SubscriberSeries series, _) => series.year,
-          measureFn: (SubscriberSeries series, _) => series.subscribers,
+          domainFn: (SubscriberSeries series, _) => series.nutritionKey,
+          measureFn: (SubscriberSeries series, _) => series.partialValue,
           colorFn: (SubscriberSeries series, _) => series.barColor)
     ];
 
@@ -118,7 +119,7 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
           actions: <Widget>[
             TXIconButtonWidget(
               icon: Icon(
-                Icons.star,
+                Icons.live_help,
                 color: Colors.yellow,
               ),
               onPressed: () {
@@ -126,7 +127,8 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                     context: context,
                     builder: (context) {
                       return Container(
-                        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                         child: Container(
                           padding: EdgeInsets.only(left: 10),
                           alignment: Alignment.topLeft,
@@ -189,10 +191,16 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                           ),
                         ),
                         Container(
-                          padding: EdgeInsets.symmetric(vertical: 10),
+                          color: Colors.white,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
+                              TXTextWidget(
+                                textAlign: TextAlign.center,
+                                text: R.string.appClinicalWarning,
+                                size: 12,
+                                color: R.color.accent_color,
+                              ),
 //                              TXTextWidget(
 //                                text: dailyModel.dailyFoodPlanModel.kCalStr,
 //                              ),
@@ -206,18 +214,23 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
 //                                height: 5,
 //                              ),
                               Container(
-                                padding: EdgeInsets.symmetric(horizontal: 5, vertical: 20),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 5, vertical: 5),
                                 child: TXComboProgressBarWidget(
 //                                  showValueInBar: true,
                                   title: "Calorías",
                                   titleSize: 12,
-                                  percentage: bloc
-                                      .getCurrentCaloriesPercentage(dailyModel),
-                                  mark1: dailyModel.dailyFoodPlanModel.kCalMin,
-                                  mark2: dailyModel.dailyFoodPlanModel.kCalMax,
+                                  percentage:
+                                  bloc.getCurrentCaloriesPercentage(
+                                      dailyModel),
+                                  mark1:
+                                  dailyModel.dailyFoodPlanModel.kCalMin,
+                                  mark2:
+                                  dailyModel.dailyFoodPlanModel.kCalMax,
                                   value: dailyModel.currentCaloriesSum,
                                 ),
                               ),
+                              Expanded(child: Container(),),
                               Container(
                                 color: R.color.gray,
                                 height: .5,
@@ -225,9 +238,8 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                               )
                             ],
                           ),
-                          height: 105,
-                          color: Colors.white,
-                        )
+                          height: 80,
+                        ),
                       ],
                     );
             },
@@ -332,149 +344,165 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                     (model.id != 2 && model.id != 4)
                         ? Column(
                             children: <Widget>[
+                              Container(
+                                padding: EdgeInsets.all(1),
+                                height: 80,
+                                width: 80,
+                                child: Stack(
+                                  children: <Widget>[
+                                    charts.PieChart(
+                                      model.id == 5 ? series1 : series,
+                                      layoutConfig: LayoutConfig(
+                                          topMarginSpec:
+                                              MarginSpec.fixedPixel(0),
+                                          leftMarginSpec:
+                                              MarginSpec.fixedPixel(0),
+                                          rightMarginSpec:
+                                              MarginSpec.fixedPixel(0),
+                                          bottomMarginSpec:
+                                              MarginSpec.fixedPixel(0)),
+                                      animate: true,
+                                    ),
+                                    Positioned(
+                                      top: 25,
+                                      left: 10,
+                                      child: TXTextWidget(
+                                        text: "40%",
+                                        color: Colors.white,
+                                        size: 12,
+                                      ),
+                                    ),
+                                    Positioned(
+                                      top: 12,
+                                      right: 12,
+                                      child: TXTextWidget(
+                                        text: "20%",
+                                        color: Colors.white,
+                                        size: 12,
+                                      ),
+                                    ),
+                                    Positioned(
+                                      right: 12,
+                                      bottom: 15,
+                                      child: TXTextWidget(
+                                        text: "40%",
+                                        color: Colors.white,
+                                        size: 12,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                height: 3,
+                              ),
                               TXTextWidget(
                                 text: "Ideal",
                                 size: 10,
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold,
                               ),
-                              Container(
-                                padding: EdgeInsets.all(1),
-                                height: 80,
-                                width: 80,
-                                child: charts.PieChart(
-                                  model.id == 5 ? series1 : series,
-                                  layoutConfig: LayoutConfig(
-                                      topMarginSpec: MarginSpec.fixedPixel(0),
-                                      leftMarginSpec: MarginSpec.fixedPixel(0),
-                                      rightMarginSpec: MarginSpec.fixedPixel(0),
-                                      bottomMarginSpec:
-                                          MarginSpec.fixedPixel(0)),
-                                  animate: true,
-                                ),
-                              )
                             ],
                           )
                         : Container(),
                     Expanded(
-                      child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 5),
-                        child: Wrap(
-                          spacing: 3,
-                          runSpacing: 0,
-                          alignment: WrapAlignment.start,
-                          children: <Widget>[..._getChips(model)],
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              Column(
-                children: <Widget>[
-                  (model.id == -1)
-                      ? Column(
-                          children: <Widget>[
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Container(
-                              padding: EdgeInsets.symmetric(horizontal: 10),
-                              child: Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    flex: 4,
-                                    child: Container(
-                                      padding:
-                                          EdgeInsets.symmetric(horizontal: 2),
-                                      child: Column(
+                      child: (model.id != 2 && model.id != 4)
+                          ? Row(
+                              children: <Widget>[
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Row(
                                         children: <Widget>[
-                                          TXComboProgressBarWidget(
-                                            titleSize: 9,
-                                            height: 14,
-                                            percentage: 30,
-                                            title: "",
-                                            mark1: 50,
-                                            mark2: 70,
-                                            value: 80,
+                                          Container(
+                                            width: 10,
+                                            height: 10,
+                                            color: Colors.red[400],
                                           ),
-                                          TXTextWidget(
-                                            text: "Vegetales",
-                                            maxLines: 1,
-                                            size: 10,
-                                            textOverflow: TextOverflow.ellipsis,
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 4,
-                                    child: Container(
-                                      padding:
-                                          EdgeInsets.symmetric(horizontal: 2),
-                                      child: Column(
-                                        children: <Widget>[
-                                          TXComboProgressBarWidget(
-                                            titleSize: 9,
-                                            height: 14,
-                                            percentage: 30,
-                                            title: "",
-                                            mark1: 50,
-                                            mark2: 70,
-                                            value: 80,
-                                          ),
-                                          TXTextWidget(
-                                            text: "Carbohidratos",
-                                            size: 10,
-                                            maxLines: 1,
-                                            textOverflow: TextOverflow.ellipsis,
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 2,
-                                    child: Container(
-                                      padding:
-                                          EdgeInsets.symmetric(horizontal: 2),
-                                      child: Column(
-                                        children: <Widget>[
-                                          TXComboProgressBarWidget(
-                                            titleSize: 9,
-                                            height: 14,
-                                            percentage: 30,
-                                            title: "",
-                                            mark1: 50,
-                                            mark2: 70,
-                                            value: 80,
+                                          SizedBox(
+                                            width: 5,
                                           ),
                                           TXTextWidget(
                                             text: "Proteínas",
-                                            size: 10,
-                                            maxLines: 1,
-                                            textOverflow: TextOverflow.ellipsis,
                                           )
                                         ],
                                       ),
-                                    ),
+                                      Row(
+                                        children: <Widget>[
+                                          Container(
+                                            width: 10,
+                                            height: 10,
+                                            color: Colors.blue[400],
+                                          ),
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          TXTextWidget(
+                                            text: "Carbohidratos",
+                                          )
+                                        ],
+                                      ),
+                                      Row(
+                                        children: <Widget>[
+                                          Container(
+                                            width: 10,
+                                            height: 10,
+                                            color: Colors.green[400],
+                                          ),
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          TXTextWidget(
+                                            text: "Frutas y/o Vegetales",
+                                          )
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Container(
+                                        margin:
+                                            EdgeInsets.only(right: 20, top: 5),
+                                        child: TXSeriesProgressBarWidget(
+                                          value1: model.foodsProteinsPercentage,
+                                          value2: model
+                                              .foodsCarbohydratesPercentage,
+                                          value3: model.foodsFiberPercentage,
+                                        ),
+                                      )
+                                    ],
                                   ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        )
-                      : Container(),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  ..._getFoods(model, model.foods),
-                  SizedBox(
-                    height: 5,
-                  )
-                ],
+                                )
+                              ],
+                            )
+                          : Container(),
+                    )
+//                    Expanded(
+//                      child: Container(
+//                        padding: EdgeInsets.symmetric(horizontal: 5),
+//                        child: Wrap(
+//                          spacing: 3,
+//                          runSpacing: 0,
+//                          alignment: WrapAlignment.start,
+//                          children: <Widget>[..._getChips(model)],
+//                        ),
+//                      ),
+//                    )
+                  ],
+                ),
               ),
+              SizedBox(
+                height: 10,
+              ),
+              ..._getFoods(model, model.foods),
+              SizedBox(
+                height: 5,
+              )
             ],
           ),
         ),
