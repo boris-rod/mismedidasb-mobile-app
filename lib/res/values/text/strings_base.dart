@@ -89,4 +89,10 @@ abstract class StringsBase implements WidgetsLocalizations {
   String get appClinicalWarning;
 
   String get appClinicalWarningForAdvice;
+
+  String get appWellnessResultText;
+
+  String get appValuesResultText;
+
+  String get appFooPlaResultText;
 }

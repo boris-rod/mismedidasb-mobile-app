@@ -136,9 +136,17 @@ class StringsEs implements StringsBase {
       "Nuestra App te brinda la posibilidad de realizar una planificación de tu alimentación diaria ajustada a tus necesidades. Toma en cuenta para ello tu peso, estatura, edad, sexo y práctica de ejercicio físico. No se trata de una dieta, aunque se basa en la moderación en la ingestión de los alimentos. \n Te brindamos una guía visual de la adecuación de tu selección en cuanto a calorías y balance de proteínas, grasas, carbohidratos y fibra. Podrás visualizar si te acerca o alejas del porcentaje adecuado, pero no ofreceremos la cantidad de calorías o peso. Hemos observado en nuestra práctica clínica que numerosas personas pueden obsesionarse con estas cifras. \n Hemos calculado las porciones de forma sencilla, las puedes medir usando las dimensiones tu mano y sentido común. No significa que debas tomar los alimentos con tus manos, o en tus manos, para comerlos o servirlos. Se trata solo de una guía visual basada en un cálculo aproximado. \n Si estás interesado en obtener una dieta médica personalizada puedes ponerte en contacto con nosotros.";
 
   @override
-  String get appClinicalWarning => "Factores como el embarazo o algunas enfermedades médicas podrian afectar la interpretación de los resultados.";
+  String get appClinicalWarning => "Factores como el embarazo o algunas enfermedades médicas podrían afectar la interpretación de los resultados.";
 
   @override
-  String get appClinicalWarningForAdvice => "Factores como el embarazo o algunas enfermedades médicas podrian afectar la interpretación de esta información";
+  String get appClinicalWarningForAdvice => "Factores como el embarazo o algunas enfermedades médicas podrían afectar la interpretación de esta información";
 
+  @override
+  String get appValuesResultText => "¡Muchas gracias! El análisis de sus valores nos ayudará a comprender su estilo de vida y la forma en la que se relaciona con los alimentos.";
+
+  @override
+  String get appWellnessResultText => "¡Muchas gracias! Su percepción de bienestar nos ayudará a comprender su estilo de vida y la forma en la que se relaciona con los alimentos.";
+
+  @override
+  String get appFooPlaResultText => "Factores como el embarazo o algunas enfermedades médicas podrían afectar la idoneidad de los alimentos seleccionados para cuidar su salud.";
 }

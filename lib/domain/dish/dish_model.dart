@@ -63,12 +63,20 @@ class DailyFoodModel {
   List<DailyActivityFoodModel> dailyActivityFoodModel;
   DailyFoodPlanModel dailyFoodPlanModel;
   double currentCaloriesSum;
+  double currentSumProteins;
+  double currentSumCarbohydrates;
+  double currentSumFat;
+  double currentSumFiber;
 
   DailyFoodModel(
       {this.dateTime,
       this.dailyActivityFoodModel,
       this.dailyFoodPlanModel,
-      this.currentCaloriesSum = 0});
+      this.currentCaloriesSum = 0,
+      this.currentSumCarbohydrates = 0,
+      this.currentSumFat = 0,
+      this.currentSumFiber = 0,
+      this.currentSumProteins = 0});
 
   static DailyFoodModel getDailyFoodModel(HealthResult healthResult) {
     final plan =
@@ -94,16 +102,22 @@ class DailyActivityFoodModel {
   double fiber;
   DailyFoodPlanModel plan;
 
-  List<FoodModel> foodsProteins;
-  List<FoodModel> foodsCarbohydrates;
-  List<FoodModel> foodsFiber;
-
-  double foodsProteinsCalories;
   int foodsProteinsPercentage;
-  double foodsCarbohydratesCalories;
   int foodsCarbohydratesPercentage;
-  double foodsFiberCalories;
   int foodsFiberPercentage;
+//  int foodsFatPercentage;
+
+  double proteinsDishCalories;
+  double fiberDishCalories;
+  double carbohydratesDishCalories;
+
+//  List<FoodModel> foodsProteins;
+//  List<FoodModel> foodsCarbohydrates;
+//  List<FoodModel> foodsFiber;
+
+//  double foodsProteinsCalories;
+//  double foodsCarbohydratesCalories;
+//  double foodsFiberCalories;
 
   DailyActivityFoodModel(
       {this.id,
@@ -149,6 +163,7 @@ class FoodModel {
 
   TagModel get tag => tags.isNotEmpty ? tags[0] : TagModel();
 
+  double get caloriesFixed => carbohydrates * 4 + proteins * 4 + fat * 9;
   FoodModel({
     this.id,
     this.name,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:mismedidasb/fcm/fcm_background_notification_aware_widget.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/bloc_state.dart';
 import 'package:mismedidasb/ui/_base/navigation_utils.dart';
@@ -33,130 +34,134 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
 
   @override
   Widget buildWidget(BuildContext context) {
-    return TXMainAppBarWidget(
-      title: R.string.appName,
-      leading: TXIconButtonWidget(
-        icon: Image.asset(
-          R.image.logo,
-        ),
-      ),
-      actions: <Widget>[
-        TXIconButtonWidget(
-          icon: Icon(Icons.settings),
-          onPressed: () async {
-            final res = await NavigationUtils.push(context, ProfilePage());
-            if (res is profileAction) {
-              if (res == profileAction.logout) {
-                NavigationUtils.pushReplacement(context, LoginPage());
-              }
-            }
-          },
-        )
-      ],
-      body: Stack(
-        children: <Widget>[
-          SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-            padding: EdgeInsets.symmetric(vertical: 20),
-            child: Column(
-              children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      flex: 1,
-                      child: _getHomeButton(
-                          context: context,
-                          imgH: 100,
-                          imgW: 100,
-                          resDir: R.image.health_home,
-                          title: R.string.myMeasureHealth,
-                          onTap: () {
-                            NavigationUtils.push(context, MeasureHealthPage());
-                          }),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: _getHomeButton(
-                          context: context,
-                          imgH: 100,
-                          imgW: 100,
-                          resDir: R.image.values_home,
-                          title: R.string.myMeasureValues,
-                          onTap: () {
-                            NavigationUtils.push(context, MeasureValuePage());
-                          }),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      flex: 1,
-                      child: _getHomeButton(
-                          context: context,
-                          imgH: 100,
-                          imgW: 100,
-                          resDir: R.image.wellness_home,
-                          title: R.string.myMeasureWellness,
-                          onTap: () {
-                            NavigationUtils.push(context, MeasureWellnessPage());
-                          }),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: _getHomeButton(
-                          context: context,
-                          resDir: R.image.dishes_home,
-                          title: R.string.foodDishes,
-                          imgH: 110,
-                          imgW: 110,
-                          onTap: () async {
-                            final res = await bloc.canNavigateToFoodPage();
-                            if (res)
-                              NavigationUtils.push(context, FoodDishPage());
-                            else
-                              Fluttertoast.showToast(
-                                  msg:
-                                      "Debe completar el cuestionario de Medidas de Salud");
-                          }),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      flex: 1,
-                      child: _getHomeButton(
-                          context: context,
-                          resDir: R.image.habits_home,
-                          imgH: 100,
-                          imgW: 100,
-                          title: R.string.healthHabits,
-                          onTap: () {
-                            NavigationUtils.push(context, HabitPage());
-                          }),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: _getHomeButton(
-                          context: context,
-                          resDir: R.image.food_craving_home,
-                          title: R.string.foodCraving,
-                          imgH: 110,
-                          imgW: 110,
-                          onTap: () {
-                            NavigationUtils.push(context, FoodCravingPage());
-                          }),
-                    ),
-                  ],
-                )
-              ],
-            ),
+    return FCMAwareBody(
+      child: TXMainAppBarWidget(
+        title: R.string.appName,
+        leading: TXIconButtonWidget(
+          icon: Image.asset(
+            R.image.logo,
           ),
-          TXLoadingWidget(
-            loadingStream: bloc.isLoadingStream,
+        ),
+        actions: <Widget>[
+          TXIconButtonWidget(
+            icon: Icon(Icons.settings),
+            onPressed: () async {
+              final res = await NavigationUtils.push(context, ProfilePage());
+              if (res is profileAction) {
+                if (res == profileAction.logout) {
+                  NavigationUtils.pushReplacement(context, LoginPage());
+                }
+              }
+            },
           )
         ],
+        body: Stack(
+          children: <Widget>[
+            SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
+              padding: EdgeInsets.symmetric(vertical: 20),
+              child: Column(
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        flex: 1,
+                        child: _getHomeButton(
+                            context: context,
+                            imgH: 100,
+                            imgW: 100,
+                            resDir: R.image.health_home,
+                            title: R.string.myMeasureHealth,
+                            onTap: () {
+                              NavigationUtils.push(
+                                  context, MeasureHealthPage());
+                            }),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: _getHomeButton(
+                            context: context,
+                            imgH: 100,
+                            imgW: 100,
+                            resDir: R.image.values_home,
+                            title: R.string.myMeasureValues,
+                            onTap: () {
+                              NavigationUtils.push(context, MeasureValuePage());
+                            }),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        flex: 1,
+                        child: _getHomeButton(
+                            context: context,
+                            imgH: 100,
+                            imgW: 100,
+                            resDir: R.image.wellness_home,
+                            title: R.string.myMeasureWellness,
+                            onTap: () {
+                              NavigationUtils.push(
+                                  context, MeasureWellnessPage());
+                            }),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: _getHomeButton(
+                            context: context,
+                            resDir: R.image.dishes_home,
+                            title: R.string.foodDishes,
+                            imgH: 110,
+                            imgW: 110,
+                            onTap: () async {
+                              final res = await bloc.canNavigateToFoodPage();
+                              if (res)
+                                NavigationUtils.push(context, FoodDishPage());
+                              else
+                                Fluttertoast.showToast(
+                                    msg:
+                                        "Debe completar el cuestionario de Medidas de Salud");
+                            }),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        flex: 1,
+                        child: _getHomeButton(
+                            context: context,
+                            resDir: R.image.habits_home,
+                            imgH: 100,
+                            imgW: 100,
+                            title: R.string.healthHabits,
+                            onTap: () {
+                              NavigationUtils.push(context, HabitPage());
+                            }),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: _getHomeButton(
+                            context: context,
+                            resDir: R.image.food_craving_home,
+                            title: R.string.foodCraving,
+                            imgH: 110,
+                            imgW: 110,
+                            onTap: () {
+                              NavigationUtils.push(context, FoodCravingPage());
+                            }),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+            TXLoadingWidget(
+              loadingStream: bloc.isLoadingStream,
+            )
+          ],
+        ),
       ),
     );
   }

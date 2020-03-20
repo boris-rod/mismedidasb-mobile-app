@@ -62,6 +62,8 @@ import 'package:mismedidasb/domain/session/i_session_repository.dart';
 import 'package:mismedidasb/domain/user/i_user_api.dart';
 import 'package:mismedidasb/domain/user/i_user_converter.dart';
 import 'package:mismedidasb/domain/user/i_user_repository.dart';
+import 'package:mismedidasb/fcm/fcm_feature.dart';
+import 'package:mismedidasb/fcm/i_fcm_feature.dart';
 import 'package:mismedidasb/ui/_base/bloc_base.dart';
 import 'package:mismedidasb/ui/change_password/change_password_bloc.dart';
 import 'package:mismedidasb/ui/food/food_bloc.dart';
@@ -214,7 +216,7 @@ class Injector {
         (c) => AccountRepository(container.resolve()));
 
     container.registerSingleton<ISessionRepository, SessionRepository>(
-        (c) => SessionRepository(container.resolve(), container.resolve()));
+        (c) => SessionRepository(container.resolve(), container.resolve(), container.resolve()));
 
     container.registerSingleton<IUserRepository, UserRepository>(
         (c) => UserRepository(container.resolve()));
@@ -266,6 +268,12 @@ class Injector {
     container.registerSingleton((c) => SharedPreferencesManager());
     container.registerSingleton(
       (c) => NetworkHandler(container.resolve(), container.resolve()),
+    );
+    container.registerSingleton<IFCMFeature, FCMFeature>(
+          (c) => FCMFeature(
+        c.resolve(),
+        c.resolve(),
+      ),
     );
   }
 }

@@ -1,5 +1,5 @@
 class Endpoint {
-  static String apiBaseUrl = "http://ec2-18-188-244-39.us-east-2.compute.amazonaws.com";
+  static String apiBaseUrl = "http://ec2-18-189-29-100.us-east-2.compute.amazonaws.com";
 
   ///Account
   static const String register = "/api/account/register";

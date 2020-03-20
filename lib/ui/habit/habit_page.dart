@@ -41,12 +41,6 @@ class _HabitState extends StateWithBloC<HabitPage, HabitBloC> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  TXTextWidget(
-                    textAlign: TextAlign.center,
-                    text: R.string.appClinicalWarningForAdvice,
-                    size: 12,
-                    color: R.color.accent_color,
-                  ),
                   Container(
                     alignment: Alignment.center,
                     padding: EdgeInsets.all(20),
@@ -98,6 +92,12 @@ class _HabitState extends StateWithBloC<HabitPage, HabitBloC> {
                         );
                       },
                     ),
+                  ),
+                  TXTextWidget(
+                    textAlign: TextAlign.center,
+                    text: R.string.appClinicalWarningForAdvice,
+                    size: 10,
+                    color: R.color.accent_color,
                   ),
                 ],
               ),

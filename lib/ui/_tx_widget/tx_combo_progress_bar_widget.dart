@@ -52,7 +52,7 @@ class TXComboProgressBarWidget extends StatelessWidget {
                 margin: EdgeInsets.all(0),
                 style: RoundedProgressBarStyle(
                     widthShadow: 0,
-                    backgroundProgress: Colors.grey[300],
+                    backgroundProgress: Colors.grey[200],
                     colorProgress: Colors.yellowAccent,
                     borderWidth: 0),
               )
@@ -78,7 +78,7 @@ class TXComboProgressBarWidget extends StatelessWidget {
                 margin: EdgeInsets.all(0),
                 style: RoundedProgressBarStyle(
                     widthShadow: 0,
-                    backgroundProgress: Colors.grey[300],
+                    backgroundProgress: Colors.grey[200],
                     colorProgress: Colors.greenAccent,
                     borderWidth: 0),
               )
@@ -104,7 +104,7 @@ class TXComboProgressBarWidget extends StatelessWidget {
                 margin: EdgeInsets.all(0),
                 style: RoundedProgressBarStyle(
                     widthShadow: 0,
-                    backgroundProgress: Colors.grey[300],
+                    backgroundProgress: Colors.grey[200],
                     colorProgress: Colors.redAccent,
                     borderWidth: 0),
               )
