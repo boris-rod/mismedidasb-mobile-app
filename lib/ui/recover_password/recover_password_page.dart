@@ -114,43 +114,22 @@ class _RecoverPasswordState
   Widget _getDialog(BuildContext context) {
     return CupertinoAlertDialog(
       title: const Text(
-          'Allow "Maps" to access your location while you are using the app?'),
+          'Recuperar contraseña'),
       content: const Text(
-          'Your current location will be displayed on the map and used '
-              'for directions, nearby search results, and estimated travel times.'),
+          'Recibira un correo con la nueva contraseña.'),
       actions: <Widget>[
         CupertinoDialogAction(
-          child: const Text("Don't Allow"),
-          onPressed: () => Navigator.pop(context, 'Disallow'),
+          child: const Text("Cancelar"),
+          onPressed: () => Navigator.pop(context, 'Cancelar'),
         ),
         CupertinoDialogAction(
-          child: const Text('Allow'),
-          onPressed: () => Navigator.pop(context, 'Allow'),
+          child: const Text('Continuar'),
+          onPressed: (){
+            Navigator.pop(context, 'Continuar');
+            bloc.recoverPassword(emailTextController.text);
+          },
         ),
       ],
     );
-  }
-
-  void _showWarningDialog(BuildContext context) {
-    showBlurDialog(
-        context: context,
-        builder: (ctx) {
-          return Container(
-            height: 100,
-            child: Column(
-              children: <Widget>[
-                TXTextWidget(
-                  text: "Recibira un correo",
-                ),
-                TXButtonWidget(
-                  title: "ok",
-                  onPressed: () {
-                    bloc.recoverPassword(emailTextController.text);
-                  },
-                )
-              ],
-            ),
-          );
-        });
   }
 }

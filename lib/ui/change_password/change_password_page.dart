@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/bloc_state.dart';
@@ -29,6 +30,10 @@ class _ChangePasswordState
   void initState() {
     super.initState();
     bloc.initView();
+    bloc.changeResult.listen((onData){
+      if(onData == true)
+        NavigationUtils.pop(context);
+    });
   }
 
   @override
@@ -97,7 +102,7 @@ class _ChangePasswordState
                         title: R.string.changePassword,
                         onPressed: () {
                           if (_keyFormChangePassword.currentState.validate()) {
-                            _showWarningDialog(context);
+                            _showDemoDialog(context: context, child: _getDialog(context));
                           }
                         },
                       ),
@@ -109,6 +114,36 @@ class _ChangePasswordState
         TXLoadingWidget(
           loadingStream: bloc.isLoadingStream,
         )
+      ],
+    );
+  }
+
+  void _showDemoDialog({BuildContext context, Widget child}) {
+    showCupertinoDialog<String>(
+      context: context,
+      builder: (BuildContext context) => child,
+    );
+  }
+
+  Widget _getDialog(BuildContext context) {
+    return CupertinoAlertDialog(
+      title: const Text(
+          'Cambiar contraseña'),
+      content: const Text(
+          'Su contraseña sera actualizada.'),
+      actions: <Widget>[
+        CupertinoDialogAction(
+          child: const Text("Cancelar"),
+          onPressed: () => Navigator.pop(context, 'Cancelar'),
+        ),
+        CupertinoDialogAction(
+          child: const Text('Continuar'),
+          onPressed: (){
+            Navigator.pop(context, 'Continuar');
+            bloc.changePassword(oldTextController.text,
+                newTextController.text, confirmTextController.text);
+          },
+        ),
       ],
     );
   }

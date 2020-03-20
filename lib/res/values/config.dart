@@ -4,9 +4,7 @@ import 'package:mismedidasb/res/values/text/custom_localizations_delegate.dart';
 
 
 enum AppPlatform { ANDROID, IOS }
-enum Environment { PROD, DEV, DEMO }
-enum ServerAPI { GERMAN, USA }
-enum AppLocale { EN, DE }
+enum AppLocale { EN, ES, IT }
 
 class AppConfig {
   static bool get isInDebugMode {
