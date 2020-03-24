@@ -9,7 +9,9 @@ class TXNetworkImage extends StatelessWidget {
   final BoxShape shape;
   final double width;
   final double height;
-  final BoxFit boxFit;
+  final BoxFit boxFitImage;
+  final BoxFit boxFitErrorImage;
+  final BoxFit boxFitPlaceholderImage;
 
   TXNetworkImage({
     this.shape = BoxShape.rectangle,
@@ -17,7 +19,9 @@ class TXNetworkImage extends StatelessWidget {
     @required this.placeholderImage,
     this.width = 80,
     this.height = 60,
-    this.boxFit = BoxFit.contain,
+    this.boxFitImage = BoxFit.contain,
+    this.boxFitErrorImage = BoxFit.contain,
+    this.boxFitPlaceholderImage = BoxFit.contain,
   });
 
   @override
@@ -35,7 +39,7 @@ class TXNetworkImage extends StatelessWidget {
             decoration: BoxDecoration(
                 shape: shape,
                 image:
-                    DecorationImage(image: imageProvider, fit: BoxFit.contain)),
+                    DecorationImage(image: imageProvider, fit: boxFitImage)),
           );
         },
         placeholder: (context, url) {
@@ -45,7 +49,7 @@ class TXNetworkImage extends StatelessWidget {
             decoration: BoxDecoration(shape: shape),
             child: Image.asset(
               placeholderImage,
-              fit: BoxFit.contain,
+              fit: boxFitPlaceholderImage,
             ),
           );
         },
@@ -56,7 +60,7 @@ class TXNetworkImage extends StatelessWidget {
             decoration: BoxDecoration(shape: shape),
             child: Image.asset(
               placeholderImage,
-              fit: BoxFit.contain,
+              fit: boxFitErrorImage,
             ),
           );
         },

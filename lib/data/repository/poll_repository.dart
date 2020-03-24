@@ -10,9 +10,9 @@ class PollRepository extends BaseRepository implements IPollRepository {
   PollRepository(this._iPollApi);
 
   @override
-  Future<Result<List<PollModel>>> getPollList(int healthConceptId) async {
+  Future<Result<List<PollModel>>> getPollsByConcept(int conceptId) async {
     try {
-      final result = await _iPollApi.getPollList(healthConceptId);
+      final result = await _iPollApi.getPollsByConcept(conceptId);
       return Result.success(value: result);
     } catch (ex) {
       return resultError(ex);

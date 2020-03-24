@@ -157,10 +157,10 @@ class Injector {
         (c) => PersonalDataConverter());
 
     container.registerSingleton<IPollConverter, PollConverter>(
-        (c) => PollConverter());
+        (c) => PollConverter(container.resolve(), container.resolve()));
 
     container.registerSingleton<IQuestionConverter, QuestionConverter>(
-        (c) => QuestionConverter());
+        (c) => QuestionConverter(container.resolve()));
 
     container.registerSingleton<IDishConverter, DishConverter>(
         (c) => DishConverter());
@@ -250,11 +250,11 @@ class Injector {
     container.registerFactory((c) => RecoverPasswordBloC(container.resolve()));
     container.registerFactory((c) => RegisterBloC(
         container.resolve(), container.resolve(), container.resolve()));
-    container.registerFactory((c) => HomeBloC(container.resolve()));
+    container.registerFactory((c) => HomeBloC(container.resolve(), container.resolve(), container.resolve()));
     container.registerFactory((c) => HabitBloC());
-    container.registerFactory((c) => MeasureHealthBloC(container.resolve()));
-    container.registerFactory((c) => MeasureValueBloC());
-    container.registerFactory((c) => MeasureWellnessBloC());
+    container.registerFactory((c) => MeasureHealthBloC(container.resolve(), container.resolve()));
+    container.registerFactory((c) => MeasureValueBloC(container.resolve()));
+    container.registerFactory((c) => MeasureWellnessBloC(container.resolve()));
     container.registerFactory((c) => FoodDishBloC(c.resolve(), c.resolve()));
     container.registerFactory((c) => FoodBloC(c.resolve()));
     container.registerFactory(

@@ -11,10 +11,11 @@ class Endpoint {
   static const String recover_password = "/api/account/forgot-password";
   static const String activation_account = "/api/account/activate-account";
   static const String resend_code = "/api/account/resend-code";
+  static const String profile = "/api/account/profile";
 
   static const String health_concept = "/api/concept"; //id
 
-  static const String health_concept_polls = "/api/polls";
+  static const String set_polls_result = "/api/poll/set-poll-result";
 
   static const String question = "/api/question"; //pollId
 
@@ -26,7 +27,6 @@ class Endpoint {
 
   static const String update_profile = "/api/account/update-profile";
   static const String upload_avatar = "/api/account/upload-avatar";
-  static const String profile = "/api/account/User";
 
 
   static const String dish = "/api/dish";

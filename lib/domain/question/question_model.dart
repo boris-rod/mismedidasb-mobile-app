@@ -1,10 +1,13 @@
+import 'package:mismedidasb/domain/answer/answer_model.dart';
+
 class QuestionModel {
   int id;
   int pollId;
   int order;
   String title;
+  List<AnswerModel> answers;
 
-  QuestionModel({this.id, this.pollId, this.order, this.title});
+  QuestionModel({this.id, this.pollId, this.order, this.title, this.answers});
 
   static List<QuestionModel> getPhysicalExerciseList() {
     List<QuestionModel> list = [
@@ -150,4 +153,10 @@ class QuestionModel {
 
     return list;
   }
+}
+
+class QuestionResultModel{
+  int questionId;
+  int answerId;
+  QuestionResultModel({this.questionId, this.answerId});
 }

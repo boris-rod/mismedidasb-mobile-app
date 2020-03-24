@@ -3,8 +3,9 @@ class HealthConceptModel {
   String title;
   String description;
   String codeName;
+  String image;
 
-  HealthConceptModel({this.id, this.title, this.description, this.codeName});
+  HealthConceptModel({this.id, this.title, this.description, this.codeName, this.image});
 
   static HealthConceptModel getHealth(){
     return HealthConceptModel(

@@ -17,6 +17,14 @@ class RemoteConstants {
   static const carbohydrate_fat_category_code = 15;
   static const soft_drinks_category_code = 16;
 
+  static const concept_health_measure = 'health-measures';
+  static const concept_values_measure = 'value-measures';
+  static const concept_wellness_measure = 'welness-measures';
+  static const concept_dishes = 'dishes';
+  static const concept_habits = 'habits';
+  static const concept_craving = 'craving';
+
+
   static const result = 'result';
   static const authorization = 'authorization';
   static const refreshToken = 'refreshtoken';
@@ -24,8 +32,10 @@ class RemoteConstants {
   static const id = 'id';
   static const name = 'name';
   static const title = 'title';
+  static const answers = 'answers';
   static const description = 'description';
   static const code_name = 'codename';
+  static const image = 'image';
   static const code = 'code';
   static const email = 'email';
   static const full_name = 'fullName';
@@ -42,13 +52,19 @@ class RemoteConstants {
   static const new_password = 'newPassword';
   static const confirm_password = 'confirmPassword';
   static const question_id = 'questionId';
+  static const answer_id = 'answerId';
   static const weight = 'weight';
   static const order = 'order';
+  static const is_read_only = 'isReadOnly';
+  static const read_only_data = 'ReadOnlyData';
   static const measure_unit = 'measureUnit';
   static const type = 'type';
   static const type_id = 'typeId';
   static const concept_id = 'conceptId';
+  static const concept = 'concept';
   static const poll_id = 'pollId';
+  static const questions_results = 'questionsResults';
+
 
 
 

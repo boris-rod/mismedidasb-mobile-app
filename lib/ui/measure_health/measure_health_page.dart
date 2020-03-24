@@ -36,7 +36,6 @@ class _MeasureHealthState
     super.initState();
     bloc.iniDataResult();
 
-    bloc.loadMeasures();
     bloc.pageResult.listen((onData) {
       pageController.animateToPage(onData,
           duration: Duration(milliseconds: 300), curve: Curves.linear);

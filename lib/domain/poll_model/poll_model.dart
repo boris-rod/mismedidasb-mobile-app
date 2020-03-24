@@ -1,50 +1,59 @@
+import 'package:mismedidasb/domain/health_concept/health_concept.dart';
+import 'package:mismedidasb/domain/question/question_model.dart';
+
 class PollModel {
   int id;
   String name;
   String description;
-  String codeName;
+  int order;
+  bool isReadOnly;
+  String readOnlyData;
   int conceptId;
+  HealthConceptModel conceptModel;
 
   PollModel(
-      {this.id, this.name, this.description, this.codeName, this.conceptId});
+      {this.id,
+      this.name,
+      this.description,
+      this.order,
+      this.isReadOnly,
+      this.readOnlyData,
+      this.conceptId,
+      this.conceptModel});
 
-  static PollModel getPollPhysicalExercise(){
+  static PollModel getPollPhysicalExercise() {
     return PollModel(
-      id: 1,
-      name: "Ejercicio Físico",
-      description: "Descripción",
-      codeName: "PE",
-      conceptId: 1
-    );
-  }
-
-  static PollModel getPollDiet(){
-    return PollModel(
-        id: 2,
-        name: "Dieta",
+        id: 1,
+        name: "Ejercicio Físico",
         description: "Descripción",
-        codeName: "DIE",
-        conceptId: 1
-    );
+        conceptId: 1);
   }
 
-  static PollModel getPollWellness(){
+  static PollModel getPollDiet() {
+    return PollModel(
+        id: 2, name: "Dieta", description: "Descripción", conceptId: 1);
+  }
+
+  static PollModel getPollWellness() {
     return PollModel(
         id: 3,
         name: "Medidas de bienestar",
         description: "Descripción",
-        codeName: "MW",
-        conceptId: 2
-    );
+        conceptId: 2);
   }
 
-  static PollModel getPollValues(){
+  static PollModel getPollValues() {
     return PollModel(
         id: 4,
         name: "Medidas de valor",
         description: "Descripción",
-        codeName: "MV",
-        conceptId: 3
-    );
+        conceptId: 3);
   }
+}
+
+class PollResultModel {
+  int pollId;
+  List<QuestionResultModel> questionsResults;
+
+  PollResultModel({this.pollId, this.questionsResults});
 }

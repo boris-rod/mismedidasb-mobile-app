@@ -1,4 +1,7 @@
+import 'package:mismedidasb/data/api/remote/result.dart';
 import 'package:mismedidasb/domain/answer/answer_model.dart';
+import 'package:mismedidasb/domain/poll_model/i_poll_repository.dart';
+import 'package:mismedidasb/domain/poll_model/poll_model.dart';
 import 'package:mismedidasb/domain/question/question_model.dart';
 import 'package:mismedidasb/ui/_base/bloc_base.dart';
 import 'package:mismedidasb/ui/_base/bloc_error_handler.dart';
@@ -8,9 +11,18 @@ import 'package:rxdart/subjects.dart';
 import 'package:mismedidasb/utils/extensions.dart';
 
 class MeasureValueBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
+  final IPollRepository _iPollRepository;
+
+  MeasureValueBloC(this._iPollRepository);
+
   BehaviorSubject<int> _pageController = new BehaviorSubject();
 
   Stream<int> get pageResult => _pageController.stream;
+
+  BehaviorSubject<List<PollModel>> _pollsController = new BehaviorSubject();
+
+  Stream<List<PollModel>> get pollsResult => _pollsController.stream;
+
 
   int currentPage = 0;
 
@@ -48,15 +60,13 @@ class MeasureValueBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     _pageController.sinkAddSafe(currentPage);
   }
 
-  void loadMeasures() async {
+  void loadPolls(int conceptId) async {
     isLoading = true;
-    try {
-      Future.delayed(Duration(seconds: 1), () {
-        isLoading = false;
-      });
-    } catch (ex) {
-      onError(ex);
+    final res = await _iPollRepository.getPollsByConcept(conceptId);
+    if(res is ResultSuccess<List<PollModel>>){
+      _pollsController.sinkAddSafe(res.value);
     }
+    isLoading = false;
   }
 
   void saveMeasures()async{
@@ -69,6 +79,7 @@ class MeasureValueBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   @override
   void dispose() {
     _pageController.close();
+    _pollsController.close();
     disposeLoadingBloC();
     disposeErrorHandlerBloC();
   }

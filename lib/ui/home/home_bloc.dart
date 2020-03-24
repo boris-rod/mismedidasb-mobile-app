@@ -1,23 +1,44 @@
+import 'package:mismedidasb/data/api/remote/remote_constanst.dart';
+import 'package:mismedidasb/data/api/remote/result.dart';
+import 'package:mismedidasb/domain/health_concept/health_concept.dart';
+import 'package:mismedidasb/domain/health_concept/i_health_concept_repository.dart';
 import 'package:mismedidasb/domain/personal_data/i_personal_data_repository.dart';
+import 'package:mismedidasb/domain/user/i_user_repository.dart';
+import 'package:mismedidasb/domain/user/user_model.dart';
+import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/bloc_base.dart';
 import 'package:mismedidasb/ui/_base/bloc_error_handler.dart';
 import 'package:mismedidasb/ui/_base/bloc_loading.dart';
 import 'package:mismedidasb/ui/measure_health/health_result.dart';
+import 'package:rxdart/subjects.dart';
+import 'package:mismedidasb/utils/extensions.dart';
 
 class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   final IPersonalDataRepository _iPersonalDataRepository;
+  final IHealthConceptRepository _iHealthConceptRepository;
+  final IUserRepository _iUserRepository;
 
-  HomeBloC(this._iPersonalDataRepository);
+  HomeBloC(this._iPersonalDataRepository, this._iHealthConceptRepository,
+      this._iUserRepository);
+
+  BehaviorSubject<List<HealthConceptModel>> _conceptController =
+      new BehaviorSubject();
+
+  Stream<List<HealthConceptModel>> get conceptResult =>
+      _conceptController.stream;
 
   void loadHomeData() async {
     isLoading = true;
-    try {
-      Future.delayed(Duration(seconds: 1), () {
-        isLoading = false;
-      });
-    } catch (ex) {
-      onError(ex);
-    }
+    final profileRes = await _iUserRepository.getProfile();
+    if (profileRes is ResultSuccess<UserModel>) {
+      final res = await _iHealthConceptRepository.getHealthConceptList();
+      if (res is ResultSuccess<List<HealthConceptModel>>) {
+        _conceptController.sinkAddSafe(res.value);
+      } else
+        showErrorMessage(res);
+    } else
+      showErrorMessage(profileRes);
+    isLoading = false;
   }
 
   Future<bool> canNavigateToFoodPage() async {
@@ -28,8 +49,37 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
         healthResult.imc != 1;
   }
 
+  int getHomeCountPerRow(double screenW) {
+    int count = 0;
+    double partialW = 0;
+    while (screenW > partialW + R.dim.homeWidgetDimen) {
+      count += 1;
+      partialW += partialW + R.dim.homeWidgetDimen;
+    }
+    return count;
+  }
+
+  String getDefaultHomeImage(HealthConceptModel model){
+    String resDir = R.image.logo;
+    if(model.codeName == RemoteConstants.concept_health_measure)
+      resDir = R.image.health_home;
+    else if(model.codeName == RemoteConstants.concept_values_measure)
+      resDir = R.image.values_home;
+    else if(model.codeName == RemoteConstants.concept_wellness_measure)
+      resDir = R.image.wellness_home;
+    else if(model.codeName == RemoteConstants.concept_dishes)
+      resDir = R.image.dishes_home;
+    else if(model.codeName == RemoteConstants.concept_habits)
+      resDir = R.image.habits_home;
+    else if(model.codeName == RemoteConstants.concept_craving)
+      resDir = R.image.food_craving_home;
+
+    return resDir;
+  }
+
   @override
   void dispose() {
+    _conceptController.close();
     disposeLoadingBloC();
     disposeErrorHandlerBloC();
 //    _loadingController.close();

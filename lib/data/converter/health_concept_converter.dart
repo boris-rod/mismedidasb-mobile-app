@@ -10,6 +10,7 @@ class HealthConceptConverter implements IHealthConceptConverter {
       title: json[RemoteConstants.title],
       description: json[RemoteConstants.description],
       codeName: json[RemoteConstants.code_name],
+      image:  json[RemoteConstants.image]
     );
   }
 }
