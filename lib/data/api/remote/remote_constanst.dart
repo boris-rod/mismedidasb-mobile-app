@@ -56,13 +56,17 @@ class RemoteConstants {
   static const weight = 'weight';
   static const order = 'order';
   static const is_read_only = 'isReadOnly';
-  static const read_only_data = 'ReadOnlyData';
+  static const html_content = 'htmlContent';
   static const measure_unit = 'measureUnit';
   static const type = 'type';
   static const type_id = 'typeId';
   static const concept_id = 'conceptId';
   static const concept = 'concept';
+  static const questions = 'questions';
+  static const tips = 'tips';
   static const poll_id = 'pollId';
+  static const content = 'content';
+  static const is_active = 'isACtive';
   static const questions_results = 'questionsResults';
 
 

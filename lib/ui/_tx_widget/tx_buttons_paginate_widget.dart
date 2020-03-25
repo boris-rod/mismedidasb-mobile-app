@@ -1,20 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_button_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
 
 class TXButtonPaginateWidget extends StatelessWidget {
   final Function onNext;
   final Function onPrevious;
   final String nextTitle;
   final String previousTitle;
+  final int total;
+  final int page;
 
-  const TXButtonPaginateWidget(
-      {Key key,
-      this.onNext,
-      this.onPrevious,
-      this.nextTitle,
-      this.previousTitle,})
-      : super(key: key);
+  const TXButtonPaginateWidget({
+    Key key,
+    this.onNext,
+    this.onPrevious,
+    this.nextTitle,
+    this.previousTitle,
+    this.total = 1,
+    this.page = 1,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,26 +31,27 @@ class TXButtonPaginateWidget extends StatelessWidget {
       alignment: Alignment.center,
       child: Row(
         children: <Widget>[
-          Expanded(
-            flex: 1,
-            child: Container(
-              alignment: Alignment.centerLeft,
-              width: double.infinity,
-              child: TXButtonWidget(
-                title: previousTitle ?? R.string.previous,
-                onPressed: onPrevious,
-              ),
+          Container(
+            child: TXButtonWidget(
+              title: previousTitle ?? R.string.previous,
+              onPressed: onPrevious,
             ),
           ),
           Expanded(
-            flex: 1,
             child: Container(
-              alignment: Alignment.centerRight,
-              width: double.infinity,
-              child: TXButtonWidget(
-                title: nextTitle ?? R.string.next,
-                onPressed: onNext,
+              margin: EdgeInsets.symmetric(horizontal: 10),
+              child: Align(
+                alignment: Alignment.center,
+                child: TXTextWidget(
+                  text: "$page / $total",
+                ),
               ),
+            ),
+          ),
+          Container(
+            child: TXButtonWidget(
+              title: nextTitle ?? R.string.next,
+              onPressed: onNext,
             ),
           )
         ],

@@ -7,19 +7,23 @@ class PollModel {
   String description;
   int order;
   bool isReadOnly;
-  String readOnlyData;
+  String htmlContent;
   int conceptId;
   HealthConceptModel conceptModel;
+  List<PollTipModel> tips;
+  List<QuestionModel> questions;
 
   PollModel(
-      {this.id,
+      {this.id = -1,
       this.name,
       this.description,
       this.order,
       this.isReadOnly,
-      this.readOnlyData,
+      this.htmlContent,
       this.conceptId,
-      this.conceptModel});
+      this.conceptModel,
+      this.tips,
+      this.questions});
 
   static PollModel getPollPhysicalExercise() {
     return PollModel(
@@ -56,4 +60,13 @@ class PollResultModel {
   List<QuestionResultModel> questionsResults;
 
   PollResultModel({this.pollId, this.questionsResults});
+}
+
+class PollTipModel {
+  int id;
+  int pollId;
+  String content;
+  bool isActive;
+
+  PollTipModel({this.id, this.pollId, this.content, this.isActive});
 }

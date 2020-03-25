@@ -149,4 +149,16 @@ class StringsEs implements StringsBase {
 
   @override
   String get appFooPlaResultText => "Factores como el embarazo o algunas enfermedades médicas podrían afectar la idoneidad de los alimentos seleccionados para cuidar su salud.";
+
+  @override
+  String get valuesMeasureTip => "Los valores son ideas o principios universales que dirigen nuestra conducta. Por favor, indique grado de importancia otorga usted a los siguientes valores";
+
+  @override
+  String get answer => "Respuesta";
+
+  @override
+  String get thanks => "Gracias";
+
+  @override
+  String get noPollData => "Cuestionario vacío";
 }

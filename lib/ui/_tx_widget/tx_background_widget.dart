@@ -6,8 +6,10 @@ import 'package:mismedidasb/res/R.dart';
 class TXBackgroundWidget extends StatelessWidget {
   final Widget child;
   final String iconRes;
+  final String imageUrl;
 
-  const TXBackgroundWidget({Key key, @required this.child, this.iconRes})
+  const TXBackgroundWidget(
+      {Key key, @required this.child, this.iconRes, this.imageUrl})
       : super(key: key);
 
   @override
@@ -21,7 +23,9 @@ class TXBackgroundWidget extends StatelessWidget {
               decoration: BoxDecoration(
                   image: DecorationImage(
                       fit: BoxFit.cover,
-                      image: ExactAssetImage(iconRes),
+                      image: (imageUrl == null || imageUrl.isEmpty)
+                          ? ExactAssetImage(iconRes)
+                          : NetworkImage(imageUrl),
                       colorFilter: new ColorFilter.mode(
                           Colors.black.withOpacity(0.1), BlendMode.dstATop)))),
 //          Container(

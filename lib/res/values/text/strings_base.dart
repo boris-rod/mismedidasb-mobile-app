@@ -95,4 +95,12 @@ abstract class StringsBase implements WidgetsLocalizations {
   String get appValuesResultText;
 
   String get appFooPlaResultText;
+
+  String get valuesMeasureTip;
+
+  String get answer;
+
+  String get thanks;
+
+  String get noPollData;
 }

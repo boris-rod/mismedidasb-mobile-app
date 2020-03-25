@@ -18,10 +18,16 @@ class PollConverter implements IPollConverter {
         description: json[RemoteConstants.description],
         order: json[RemoteConstants.order],
         isReadOnly: json[RemoteConstants.is_read_only],
-        readOnlyData: json[RemoteConstants.read_only_data],
+        htmlContent: json[RemoteConstants.html_content],
         conceptId: json[RemoteConstants.concept_id],
         conceptModel:
-            _iHealthConceptConverter.fromJson(json[RemoteConstants.concept]));
+            _iHealthConceptConverter.fromJson(json[RemoteConstants.concept]),
+        tips: (json[RemoteConstants.tips] as List<dynamic>)
+            .map((map) => fromJsonPollTipModel(map))
+            .toList(),
+        questions: (json[RemoteConstants.questions] as List<dynamic>)
+            .map((map) => _iQuestionConverter.fromJson(map))
+            .toList());
   }
 
   @override
@@ -32,5 +38,14 @@ class PollConverter implements IPollConverter {
           .map((model) => _iQuestionConverter.toQuestionResultMap(model))
           .toList()
     };
+  }
+
+  @override
+  PollTipModel fromJsonPollTipModel(Map<String, dynamic> json) {
+    return PollTipModel(
+        id: json[RemoteConstants.id],
+        pollId: json[RemoteConstants.poll_id],
+        content: json[RemoteConstants.content],
+        isActive: json[RemoteConstants.is_active]);
   }
 }

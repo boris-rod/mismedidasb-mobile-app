@@ -39,144 +39,46 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
     final screenW = MediaQuery.of(context).size.width;
     final totalRowCount = bloc.getHomeCountPerRow(screenW);
     return FCMAwareBody(
-      child: TXMainAppBarWidget(
-        title: R.string.appName,
-        leading: TXIconButtonWidget(
-          icon: Image.asset(
-            R.image.logo,
-          ),
-        ),
-        actions: <Widget>[
-          TXIconButtonWidget(
-            icon: Icon(Icons.settings),
-            onPressed: () async {
-              final res = await NavigationUtils.push(context, ProfilePage());
-              if (res is profileAction) {
-                if (res == profileAction.logout) {
-                  NavigationUtils.pushReplacement(context, LoginPage());
-                }
-              }
-            },
-          )
-        ],
-        body: Stack(
-          children: <Widget>[
-            StreamBuilder<List<HealthConceptModel>>(
+      child: Stack(
+        children: <Widget>[
+          TXMainAppBarWidget(
+            title: R.string.appName,
+            leading: TXIconButtonWidget(
+              icon: Image.asset(
+                R.image.logo,
+              ),
+            ),
+            actions: <Widget>[
+              TXIconButtonWidget(
+                icon: Icon(Icons.settings),
+                onPressed: () async {
+                  final res =
+                      await NavigationUtils.push(context, ProfilePage());
+                  if (res is profileAction) {
+                    if (res == profileAction.logout) {
+                      NavigationUtils.pushReplacement(context, LoginPage());
+                    }
+                  }
+                },
+              )
+            ],
+            body: StreamBuilder<List<HealthConceptModel>>(
               stream: bloc.conceptResult,
               initialData: [],
               builder: (ctx, snapshot) {
                 return GridView.count(
+                  padding: EdgeInsets.only(top: 20),
                   crossAxisCount: totalRowCount,
                   children:
                       _getHomeWidgets(snapshot.data, screenW, totalRowCount),
                 );
               },
             ),
-//            SingleChildScrollView(
-//              physics: BouncingScrollPhysics(),
-//              padding: EdgeInsets.symmetric(vertical: 20),
-//              child: Column(
-//                children: <Widget>[
-//                  Row(
-//                    children: <Widget>[
-//                      Expanded(
-//                        flex: 1,
-//                        child: _getHomeButton(
-//                            context: context,
-//                            imgH: 100,
-//                            imgW: 100,
-//                            resDir: R.image.health_home,
-//                            title: R.string.myMeasureHealth,
-//                            onTap: () {
-//                              NavigationUtils.push(
-//                                  context, MeasureHealthPage());
-//                            }),
-//                      ),
-//                      Expanded(
-//                        flex: 1,
-//                        child: _getHomeButton(
-//                            context: context,
-//                            imgH: 100,
-//                            imgW: 100,
-//                            resDir: R.image.values_home,
-//                            title: R.string.myMeasureValues,
-//                            onTap: () {
-//                              NavigationUtils.push(context, MeasureValuePage());
-//                            }),
-//                      ),
-//                    ],
-//                  ),
-//                  Row(
-//                    children: <Widget>[
-//                      Expanded(
-//                        flex: 1,
-//                        child: _getHomeButton(
-//                            context: context,
-//                            imgH: 100,
-//                            imgW: 100,
-//                            resDir: R.image.wellness_home,
-//                            title: R.string.myMeasureWellness,
-//                            onTap: () {
-//                              NavigationUtils.push(
-//                                  context, MeasureWellnessPage());
-//                            }),
-//                      ),
-//                      Expanded(
-//                        flex: 1,
-//                        child: _getHomeButton(
-//                            context: context,
-//                            resDir: R.image.dishes_home,
-//                            title: R.string.foodDishes,
-//                            imgH: 110,
-//                            imgW: 110,
-//                            onTap: () async {
-//                              final res = await bloc.canNavigateToFoodPage();
-//                              if (res)
-//                                NavigationUtils.push(context, FoodDishPage());
-//                              else
-//                                Fluttertoast.showToast(
-//                                    msg:
-//                                        "Debe completar el cuestionario de Medidas de Salud");
-//                            }),
-//                      ),
-//                    ],
-//                  ),
-//                  Row(
-//                    children: <Widget>[
-//                      Expanded(
-//                        flex: 1,
-//                        child: _getHomeButton(
-//                            context: context,
-//                            resDir: R.image.habits_home,
-//                            imgH: 100,
-//                            imgW: 100,
-//                            title: R.string.healthHabits,
-//                            onTap: () {
-//                              NavigationUtils.push(context, HabitPage());
-//                            }),
-//                      ),
-//                      Expanded(
-//                        flex: 1,
-//                        child: _getHomeButton(
-//                            context: context,
-//                            resDir: R.image.food_craving_home,
-//                            title: R.string.foodCraving,
-//                            imgH: 110,
-//                            imgW: 110,
-//                            onTap: () {
-//                              NavigationUtils.push(context, FoodCravingPage());
-//                            }),
-//                      ),
-//                    ],
-//                  )
-//                ],
-//              ),
-//            ),
-            TXLoadingWidget(
-              loadingStream: bloc.isLoadingStream,
-            )
-          ],
-        ),
+          ),
+          TXLoadingWidget(
+            loadingStream: bloc.isLoadingStream,
+          )
+        ],
       ),
     );
   }
@@ -193,7 +95,9 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
           if (model.codeName == RemoteConstants.concept_health_measure)
             page = MeasureHealthPage();
           else if (model.codeName == RemoteConstants.concept_values_measure)
-            page = MeasureValuePage();
+            page = MeasureValuePage(
+              conceptModel: model,
+            );
           else if (model.codeName == RemoteConstants.concept_wellness_measure)
             page = MeasureWellnessPage();
           else if (model.codeName == RemoteConstants.concept_dishes)

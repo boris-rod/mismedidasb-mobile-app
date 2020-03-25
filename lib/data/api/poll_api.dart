@@ -8,6 +8,7 @@ import 'package:mismedidasb/data/api/remote/remote_constanst.dart';
 import 'package:mismedidasb/domain/poll_model/i_poll_api.dart';
 import 'package:mismedidasb/domain/poll_model/i_poll_converter.dart';
 import 'package:mismedidasb/domain/poll_model/poll_model.dart';
+import 'package:mismedidasb/res/R.dart';
 
 class PollApi extends BaseApi implements IPollApi {
   final IPollConverter _iPollConverter;
@@ -27,13 +28,14 @@ class PollApi extends BaseApi implements IPollApi {
   }
 
   @override
-  Future<bool> setPollResult(List<PollResultModel> list) async {
+  Future<String> setPollResult(List<PollResultModel> list) async {
     final map =
         list.map((model) => _iPollConverter.toPollResultMap(model)).toList();
     final body = jsonEncode({"pollDatas": map});
     final res =
         await _networkHandler.post(path: Endpoint.set_polls_result, body: body);
-    if (res.statusCode == RemoteConstants.code_success) return true;
+    if (res.statusCode == RemoteConstants.code_success)
+      return R.string.appValuesResultText;
     throw serverException(res);
   }
 }
