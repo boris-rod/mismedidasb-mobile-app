@@ -18,68 +18,54 @@ class MeasureWellnessBloC
   MeasureWellnessBloC(this._iPollRepository);
 
   BehaviorSubject<int> _pageController = new BehaviorSubject();
-
   Stream<int> get pageResult => _pageController.stream;
 
-  BehaviorSubject<List<PollModel>> _pollsController = new BehaviorSubject();
+  BehaviorSubject<PollModel> _pollsController = new BehaviorSubject();
+  Stream<PollModel> get pollsResult => _pollsController.stream;
 
-  Stream<List<PollModel>> get pollsResult => _pollsController.stream;
+  BehaviorSubject<String> _pollSaveController = new BehaviorSubject();
+  Stream<String> get pollSaveResult => _pollSaveController.stream;
 
-  int currentPage = 0;
-
-  WellnessResultModel wellnessResultModel;
-
-  void iniDataResult() {
-    if (wellnessResultModel == null)
-      wellnessResultModel = WellnessResultModel(result: [], wellness: []);
-
-    List<QuestionModel> questions = QuestionModel.getWellness();
-    List<AnswerModel> answers = AnswerModel.getAnswers();
-
-    questions.forEach((q) {
-      final measureW = MeasureWellnessModel(
-          question: q, answers: answers, selectedAnswer: answers[0]);
-      wellnessResultModel.wellness.add(measureW);
-    });
-    wellnessResultModel.result = WellnessResult.getResult(wellnessResultModel);
-  }
+  int currentPage = 1;
 
   void setAnswerValue(int questionIndex, int answerId) async {
-    wellnessResultModel.wellness[questionIndex].selectedAnswer =
-        wellnessResultModel.wellness[questionIndex].answers
-            .firstWhere((a) => a.id == answerId);
-    wellnessResultModel.result = WellnessResult.getResult(wellnessResultModel);
-    _pageController.sinkAddSafe(currentPage);
+    final poll = await pollsResult.first;
+    poll.questions[questionIndex].selectedAnswerId = answerId;
+    _pollsController.sinkAddSafe(poll);
   }
 
   void changePage(int value) async {
-    if (value > 0 && currentPage < wellnessResultModel.wellness.length) {
-      currentPage += value;
-    } else if (value < 0 && currentPage > 0) {
-      currentPage += value;
-    }
-    _pageController.sinkAddSafe(currentPage);
+    currentPage += value;
+    _pageController.sinkAddSafe(currentPage - 1);
   }
 
   void loadPolls(int conceptId) async {
     isLoading = true;
     final res = await _iPollRepository.getPollsByConcept(conceptId);
     if (res is ResultSuccess<List<PollModel>>) {
-      _pollsController.sinkAddSafe(res.value);
+      if (res.value.isNotEmpty)
+        _pollsController.sinkAddSafe(res.value[0]);
+      else
+        _pollsController.sinkAddSafe(PollModel(id: -1));
     }
     isLoading = false;
   }
 
   void saveMeasures() async {
     isLoading = true;
-    Future.delayed(Duration(seconds: 2), () {
-      isLoading = false;
-    });
+    final poll = await pollsResult.first;
+    final res = await _iPollRepository.setPollResult([poll]);
+    if (res is ResultSuccess<String>) {
+      _pollSaveController.sinkAddSafe(res.value);
+    }
+    isLoading = false;
   }
 
   @override
   void dispose() {
     _pageController.close();
+    _pollsController.close();
+    _pollSaveController.close();
     disposeLoadingBloC();
     disposeErrorHandlerBloC();
   }

@@ -251,7 +251,7 @@ class Injector {
     container.registerFactory((c) => RegisterBloC(
         container.resolve(), container.resolve(), container.resolve()));
     container.registerFactory((c) => HomeBloC(container.resolve(), container.resolve(), container.resolve()));
-    container.registerFactory((c) => HabitBloC());
+    container.registerFactory((c) => HabitBloC(container.resolve()));
     container.registerFactory((c) => MeasureHealthBloC(container.resolve(), container.resolve()));
     container.registerFactory((c) => MeasureValueBloC(container.resolve()));
     container.registerFactory((c) => MeasureWellnessBloC(container.resolve()));

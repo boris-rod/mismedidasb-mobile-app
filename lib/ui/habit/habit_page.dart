@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mismedidasb/domain/habit/habit_model.dart';
+import 'package:mismedidasb/domain/health_concept/health_concept.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/bloc_state.dart';
 import 'package:mismedidasb/ui/_base/navigation_utils.dart';
@@ -11,6 +12,10 @@ import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
 import 'package:mismedidasb/ui/habit/habit_bloc.dart';
 
 class HabitPage extends StatefulWidget {
+  final HealthConceptModel conceptModel;
+
+  const HabitPage({Key key, this.conceptModel}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => _HabitState();
 }
@@ -19,7 +24,7 @@ class _HabitState extends StateWithBloC<HabitPage, HabitBloC> {
   @override
   void initState() {
     super.initState();
-    bloc.loadData();
+    bloc.loadData(widget.conceptModel.id);
   }
 
   @override
@@ -33,7 +38,7 @@ class _HabitState extends StateWithBloC<HabitPage, HabitBloC> {
               NavigationUtils.pop(context);
             },
           ),
-          title: "Hábitos Saludables",
+          title: widget.conceptModel.title ?? "Hábitos Saludables",
           body: TXBackgroundWidget(
             iconRes: R.image.habits_home,
             child: Container(
