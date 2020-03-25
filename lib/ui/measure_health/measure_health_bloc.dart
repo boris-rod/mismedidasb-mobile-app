@@ -29,30 +29,23 @@ class MeasureHealthBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
       _measureController.stream;
 
   BehaviorSubject<List<PollModel>> _pollsController = new BehaviorSubject();
+
   Stream<List<PollModel>> get pollsResult => _pollsController.stream;
 
-  int currentPage = 0;
+  BehaviorSubject<String> _pollSaveController = new BehaviorSubject();
+
+  Stream<String> get pollSaveResult => _pollSaveController.stream;
+
+  int currentPage = 1;
   HealthMeasureResultModel healthMeasureResultModel;
 
-  void iniDataResult() {
-    if (healthMeasureResultModel == null) {
-      final diets = AnswerModel.getAnswers();
-      final dietsQuestion = QuestionModel.getDiets();
-      final exercises = AnswerModel.getPhysicalExercise();
-      healthMeasureResultModel = HealthMeasureResultModel(
-          age: 40,
-          weight: 70,
-          height: 170,
-          sex: 1,
-          physicalExercise: 1,
-          physicalExerciseValue: exercises[0].title,
-          diet: List.generate(dietsQuestion.length, (index) {
-            return 1;
-          }),
-          dietValue: List.generate(dietsQuestion.length, (index) {
-            return diets[0].title;
-          }));
+  void loadPolls(int conceptId) async {
+    isLoading = true;
+    final res = await _iPollRepository.getPollsByConcept(conceptId);
+    if (res is ResultSuccess<List<PollModel>>) {
+      _pollsController.sinkAddSafe(res.value);
     }
+    isLoading = false;
   }
 
   void setDataResult(HealthMeasureResultModel model) {
@@ -91,39 +84,25 @@ class MeasureHealthBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     _measureController.sinkAddSafe(healthMeasureResultModel);
   }
 
-  void changePage(bool isNext) async {
-    if (isNext && currentPage < 3) {
-      if (currentPage == 2) {
-        final HealthResult result =
-            HealthResult.getResult(healthMeasureResultModel);
-        await _iPersonalDataRepository.saveHealthResult(result);
-        _measureController.sinkAddSafe(healthMeasureResultModel);
-      }
-      currentPage += 1;
-    } else if (currentPage > 0) {
-      currentPage -= 1;
-    }
-    _pageController.sinkAddSafe(currentPage);
+  void setAnswerValue(int pollIndex, int questionIndex, int answerId) async {
+    final polls = await pollsResult.first;
+    polls[pollIndex].questions[questionIndex].selectedAnswerId = answerId;
+    _pollsController.sinkAddSafe(polls);
   }
 
-  void loadPolls(int conceptId) async {
+  void changePage(int value) async {
+    currentPage += value;
+    _pageController.sinkAddSafe(currentPage - 1);
+  }
+
+  void saveMeasures() async {
     isLoading = true;
-    final res = await _iPollRepository.getPollsByConcept(conceptId);
-    if (res is ResultSuccess<List<PollModel>>) {
-      _pollsController.sinkAddSafe(res.value);
+    final polls = await pollsResult.first;
+    final res = await _iPollRepository.setPollResult(polls);
+    if (res is ResultSuccess<String>) {
+      _pollSaveController.sinkAddSafe(res.value);
     }
     isLoading = false;
-  }
-
-  Future<HealthResult> saveMeasures() async {
-    isLoading = true;
-    final HealthResult result =
-        HealthResult.getResult(healthMeasureResultModel);
-    await _iPersonalDataRepository.saveHealthResult(result);
-    Future.delayed(Duration(seconds: 2), () {
-      isLoading = false;
-    });
-    return result;
   }
 
   @override

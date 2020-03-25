@@ -93,7 +93,7 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
         child: _getHomeButton(model, () {
           Widget page;
           if (model.codeName == RemoteConstants.concept_health_measure)
-            page = MeasureHealthPage();
+            page = MeasureHealthPage(conceptModel: model,);
           else if (model.codeName == RemoteConstants.concept_values_measure)
             page = MeasureValuePage(
               conceptModel: model,

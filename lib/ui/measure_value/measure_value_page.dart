@@ -7,6 +7,7 @@ import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/bloc_state.dart';
 import 'package:mismedidasb/ui/_base/navigation_utils.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_background_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_bottom_result_info.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_bottom_sheet.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_bottomsheet_selector_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_button_widget.dart';
@@ -44,7 +45,7 @@ class _MeasureValueState
         showTXModalBottomSheet(
             context: context,
             builder: (ctx) {
-              return _getBottomInfo(onData);
+              return TXBottomResultInfo(content: onData,);
             });
       }
     });
@@ -171,53 +172,6 @@ class _MeasureValueState
             initialId: model.selectedAnswerId,
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _getBottomInfo(String content) {
-    return Container(
-      height: 300,
-      child: Container(
-        padding: EdgeInsets.only(left: 10),
-        alignment: Alignment.topLeft,
-        child: Column(
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Expanded(
-                  child: TXTextWidget(
-                    text: R.string.thanks,
-                    maxLines: 2,
-                    textOverflow: TextOverflow.ellipsis,
-                    size: 18,
-                  ),
-                ),
-                Container(
-                  width: 50,
-                  child: TXTextLinkWidget(
-                    title: R.string.ok,
-                    textColor: R.color.primary_color,
-                    onTap: () {
-                      NavigationUtils.pop(context);
-                    },
-                  ),
-                )
-              ],
-            ),
-            Expanded(
-              child: Container(
-                padding: EdgeInsets.only(left: 10, right: 20),
-                child: Center(
-                  child: TXTextWidget(
-                      textAlign: TextAlign.justify,
-                      text: content ?? R.string.appValuesResultText),
-                ),
-              ),
-            )
-          ],
-        ),
       ),
     );
   }
