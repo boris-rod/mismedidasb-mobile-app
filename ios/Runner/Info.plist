@@ -43,5 +43,9 @@
 	<false/>
 	<key>io.flutter.embedded_views_preview</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Mis medidas solicita acceso a la cámara para que pueda tomar fotos que le permitan actualizar su foto de perfil.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Mis Medidas solicita acceso a las fotos para que pueda escoger su foto de perfil.</string>
 </dict>
 </plist>
