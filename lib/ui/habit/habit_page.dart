@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:mismedidasb/domain/habit/habit_model.dart';
 import 'package:mismedidasb/domain/health_concept/health_concept.dart';
+import 'package:mismedidasb/domain/poll_model/poll_model.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/bloc_state.dart';
 import 'package:mismedidasb/ui/_base/navigation_utils.dart';
@@ -10,6 +14,7 @@ import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_main_app_bar_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
 import 'package:mismedidasb/ui/habit/habit_bloc.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class HabitPage extends StatefulWidget {
   final HealthConceptModel conceptModel;
@@ -21,6 +26,8 @@ class HabitPage extends StatefulWidget {
 }
 
 class _HabitState extends StateWithBloC<HabitPage, HabitBloC> {
+  WebViewController _webViewController;
+
   @override
   void initState() {
     super.initState();
@@ -38,74 +45,56 @@ class _HabitState extends StateWithBloC<HabitPage, HabitBloC> {
               NavigationUtils.pop(context);
             },
           ),
-          title: widget.conceptModel.title ?? "Hábitos Saludables",
+          title: widget.conceptModel.title,
           body: TXBackgroundWidget(
             iconRes: R.image.habits_home,
+            imageUrl: widget.conceptModel.image,
             child: Container(
               padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Container(
-                    alignment: Alignment.center,
-                    padding: EdgeInsets.all(20),
-                    child: TXTextWidget(
-                      text: R.string.healthHabits,
-                      size: 20,
-                    ),
-                  ),
-                  Expanded(
-                    child: StreamBuilder<List<HabitModel>>(
-                      stream: bloc.habitsResult,
-                      initialData: [],
-                      builder: (context, snapshot) {
-                        return ListView.builder(
-                          physics: BouncingScrollPhysics(),
-                          padding: EdgeInsets.only(bottom: 30),
-                          shrinkWrap: true,
-                          itemBuilder: (ctx, index) {
-                            final habit = snapshot.data[index];
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                TXTextWidget(
-                                  textAlign: TextAlign.justify,
-                                  text: habit.title,
-                                  color: R.color.primary_color,
+              child: StreamBuilder<List<PollModel>>(
+                  stream: bloc.pollsResult,
+                  initialData: [],
+                  builder: (context, snapshot) {
+                    final poll =
+                        snapshot.data.isNotEmpty ? snapshot.data[0] : null;
+                    return poll == null
+                        ? Container()
+                        : Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+//                              Container(
+//                                alignment: Alignment.center,
+//                                padding: EdgeInsets.all(20),
+//                                child: TXTextWidget(
+//                                  text: poll.name,
+//                                  size: 20,
+//                                ),
+//                              ),
+                              Expanded(
+                                child: SingleChildScrollView(
+                                  child: Html(
+                                    data: poll.htmlContent,
+                                  ),
                                 ),
-                                ListView.builder(
-                                  physics: NeverScrollableScrollPhysics(),
-                                  shrinkWrap: true,
-                                  itemBuilder: (context, subIndex) {
-                                    final subTitle = habit.subtitle[subIndex];
-                                    return Container(
-                                      padding: EdgeInsets.only(left: 10),
-                                      child: TXTextWidget(
-                                        text: "- $subTitle",
-                                        textAlign: TextAlign.justify,
-                                        color: R.color.accent_color,
-                                      ),
-                                    );
-                                  },
-                                  itemCount: habit.subtitle.length,
-                                ),
-                                SizedBox(height: 10,)
-                              ],
-                            );
-                          },
-                          itemCount: snapshot.data.length,
-                        );
-                      },
-                    ),
-                  ),
-                  TXTextWidget(
-                    textAlign: TextAlign.center,
-                    text: R.string.appClinicalWarningForAdvice,
-                    size: 10,
-                    color: R.color.accent_color,
-                  ),
-                ],
-              ),
+                              ),
+//                              Expanded(
+//                                child: WebView(
+//                                  initialUrl: 'about:blank',
+//                                  onWebViewCreated: (controller) {
+//                                    _webViewController = controller;
+//                                    _loadHtmlInWebView(poll.htmlContent);
+//                                  },
+//                                ),
+//                              ),
+//                        TXTextWidget(
+//                          textAlign: TextAlign.center,
+//                          text: R.string.appClinicalWarningForAdvice,
+//                          size: 10,
+//                          color: R.color.accent_color,
+//                        ),
+                            ],
+                          );
+                  }),
             ),
           ),
         ),
@@ -114,5 +103,11 @@ class _HabitState extends StateWithBloC<HabitPage, HabitBloC> {
         )
       ],
     );
+  }
+
+  _loadHtmlInWebView(String htmlContent) {
+    _webViewController.loadUrl(Uri.dataFromString('<html><body>$htmlContent</body></html>',
+            mimeType: 'text/html', encoding: Encoding.getByName('utf-8'))
+        .toString());
   }
 }

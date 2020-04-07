@@ -67,6 +67,7 @@ import 'package:mismedidasb/fcm/i_fcm_feature.dart';
 import 'package:mismedidasb/ui/_base/bloc_base.dart';
 import 'package:mismedidasb/ui/change_password/change_password_bloc.dart';
 import 'package:mismedidasb/ui/food/food_bloc.dart';
+import 'package:mismedidasb/ui/food_craving/food_craving_bloc.dart';
 import 'package:mismedidasb/ui/food_dish/food_dish_bloc.dart';
 import 'package:mismedidasb/ui/habit/habit_bloc.dart';
 import 'package:mismedidasb/ui/home/home_bloc.dart';
@@ -252,6 +253,7 @@ class Injector {
         container.resolve(), container.resolve(), container.resolve()));
     container.registerFactory((c) => HomeBloC(container.resolve(), container.resolve(), container.resolve()));
     container.registerFactory((c) => HabitBloC(container.resolve()));
+    container.registerFactory((c) => FoodCravingBloC(container.resolve()));
     container.registerFactory((c) => MeasureHealthBloC(container.resolve(), container.resolve()));
     container.registerFactory((c) => MeasureValueBloC(container.resolve()));
     container.registerFactory((c) => MeasureWellnessBloC(container.resolve()));

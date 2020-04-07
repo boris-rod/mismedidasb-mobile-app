@@ -94,7 +94,8 @@ class FCMFeature extends IFCMFeature {
 
   @override
   void setUp() {
-    _fireBaseMessaging.requestNotificationPermissions();
+    _fireBaseMessaging.requestNotificationPermissions(const IosNotificationSettings(
+        sound: true, badge: true, alert: true, provisional: true));
     _fireBaseMessaging.configure(
       onLaunch: _processMessageFromNotification,
       onResume: _processMessageFromNotification,

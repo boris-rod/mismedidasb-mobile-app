@@ -16,6 +16,7 @@ class Endpoint {
   static const String health_concept = "/api/concept"; //id
 
   static const String set_polls_result = "/api/poll/set-poll-result";
+  static const String get_poll = "/api/poll";
 
   static const String question = "/api/question"; //pollId
 

@@ -19,7 +19,7 @@ class PollApi extends BaseApi implements IPollApi {
   @override
   Future<List<PollModel>> getPollsByConcept(int conceptId) async {
     final res = await _networkHandler.get(
-        path: "${Endpoint.health_concept}/$conceptId/polls");
+        path: "${Endpoint.get_poll}/?conceptId=$conceptId");
     if (res.statusCode == RemoteConstants.code_success) {
       Iterable l = jsonDecode(res.body)[RemoteConstants.result];
       return l.map((model) => _iPollConverter.fromJson(model)).toList();

@@ -23,6 +23,7 @@ import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_textlink_widget.dart';
 import 'package:mismedidasb/ui/measure_health/health_measure_result_model.dart';
 import 'package:mismedidasb/ui/measure_health/measure_health_bloc.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class MeasureHealthPage extends StatefulWidget {
   final HealthConceptModel conceptModel;
@@ -82,17 +83,6 @@ class _MeasureHealthState
                     SizedBox(
                       height: 30,
                     ),
-//                    StreamBuilder<int>(
-//                      stream: bloc.pageResult,
-//                      initialData: bloc.currentPage,
-//                      builder: (context, snapshot) {
-//                        return TXTextWidget(
-//                          color: R.color.gray,
-//                          textAlign: TextAlign.justify,
-//                          text: "${snapshot.data + 1} / 3",
-//                        );
-//                      },
-//                    ),
                     Expanded(
                       child: Column(
                         children: <Widget>[
