@@ -94,7 +94,6 @@ class DailyActivityFoodModel {
   int id;
   String name;
   List<FoodModel> foods;
-  bool isExpanded;
   double calories;
   double carbohydrates;
   double proteins;
@@ -105,25 +104,15 @@ class DailyActivityFoodModel {
   int foodsProteinsPercentage;
   int foodsCarbohydratesPercentage;
   int foodsFiberPercentage;
-//  int foodsFatPercentage;
 
   double proteinsDishCalories;
   double fiberDishCalories;
   double carbohydratesDishCalories;
 
-//  List<FoodModel> foodsProteins;
-//  List<FoodModel> foodsCarbohydrates;
-//  List<FoodModel> foodsFiber;
-
-//  double foodsProteinsCalories;
-//  double foodsCarbohydratesCalories;
-//  double foodsFiberCalories;
-
   DailyActivityFoodModel(
       {this.id,
       this.name,
       this.foods,
-      this.isExpanded = false,
       this.calories = 0,
       this.carbohydrates = 0,
       this.proteins = 0,
