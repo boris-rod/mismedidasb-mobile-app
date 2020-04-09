@@ -1,5 +1,6 @@
 class AppImage {
   final logo = 'lib/res/assets/img/logo.png';
+  final logo_blue = 'lib/res/assets/img/logo_blue.png';
   final car = 'lib/res/assets/img/car_placeholder.png';
   final user = 'lib/res/assets/img/user_placeholder.png';
   final dishes_home = 'lib/res/assets/img/dishes_home.png';

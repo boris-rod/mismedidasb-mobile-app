@@ -8,6 +8,8 @@ class SharedPreferencesManager {
   final _userId = "user_id";
   final _saveCredentials = "save_credentials";
   final _activeAccount = "save_credentials";
+  final _dailyKCal = "daily_cal";
+  final _imc = "imc";
 
   Future<bool> cleanAll() async {
 //    setUserEmail('');
@@ -48,6 +50,38 @@ class SharedPreferencesManager {
   Future<bool> setSaveCredentials(bool newValue) async {
     var res = (await SharedPreferences.getInstance())
         .setBool(_saveCredentials, newValue);
+    return res;
+  }
+
+  Future<double> getDailyKCal() async {
+    var value =
+    (await SharedPreferences.getInstance()).getDouble(_dailyKCal);
+    if (value == null) {
+      value = 0;
+      setDailyKCal(value);
+    }
+    return value;
+  }
+
+  Future<bool> setDailyKCal(double newValue) async {
+    var res = (await SharedPreferences.getInstance())
+        .setDouble(_dailyKCal, newValue);
+    return res;
+  }
+
+  Future<double> getIMC() async {
+    var value =
+    (await SharedPreferences.getInstance()).getDouble(_imc);
+    if (value == null) {
+      value = 0;
+      setIMC(value);
+    }
+    return value;
+  }
+
+  Future<bool> setIMC(double newValue) async {
+    var res = (await SharedPreferences.getInstance())
+        .setDouble(_imc, newValue);
     return res;
   }
 

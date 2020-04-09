@@ -9,9 +9,13 @@ class UserModel {
   String avatarMimeType;
   String role;
   int roleId;
+  double dailyKCal;
+  double imc;
 
   UserModel(
       {this.id,
+      this.dailyKCal = 0,
+      this.imc = 0,
       this.fullName = "",
       this.email = "",
       this.phone,

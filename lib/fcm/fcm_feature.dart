@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_apns/apns.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mismedidasb/data/api/remote/network_handler.dart';
 import 'package:mismedidasb/fcm/fcm_message_model.dart';
@@ -37,19 +38,15 @@ class FCMFeature extends IFCMFeature {
   }
 
   @override
-  void deactivateToken() async{
+  void deactivateToken() async {
     try {
       final token = await _fireBaseMessaging.getToken();
       print(token);
       final deviceType = Platform.isAndroid ? 0 : (Platform.isIOS ? 1 : -1);
       await networkHandler.post(
           path: '/api/device',
-          body: jsonEncode({
-            'token': "",
-            'deviceType': deviceType
-          }),
-          doRefreshToken: false
-      );
+          body: jsonEncode({'token': "", 'deviceType': deviceType}),
+          doRefreshToken: false);
     } catch (ex) {
       logger.log('deactivate Token Exception');
       logger.log(ex);
@@ -73,29 +70,32 @@ class FCMFeature extends IFCMFeature {
       onMessageArrivesForegroundSubject.stream;
 
   @override
-  Future<void> refreshToken() async{
+  Future<void> refreshToken() async {
     try {
       final token = await _fireBaseMessaging.getToken();
       print('FCM TOKEN');
       print(token);
       final deviceType = Platform.isAndroid ? 0 : (Platform.isIOS ? 1 : -1);
       await networkHandler.post(
-        path: '/api/device',
-        body: jsonEncode({
-          'token': token,
-          'deviceType': deviceType
-        }),
-        doRefreshToken: false
-      );
+          path: '/api/device',
+          body: jsonEncode({'token': token, 'deviceType': deviceType}),
+          doRefreshToken: false);
     } catch (ex) {
       logger.log('refresh Token Exception');
       logger.log(ex);
-    }  }
+    }
+  }
 
   @override
   void setUp() {
-    _fireBaseMessaging.requestNotificationPermissions(const IosNotificationSettings(
-        sound: true, badge: true, alert: true, provisional: true));
+//    final connector = createPushConnector();
+//    connector.configure(onBackgroundMessage: (map) async {
+//      print(map.toString());
+//    });
+
+    _fireBaseMessaging.requestNotificationPermissions(
+        const IosNotificationSettings(
+            sound: true, badge: true, alert: true, provisional: true));
     _fireBaseMessaging.configure(
       onLaunch: _processMessageFromNotification,
       onResume: _processMessageFromNotification,
@@ -107,7 +107,8 @@ class FCMFeature extends IFCMFeature {
       Map<String, dynamic> message) async {
     print('FCM Message Background');
     print(message);
-    Fluttertoast.showToast(msg: message.toString(), toastLength: Toast.LENGTH_SHORT);
+    Fluttertoast.showToast(
+        msg: message.toString(), toastLength: Toast.LENGTH_SHORT);
 //    final fcmMessage = FCMJsonParser.parseJson(message);
 //    if (fcmMessage.todoId != null) {
 //      onMessageActionBackgroundSubject.sink.add(fcmMessage);
@@ -118,7 +119,8 @@ class FCMFeature extends IFCMFeature {
       Map<String, dynamic> message) async {
     print('FCM Message Foreground');
     print(message);
-    Fluttertoast.showToast(msg: message.toString(), toastLength: Toast.LENGTH_SHORT);
+    Fluttertoast.showToast(
+        msg: message.toString(), toastLength: Toast.LENGTH_SHORT);
 
 //    final fcmMessage = FCMJsonParser.parseJson(message);
 //    if (fcmMessage.todoId != null) {

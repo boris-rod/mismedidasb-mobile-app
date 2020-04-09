@@ -78,9 +78,9 @@ class DailyFoodModel {
       this.currentSumFiber = 0,
       this.currentSumProteins = 0});
 
-  static DailyFoodModel getDailyFoodModel(HealthResult healthResult) {
+  static DailyFoodModel getDailyFoodModel(double dailyKCal, double imc) {
     final plan =
-        DailyFoodPlanModel(imc: healthResult.imc, dailyKCal: healthResult.kCal);
+        DailyFoodPlanModel(imc: imc, dailyKCal: dailyKCal);
 
     return DailyFoodModel(
         dateTime: DateTime.now(),

@@ -112,7 +112,7 @@ class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
                                     ),
                                     leading: TXNetworkImage(
                                       imageUrl: model.image,
-                                      placeholderImage: R.image.logo,
+                                      placeholderImage: R.image.logo_blue,
                                       height: 40,
                                       width: 40,
                                     ),

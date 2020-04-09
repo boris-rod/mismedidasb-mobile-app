@@ -93,21 +93,34 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
         child: _getHomeButton(model, () {
           Widget page;
           if (model.codeName == RemoteConstants.concept_health_measure)
-            page = MeasureHealthPage(conceptModel: model,);
+            page = MeasureHealthPage(
+              conceptModel: model,
+            );
           else if (model.codeName == RemoteConstants.concept_values_measure)
             page = MeasureValuePage(
               conceptModel: model,
             );
           else if (model.codeName == RemoteConstants.concept_wellness_measure)
-            page = MeasureWellnessPage(conceptModel: model,);
+            page = MeasureWellnessPage(
+              conceptModel: model,
+            );
           else if (model.codeName == RemoteConstants.concept_dishes)
             page = FoodDishPage();
           else if (model.codeName == RemoteConstants.concept_habits)
-            page = HabitPage(conceptModel: model,);
+            page = HabitPage(
+              conceptModel: model,
+            );
           else if (model.codeName == RemoteConstants.concept_craving)
-            page = FoodCravingPage(conceptModel: model,);
+            page = FoodCravingPage(
+              conceptModel: model,
+            );
           if (page != null) {
-            NavigationUtils.push(context, page);
+            if (page is FoodDishPage && !bloc.canNavigateToFoodPage) {
+              Fluttertoast.showToast(
+                  msg:
+                      "Debe rellenar el formulario de medidas de salud antes de planificar sus platos");
+            } else
+              NavigationUtils.push(context, page);
           }
         }),
       );

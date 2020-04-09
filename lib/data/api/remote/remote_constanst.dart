@@ -46,6 +46,8 @@ class RemoteConstants {
   static const avatar_mime_type = 'avatarMimeType';
   static const role = 'role';
   static const role_id = 'roleId';
+  static const daily_kcal = 'dailyKCal';
+  static const imc = 'imc';
   static const password = 'password';
   static const confirmation_password = 'confirmationPassword';
   static const old_password = 'oldPassword';

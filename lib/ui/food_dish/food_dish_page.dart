@@ -27,7 +27,8 @@ import 'package:mp_chart/mp/chart/pie_chart.dart';
 class FoodDishPage extends StatefulWidget {
   final bool fromNotificationScope;
 
-  const FoodDishPage({Key key, this.fromNotificationScope = false})
+  const FoodDishPage(
+      {Key key, this.fromNotificationScope = false})
       : super(key: key);
 
   @override
@@ -121,7 +122,7 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
 
     charts.SeriesLegend();
     return WillPopScope(
-      onWillPop: ()async{
+      onWillPop: () async {
         _navBack();
         return false;
       },
@@ -207,131 +208,135 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                 return dailyModel == null
                     ? Container()
                     : Column(
-                  children: <Widget>[
-                    Container(
-                      color: Colors.white,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          SizedBox(
-                            height: 10,
-                          ),
-                          TXTextWidget(
-                            text: "Ingesta de kilo-calorías por día.",
-                            size: 12,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                          ),
                           Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 5, vertical: 5),
-                            child: TXComboProgressBarWidget(
-//                                  showValueInBar: true,
-                              title: "Calorías",
-                              titleSize: 10,
-                              percentage: bloc
-                                  .getCurrentCaloriesPercentage(dailyModel),
-                              mark1: dailyModel.dailyFoodPlanModel.kCalMin,
-                              mark2: dailyModel.dailyFoodPlanModel.kCalMax,
-                              value: dailyModel.currentCaloriesSum,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          TXTextWidget(
-                            text: "Información nutricional",
-                            size: 12,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          SizedBox(
-                            height: 3,
-                          ),
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 20,
-                            ),
+                            color: Colors.white,
                             child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
-                                TXProgressBarCheckedWidget(
-                                  title: "Proteínas",
-                                  percentage:
-                                  dailyModel.currentSumProteins *
-                                      100 /
-                                      (dailyModel.dailyFoodPlanModel
-                                          .kCalMax *
-                                          25 /
-                                          100),
-                                  color: Colors.grey[350],
-                                  minMark: 12 * 100 / 25,
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                TXTextWidget(
+                                  text: "Ingesta de kilo-calorías por día.",
+                                  size: 12,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 5, vertical: 5),
+                                  child: TXComboProgressBarWidget(
+//                                  showValueInBar: true,
+                                    title: "Calorías",
+                                    titleSize: 10,
+                                    percentage:
+                                        bloc.getCurrentCaloriesPercentage(
+                                            dailyModel),
+                                    mark1:
+                                        dailyModel.dailyFoodPlanModel.kCalMin,
+                                    mark2:
+                                        dailyModel.dailyFoodPlanModel.kCalMax,
+                                    value: dailyModel.currentCaloriesSum,
+                                  ),
                                 ),
                                 SizedBox(
-                                  height: 5,
+                                  height: 10,
                                 ),
-                                TXProgressBarCheckedWidget(
-                                  title: "Carbohidratos",
-                                  percentage:
-                                  dailyModel.currentSumCarbohydrates *
-                                      100 /
-                                      (dailyModel.dailyFoodPlanModel
-                                          .kCalMax *
-                                          55 /
-                                          100),
-                                  color: Colors.grey[350],
-                                  minMark: 35 * 100 / 55,
+                                TXTextWidget(
+                                  text: "Información nutricional",
+                                  size: 12,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
                                 ),
                                 SizedBox(
-                                  height: 5,
+                                  height: 3,
                                 ),
-                                TXProgressBarCheckedWidget(
-                                  title: "Grasas",
-                                  percentage: dailyModel.currentSumFat *
-                                      100 /
-                                      (dailyModel
-                                          .dailyFoodPlanModel.kCalMax *
-                                          35 /
-                                          100),
-                                  color: Colors.grey[350],
-                                  minMark: 20 * 100 / 35,
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 20,
+                                  ),
+                                  child: Column(
+                                    children: <Widget>[
+                                      TXProgressBarCheckedWidget(
+                                        title: "Proteínas",
+                                        percentage:
+                                            dailyModel.currentSumProteins *
+                                                100 /
+                                                (dailyModel.dailyFoodPlanModel
+                                                        .kCalMax *
+                                                    25 /
+                                                    100),
+                                        color: Colors.grey[350],
+                                        minMark: 12 * 100 / 25,
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      TXProgressBarCheckedWidget(
+                                        title: "Carbohidratos",
+                                        percentage:
+                                            dailyModel.currentSumCarbohydrates *
+                                                100 /
+                                                (dailyModel.dailyFoodPlanModel
+                                                        .kCalMax *
+                                                    55 /
+                                                    100),
+                                        color: Colors.grey[350],
+                                        minMark: 35 * 100 / 55,
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      TXProgressBarCheckedWidget(
+                                        title: "Grasas",
+                                        percentage: dailyModel.currentSumFat *
+                                            100 /
+                                            (dailyModel.dailyFoodPlanModel
+                                                    .kCalMax *
+                                                35 /
+                                                100),
+                                        color: Colors.grey[350],
+                                        minMark: 20 * 100 / 35,
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      TXProgressBarCheckedWidget(
+                                        title: "Fibras",
+                                        percentage: dailyModel.currentSumFiber *
+                                            100 /
+                                            50,
+                                        color: Colors.grey[350],
+                                        minMark: 30 * 100 / 50,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                                 SizedBox(
-                                  height: 5,
+                                  height: 10,
                                 ),
-                                TXProgressBarCheckedWidget(
-                                  title: "Fibras",
-                                  percentage:
-                                  dailyModel.currentSumFiber * 100 / 50,
-                                  color: Colors.grey[350],
-                                  minMark: 30 * 100 / 50,
-                                ),
+                                Container(
+                                  color: R.color.gray,
+                                  height: .5,
+                                  margin: EdgeInsets.only(top: 5),
+                                )
                               ],
                             ),
                           ),
-                          SizedBox(
-                            height: 10,
+                          Expanded(
+                            child: SingleChildScrollView(
+                              padding: EdgeInsets.only(
+                                  top: 5, left: 5, right: 5, bottom: 50),
+                              child: Column(
+                                children: _getDailyActivityFood(context,
+                                    snapshot.data.dailyActivityFoodModel),
+                              ),
+                              physics: BouncingScrollPhysics(),
+                            ),
                           ),
-                          Container(
-                            color: R.color.gray,
-                            height: .5,
-                            margin: EdgeInsets.only(top: 5),
-                          )
                         ],
-                      ),
-                    ),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        padding: EdgeInsets.only(
-                            top: 5, left: 5, right: 5, bottom: 50),
-                        child: Column(
-                          children: _getDailyActivityFood(context,
-                              snapshot.data.dailyActivityFoodModel),
-                        ),
-                        physics: BouncingScrollPhysics(),
-                      ),
-                    ),
-                  ],
-                );
+                      );
               },
             ),
           ),
@@ -632,21 +637,21 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
           width: 40,
           height: 40,
           imageUrl: model.image,
-          placeholderImage: R.image.logo,
+          placeholderImage: R.image.logo_blue,
         ),
         title: Wrap(
           children: <Widget>[
             TXTextWidget(
               text: "${model.name}",
             ),
-            TXTextWidget(
-              size: 9,
-              color: Colors.black,
-              text:
-                  "${model.calories.toStringAsFixed(2)}kCal-${model.carbohydrates.toStringAsFixed(2)}Car-"
-                  "${model.fat.toStringAsFixed(2)}Fat- ${model.fiber.toStringAsFixed(2)}Fib-"
-                  "${model.proteins.toStringAsFixed(2)}Pro",
-            ),
+//            TXTextWidget(
+//              size: 9,
+//              color: Colors.black,
+//              text:
+//                  "${model.calories.toStringAsFixed(2)}kCal-${model.carbohydrates.toStringAsFixed(2)}Car-"
+//                  "${model.fat.toStringAsFixed(2)}Fat- ${model.fiber.toStringAsFixed(2)}Fib-"
+//                  "${model.proteins.toStringAsFixed(2)}Pro",
+//            ),
           ],
         ),
         trailing: TXIconButtonWidget(

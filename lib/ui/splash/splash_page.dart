@@ -33,8 +33,8 @@ class _SplashState extends StateWithBloC<SplashPage, SplashBloC> {
         child: Center(
           child: Image.asset(
             R.image.logo,
-            width: 100,
-            height: 100,
+            width: 400,
+            height: 400,
           ),
         ),
       ),

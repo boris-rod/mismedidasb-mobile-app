@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:mismedidasb/data/_shared_prefs.dart';
 import 'package:mismedidasb/data/api/remote/remote_constanst.dart';
 import 'package:mismedidasb/data/api/remote/result.dart';
 import 'package:mismedidasb/domain/dish/dish_model.dart';
@@ -16,9 +17,9 @@ import 'package:mismedidasb/utils/extensions.dart';
 
 class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   final IDishRepository _iDishRepository;
-  final IPersonalDataRepository _iPersonalDataRepository;
+  final SharedPreferencesManager _sharedPreferencesManager;
 
-  FoodDishBloC(this._iDishRepository, this._iPersonalDataRepository);
+  FoodDishBloC(this._iDishRepository, this._sharedPreferencesManager);
 
   BehaviorSubject<DailyFoodModel> _dailyFoodController = new BehaviorSubject();
 
@@ -30,10 +31,10 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
   void loadInitialData() async {
     isLoading = true;
+    double dailyKCal = await _sharedPreferencesManager.getDailyKCal();
+    double imc = await _sharedPreferencesManager.getIMC();
 
-    final healthResult = await _iPersonalDataRepository.getHealthResult();
-
-    final daily = await _iDishRepository.getDailyFoodModel(healthResult);
+    final daily = await _iDishRepository.getDailyFoodModel(dailyKCal, imc);
 
     daily.currentCaloriesSum = 0;
     daily.currentSumProteins = 0;

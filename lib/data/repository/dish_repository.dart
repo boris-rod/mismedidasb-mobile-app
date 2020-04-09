@@ -34,21 +34,21 @@ class DishRepository extends BaseRepository implements IDishRepository {
   }
 
   @override
-  Future<DailyFoodModel> getDailyFoodModel(HealthResult healthResult) async {
+  Future<DailyFoodModel> getDailyFoodModel(double dailyKCal, double imc) async {
     List<DailyFoodModel> list = [];
     try {
       list = await _iDishDao.getDailyFoodModelList();
       DailyFoodModel model = list.isNotEmpty
           ? (CalendarUtils.compare(list.last.dateTime, DateTime.now()) != 0
-              ? DailyFoodModel.getDailyFoodModel(healthResult)
+              ? DailyFoodModel.getDailyFoodModel(dailyKCal, imc)
               : list.last)
-          : DailyFoodModel.getDailyFoodModel(healthResult);
+          : DailyFoodModel.getDailyFoodModel(dailyKCal, imc);
 
       if (model.dailyFoodPlanModel == null) {
         final plan = DailyFoodPlanModel(
-            imc: healthResult.imc, dailyKCal: healthResult.kCal);
+            imc: imc, dailyKCal: dailyKCal);
         model.dailyFoodPlanModel = DailyFoodPlanModel(
-            imc: healthResult.imc, dailyKCal: healthResult.kCal);
+            imc: imc, dailyKCal: dailyKCal);
         model.dailyActivityFoodModel.forEach((dA) {
           if (dA.plan == null) dA.plan = plan;
         });
@@ -57,7 +57,7 @@ class DishRepository extends BaseRepository implements IDishRepository {
       await _iDishDao.saveDailyFoodModel(model);
       return model;
     } catch (ex) {
-      return DailyFoodModel.getDailyFoodModel(healthResult);
+      return DailyFoodModel.getDailyFoodModel(dailyKCal, imc);
     }
   }
 

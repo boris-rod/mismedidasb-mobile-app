@@ -1,3 +1,4 @@
+import 'package:mismedidasb/data/_shared_prefs.dart';
 import 'package:mismedidasb/data/api/remote/remote_constanst.dart';
 import 'package:mismedidasb/data/api/remote/result.dart';
 import 'package:mismedidasb/domain/health_concept/health_concept.dart';
@@ -14,12 +15,12 @@ import 'package:rxdart/subjects.dart';
 import 'package:mismedidasb/utils/extensions.dart';
 
 class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
-  final IPersonalDataRepository _iPersonalDataRepository;
   final IHealthConceptRepository _iHealthConceptRepository;
   final IUserRepository _iUserRepository;
+  final SharedPreferencesManager _sharedPreferencesManager;
 
-  HomeBloC(this._iPersonalDataRepository, this._iHealthConceptRepository,
-      this._iUserRepository);
+  HomeBloC(this._iHealthConceptRepository,
+      this._iUserRepository, this._sharedPreferencesManager);
 
   BehaviorSubject<List<HealthConceptModel>> _conceptController =
       new BehaviorSubject();
@@ -27,10 +28,17 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   Stream<List<HealthConceptModel>> get conceptResult =>
       _conceptController.stream;
 
+  bool canNavigateToFoodPage = false;
   void loadHomeData() async {
     isLoading = true;
     final profileRes = await _iUserRepository.getProfile();
     if (profileRes is ResultSuccess<UserModel>) {
+      profileRes.value.dailyKCal = profileRes.value.dailyKCal ?? 2000;
+      profileRes.value.imc = profileRes.value.imc ?? 24;
+
+      await _sharedPreferencesManager.setDailyKCal(profileRes.value.dailyKCal ?? 2000);
+      await _sharedPreferencesManager.setIMC(profileRes.value.imc ?? 24);
+      canNavigateToFoodPage = profileRes.value.dailyKCal > 1 && profileRes.value.imc > 1;
       final res = await _iHealthConceptRepository.getHealthConceptList();
       if (res is ResultSuccess<List<HealthConceptModel>>) {
         _conceptController.sinkAddSafe(res.value);
@@ -39,14 +47,6 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     } else
       showErrorMessage(profileRes);
     isLoading = false;
-  }
-
-  Future<bool> canNavigateToFoodPage() async {
-    HealthResult healthResult =
-        await _iPersonalDataRepository.getHealthResult();
-    return healthResult.result.isNotEmpty &&
-        healthResult.kCal != 1 &&
-        healthResult.imc != 1;
   }
 
   int getHomeCountPerRow(double screenW) {

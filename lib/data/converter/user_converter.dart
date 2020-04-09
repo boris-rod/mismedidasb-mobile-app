@@ -16,6 +16,8 @@ class UserConverter implements IUserConverter {
       avatarMimeType: json[RemoteConstants.avatar_mime_type],
       role: json[RemoteConstants.role],
       roleId: json[RemoteConstants.role_id],
+      dailyKCal: json[RemoteConstants.daily_kcal],
+      imc: json[RemoteConstants.imc]
     );
   }
 
