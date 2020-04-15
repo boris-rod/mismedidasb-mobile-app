@@ -1,6 +1,7 @@
 import 'package:mismedidasb/data/dao/_base/app_database.dart';
 import 'package:mismedidasb/data/dao/_base/db_constants.dart';
 import 'package:mismedidasb/domain/common_db/i_common_dao.dart';
+import 'package:sqflite/sqflite.dart';
 
 class CommonDao implements ICommonDao {
   final AppDatabase _appDatabase;
@@ -10,12 +11,10 @@ class CommonDao implements ICommonDao {
   @override
   Future<bool> cleanDB() async {
     try {
-      await _appDatabase.deleteAll(DBConstants.food_table);
-      await _appDatabase.deleteAll(DBConstants.food_tag_table);
-      await _appDatabase.deleteAll(DBConstants.daily_food_activity_table);
-      await _appDatabase.deleteAll(DBConstants.measure_health_table);
-      await _appDatabase.deleteAll(DBConstants.health_result_table);
-
+      Database db = await _appDatabase.db;
+      db.delete(DBConstants.food_table);
+      db.delete(DBConstants.food_tag_table);
+      db.delete(DBConstants.daily_food_activity_table);
       ///Add here all lines for complete data remove by each table...
       return true;
     } catch (ex) {

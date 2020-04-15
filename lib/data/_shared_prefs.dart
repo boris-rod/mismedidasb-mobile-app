@@ -1,3 +1,4 @@
+import 'package:mismedidasb/domain/session/session_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesManager {
@@ -7,33 +8,51 @@ class SharedPreferencesManager {
   final _password = "password";
   final _userId = "user_id";
   final _saveCredentials = "save_credentials";
-  final _activeAccount = "save_credentials";
+  final _activeAccount = "active_account";
   final _dailyKCal = "daily_cal";
   final _imc = "imc";
+  final _firstDateHealthResult = "first_date_health_result";
+  final _showDailyResume = "true";
 
   Future<bool> cleanAll() async {
 //    setUserEmail('');
     setAccessToken('');
-    setUserId(-1);
+//    setUserId(-1);
     setPassword('');
     setSaveCredentials(false);
-    setActivateAccount(false);
+    setActivateAccount(ACCOUNT_STATUS.PENDING.index);
+    setShowDailyResume(true);
     return true;
   }
 
-  Future<bool> getActivateAccount() async {
-    var value =
-        (await SharedPreferences.getInstance()).getBool(_saveCredentials);
+  Future<int> getActivateAccount() async {
+    var value = (await SharedPreferences.getInstance()).getInt(_activeAccount);
     if (value == null) {
-      value = false;
+      value = ACCOUNT_STATUS.PENDING.index;
       setActivateAccount(value);
     }
     return value;
   }
 
-  Future<bool> setActivateAccount(bool newValue) async {
+  Future<bool> setActivateAccount(int newValue) async {
     var res = (await SharedPreferences.getInstance())
-        .setBool(_saveCredentials, newValue);
+        .setInt(_activeAccount, newValue);
+    return res;
+  }
+
+  Future<DateTime> getFirstDateHealthResult() async {
+    var value = (await SharedPreferences.getInstance()).getString(_firstDateHealthResult);
+    if (value == null) {
+      final now = DateTime.now();
+      value = now.toIso8601String();
+      setFirstDateHealthResult(now);
+    }
+    return DateTime.parse(value);
+  }
+
+  Future<bool> setFirstDateHealthResult(DateTime newValue) async {
+    var res = (await SharedPreferences.getInstance())
+        .setString(_firstDateHealthResult, newValue.toIso8601String());
     return res;
   }
 
@@ -54,34 +73,47 @@ class SharedPreferencesManager {
   }
 
   Future<double> getDailyKCal() async {
-    var value =
-    (await SharedPreferences.getInstance()).getDouble(_dailyKCal);
-    if (value == null) {
-      value = 0;
+    var value = (await SharedPreferences.getInstance()).getDouble(_dailyKCal);
+    if (value == null || value < 1) {
+      value = 1;
       setDailyKCal(value);
     }
     return value;
   }
 
   Future<bool> setDailyKCal(double newValue) async {
-    var res = (await SharedPreferences.getInstance())
-        .setDouble(_dailyKCal, newValue);
+    var res =
+        (await SharedPreferences.getInstance()).setDouble(_dailyKCal, newValue);
     return res;
   }
 
   Future<double> getIMC() async {
-    var value =
-    (await SharedPreferences.getInstance()).getDouble(_imc);
-    if (value == null) {
-      value = 0;
+    var value = (await SharedPreferences.getInstance()).getDouble(_imc);
+    if (value == null || value < 1) {
+      value = 1;
       setIMC(value);
     }
     return value;
   }
 
   Future<bool> setIMC(double newValue) async {
+    var res = (await SharedPreferences.getInstance()).setDouble(_imc, newValue);
+    return res;
+  }
+
+  Future<bool> getShowDailyResume() async {
+    var value =
+        (await SharedPreferences.getInstance()).getBool(_showDailyResume);
+    if (value == null) {
+      value = true;
+      setShowDailyResume(value);
+    }
+    return value;
+  }
+
+  Future<bool> setShowDailyResume(bool newValue) async {
     var res = (await SharedPreferences.getInstance())
-        .setDouble(_imc, newValue);
+        .setBool(_showDailyResume, newValue);
     return res;
   }
 
@@ -135,7 +167,7 @@ class SharedPreferencesManager {
         (await SharedPreferences.getInstance()).getString(_refreshToken);
     if (value == null) {
       value = '';
-      setAccessToken(value);
+      setRefreshToken(value);
     }
     return value;
   }

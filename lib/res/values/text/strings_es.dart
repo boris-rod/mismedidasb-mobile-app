@@ -161,4 +161,55 @@ class StringsEs implements StringsBase {
 
   @override
   String get noPollData => "Cuestionario vacío";
+
+  @override
+  String get fiberAndVegetables => "Frutas y/o Vegetales";
+
+  @override
+  String get breakfast => "Desayuno";
+
+  @override
+  String get calories => "Calorías";
+
+  @override
+  String get carbohydrates => "Carbohidratos";
+
+  @override
+  String get dinner => "Cena";
+
+  @override
+  String get fat => "Grasa";
+
+  @override
+  String get fiber => "Fibra";
+
+  @override
+  String get lunch => "Almuerzo";
+
+  @override
+  String get nutritionalInfo => "Información nutricional";
+
+  @override
+  String get proteins => "Proteínas";
+
+  @override
+  String get snack => "Merienda";
+
+  @override
+  String get emptyFoodList => "Debe escoger al menos un alimentos";
+
+  @override
+  String get save => "Salvar";
+
+  @override
+  String get foodInstructionsTitle => "Instrucciones";
+
+  @override
+  String get ideal => "Ideal";
+
+  @override
+  String get confirm => "Confirmar";
+
+  @override
+  String get notShowAgain => "No volver a mostrar";
 }

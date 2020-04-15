@@ -65,7 +65,7 @@ class _MeasureHealthState
       children: <Widget>[
         TXMainAppBarWidget(
           leading: TXIconButtonWidget(
-            icon: Icon(Icons.arrow_back),
+            icon: Icon(Icons.close),
             onPressed: () {
               NavigationUtils.pop(context);
             },
@@ -185,199 +185,199 @@ class _MeasureHealthState
     return list;
   }
 
-  Widget getPersonalDataView(BuildContext context) {
-    return Container(
-      child: SingleChildScrollView(
-        child: StreamBuilder<HealthMeasureResultModel>(
-          stream: bloc.measureResult,
-          initialData: bloc.healthMeasureResultModel,
-          builder: (ctx, snapshot) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.all(20),
-                  child: TXTextWidget(
-                    text: "Datos personales",
-                    size: 20,
-                  ),
-                ),
-                TXBottomSheetSelectorWidget(
-                  list: SingleSelectionModel.getAgeRange(),
-                  onItemSelected: (model) {
-                    bloc.setAge(model.id);
-                  },
-                  title: "Edad - (Años)",
-                  initialId: bloc.healthMeasureResultModel.age,
-                ),
-                Divider(
-                  height: 1,
-                ),
-                TXBottomSheetSelectorWidget(
-                  list: SingleSelectionModel.getWeight(),
-                  onItemSelected: (model) {
-                    bloc.setWeight(model.id);
-                  },
-                  title: "Peso - (Kilogramos)",
-                  initialId: bloc.healthMeasureResultModel.weight,
-                ),
-                Divider(
-                  height: 1,
-                ),
-                TXBottomSheetSelectorWidget(
-                  list: SingleSelectionModel.getHeight(),
-                  onItemSelected: (model) {
-                    bloc.setHeight(model.id);
-                  },
-                  title: "Estatura - (Centímetros)",
-                  initialId: bloc.healthMeasureResultModel.height,
-                ),
-                Divider(
-                  height: 1,
-                ),
-                TXBottomSheetSelectorWidget(
-                  list: SingleSelectionModel.getSex(),
-                  bottomSheetHeight: 200,
-                  onItemSelected: (model) {
-                    bloc.setSex(model.id);
-                  },
-                  title: "Sexo",
-                  initialId: bloc.healthMeasureResultModel.sex,
-                ),
-                Divider(
-                  height: 1,
-                ),
-              ],
-            );
-          },
-        ),
-      ),
-    );
-  }
-
-  Widget getPeriodForPhysicalExerciseView(BuildContext context) {
-    return Container(
-      child: StreamBuilder<HealthMeasureResultModel>(
-        stream: bloc.measureResult,
-        initialData: bloc.healthMeasureResultModel,
-        builder: (ctx, snapshot) {
-          final elementList = QuestionModel.getPhysicalExerciseList();
-          final poll = PollModel.getPollPhysicalExercise();
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                alignment: Alignment.center,
-                padding: EdgeInsets.all(20),
-                child: TXTextWidget(
-                  text: poll.name,
-                  size: 20,
-                ),
-              ),
-              ListView.builder(
-                shrinkWrap: true,
-                itemBuilder: (ctx, index) {
-                  final element = elementList[index];
-                  return Column(
-                    children: <Widget>[
-                      TXBottomSheetSelectorWidget(
-                        list: SingleSelectionModel.getPhysicalExercise(),
-                        onItemSelected: (model) {
-                          bloc.setPhysicalExercise(model.id, model.displayName);
-                        },
-                        title: element.title,
-                        initialId:
-                            bloc.healthMeasureResultModel.physicalExercise,
-                      ),
-                      Divider(
-                        height: 1,
-                      ),
-                    ],
-                  );
-                },
-                itemCount: elementList.length,
-              ),
-            ],
-          );
-        },
-      ),
-    );
-  }
-
-  Widget getDietView(BuildContext context) {
-    return Container(
-      child: StreamBuilder<HealthMeasureResultModel>(
-        stream: bloc.measureResult,
-        initialData: bloc.healthMeasureResultModel,
-        builder: (ctx, snapshot) {
-          final elementList = QuestionModel.getDiets();
-          final poll = PollModel.getPollDiet();
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                alignment: Alignment.center,
-                padding: EdgeInsets.all(20),
-                child: TXTextWidget(
-                  text: poll.name,
-                  size: 20,
-                ),
-              ),
-              ListView.builder(
-                physics: BouncingScrollPhysics(),
-                shrinkWrap: true,
-                itemBuilder: (ctx, index) {
-                  final element = elementList[index];
-                  return Column(
-                    children: <Widget>[
-                      TXBottomSheetSelectorWidget(
-                        list: SingleSelectionModel.getDiet(),
-                        onItemSelected: (model) {
-                          bloc.setDiet(model.id, model.displayName, index);
-                        },
-                        title: element.title,
-                        initialId: bloc.healthMeasureResultModel.diet[index],
-                      ),
-                      Divider(
-                        height: 1,
-                      ),
-                    ],
-                  );
-                },
-                itemCount: elementList.length,
-              ),
-            ],
-          );
-        },
-      ),
-    );
-  }
-
-  Widget getResultView(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(20),
-      child: StreamBuilder<HealthMeasureResultModel>(
-          stream: bloc.measureResult,
-          initialData: bloc.healthMeasureResultModel,
-          builder: (ctx, snapshot) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.all(20),
-                  child: TXTextWidget(
-                    text: "Resultados",
-                    size: 20,
-                  ),
-                ),
-                TXTextWidget(
-                  text: snapshot.data.result,
-                )
-              ],
-            );
-          }),
-    );
-  }
+//  Widget getPersonalDataView(BuildContext context) {
+//    return Container(
+//      child: SingleChildScrollView(
+//        child: StreamBuilder<HealthMeasureResultModel>(
+//          stream: bloc.measureResult,
+//          initialData: bloc.healthMeasureResultModel,
+//          builder: (ctx, snapshot) {
+//            return Column(
+//              crossAxisAlignment: CrossAxisAlignment.center,
+//              children: <Widget>[
+//                Container(
+//                  alignment: Alignment.center,
+//                  padding: EdgeInsets.all(20),
+//                  child: TXTextWidget(
+//                    text: "Datos personales",
+//                    size: 20,
+//                  ),
+//                ),
+//                TXBottomSheetSelectorWidget(
+//                  list: SingleSelectionModel.getAgeRange(),
+//                  onItemSelected: (model) {
+//                    bloc.setAge(model.id);
+//                  },
+//                  title: "Edad - (Años)",
+//                  initialId: bloc.healthMeasureResultModel.age,
+//                ),
+//                Divider(
+//                  height: 1,
+//                ),
+//                TXBottomSheetSelectorWidget(
+//                  list: SingleSelectionModel.getWeight(),
+//                  onItemSelected: (model) {
+//                    bloc.setWeight(model.id);
+//                  },
+//                  title: "Peso - (Kilogramos)",
+//                  initialId: bloc.healthMeasureResultModel.weight,
+//                ),
+//                Divider(
+//                  height: 1,
+//                ),
+//                TXBottomSheetSelectorWidget(
+//                  list: SingleSelectionModel.getHeight(),
+//                  onItemSelected: (model) {
+//                    bloc.setHeight(model.id);
+//                  },
+//                  title: "Estatura - (Centímetros)",
+//                  initialId: bloc.healthMeasureResultModel.height,
+//                ),
+//                Divider(
+//                  height: 1,
+//                ),
+//                TXBottomSheetSelectorWidget(
+//                  list: SingleSelectionModel.getSex(),
+//                  bottomSheetHeight: 200,
+//                  onItemSelected: (model) {
+//                    bloc.setSex(model.id);
+//                  },
+//                  title: "Sexo",
+//                  initialId: bloc.healthMeasureResultModel.sex,
+//                ),
+//                Divider(
+//                  height: 1,
+//                ),
+//              ],
+//            );
+//          },
+//        ),
+//      ),
+//    );
+//  }
+//
+//  Widget getPeriodForPhysicalExerciseView(BuildContext context) {
+//    return Container(
+//      child: StreamBuilder<HealthMeasureResultModel>(
+//        stream: bloc.measureResult,
+//        initialData: bloc.healthMeasureResultModel,
+//        builder: (ctx, snapshot) {
+//          final elementList = QuestionModel.getPhysicalExerciseList();
+//          final poll = PollModel.getPollPhysicalExercise();
+//          return Column(
+//            crossAxisAlignment: CrossAxisAlignment.center,
+//            children: <Widget>[
+//              Container(
+//                alignment: Alignment.center,
+//                padding: EdgeInsets.all(20),
+//                child: TXTextWidget(
+//                  text: poll.name,
+//                  size: 20,
+//                ),
+//              ),
+//              ListView.builder(
+//                shrinkWrap: true,
+//                itemBuilder: (ctx, index) {
+//                  final element = elementList[index];
+//                  return Column(
+//                    children: <Widget>[
+//                      TXBottomSheetSelectorWidget(
+//                        list: SingleSelectionModel.getPhysicalExercise(),
+//                        onItemSelected: (model) {
+//                          bloc.setPhysicalExercise(model.id, model.displayName);
+//                        },
+//                        title: element.title,
+//                        initialId:
+//                            bloc.healthMeasureResultModel.physicalExercise,
+//                      ),
+//                      Divider(
+//                        height: 1,
+//                      ),
+//                    ],
+//                  );
+//                },
+//                itemCount: elementList.length,
+//              ),
+//            ],
+//          );
+//        },
+//      ),
+//    );
+//  }
+//
+//  Widget getDietView(BuildContext context) {
+//    return Container(
+//      child: StreamBuilder<HealthMeasureResultModel>(
+//        stream: bloc.measureResult,
+//        initialData: bloc.healthMeasureResultModel,
+//        builder: (ctx, snapshot) {
+//          final elementList = QuestionModel.getDiets();
+//          final poll = PollModel.getPollDiet();
+//          return Column(
+//            crossAxisAlignment: CrossAxisAlignment.center,
+//            children: <Widget>[
+//              Container(
+//                alignment: Alignment.center,
+//                padding: EdgeInsets.all(20),
+//                child: TXTextWidget(
+//                  text: poll.name,
+//                  size: 20,
+//                ),
+//              ),
+//              ListView.builder(
+//                physics: BouncingScrollPhysics(),
+//                shrinkWrap: true,
+//                itemBuilder: (ctx, index) {
+//                  final element = elementList[index];
+//                  return Column(
+//                    children: <Widget>[
+//                      TXBottomSheetSelectorWidget(
+//                        list: SingleSelectionModel.getDiet(),
+//                        onItemSelected: (model) {
+//                          bloc.setDiet(model.id, model.displayName, index);
+//                        },
+//                        title: element.title,
+//                        initialId: bloc.healthMeasureResultModel.diet[index],
+//                      ),
+//                      Divider(
+//                        height: 1,
+//                      ),
+//                    ],
+//                  );
+//                },
+//                itemCount: elementList.length,
+//              ),
+//            ],
+//          );
+//        },
+//      ),
+//    );
+//  }
+//
+//  Widget getResultView(BuildContext context) {
+//    return Container(
+//      padding: EdgeInsets.all(20),
+//      child: StreamBuilder<HealthMeasureResultModel>(
+//          stream: bloc.measureResult,
+//          initialData: bloc.healthMeasureResultModel,
+//          builder: (ctx, snapshot) {
+//            return Column(
+//              crossAxisAlignment: CrossAxisAlignment.center,
+//              children: <Widget>[
+//                Container(
+//                  alignment: Alignment.center,
+//                  padding: EdgeInsets.all(20),
+//                  child: TXTextWidget(
+//                    text: "Resultados",
+//                    size: 20,
+//                  ),
+//                ),
+//                TXTextWidget(
+//                  text: snapshot.data.result,
+//                )
+//              ],
+//            );
+//          }),
+//    );
+//  }
 }

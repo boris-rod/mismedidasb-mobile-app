@@ -26,8 +26,32 @@ class DishDao extends IDishDao {
             _foodConverter.fromJsonDailyFoodModel(jsonDecode(value));
         list.add(obj);
       });
-    } catch (ex) {}
+    } catch (ex) {
+      print(ex.toString());
+    }
     return list;
+  }
+
+  @override
+  Future<bool> saveDailyFoodModelList(List<DailyFoodModel> list) async {
+    try {
+      Database db = await _appDatabase.db;
+      list.forEach((model) async {
+        final map = {
+          DBConstants.id_key:
+          CalendarUtils.getTimeIdBasedDay(dateTime: model.dateTime),
+          DBConstants.data_key:
+          jsonEncode(_foodConverter.toJsonDailyFoodModel(model)),
+          DBConstants.parent_key:
+          CalendarUtils.getTimeIdBasedDay(dateTime: model.dateTime),
+        };
+        await db.insert(DBConstants.daily_food_activity_table, map,
+            conflictAlgorithm: ConflictAlgorithm.replace);
+      });
+      return true;
+    } catch (ex) {
+      return false;
+    }
   }
 
   @override
@@ -49,13 +73,13 @@ class DishDao extends IDishDao {
       final data = jsonEncode(_foodConverter.toJsonDailyFoodModel(model));
       if (data.isNotEmpty) {
         final map = {
-          DBConstants.id_key: CalendarUtils.getTimeIdBasedDay(),
+          DBConstants.id_key: CalendarUtils.getTimeIdBasedDay(dateTime: model.dateTime),
           DBConstants.data_key: data,
-          DBConstants.parent_key: CalendarUtils.getTimeIdBasedDay()
+          DBConstants.parent_key: CalendarUtils.getTimeIdBasedDay(dateTime: model.dateTime)
         };
-        final inserted = await db.insert(DBConstants.daily_food_activity_table, map,
+        final inserted = await db.insert(
+            DBConstants.daily_food_activity_table, map,
             conflictAlgorithm: ConflictAlgorithm.replace);
-        print(inserted.toString());
       }
       return true;
     } catch (ex) {

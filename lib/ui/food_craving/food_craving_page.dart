@@ -36,7 +36,7 @@ class _FoodCravingState
         TXMainAppBarWidget(
           title: widget.conceptModel.title,
           leading: TXIconButtonWidget(
-            icon: Icon(Icons.arrow_back),
+            icon: Icon(Icons.close),
             onPressed: () {
               NavigationUtils.pop(context);
             },

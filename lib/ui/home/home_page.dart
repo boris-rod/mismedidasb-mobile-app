@@ -43,11 +43,6 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
         children: <Widget>[
           TXMainAppBarWidget(
             title: R.string.appName,
-            leading: TXIconButtonWidget(
-              icon: Image.asset(
-                R.image.logo,
-              ),
-            ),
             actions: <Widget>[
               TXIconButtonWidget(
                 icon: Icon(Icons.settings),
@@ -164,7 +159,7 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
                       width: double.infinity,
                       height: double.infinity,
                       imageUrl: model.image ?? '',
-                      placeholderImage: bloc.getDefaultHomeImage(model),
+                      placeholderImage: R.image.logo_blue,
                     )),
               ),
             ],

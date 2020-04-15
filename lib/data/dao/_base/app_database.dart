@@ -39,8 +39,8 @@ class AppDatabase {
     await _createTable(db, DBConstants.food_table, DBConstants.table_cols);
     await _createTable(db, DBConstants.food_tag_table, DBConstants.table_cols);
     await _createTable(db, DBConstants.daily_food_activity_table, DBConstants.table_cols);
-    await _createTable(db, DBConstants.measure_health_table, DBConstants.table_cols);
-    await _createTable(db, DBConstants.health_result_table, DBConstants.table_cols);
+//    await _createTable(db, DBConstants.measure_health_table, DBConstants.table_cols);
+//    await _createTable(db, DBConstants.health_result_table, DBConstants.table_cols);
   }
 
   static Future<bool> _createTable(

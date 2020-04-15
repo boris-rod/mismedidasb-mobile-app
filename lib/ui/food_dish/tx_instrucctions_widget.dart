@@ -18,7 +18,7 @@ class TXInstructionsWidget extends StatelessWidget{
               children: <Widget>[
                 Expanded(
                   child: TXTextWidget(
-                    text: "Instrucciones",
+                    text: R.string.foodInstructionsTitle,
                     maxLines: 2,
                     textOverflow: TextOverflow.ellipsis,
                     size: 18,

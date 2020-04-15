@@ -40,7 +40,7 @@ class _HabitState extends StateWithBloC<HabitPage, HabitBloC> {
       children: <Widget>[
         TXMainAppBarWidget(
           leading: TXIconButtonWidget(
-            icon: Icon(Icons.arrow_back),
+            icon: Icon(Icons.close),
             onPressed: () {
               NavigationUtils.pop(context);
             },

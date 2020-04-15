@@ -21,6 +21,9 @@ class SessionRepository extends BaseRepository implements ISessionRepository {
     try {
       final result = await _iSessionApi.login(loginModel);
       _sharedPreferencesManager.setUserEmail(result.email);
+      _sharedPreferencesManager.setActivateAccount(result.statusId);
+      _sharedPreferencesManager.setDailyKCal(result.dailyKCal);
+      _sharedPreferencesManager.setIMC(result.imc);
       if (saveCredentials) {
         _sharedPreferencesManager.setUserId(result.id);
         _sharedPreferencesManager.setPassword(loginModel.password);

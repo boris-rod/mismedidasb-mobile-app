@@ -2,6 +2,7 @@ import 'package:charts_flutter/flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:mismedidasb/domain/dish/dish_model.dart';
+import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
 
 class TXIdealPieChartFoodWidget extends StatelessWidget{
@@ -72,8 +73,8 @@ class TXIdealPieChartFoodWidget extends StatelessWidget{
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         TXTextWidget(
-          text: "Ideal",
-          size: 10,
+          text: R.string.ideal,
+          size: 8,
           color: Colors.black,
           fontWeight: FontWeight.bold,
           textAlign: TextAlign.center,
@@ -84,7 +85,7 @@ class TXIdealPieChartFoodWidget extends StatelessWidget{
           child: Stack(
             children: <Widget>[
               charts.PieChart(
-                model.id == 5 ? series1 : series,
+                model.id == 4 ? series1 : series,
                 layoutConfig: LayoutConfig(
                     topMarginSpec:
                     MarginSpec.fixedPixel(0),
@@ -97,30 +98,30 @@ class TXIdealPieChartFoodWidget extends StatelessWidget{
                 animate: true,
               ),
               Positioned(
-                top: model.id == 5 ? 23 : 20,
+                top: model.id == 4 ? 23 : 20,
                 left: 6,
                 child: TXTextWidget(
-                  text: model.id == 5 ? "50%" : "40%",
+                  text: model.id == 4 ? "50%" : "40%",
                   color: Colors.white,
                   size: 9,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               Positioned(
-                top: model.id == 5 ? 15 : 10,
-                right: model.id == 5 ? 7 : 8,
+                top: model.id == 4 ? 15 : 10,
+                right: model.id == 4 ? 7 : 8,
                 child: TXTextWidget(
-                  text: model.id == 5 ? "30%" : "20%",
+                  text: model.id == 4 ? "30%" : "20%",
                   color: Colors.white,
                   size: 9,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               Positioned(
-                right: model.id == 5 ? 8 : 9,
-                bottom: model.id == 5 ? 7 : 12,
+                right: model.id == 4 ? 8 : 9,
+                bottom: model.id == 4 ? 7 : 12,
                 child: TXTextWidget(
-                  text: model.id == 5 ? "20%" : "40%",
+                  text: model.id == 4 ? "20%" : "40%",
                   color: Colors.white,
                   size: 9,
                   fontWeight: FontWeight.bold,

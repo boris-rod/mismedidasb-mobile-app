@@ -34,8 +34,13 @@ class PollApi extends BaseApi implements IPollApi {
     final body = jsonEncode({"pollDatas": map});
     final res =
         await _networkHandler.post(path: Endpoint.set_polls_result, body: body);
-    if (res.statusCode == RemoteConstants.code_success)
-      return R.string.appValuesResultText;
+    if (res.statusCode == RemoteConstants.code_success){
+      String result = "";
+      var tagsJson = jsonDecode(res.body)[RemoteConstants.result];
+      List<String> tags = tagsJson != null ? List.from(tagsJson) : null;
+      result = tags.isNotEmpty ? tags[0] : result;
+      return result;
+    }
     throw serverException(res);
   }
 }

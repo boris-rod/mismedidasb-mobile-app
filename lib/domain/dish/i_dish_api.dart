@@ -4,4 +4,6 @@ abstract class IDishApi {
   Future<List<FoodModel>> getFoodModelList();
 
   Future<List<TagModel>> getTagList();
+
+  Future<List<DailyActivityFoodModel>> getDailyActivityFoodModelListByDateRange(DateTime start, DateTime end);
 }

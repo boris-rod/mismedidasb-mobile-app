@@ -1,9 +1,12 @@
+import 'package:mismedidasb/data/_shared_prefs.dart';
 import 'package:mismedidasb/data/api/remote/result.dart';
 import 'package:mismedidasb/domain/answer/answer_model.dart';
 import 'package:mismedidasb/domain/personal_data/i_personal_data_repository.dart';
 import 'package:mismedidasb/domain/poll_model/i_poll_repository.dart';
 import 'package:mismedidasb/domain/poll_model/poll_model.dart';
 import 'package:mismedidasb/domain/question/question_model.dart';
+import 'package:mismedidasb/domain/user/i_user_repository.dart';
+import 'package:mismedidasb/domain/user/user_model.dart';
 import 'package:mismedidasb/ui/_base/bloc_base.dart';
 import 'package:mismedidasb/ui/_base/bloc_error_handler.dart';
 import 'package:mismedidasb/ui/_base/bloc_loading.dart';
@@ -13,10 +16,9 @@ import 'package:rxdart/subjects.dart';
 import 'package:mismedidasb/utils/extensions.dart';
 
 class MeasureHealthBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
-  final IPersonalDataRepository _iPersonalDataRepository;
   final IPollRepository _iPollRepository;
 
-  MeasureHealthBloC(this._iPersonalDataRepository, this._iPollRepository);
+  MeasureHealthBloC(this._iPollRepository);
 
   BehaviorSubject<int> _pageController = new BehaviorSubject();
 
@@ -44,45 +46,47 @@ class MeasureHealthBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     final res = await _iPollRepository.getPollsByConcept(conceptId);
     if (res is ResultSuccess<List<PollModel>>) {
       _pollsController.sinkAddSafe(res.value);
+    } else {
+      showErrorMessage(res);
     }
     isLoading = false;
   }
 
-  void setDataResult(HealthMeasureResultModel model) {
-    _measureController.sinkAddSafe(model);
-  }
+//  void setDataResult(HealthMeasureResultModel model) {
+//    _measureController.sinkAddSafe(model);
+//  }
+//
+//  void setAge(int data) async {
+//    healthMeasureResultModel.age = data;
+//    _measureController.sinkAddSafe(healthMeasureResultModel);
+//  }
+//
+//  void setWeight(int data) async {
+//    healthMeasureResultModel.weight = data;
+//    _measureController.sinkAddSafe(healthMeasureResultModel);
+//  }
 
-  void setAge(int data) async {
-    healthMeasureResultModel.age = data;
-    _measureController.sinkAddSafe(healthMeasureResultModel);
-  }
-
-  void setWeight(int data) async {
-    healthMeasureResultModel.weight = data;
-    _measureController.sinkAddSafe(healthMeasureResultModel);
-  }
-
-  void setHeight(int data) async {
-    healthMeasureResultModel.height = data;
-    _measureController.sinkAddSafe(healthMeasureResultModel);
-  }
-
-  void setSex(int data) async {
-    healthMeasureResultModel.sex = data;
-    _measureController.sinkAddSafe(healthMeasureResultModel);
-  }
-
-  void setPhysicalExercise(int data, String name) async {
-    healthMeasureResultModel.physicalExercise = data;
-    healthMeasureResultModel.physicalExerciseValue = name;
-    _measureController.sinkAddSafe(healthMeasureResultModel);
-  }
-
-  void setDiet(int data, String name, int index) async {
-    healthMeasureResultModel.diet[index] = data;
-    healthMeasureResultModel.dietValue[index] = name;
-    _measureController.sinkAddSafe(healthMeasureResultModel);
-  }
+//  void setHeight(int data) async {
+//    healthMeasureResultModel.height = data;
+//    _measureController.sinkAddSafe(healthMeasureResultModel);
+//  }
+//
+//  void setSex(int data) async {
+//    healthMeasureResultModel.sex = data;
+//    _measureController.sinkAddSafe(healthMeasureResultModel);
+//  }
+//
+//  void setPhysicalExercise(int data, String name) async {
+//    healthMeasureResultModel.physicalExercise = data;
+//    healthMeasureResultModel.physicalExerciseValue = name;
+//    _measureController.sinkAddSafe(healthMeasureResultModel);
+//  }
+//
+//  void setDiet(int data, String name, int index) async {
+//    healthMeasureResultModel.diet[index] = data;
+//    healthMeasureResultModel.dietValue[index] = name;
+//    _measureController.sinkAddSafe(healthMeasureResultModel);
+//  }
 
   void setAnswerValue(int pollIndex, int questionIndex, int answerId) async {
     final polls = await pollsResult.first;
@@ -101,6 +105,8 @@ class MeasureHealthBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     final res = await _iPollRepository.setPollResult(polls);
     if (res is ResultSuccess<String>) {
       _pollSaveController.sinkAddSafe(res.value);
+    } else {
+      showErrorMessage(res);
     }
     isLoading = false;
   }

@@ -5,6 +5,7 @@ import 'package:flutter_rounded_progress_bar/rounded_progress_bar_style.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mismedidasb/domain/dish/dish_model.dart';
 import 'package:mismedidasb/res/R.dart';
+import 'package:mismedidasb/res/values/config.dart';
 import 'package:mismedidasb/ui/_base/bloc_state.dart';
 import 'package:mismedidasb/ui/_base/navigation_utils.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_action_chip_widget.dart';
@@ -22,12 +23,16 @@ import 'package:mismedidasb/ui/_tx_widget/tx_textlink_widget.dart';
 import 'package:mismedidasb/ui/food/food_page.dart';
 import 'package:mismedidasb/ui/food_dish/food_dish_bloc.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:mismedidasb/ui/food_dish/tx_bottom_resume_food_plan_widget.dart';
 import 'package:mismedidasb/ui/food_dish/tx_daily_nutritional_info_widget.dart';
 import 'package:mismedidasb/ui/food_dish/tx_dish_nutritional_info_widget.dart';
+import 'package:mismedidasb/ui/food_dish/tx_food_menu_action_widget.dart';
 import 'package:mismedidasb/ui/food_dish/tx_ideal_pie_chart_food_widget.dart';
 import 'package:mismedidasb/ui/food_dish/tx_instrucctions_widget.dart';
 import 'package:mismedidasb/ui/home/home_page.dart';
+import 'package:mismedidasb/utils/calendar_utils.dart';
 import 'package:mp_chart/mp/chart/pie_chart.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 class FoodDishPage extends StatefulWidget {
   final bool fromNotificationScope;
@@ -40,6 +45,9 @@ class FoodDishPage extends StatefulWidget {
 }
 
 class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
+  PageController _pageController = PageController();
+  CalendarController _calendarController = CalendarController();
+
   void _navBack() {
     if (widget.fromNotificationScope)
       NavigationUtils.pushReplacement(context, HomePage());
@@ -50,6 +58,11 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
   @override
   void initState() {
     super.initState();
+    _calendarController = CalendarController();
+    bloc.pageResult.listen((onData) {
+      _pageController.animateToPage(onData,
+          duration: Duration(milliseconds: 300), curve: Curves.linear);
+    });
     bloc.loadInitialData();
   }
 
@@ -65,7 +78,7 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
           TXMainAppBarWidget(
             title: R.string.foodDishes,
             leading: TXIconButtonWidget(
-              icon: Icon(Icons.arrow_back),
+              icon: Icon(Icons.close),
               onPressed: () {
                 _navBack();
               },
@@ -74,7 +87,7 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
               TXIconButtonWidget(
                 icon: Icon(
                   Icons.live_help,
-                  color: Colors.yellow,
+//                  color: Colors.yellow,
                 ),
                 onPressed: () {
                   showTXModalBottomSheet(
@@ -83,7 +96,24 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                         return TXInstructionsWidget();
                       });
                 },
-              )
+              ),
+              StreamBuilder<int>(
+                stream: bloc.pageResult,
+                initialData: 0,
+                builder: (ctx, snapshot) {
+                  return TXIconButtonWidget(
+                    icon: Icon(
+                      snapshot.data == 0
+                          ? Icons.calendar_today
+                          : Icons.mode_edit,
+//                  color: Colors.yellow,
+                    ),
+                    onPressed: () {
+                      bloc.changePage(bloc.currentPage == 0 ? 1 : 0);
+                    },
+                  );
+                },
+              ),
             ],
             body: StreamBuilder<DailyFoodModel>(
               stream: bloc.dailyFoodResult,
@@ -106,14 +136,16 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                                   currentCaloriesPercentage: bloc
                                       .getCurrentCaloriesPercentage(dailyModel),
                                   dailyModel: dailyModel,
-                                ),
-                                SizedBox(
-                                  height: 10,
+                                  onHeaderTap: () {
+                                    setState(() {
+                                      dailyModel.headerExpanded =
+                                          !dailyModel.headerExpanded;
+                                    });
+                                  },
                                 ),
                                 Container(
                                   color: R.color.gray,
                                   height: .5,
-                                  margin: EdgeInsets.only(top: 5),
                                 )
                               ],
                             ),
@@ -122,23 +154,66 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                             child: Column(
                               children: <Widget>[
                                 Expanded(
-                                  child: SingleChildScrollView(
-                                    padding: EdgeInsets.only(
-                                        top: 5, left: 5, right: 5, bottom: 50),
-                                    child: Column(
-                                      children: _getDailyActivityFood(context,
-                                          snapshot.data.dailyActivityFoodModel),
+                                  child: Container(
+                                    child: PageView.builder(
+                                      itemBuilder: (ctx, index) {
+                                        return index == 0
+                                            ? _getListModeView(
+                                                context,
+                                                snapshot.data
+                                                    .dailyActivityFoodModelList)
+                                            : _getCalendarView(context, []);
+                                      },
+                                      itemCount: 2,
+                                      physics: NeverScrollableScrollPhysics(),
+                                      controller: _pageController,
                                     ),
-                                    physics: BouncingScrollPhysics(),
+                                    color: R.color.gray_light,
                                   ),
                                 ),
                                 Container(
                                   width: double.infinity,
-                                  padding: EdgeInsets.symmetric(vertical: 5, horizontal: 50),
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 5, horizontal: 50),
                                   child: TXButtonWidget(
                                       onPressed: () {
+                                        if (dailyModel.hasFoods == null)
+                                          Fluttertoast.showToast(
+                                              msg: R.string.emptyFoodList);
+                                        else {
+                                          bloc.saveDailyPlan();
+//                                          if (bloc.showResume)
+//                                            showTXModalBottomSheet(
+//                                                context: context,
+//                                                builder: (context) {
+//                                                  return StreamBuilder<bool>(
+//                                                    stream:
+//                                                        bloc.showResumeResult,
+//                                                    initialData: true,
+//                                                    builder:
+//                                                        (ctx, showSnapshot) {
+//                                                      return TXBottomResumeFoodPlanWidget(
+//                                                        dailyFoodModel:
+//                                                            dailyModel,
+//                                                        showValue:
+//                                                            showSnapshot.data,
+//                                                        setShowDailyResume:
+//                                                            (value) {
+//                                                          bloc.setShowDailyResume(
+//                                                              value);
+//                                                        },
+//                                                        onSaveConfirm: () {
+//                                                          bloc.saveDailyPlan();
+//                                                        },
+//                                                      );
+//                                                    },
+//                                                  );
+//                                                });
+//                                          else
+//                                            bloc.saveDailyPlan();
+                                        }
                                       },
-                                      title: "Salvar"),
+                                      title: R.string.save),
                                 )
                               ],
                             ),
@@ -156,6 +231,17 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
     );
   }
 
+  Widget _getListModeView(
+      BuildContext context, List<DailyActivityFoodModel> modelList) {
+    return SingleChildScrollView(
+      padding: EdgeInsets.only(top: 5, left: 5, right: 5, bottom: 50),
+      child: Column(
+        children: _getDailyActivityFood(context, modelList),
+      ),
+      physics: BouncingScrollPhysics(),
+    );
+  }
+
   List<Widget> _getDailyActivityFood(
       BuildContext context, List<DailyActivityFoodModel> modelList) {
     List<Widget> list = [];
@@ -166,21 +252,37 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
           child: Column(
             children: <Widget>[
               Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 10,
-                ),
+                padding: EdgeInsets.only(left: 5),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Expanded(
-                      child: TXTextWidget(
-                        text: "${model.name}",
-                        maxLines: 1,
-                        textOverflow: TextOverflow.ellipsis,
-                        fontWeight: FontWeight.bold,
-                        color: R.color.primary_dark_color,
-                        size: 16,
+                      child: InkWell(
+                        child: Row(
+                          children: <Widget>[
+                            Icon(
+                              model.isExpanded
+                                  ? Icons.keyboard_arrow_up
+                                  : Icons.keyboard_arrow_down,
+                              size: 28,
+                              color: R.color.primary_dark_color,
+                            ),
+                            TXTextWidget(
+                              text: "${model.name}",
+                              maxLines: 1,
+                              textOverflow: TextOverflow.ellipsis,
+                              fontWeight: FontWeight.bold,
+                              color: R.color.primary_dark_color,
+                              size: 15,
+                            )
+                          ],
+                        ),
+                        onTap: () {
+                          setState(() {
+                            model.isExpanded = !model.isExpanded;
+                          });
+                        },
                       ),
                     ),
                     SizedBox(
@@ -226,40 +328,48 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                 height: .5,
                 margin: EdgeInsets.only(left: 10),
               ),
-              (model.id != 2 && model.id != 4)
-                  ? Container(
-                      padding: EdgeInsets.only(left: 10, top: 5, right: 10),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Expanded(
-                            child: TXDishNutritionalInfoWidget(model: model),
-                          ),
-                          TXIdealPieChartFoodWidget(model: model)
-                        ],
-                      ),
+              model.isExpanded
+                  ? Column(
+                      children: <Widget>[
+                        (model.id != 1 && model.id != 3)
+                            ? Container(
+                                padding: EdgeInsets.only(
+                                    left: 10, top: 5, right: 10),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: TXDishNutritionalInfoWidget(
+                                          model: model),
+                                    ),
+                                    TXIdealPieChartFoodWidget(model: model)
+                                  ],
+                                ),
+                              )
+                            : Container(),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        ..._getFoods(model, model.foods),
+                        SizedBox(
+                          height: 5,
+                        )
+                      ],
                     )
-                  : Container(),
-              SizedBox(
-                height: 10,
-              ),
-              ..._getFoods(model, model.foods),
-              SizedBox(
-                height: 5,
-              )
+                  : Container()
             ],
           ),
         ),
       );
       list.add(w);
-      if(model.id != 5)
-      list.add(Container(
-        height: 15,
-        margin: EdgeInsets.symmetric(horizontal: 5),
-        child: Divider(
-          color: R.color.primary_color,
-        ),
-      ));
+      if (model.id != 4)
+        list.add(Container(
+          height: 15,
+          margin: EdgeInsets.symmetric(horizontal: 5),
+          child: Divider(
+            color: R.color.primary_color,
+          ),
+        ));
     });
     return list;
   }
@@ -303,5 +413,159 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
       list.add(w);
     });
     return list;
+  }
+
+  Widget _getCalendarView(
+      BuildContext context, List<DailyFoodModel> modelList) {
+    return SingleChildScrollView(
+      child: Column(
+        children: <Widget>[
+          TableCalendar(
+            availableGestures: AvailableGestures.none,
+            locale: AppConfig.locale == AppLocale.EN
+                ? 'en_US'
+                : AppConfig.locale == AppLocale.IT ? 'it_IT' : 'es_ES',
+            calendarController: _calendarController,
+            startDay: bloc.firstDate,
+            endDay: bloc.lastDate,
+            onDaySelected: (datetime, events) {
+              bloc.selectedDate = datetime;
+
+              bloc.loadInitialDailyData();
+            },
+            enabledDayPredicate: (datetime){
+              return CalendarUtils.compare(datetime, bloc.firstDateHealthResult) >= 0;
+            },
+            initialSelectedDay: bloc.selectedDate,
+            events: bloc.dailyFoodModelMap,
+            initialCalendarFormat: CalendarFormat.month,
+            availableCalendarFormats: Map.of({CalendarFormat.month: ""}),
+            headerStyle: HeaderStyle(
+                centerHeaderTitle: true,
+                rightChevronIcon: Icon(
+                  Icons.keyboard_arrow_right,
+                  size: 30,
+                  color: R.color.primary_color,
+                ),
+                leftChevronIcon: Icon(
+                  Icons.keyboard_arrow_left,
+                  size: 30,
+                  color: R.color.primary_color,
+                )),
+            builders: CalendarBuilders(
+              markersBuilder: (context, date, events, holidays) {
+                final children = <Widget>[];
+                if (events.isNotEmpty) {
+                  children.add(
+                    _buildEventsMarker(date, events),
+                  );
+                }
+                return children;
+              },
+              selectedDayBuilder: (context, date, events) {
+                return Container(
+                  height: double.infinity,
+                  width: double.infinity,
+                  child: Center(
+                    child: Stack(
+                      children: <Widget>[
+                        Center(
+                          child: CircleAvatar(
+                            backgroundColor: Colors.blueAccent[100],
+                            radius: 12,
+                          ),
+                        ),
+                        Center(
+                          child: TXTextWidget(
+                            text: "${date.day}",
+                            color: Colors.white,
+                            size: 12,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                );
+              },
+              todayDayBuilder: (context, date, events) {
+                return Container(
+                  height: double.infinity,
+                  width: double.infinity,
+                  child: Center(
+                    child: Stack(
+                      children: <Widget>[
+                        Center(
+                          child: CircleAvatar(
+                            backgroundColor: R.color.gray_dark,
+                            radius: 12,
+                          ),
+                        ),
+                        Center(
+                          child: TXTextWidget(
+                            text: "${date.day}",
+                            size: 12,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          Wrap(children: <Widget>[
+            TXTextLinkWidget(title: "Planificar", onTap: (){}, textColor: R.color.accent_color,),
+            TXTextLinkWidget(title: "Copiar", onTap: (){}, textColor: R.color.accent_color,),
+            TXTextLinkWidget(title: "Editar", onTap: (){}, textColor: R.color.accent_color,),
+            TXTextLinkWidget(title: "Ver resumen", onTap: (){}, textColor: R.color.accent_color,),
+          ],)
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEventsMarker(DateTime date, List events) {
+    final DailyFoodModel dailyModel =
+        events.isNotEmpty ? events[0] as DailyFoodModel : null;
+    return (dailyModel != null && dailyModel.hasFoods != null)
+        ? Align(
+            alignment: Alignment.bottomCenter,
+            child: Icon(
+              dailyModel.currentCaloriesSum >
+                      dailyModel.dailyFoodPlanModel.kCalMax
+                  ? Icons.add_circle_outline
+                  : dailyModel.currentCaloriesSum >
+                          dailyModel.dailyFoodPlanModel.kCalMin
+                      ? Icons.check_circle_outline
+                      : Icons.remove_circle_outline,
+              size: 14,
+              color: dailyModel.currentCaloriesSum >
+                      dailyModel.dailyFoodPlanModel.kCalMax
+                  ? Colors.red[400]
+                  : dailyModel.currentCaloriesSum >
+                          dailyModel.dailyFoodPlanModel.kCalMin
+                      ? Colors.green[400]
+                      : Colors.yellow[400],
+            ),
+          )
+        : Container();
+  }
+
+  Future<Null> _selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: bloc.selectedDate,
+        firstDate: bloc.firstDate,
+        lastDate: bloc.lastDate,
+        selectableDayPredicate: (date) {
+          return true;
+        });
+    if (picked != null && picked != bloc.selectedDate) {}
+  }
+
+  @override
+  void dispose() {
+    _calendarController.dispose();
+    super.dispose();
   }
 }

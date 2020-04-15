@@ -42,12 +42,15 @@ class TXComboProgressBarWidget extends StatelessWidget {
                   color: Colors.black,
                   size: titleSize ?? 12,
                 ),
-                childCenter: TXTextWidget(
-                  fontWeight: FontWeight.bold,
-                  text: showPercentageInfo ?
-                  "${percentage.toInt()}/100% ${showValueInBar ? "${value.toStringAsFixed(2)}kCal" : ""}" : "",
-                  size: titleSize ?? 10,
-                  color: Colors.black,
+                childRight: Container(
+                  margin: EdgeInsets.only(right: 5),
+                  child: TXTextWidget(
+                    fontWeight: FontWeight.bold,
+                    text: showPercentageInfo ?
+                    "${percentage.toInt()}% ${showValueInBar ? "${value.toStringAsFixed(2)}kCal" : ""}" : "",
+                    size: titleSize ?? 10,
+                    color: Colors.black,
+                  ),
                 ),
                 margin: EdgeInsets.all(0),
                 style: RoundedProgressBarStyle(
@@ -71,7 +74,7 @@ class TXComboProgressBarWidget extends StatelessWidget {
                 childCenter: TXTextWidget(
                   fontWeight: FontWeight.bold,
                   text: showPercentageInfo ?
-                  "${percentage.toInt()}/100% ${showValueInBar ? "${value.toStringAsFixed(2)}kCal" : ""}" : "",
+                  "${percentage.toInt()}% ${showValueInBar ? "${value.toStringAsFixed(2)}kCal" : ""}" : "",
                   size: titleSize ?? 10,
                   color: Colors.black,
                 ),
@@ -97,7 +100,7 @@ class TXComboProgressBarWidget extends StatelessWidget {
                 childCenter: TXTextWidget(
                   fontWeight: FontWeight.bold,
                   text: showPercentageInfo ?
-                  "${percentage.toInt()}/100% ${showValueInBar ? "${value.toStringAsFixed(2)}kCal" : ""}" : "",
+                  "${percentage.toInt()}% ${showValueInBar ? "${value.toStringAsFixed(2)}kCal" : ""}" : "",
                   size: titleSize ?? 10,
                   color: Colors.black,
                 ),

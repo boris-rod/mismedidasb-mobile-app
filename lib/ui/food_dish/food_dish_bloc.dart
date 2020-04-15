@@ -12,6 +12,7 @@ import 'package:mismedidasb/ui/_base/bloc_base.dart';
 import 'package:mismedidasb/ui/_base/bloc_error_handler.dart';
 import 'package:mismedidasb/ui/_base/bloc_loading.dart';
 import 'package:mismedidasb/ui/measure_health/health_result.dart';
+import 'package:mismedidasb/utils/calendar_utils.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:mismedidasb/utils/extensions.dart';
 
@@ -29,12 +30,81 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
   Stream<List<FoodModel>> get foodsResult => _foodsController.stream;
 
-  void loadInitialData() async {
-    isLoading = true;
-    double dailyKCal = await _sharedPreferencesManager.getDailyKCal();
-    double imc = await _sharedPreferencesManager.getIMC();
+  BehaviorSubject<bool> _showResumeController = new BehaviorSubject();
 
-    final daily = await _iDishRepository.getDailyFoodModel(dailyKCal, imc);
+  Stream<bool> get showResumeResult => _showResumeController.stream;
+
+  BehaviorSubject<int> _pageController = new BehaviorSubject();
+
+  Stream<int> get pageResult => _pageController.stream;
+
+  bool tagsLoaded = false;
+  bool foodsLoaded = false;
+  bool showResume = false;
+  int currentPage = 0;
+  List<DailyFoodModel> dailyFoodModelList = [];
+  Map<DateTime, List<DailyFoodModel>> dailyFoodModelMap;
+
+  double dailyKCal = 1;
+  double imc = 1;
+
+  DateTime selectedDate = DateTime.now();
+  DateTime firstDate = DateTime.now();
+  DateTime lastDate = DateTime.now();
+  DateTime firstDateHealthResult = DateTime.now();
+
+  void loadInitialData() async {
+    firstDate = CalendarUtils.getFirstDateOfMonthAgo();
+    lastDate = CalendarUtils.getLastDateOfMonthLater();
+    tagsLoaded = false;
+    foodsLoaded = false;
+    showResume = await _sharedPreferencesManager.getShowDailyResume();
+    isLoading = true;
+
+    dailyKCal = await _sharedPreferencesManager.getDailyKCal();
+    imc = await _sharedPreferencesManager.getIMC();
+    firstDateHealthResult = await _sharedPreferencesManager.getFirstDateHealthResult();
+
+    dailyFoodModelList = await _iDishRepository.getDailyFoodModelList();
+    dailyFoodModelMap = {};
+    dailyFoodModelList.forEach((d) {
+      dailyFoodModelMap[d.dateTime] = [d];
+    });
+    loadInitialDailyData();
+
+    _iDishRepository.getFoodModelList(forceReload: true).then((onValue) {
+      foodsLoaded = true;
+      if (tagsLoaded) isLoading = false;
+    }).catchError((onError) {
+      foodsLoaded = true;
+      if (tagsLoaded) isLoading = false;
+      showErrorMessage(onError);
+    });
+    _iDishRepository.getTagList(forceReload: true).then((onValue) {
+      tagsLoaded = true;
+      if (foodsLoaded) isLoading = false;
+    }).catchError((onError) {
+      tagsLoaded = true;
+      if (foodsLoaded) isLoading = false;
+      showErrorMessage(onError);
+    });
+  }
+
+//  Map getDailyFoodModelListAsMap() {
+//    final Map<DateTime, List<DailyFoodModel>> map = {};
+//    dailyFoodModelList.forEach((d) {
+//      map[d.dateTime] = [d];
+//    });
+//    return map;
+//  }
+
+  void loadInitialDailyData() {
+//    CalendarUtils.compareByMonth(datetime1, datetime2);
+
+    DailyFoodModel daily = dailyFoodModelList.firstWhere(
+        (d) => CalendarUtils.isSameDay(d.dateTime, selectedDate), orElse: () {
+      return DailyFoodModel.getDailyFoodModel(dailyKCal, imc, selectedDate);
+    });
 
     daily.currentCaloriesSum = 0;
     daily.currentSumProteins = 0;
@@ -42,7 +112,7 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     daily.currentSumFat = 0;
     daily.currentSumFiber = 0;
 
-    daily.dailyActivityFoodModel.forEach((dA) {
+    daily.dailyActivityFoodModelList.forEach((dA) {
       dA.proteinsDishCalories = 0;
       dA.fiberDishCalories = 0;
       dA.carbohydratesDishCalories = 0;
@@ -83,7 +153,6 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
       dA.foodsFiberPercentage =
           (dA.fiberDishCalories * 100 ~/ activityFoodCalories).toInt();
 
-
       daily.currentCaloriesSum += dA.calories;
       daily.currentSumProteins += dA.proteins;
       daily.currentSumCarbohydrates += dA.carbohydrates;
@@ -91,21 +160,6 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
       daily.currentSumFiber += dA.fiber;
     });
     _dailyFoodController.sinkAddSafe(daily);
-
-    final res = await _iDishRepository.getFoodModelList(forceReload: true);
-    if (res is ResultSuccess<List<FoodModel>>) {
-//      _foodsController.sink.add(res.value);
-    } else {
-      showErrorMessage(res);
-    }
-
-    final tags = await _iDishRepository.getTagList(forceReload: true);
-    if (tags is ResultSuccess<List<TagModel>>) {
-    } else {
-      showErrorMessage(tags);
-    }
-
-    isLoading = false;
   }
 
   double getCurrentCaloriesPercentage(DailyFoodModel dailyModel) {
@@ -116,13 +170,13 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
   double getActivityFoodCalories(
       DailyActivityFoodModel dailyActivityFoodModel) {
-    return dailyActivityFoodModel.id == 1
+    return dailyActivityFoodModel.id == 0
         ? dailyActivityFoodModel.plan.breakFastCalVal
-        : (dailyActivityFoodModel.id == 2
+        : (dailyActivityFoodModel.id == 1
             ? dailyActivityFoodModel.plan.snack1CalVal
-            : (dailyActivityFoodModel.id == 3
+            : (dailyActivityFoodModel.id == 2
                 ? dailyActivityFoodModel.plan.lunchCalVal
-                : (dailyActivityFoodModel.id == 4
+                : (dailyActivityFoodModel.id == 3
                     ? dailyActivityFoodModel.plan.snack2CalVal
                     : dailyActivityFoodModel.plan.dinnerCalVal)));
   }
@@ -137,13 +191,13 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
   double getActivityFoodCaloriesOffSet(
       DailyActivityFoodModel dailyActivityFoodModel) {
-    return dailyActivityFoodModel.id == 1
+    return dailyActivityFoodModel.id == 0
         ? dailyActivityFoodModel.plan.breakFastCalValExtra
-        : (dailyActivityFoodModel.id == 2
+        : (dailyActivityFoodModel.id == 1
             ? dailyActivityFoodModel.plan.snack1CalValExtra
-            : (dailyActivityFoodModel.id == 3
+            : (dailyActivityFoodModel.id == 2
                 ? dailyActivityFoodModel.plan.lunchCalValExtra
-                : (dailyActivityFoodModel.id == 4
+                : (dailyActivityFoodModel.id == 3
                     ? dailyActivityFoodModel.plan.snack2CalValExtra
                     : dailyActivityFoodModel.plan.dinnerCalValExtra)));
   }
@@ -212,21 +266,46 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     model.foodsFiberPercentage =
         (model.fiberDishCalories * 100 ~/ activityFoodCalories).toInt();
 
-
     rootModel.currentCaloriesSum += model.calories;
     rootModel.currentSumProteins += model.proteins;
     rootModel.currentSumCarbohydrates += model.carbohydrates;
     rootModel.currentSumFat += model.fat;
     rootModel.currentSumFiber += model.fiber;
 
-    await _iDishRepository.saveDailyFoodModel(rootModel);
     _dailyFoodController.sink.add(rootModel);
+  }
+
+  void setShowDailyResume(bool value) async {
+    await _sharedPreferencesManager.setShowDailyResume(value);
+    _showResumeController.sinkAddSafe(value);
+  }
+
+  void saveDailyPlan() async {
+    isLoading = true;
+    final rootModel = await dailyFoodResult.first;
+    await _iDishRepository.saveDailyFoodModel(rootModel);
+
+    dailyFoodModelMap = {};
+    dailyFoodModelList.forEach((d) {
+      dailyFoodModelMap[d.dateTime] = [d];
+    });
+
+    Future.delayed(Duration(seconds: 2), () {
+      isLoading = false;
+    });
+  }
+
+  void changePage(int value) async {
+    currentPage = value;
+    _pageController.sinkAddSafe(currentPage);
   }
 
   @override
   void dispose() {
     _foodsController.close();
     _dailyFoodController.close();
+    _showResumeController.close();
+    _pageController.close();
     disposeErrorHandlerBloC();
     disposeLoadingBloC();
   }

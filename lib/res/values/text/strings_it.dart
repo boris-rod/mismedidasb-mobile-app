@@ -2,133 +2,134 @@ import 'dart:ui';
 
 import 'package:mismedidasb/res/values/text/strings_base.dart';
 
-class StringsEn implements StringsBase {
+class StringsIt implements StringsBase {
   @override
   TextDirection get textDirection => TextDirection.ltr;
 
-  String get appName => "My Measures Wellness";
+  String get appName => "Mis Medidas Bienestar";
 
   @override
-  String get foodDishes => "My food dishes";
+  String get foodDishes => "Mis platos";
 
   @override
-  String get myMeasureHealth => "My health measures";
+  String get myMeasureHealth => "Mis medidas de salud";
 
   @override
-  String get myMeasureValues => "My values measures";
+  String get myMeasureValues => "Mis medidas de valores";
 
   @override
-  String get myMeasureWellness => "My wellness measures";
+  String get myMeasureWellness => "Mis medidas de bienestar";
 
   @override
-  String get next => "Next";
+  String get next => "Siguiente";
 
   @override
-  String get previous => "Previous";
+  String get previous => "Anterior";
 
   @override
-  String get update => "Analize";
+  String get update => "Analizar";
 
   @override
   String get valuesConcept =>
       "Los valores son ideas o principios universales que dirigen nuestra conducta.";
 
   @override
-  String get healthHabits => "10 Healhty habits";
+  String get healthHabits => "10 Hábitos Saludables";
 
   @override
-  String get checkNetworkConnection => "Please check your network connection.";
+  String get checkNetworkConnection => "Por favor revise su conexión de red.";
 
   @override
-  String get failedOperation => "Operation failed.";
+  String get failedOperation => "Falló la operación.";
 
   @override
-  String get forgotPassword => "Forgot password?";
+  String get forgotPassword => "Olvidó su contraseña?";
 
   @override
-  String get login => "Login";
+  String get login => "Entrar";
 
   @override
-  String get password => "Password";
+  String get password => "Contraseña";
 
   @override
-  String get register => "Register";
+  String get register => "Registrarse";
 
   @override
-  String get remember => "Remember";
+  String get remember => "Recordar";
 
   @override
-  String get userName => "User Name";
+  String get userName => "Nombre de ususario";
 
   @override
-  String get email => "Email";
+  String get email => "Correo";
 
   @override
-  String get invalidEmail => "Invalid email.";
+  String get invalidEmail => "Correo inválido.";
 
   @override
-  String get minCharsLength => "At least 6 characters.";
+  String get minCharsLength => "Al menos 6 caractéres.";
 
   @override
-  String get requiredField => "Required field.";
+  String get requiredField => "Campo requerido.";
 
   @override
-  String get especialCharRequired => "At least 1 especial character.";
+  String get especialCharRequired => "Al menos 1 caractér especial.";
 
   @override
-  String get upperLetterCharRequired => "At least 1 upper case letter.";
+  String get upperLetterCharRequired => "Al menos 1 caractér en mayúscula.";
 
   @override
-  String get passwordMatch => "Password doesn't match.";
+  String get passwordMatch => "La contraseña no coincide.";
 
   @override
-  String get recover => "Recover";
+  String get recover => "Recuperar";
 
   @override
-  String get code => "Code";
+  String get code => "Código";
 
   @override
-  String get activateAccount => "Activate account";
+  String get activateAccount => "Activar cuenta";
 
   @override
-  String get reSendCode => "Send me the code again";
+  String get reSendCode => "Enviar código otra vez";
 
   @override
-  String get checkEmail => "Check your email in order to get activation code.";
+  String get checkEmail =>
+      "Revise su correo para obtener el código de activación.";
 
   @override
-  String get profile => "Profile";
+  String get profile => "Perfil";
 
   @override
-  String get logout => "Logout";
+  String get logout => "Salir";
 
   @override
-  String get changePassword => "Change password";
+  String get changePassword => "Cambiar contraseña";
 
   @override
-  String get confirmPassword => "Confirm password";
+  String get confirmPassword => "Confirmar contraseña";
 
   @override
-  String get newPassword => "New password";
+  String get newPassword => "Nueva contraseña";
 
   @override
-  String get oldPassword => "Old password";
+  String get oldPassword => "Contraseña anterior";
 
   @override
-  String get cancel => "Cancel";
+  String get cancel => "Cancelar";
 
   @override
   String get emailWillBeReceived =>
-      "You will receive an email with a new password.";
+      "Recibirá un correo con la nueva contraseña.";
 
   @override
   String get ok => "Ok";
 
   @override
-  String get logoutContent => "Are you sure you want to logout?";
+  String get logoutContent => "Está seguro que desea salir?";
 
   @override
-  String get foodCraving => "Auto-control steps";
+  String get foodCraving => "Recursos de autocontrol";
 
   @override
   String get foodsInstructions =>
@@ -153,13 +154,13 @@ class StringsEn implements StringsBase {
   String get valuesMeasureTip => "Los valores son ideas o principios universales que dirigen nuestra conducta. Por favor, indique grado de importancia otorga usted a los siguientes valores";
 
   @override
-  String get answer => "Answer";
+  String get answer => "Respuesta";
 
   @override
-  String get thanks => "Thanks";
+  String get thanks => "Gracias";
 
   @override
-  String get noPollData => "No poll data";
+  String get noPollData => "Cuestionario vacío";
 
   @override
   String get fiberAndVegetables => "Frutas y/o Vegetales";
