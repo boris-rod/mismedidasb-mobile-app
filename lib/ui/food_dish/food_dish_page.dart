@@ -181,36 +181,14 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                                           Fluttertoast.showToast(
                                               msg: R.string.emptyFoodList);
                                         else {
-                                          bloc.saveDailyPlan();
-//                                          if (bloc.showResume)
-//                                            showTXModalBottomSheet(
-//                                                context: context,
-//                                                builder: (context) {
-//                                                  return StreamBuilder<bool>(
-//                                                    stream:
-//                                                        bloc.showResumeResult,
-//                                                    initialData: true,
-//                                                    builder:
-//                                                        (ctx, showSnapshot) {
-//                                                      return TXBottomResumeFoodPlanWidget(
-//                                                        dailyFoodModel:
-//                                                            dailyModel,
-//                                                        showValue:
-//                                                            showSnapshot.data,
-//                                                        setShowDailyResume:
-//                                                            (value) {
-//                                                          bloc.setShowDailyResume(
-//                                                              value);
-//                                                        },
-//                                                        onSaveConfirm: () {
-//                                                          bloc.saveDailyPlan();
-//                                                        },
-//                                                      );
-//                                                    },
-//                                                  );
-//                                                });
-//                                          else
-//                                            bloc.saveDailyPlan();
+                                          if (bloc.showResume)
+                                            showTXModalBottomSheet(
+                                                context: context,
+                                                builder: (context) {
+                                                  return _showResume(context, dailyModel);
+                                                });
+                                          else
+                                            bloc.saveDailyPlan();
                                         }
                                       },
                                       title: R.string.save),
@@ -228,6 +206,31 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
           )
         ],
       ),
+    );
+  }
+
+  Widget _showResume(BuildContext context, DailyFoodModel dailyModel){
+    return StreamBuilder<bool>(
+      stream:
+      bloc.showResumeResult,
+      initialData: true,
+      builder:
+          (ctx, showSnapshot) {
+        return TXBottomResumeFoodPlanWidget(
+          dailyFoodModel:
+          dailyModel,
+          showValue:
+          showSnapshot.data,
+          setShowDailyResume:
+              (value) {
+            bloc.setShowDailyResume(
+                value);
+          },
+          onSaveConfirm: () {
+            bloc.saveDailyPlan();
+          },
+        );
+      },
     );
   }
 
@@ -420,6 +423,10 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
     return SingleChildScrollView(
       child: Column(
         children: <Widget>[
+          IconButton(
+            icon: Icon(Icons.arrow_back_ios),
+            onPressed: (){},
+          ),
           TableCalendar(
             availableGestures: AvailableGestures.none,
             locale: AppConfig.locale == AppLocale.EN
