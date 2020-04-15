@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:mismedidasb/res/values/text/custom_localizations_delegate.dart';
 
-
 enum AppPlatform { ANDROID, IOS }
 enum AppLocale { EN, ES, IT }
 
@@ -14,7 +13,9 @@ class AppConfig {
   }
 
   static AppLocale get locale => CustomLocalizationsDelegate.currentLang;
-  static String get localeCode => locale == AppLocale.EN ? 'en' : 'es';
+
+  static String get localeCode =>
+      locale == AppLocale.EN ? 'en' : locale == AppLocale.IT ? 'it' : 'es';
 
   ///Access to info about current platform
   static AppPlatform get platform =>

@@ -47,6 +47,8 @@ class MeasureWellnessBloC
         _pollsController.sinkAddSafe(res.value[0]);
       else
         _pollsController.sinkAddSafe(PollModel(id: -1));
+    }else {
+      showErrorMessage(res);
     }
     isLoading = false;
   }
@@ -57,6 +59,8 @@ class MeasureWellnessBloC
     final res = await _iPollRepository.setPollResult([poll]);
     if (res is ResultSuccess<String>) {
       _pollSaveController.sinkAddSafe(res.value);
+    }else {
+      showErrorMessage(res);
     }
     isLoading = false;
   }

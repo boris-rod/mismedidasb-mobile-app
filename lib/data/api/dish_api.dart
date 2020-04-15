@@ -35,4 +35,20 @@ class DishApi extends BaseApi implements IDishApi {
     } else
       throw serverException(res);
   }
+
+  @override
+  Future<List<DailyActivityFoodModel>> getDailyActivityFoodModelListByDateRange(
+      DateTime start, DateTime end) async {
+    final res = await _networkHandler.get(
+        path: Endpoint.eat_by_date_range,
+        params:
+            "?date=${start.toIso8601String()}&endDate=${end.toIso8601String()}");
+    if (res.statusCode == RemoteConstants.code_success) {
+      Iterable l = jsonDecode(res.body)[RemoteConstants.result];
+      return l
+          .map((model) => _foodConverter.fromJsonDailyActivityFoodModel(model))
+          .toList();
+    } else
+      throw serverException(res);
+  }
 }

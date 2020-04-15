@@ -41,11 +41,14 @@ class TXProgressBarCheckedWidget extends StatelessWidget {
               color: Colors.black,
               size: titleSize ?? 10,
             ),
-            childCenter: TXTextWidget(
-              fontWeight: FontWeight.bold,
-              text: showPercentage ? "${percentage.toInt()}/100%" : "",
-              size: titleSize ?? 10,
-              color: Colors.black,
+            childRight: Container(
+              margin: EdgeInsets.only(right: 10),
+              child: TXTextWidget(
+                fontWeight: FontWeight.bold,
+                text: showPercentage ? "${percentage.toInt()}%" : "",
+                size: titleSize ?? 10,
+                color: Colors.black,
+              ),
             ),
             margin: EdgeInsets.all(0),
             style: RoundedProgressBarStyle(

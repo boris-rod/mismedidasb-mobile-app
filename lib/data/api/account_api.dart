@@ -67,7 +67,6 @@ class AccountApi extends BaseApi implements IAccountApi {
         path: Endpoint.resend_code, params: "?email=$email");
     if (res.statusCode == RemoteConstants.code_success)
       return RemoteConstants.code_success;
-    else
-      throw serverException(res);
+    throw serverException(res);
   }
 }

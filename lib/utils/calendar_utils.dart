@@ -13,9 +13,9 @@ class CalendarUtils {
     return "${now.year}_${now.month}_${now.day}_${now.hour}_${now.minute}_${now.second}";
   }
 
-  static String getTimeIdBasedDay() {
-    final DateTime now = DateTime.now();
-    return "${now.year}_${now.month}_${now.day}}";
+  static String getTimeIdBasedDay({DateTime dateTime}) {
+    final DateTime now = dateTime ?? DateTime.now();
+    return "${now.year}_${now.month}_${now.day}";
   }
 
   static bool isWeekEnd(DateTime datetime) {
@@ -58,6 +58,58 @@ class CalendarUtils {
       return datetime1.day > datetime2.day ? 1 : -1;
     } else
       return 0;
+  }
+
+  static int compareByMonth(DateTime datetime1, DateTime datetime2) {
+    if (datetime1.year != datetime2.year) {
+      return datetime1.year > datetime2.year ? 1 : -1;
+    } else if (datetime1.month != datetime2.month) {
+      return datetime1.month > datetime2.month ? 1 : -1;
+    }  else
+      return 0;
+  }
+
+  static DateTime getFirstDateOfMonthAgo() {
+    DateTime now = DateTime.now();
+    int year = now.month == DateTime.january ? now.year - 1 : now.year;
+    int month =
+        now.month == DateTime.january ? DateTime.december : now.month - 1;
+    int day = 1;
+    return DateTime(year, month, day);
+  }
+
+  static DateTime getLastDateOfMonthLater() {
+    DateTime now = DateTime.now();
+    int year = now.month == DateTime.december ? now.year + 1 : now.year;
+    int month =
+        now.month == DateTime.december ? DateTime.january : now.month + 1;
+    int day = now.day;
+    if ([
+      DateTime.january,
+      DateTime.march,
+      DateTime.may,
+      DateTime.july,
+      DateTime.august,
+      DateTime.october,
+      DateTime.december
+    ].contains(month))
+      day = 31;
+    else if ([
+      DateTime.april,
+      DateTime.june,
+      DateTime.september,
+      DateTime.november
+    ].contains(month))
+      day = 31;
+    else {
+      day = _isLeapYear(now) ? 29 : 28;
+    }
+    return DateTime(year, month, day);
+  }
+
+  static bool _isLeapYear(DateTime date) {
+    var feb29 = new DateTime(date.year, 2, 29);
+    return feb29.month == 2;
   }
 
   static DateTime getNewest(DateTime datetime1, DateTime datetime2) {

@@ -4,29 +4,38 @@ import 'package:mismedidasb/res/values/config.dart';
 import 'package:mismedidasb/res/values/text/strings_base.dart';
 import 'package:mismedidasb/res/values/text/strings_en.dart';
 import 'package:mismedidasb/res/values/text/strings_es.dart';
+import 'package:mismedidasb/res/values/text/strings_it.dart';
 
 class CustomLocalizationsDelegate extends LocalizationsDelegate<StringsBase> {
 
-  static StringsBase stringsBase = StringsEn();
+  static StringsBase stringsBase = StringsEs();
 
   List<Locale> get supportedLocales {
     return const <Locale>[
-      Locale("en", ""),
-      Locale("es", ""),
+      Locale("es", "ES"),
+      Locale("en", "US"),
+      Locale("it", "IT"),
     ];
   }
 
   @override
   Future<StringsBase> load(Locale locale) {
     switch (locale.languageCode) {
-      case "en":
-        stringsBase = StringsEn();
-        break;
       case "es":
         stringsBase = StringsEs();
+        currentLang = AppLocale.ES;
+        break;
+      case "en":
+        stringsBase = StringsEn();
+        currentLang = AppLocale.EN;
+        break;
+      case "it":
+        stringsBase = StringsIt();
+        currentLang = AppLocale.IT;
         break;
       default:
-        stringsBase = StringsEn();
+        stringsBase = StringsEs();
+        currentLang = AppLocale.ES;
         break;
     }
     return SynchronousFuture<StringsBase>(stringsBase);

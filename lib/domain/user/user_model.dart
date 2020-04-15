@@ -14,8 +14,8 @@ class UserModel {
 
   UserModel(
       {this.id,
-      this.dailyKCal = 0,
-      this.imc = 0,
+      this.dailyKCal,
+      this.imc,
       this.fullName = "",
       this.email = "",
       this.phone,

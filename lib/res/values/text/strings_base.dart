@@ -103,4 +103,40 @@ abstract class StringsBase implements WidgetsLocalizations {
   String get thanks;
 
   String get noPollData;
+
+  String get breakfast;
+
+  String get snack;
+
+  String get lunch;
+
+  String get dinner;
+
+  String get calories;
+
+  String get carbohydrates;
+
+  String get proteins;
+
+  String get fat;
+
+  String get fiber;
+
+  String get nutritionalInfo;
+
+  String get fiberAndVegetables;
+
+  String get emptyFoodList;
+
+  String get save;
+
+  String get foodInstructionsTitle;
+
+  String get ideal;
+
+  String get confirm;
+
+  String get notShowAgain;
+
+  String get fillHealthPoll;
 }

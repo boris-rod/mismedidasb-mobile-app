@@ -43,11 +43,6 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
         children: <Widget>[
           TXMainAppBarWidget(
             title: R.string.appName,
-            leading: TXIconButtonWidget(
-              icon: Image.asset(
-                R.image.logo,
-              ),
-            ),
             actions: <Widget>[
               TXIconButtonWidget(
                 icon: Icon(Icons.settings),
@@ -117,8 +112,7 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
           if (page != null) {
             if (page is FoodDishPage && !bloc.canNavigateToFoodPage) {
               Fluttertoast.showToast(
-                  msg:
-                      "Debe rellenar el formulario de medidas de salud antes de planificar sus platos");
+                  msg: R.string.fillHealthPoll);
             } else
               NavigationUtils.push(context, page);
           }
@@ -164,7 +158,7 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
                       width: double.infinity,
                       height: double.infinity,
                       imageUrl: model.image ?? '',
-                      placeholderImage: bloc.getDefaultHomeImage(model),
+                      placeholderImage: R.image.logo_blue,
                     )),
               ),
             ],

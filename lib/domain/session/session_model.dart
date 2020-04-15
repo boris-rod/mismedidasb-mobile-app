@@ -1,3 +1,6 @@
+
+enum ACCOUNT_STATUS { PENDING, INACTIVE, ACTIVE}
+
 class LoginModel {
   String email;
   String password;

@@ -33,11 +33,9 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     isLoading = true;
     final profileRes = await _iUserRepository.getProfile();
     if (profileRes is ResultSuccess<UserModel>) {
-      profileRes.value.dailyKCal = profileRes.value.dailyKCal ?? 2000;
-      profileRes.value.imc = profileRes.value.imc ?? 24;
-
-      await _sharedPreferencesManager.setDailyKCal(profileRes.value.dailyKCal ?? 2000);
-      await _sharedPreferencesManager.setIMC(profileRes.value.imc ?? 24);
+      await _sharedPreferencesManager.setDailyKCal(profileRes.value.dailyKCal);
+      await _sharedPreferencesManager.setIMC(profileRes.value.imc);
+      await _sharedPreferencesManager.setFirstDateHealthResult(DateTime.now());
       canNavigateToFoodPage = profileRes.value.dailyKCal > 1 && profileRes.value.imc > 1;
       final res = await _iHealthConceptRepository.getHealthConceptList();
       if (res is ResultSuccess<List<HealthConceptModel>>) {

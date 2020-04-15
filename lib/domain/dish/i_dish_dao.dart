@@ -5,6 +5,8 @@ abstract class IDishDao {
 
   Future<bool> saveDailyFoodModel(DailyFoodModel model);
 
+  Future<bool> saveDailyFoodModelList(List<DailyFoodModel> list);
+
   Future<List<FoodModel>> getFoodModeList();
 
   Future<List<TagModel>> getFoodTagList();

@@ -7,21 +7,37 @@ class DishConverter extends IDishConverter {
   DailyFoodModel fromJsonDailyFoodModel(Map<String, dynamic> json) {
     return DailyFoodModel(
         dateTime: DateTime.parse(json["dateTime"]),
-        dailyActivityFoodModel:
-            (json['dailyActivityFoodModel'] as List<dynamic>)
-                .map((model) => fromJsonDailyActivityFoodModel(model))
+        dailyFoodPlanModel: DailyFoodPlanModel(
+            dailyKCal: json["dailyKCal"] ?? 1, imc: json["imc"] ?? 1),
+        dailyActivityFoodModelList:
+            (json['dailyActivityFoodModelList'] as List<dynamic>)
+                .map((model) =>
+                    fromJsonDailyActivityFoodModel(model, fromAPI: false))
                 .toList());
   }
 
   @override
   DailyActivityFoodModel fromJsonDailyActivityFoodModel(
-      Map<String, dynamic> json) {
+      Map<String, dynamic> json,
+      {bool fromAPI = true}) {
     return DailyActivityFoodModel(
         id: json["id"],
         name: json["name"],
-        foods: (json['foods'] as List<dynamic>)
-            .map((model) => fromJsonFoodModel(model))
+        typeId: json["eatTypeId"],
+        type: json["eatType"],
+        dateTime: DateTime.parse(json[fromAPI ? "createdAt" : "dateTime"]),
+        plan: DailyFoodPlanModel(
+            dailyKCal: json["dailyKCal"] ?? 1, imc: json["imc"] ?? 1),
+        foods: (json[fromAPI ? "eatDishResponse" : "foods"] as List<dynamic>)
+            .map((model) => fromAPI
+                ? fromJsonFoodModelWithQTY(model)
+                : fromJsonFoodModel(model))
             .toList());
+  }
+
+  @override
+  FoodModel fromJsonFoodModelWithQTY(Map<String, dynamic> json) {
+    return fromJsonFoodModel(json["dish"]);
   }
 
   @override
@@ -50,7 +66,9 @@ class DishConverter extends IDishConverter {
   Map<String, dynamic> toJsonDailyFoodModel(DailyFoodModel model) {
     return {
       "dateTime": model.dateTime.toIso8601String(),
-      "dailyActivityFoodModel": model.dailyActivityFoodModel
+      "dailyKCal": model.dailyFoodPlanModel.dailyKCal,
+      "imc": model.dailyFoodPlanModel.imc,
+      "dailyActivityFoodModelList": model.dailyActivityFoodModelList
           .map((d) => toJsonDailyActivityFoodModel(d))
           .toList()
     };
@@ -62,6 +80,11 @@ class DishConverter extends IDishConverter {
     return {
       "id": model.id,
       "name": model.name,
+      "eatType": model.type,
+      "eatTypeId": model.typeId,
+      "dateTime": model.dateTime.toIso8601String(),
+      "dailyKCal": model.plan.dailyKCal,
+      "imc": model.plan.imc,
       "foods": model.foods.map((f) => toJsonFoodModel(f)).toList()
     };
   }
@@ -85,5 +108,29 @@ class DishConverter extends IDishConverter {
   @override
   Map<String, dynamic> toJsonFoodModelTag(TagModel model) {
     return {"id": model.id, "name": model.name};
+  }
+
+  @override
+  Map<String, dynamic> toJsonCreateDailyActivityModel(
+      CreateDailyActivityModel model) {
+    return {
+      "eatType": model.id,
+      "dishes": model.foods.map((f) => toJsonCreateFoodModel(f)).toList()
+    };
+  }
+
+  @override
+  Map<String, dynamic> toJsonCreateDailyPlanModel(CreateDailyPlanModel model) {
+    return {
+      "dateInUtc": model.dateInUtc.toUtc().toIso8601String(),
+      "eats": model.activities
+          .map((m) => toJsonCreateDailyActivityModel(m))
+          .toList()
+    };
+  }
+
+  @override
+  Map<String, dynamic> toJsonCreateFoodModel(CreateFoodModel model) {
+    return {"dishId": model.id, "qty": 1};
   }
 }

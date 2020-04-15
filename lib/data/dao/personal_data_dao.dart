@@ -13,38 +13,38 @@ class PersonalDataDao implements IPersonalDataDao {
 
   PersonalDataDao(this._appDatabase, this._iPersonalDataConverter);
 
-  @override
-  Future<HealthResult> getHealthResult() async {
-    HealthResult model = HealthResult();
-    try {
-      Database db = await _appDatabase.db;
-      final data = await db.query(DBConstants.health_result_table);
-      data.forEach((map) {
-        final value = map[DBConstants.data_key];
-        final HealthResult obj =
-            _iPersonalDataConverter.fromJsonHealthResult(jsonDecode(value));
-        model = obj;
-      });
-    } catch (ex) {}
-    return model;
-  }
+//  @override
+//  Future<HealthResult> getHealthResult() async {
+//    HealthResult model = HealthResult();
+//    try {
+//      Database db = await _appDatabase.db;
+//      final data = await db.query(DBConstants.health_result_table);
+//      data.forEach((map) {
+//        final value = map[DBConstants.data_key];
+//        final HealthResult obj =
+//            _iPersonalDataConverter.fromJsonHealthResult(jsonDecode(value));
+//        model = obj;
+//      });
+//    } catch (ex) {}
+//    return model;
+//  }
 
-  @override
-  Future<bool> saveHealthResult(HealthResult model) async{
-    try {
-      Database db = await _appDatabase.db;
-      final data = jsonEncode(_iPersonalDataConverter.toJsonHealthResult(model));
-      if (data.isNotEmpty) {
-        final map = {
-          DBConstants.id_key: "1",
-          DBConstants.data_key: data,
-          DBConstants.parent_key: "parent"
-        };
-        await db.insert(DBConstants.health_result_table, map,
-            conflictAlgorithm: ConflictAlgorithm.replace);
-      }
-      return true;
-    } catch (ex) {
-      return false;
-    }  }
+//  @override
+//  Future<bool> saveHealthResult(HealthResult model) async{
+//    try {
+//      Database db = await _appDatabase.db;
+//      final data = jsonEncode(_iPersonalDataConverter.toJsonHealthResult(model));
+//      if (data.isNotEmpty) {
+//        final map = {
+//          DBConstants.id_key: "1",
+//          DBConstants.data_key: data,
+//          DBConstants.parent_key: "parent"
+//        };
+//        await db.insert(DBConstants.health_result_table, map,
+//            conflictAlgorithm: ConflictAlgorithm.replace);
+//      }
+//      return true;
+//    } catch (ex) {
+//      return false;
+//    }  }
 }

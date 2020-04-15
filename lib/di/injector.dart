@@ -25,6 +25,7 @@ import 'package:mismedidasb/data/dao/common_dao.dart';
 import 'package:mismedidasb/data/dao/personal_data_dao.dart';
 import 'package:mismedidasb/data/repository/account_repository.dart';
 import 'package:mismedidasb/data/repository/answer_repository.dart';
+import 'package:mismedidasb/data/repository/common_repository.dart';
 import 'package:mismedidasb/data/repository/dish_repository.dart';
 import 'package:mismedidasb/data/repository/health_concept_repository.dart';
 import 'package:mismedidasb/data/repository/personal_data_repository.dart';
@@ -39,6 +40,7 @@ import 'package:mismedidasb/domain/answer/i_answer_api.dart';
 import 'package:mismedidasb/domain/answer/i_answer_converter.dart';
 import 'package:mismedidasb/domain/answer/i_answer_repository.dart';
 import 'package:mismedidasb/domain/common_db/i_common_dao.dart';
+import 'package:mismedidasb/domain/common_db/i_common_repository.dart';
 import 'package:mismedidasb/domain/dish/i_dish_api.dart';
 import 'package:mismedidasb/domain/dish/i_dish_converter.dart';
 import 'package:mismedidasb/domain/dish/i_dish_dao.dart';
@@ -216,6 +218,9 @@ class Injector {
     container.registerSingleton<IAccountRepository, AccountRepository>(
         (c) => AccountRepository(container.resolve()));
 
+    container.registerSingleton<ICommonRepository, CommonRepository>(
+        (c) => CommonRepository(container.resolve()));
+
     container.registerSingleton<ISessionRepository, SessionRepository>(
         (c) => SessionRepository(container.resolve(), container.resolve(), container.resolve()));
 
@@ -240,21 +245,21 @@ class Injector {
         (c) => QuestionRepository(container.resolve()));
 
     container.registerSingleton<IDishRepository, DishRepository>(
-        (c) => DishRepository(container.resolve(), container.resolve()));
+        (c) => DishRepository(container.resolve(), container.resolve(), container.resolve()));
   }
 
   _registerBloCs() {
     container.registerFactory(
         (c) => SplashBloC(container.resolve(), container.resolve()));
     container.registerFactory((c) => LoginBloC(
-        container.resolve(), container.resolve(), container.resolve()));
+        container.resolve(), container.resolve(), container.resolve(), container.resolve()));
     container.registerFactory((c) => RecoverPasswordBloC(container.resolve()));
     container.registerFactory((c) => RegisterBloC(
         container.resolve(), container.resolve(), container.resolve()));
     container.registerFactory((c) => HomeBloC(container.resolve(), container.resolve(), container.resolve()));
     container.registerFactory((c) => HabitBloC(container.resolve()));
     container.registerFactory((c) => FoodCravingBloC(container.resolve()));
-    container.registerFactory((c) => MeasureHealthBloC(container.resolve(), container.resolve()));
+    container.registerFactory((c) => MeasureHealthBloC(container.resolve()));
     container.registerFactory((c) => MeasureValueBloC(container.resolve()));
     container.registerFactory((c) => MeasureWellnessBloC(container.resolve()));
     container.registerFactory((c) => FoodDishBloC(c.resolve(), c.resolve()));

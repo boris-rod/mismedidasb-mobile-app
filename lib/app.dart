@@ -55,7 +55,7 @@ class _MyMeasuresBState extends State<MyMeasuresBApp> {
       ],
       supportedLocales: localizationDelegate.supportedLocales,
       localeResolutionCallback: localizationDelegate.resolution(
-        fallback: Locale("en"),
+        fallback: Locale("es"),
       ),
       home: widget.initPage,
       title: R.string.appName,

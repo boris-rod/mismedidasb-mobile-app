@@ -23,23 +23,23 @@ class PersonalDataRepository extends BaseRepository
     }
   }
 
-  @override
-  Future<HealthResult> getHealthResult() async{
-    try {
-      final result = await _iPersonalDataDao.getHealthResult();
-      return result ;
-    } catch (ex) {
-      return HealthResult();
-    }
-  }
+//  @override
+//  Future<HealthResult> getHealthResult() async{
+//    try {
+//      final result = await _iPersonalDataDao.getHealthResult();
+//      return result ;
+//    } catch (ex) {
+//      return HealthResult();
+//    }
+//  }
 
-  @override
-  Future<bool> saveHealthResult(HealthResult model) async{
-    try {
-      final result = await _iPersonalDataDao.saveHealthResult(model);
-      return true;
-    } catch (ex) {
-      return false;
-    }
-  }
+//  @override
+//  Future<bool> saveHealthResult(HealthResult model) async{
+//    try {
+//      final result = await _iPersonalDataDao.saveHealthResult(model);
+//      return true;
+//    } catch (ex) {
+//      return false;
+//    }
+//  }
 }

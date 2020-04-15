@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mismedidasb/domain/dish/dish_model.dart';
+import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
 
 class TXDishNutritionalInfoWidget extends StatelessWidget{
@@ -30,7 +31,7 @@ class TXDishNutritionalInfoWidget extends StatelessWidget{
               width: 5,
             ),
             TXTextWidget(
-              text: "Proteínas",
+              text: R.string.proteins,
             ),
           ],
         ),
@@ -55,7 +56,7 @@ class TXDishNutritionalInfoWidget extends StatelessWidget{
               width: 5,
             ),
             TXTextWidget(
-              text: "Carbohidratos",
+              text: R.string.carbohydrates,
             ),
           ],
         ),
@@ -80,7 +81,7 @@ class TXDishNutritionalInfoWidget extends StatelessWidget{
               width: 5,
             ),
             TXTextWidget(
-              text: "Frutas y/o Vegetales",
+              text: R.string.fiberAndVegetables,
             ),
           ],
         ),
