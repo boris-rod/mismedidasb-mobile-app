@@ -14,5 +14,4 @@ abstract class IDishRepository {
   Future<Result<List<TagModel>>> getTagList({bool forceReload: false});
 
   Future<Result<List<DailyFoodModel>>> getDailyActivityFoodModelListByDateRange(DateTime start, DateTime end);
-
 }

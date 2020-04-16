@@ -106,6 +106,8 @@ class FCMFeature extends IFCMFeature {
   Future<dynamic> _processMessageFromNotification(
       Map<String, dynamic> message) async {
     print('FCM Message Background');
+//    Title = "Recordatorio",
+//    Body = "Recuerde planificar lo que va a comer mañana."
     print(message);
     Fluttertoast.showToast(
         msg: message.toString(), toastLength: Toast.LENGTH_SHORT);

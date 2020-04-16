@@ -28,15 +28,13 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   Stream<List<HealthConceptModel>> get conceptResult =>
       _conceptController.stream;
 
-  bool canNavigateToFoodPage = false;
   void loadHomeData() async {
     isLoading = true;
     final profileRes = await _iUserRepository.getProfile();
     if (profileRes is ResultSuccess<UserModel>) {
       await _sharedPreferencesManager.setDailyKCal(profileRes.value.dailyKCal);
       await _sharedPreferencesManager.setIMC(profileRes.value.imc);
-      await _sharedPreferencesManager.setFirstDateHealthResult(DateTime.now());
-      canNavigateToFoodPage = profileRes.value.dailyKCal > 1 && profileRes.value.imc > 1;
+      await _sharedPreferencesManager.setFirstDateHealthResult(profileRes.value.firstDateHealthResult);
       final res = await _iHealthConceptRepository.getHealthConceptList();
       if (res is ResultSuccess<List<HealthConceptModel>>) {
         _conceptController.sinkAddSafe(res.value);
@@ -45,6 +43,12 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     } else
       showErrorMessage(profileRes);
     isLoading = false;
+  }
+
+  Future<bool> canNavigateToDishes()async{
+    final kCal = await _sharedPreferencesManager.getDailyKCal();
+    final imc = await _sharedPreferencesManager.getIMC();
+    return kCal > 1 && imc > 1;
   }
 
   int getHomeCountPerRow(double screenW) {

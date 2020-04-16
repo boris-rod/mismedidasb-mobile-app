@@ -24,6 +24,7 @@ class SessionRepository extends BaseRepository implements ISessionRepository {
       _sharedPreferencesManager.setActivateAccount(result.statusId);
       _sharedPreferencesManager.setDailyKCal(result.dailyKCal);
       _sharedPreferencesManager.setIMC(result.imc);
+      _sharedPreferencesManager.setFirstDateHealthResult(result.firstDateHealthResult);
       if (saveCredentials) {
         _sharedPreferencesManager.setUserId(result.id);
         _sharedPreferencesManager.setPassword(loginModel.password);

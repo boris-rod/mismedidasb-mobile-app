@@ -31,12 +31,12 @@ class TXComboProgressBarWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
-        value < mark1
+        value.ceilToDouble() < mark1.ceilToDouble()
             ? RoundedProgressBar(
                 height: height ?? 20,
                 paddingChildLeft: EdgeInsets.only(left: 10),
                 paddingChildRight: EdgeInsets.only(right: 0),
-                percent: percentage,
+                percent: percentage.ceilToDouble(),
                 childLeft: TXTextWidget(
                   text: title,
                   color: Colors.black,
@@ -46,8 +46,9 @@ class TXComboProgressBarWidget extends StatelessWidget {
                   margin: EdgeInsets.only(right: 5),
                   child: TXTextWidget(
                     fontWeight: FontWeight.bold,
-                    text: showPercentageInfo ?
-                    "${percentage.toInt()}% ${showValueInBar ? "${value.toStringAsFixed(2)}kCal" : ""}" : "",
+                    text: showPercentageInfo
+                        ? "${percentage.toInt()}% ${showValueInBar ? "${value.toStringAsFixed(2)}kCal" : ""}"
+                        : "",
                     size: titleSize ?? 10,
                     color: Colors.black,
                   ),
@@ -60,12 +61,13 @@ class TXComboProgressBarWidget extends StatelessWidget {
                     borderWidth: 0),
               )
             : Container(),
-        value >= mark1 && value <= mark2
+        value.ceilToDouble() >= mark1.ceilToDouble() &&
+                value.ceilToDouble() <= mark2.ceilToDouble()
             ? RoundedProgressBar(
                 height: height ?? 20,
                 paddingChildLeft: EdgeInsets.only(left: 10),
                 paddingChildRight: EdgeInsets.only(right: 0),
-                percent: percentage,
+                percent: percentage.ceilToDouble(),
                 childLeft: TXTextWidget(
                   text: title,
                   color: Colors.black,
@@ -73,8 +75,9 @@ class TXComboProgressBarWidget extends StatelessWidget {
                 ),
                 childCenter: TXTextWidget(
                   fontWeight: FontWeight.bold,
-                  text: showPercentageInfo ?
-                  "${percentage.toInt()}% ${showValueInBar ? "${value.toStringAsFixed(2)}kCal" : ""}" : "",
+                  text: showPercentageInfo
+                      ? "${percentage.toInt()}% ${showValueInBar ? "${value.toStringAsFixed(2)}kCal" : ""}"
+                      : "",
                   size: titleSize ?? 10,
                   color: Colors.black,
                 ),
@@ -86,12 +89,12 @@ class TXComboProgressBarWidget extends StatelessWidget {
                     borderWidth: 0),
               )
             : Container(),
-        value > mark2
+        value.ceilToDouble() > mark2.ceilToDouble()
             ? RoundedProgressBar(
                 height: height ?? 20,
                 paddingChildLeft: EdgeInsets.only(left: 10),
                 paddingChildRight: EdgeInsets.only(right: 0),
-                percent: percentage,
+                percent: percentage.ceilToDouble(),
                 childLeft: TXTextWidget(
                   text: title,
                   color: Colors.black,
@@ -99,8 +102,9 @@ class TXComboProgressBarWidget extends StatelessWidget {
                 ),
                 childCenter: TXTextWidget(
                   fontWeight: FontWeight.bold,
-                  text: showPercentageInfo ?
-                  "${percentage.toInt()}% ${showValueInBar ? "${value.toStringAsFixed(2)}kCal" : ""}" : "",
+                  text: showPercentageInfo
+                      ? "${percentage.toInt()}% ${showValueInBar ? "${value.toStringAsFixed(2)}kCal" : ""}"
+                      : "",
                   size: titleSize ?? 10,
                   color: Colors.black,
                 ),

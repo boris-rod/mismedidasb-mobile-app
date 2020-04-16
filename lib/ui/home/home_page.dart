@@ -85,7 +85,7 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
       final w = Container(
         width: screenW / totalRowCount,
         height: screenW / totalRowCount,
-        child: _getHomeButton(model, () {
+        child: _getHomeButton(model, () async{
           Widget page;
           if (model.codeName == RemoteConstants.concept_health_measure)
             page = MeasureHealthPage(
@@ -110,7 +110,7 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
               conceptModel: model,
             );
           if (page != null) {
-            if (page is FoodDishPage && !bloc.canNavigateToFoodPage) {
+            if (page is FoodDishPage && !(await bloc.canNavigateToDishes())) {
               Fluttertoast.showToast(
                   msg: R.string.fillHealthPoll);
             } else

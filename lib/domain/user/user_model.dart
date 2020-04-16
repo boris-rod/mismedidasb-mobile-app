@@ -11,11 +11,13 @@ class UserModel {
   int roleId;
   double dailyKCal;
   double imc;
+  DateTime firstDateHealthResult;
 
   UserModel(
       {this.id,
       this.dailyKCal,
       this.imc,
+      this.firstDateHealthResult,
       this.fullName = "",
       this.email = "",
       this.phone,

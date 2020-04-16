@@ -33,6 +33,7 @@ import 'package:mismedidasb/ui/home/home_page.dart';
 import 'package:mismedidasb/utils/calendar_utils.dart';
 import 'package:mp_chart/mp/chart/pie_chart.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:mismedidasb/utils/extensions.dart';
 
 class FoodDishPage extends StatefulWidget {
   final bool fromNotificationScope;
@@ -109,6 +110,9 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
 //                  color: Colors.yellow,
                     ),
                     onPressed: () {
+                      _pageController.animateToPage(snapshot.data == 0 ? 1 : 0,
+                          duration: Duration(milliseconds: 300),
+                          curve: Curves.linear);
                       bloc.changePage(bloc.currentPage == 0 ? 1 : 0);
                     },
                   );
@@ -151,49 +155,22 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                             ),
                           ),
                           Expanded(
-                            child: Column(
-                              children: <Widget>[
-                                Expanded(
-                                  child: Container(
-                                    child: PageView.builder(
-                                      itemBuilder: (ctx, index) {
-                                        return index == 0
-                                            ? _getListModeView(
-                                                context,
-                                                snapshot.data
-                                                    .dailyActivityFoodModelList)
-                                            : _getCalendarView(context, []);
-                                      },
-                                      itemCount: 2,
-                                      physics: NeverScrollableScrollPhysics(),
-                                      controller: _pageController,
-                                    ),
-                                    color: R.color.gray_light,
-                                  ),
-                                ),
-                                Container(
-                                  width: double.infinity,
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 5, horizontal: 50),
-                                  child: TXButtonWidget(
-                                      onPressed: () {
-                                        if (dailyModel.hasFoods == null)
-                                          Fluttertoast.showToast(
-                                              msg: R.string.emptyFoodList);
-                                        else {
-                                          if (bloc.showResume)
-                                            showTXModalBottomSheet(
-                                                context: context,
-                                                builder: (context) {
-                                                  return _showResume(context, dailyModel);
-                                                });
-                                          else
-                                            bloc.saveDailyPlan();
-                                        }
-                                      },
-                                      title: R.string.save),
-                                )
-                              ],
+                            child: Container(
+                              child: PageView.builder(
+                                itemBuilder: (ctx, index) {
+                                  return index == 0
+                                      ? _getListModeView(
+                                          context,
+                                          snapshot
+                                              .data.dailyActivityFoodModelList,
+                                          dailyModel)
+                                      : _getCalendarView(context, []);
+                                },
+                                itemCount: 2,
+                                physics: NeverScrollableScrollPhysics(),
+                                controller: _pageController,
+                              ),
+                              color: R.color.gray_light,
                             ),
                           ),
                         ],
@@ -209,22 +186,17 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
     );
   }
 
-  Widget _showResume(BuildContext context, DailyFoodModel dailyModel){
+  Widget _showResume(BuildContext context, DailyFoodModel dailyModel, {bool showConfirm = true}) {
     return StreamBuilder<bool>(
-      stream:
-      bloc.showResumeResult,
+      stream: bloc.showResumeResult,
       initialData: true,
-      builder:
-          (ctx, showSnapshot) {
+      builder: (ctx, showSnapshot) {
         return TXBottomResumeFoodPlanWidget(
-          dailyFoodModel:
-          dailyModel,
-          showValue:
-          showSnapshot.data,
-          setShowDailyResume:
-              (value) {
-            bloc.setShowDailyResume(
-                value);
+          dailyFoodModel: dailyModel,
+          showValue: showSnapshot.data,
+          showConfirm: showConfirm,
+          setShowDailyResume: (value) {
+            bloc.setShowDailyResume(value);
           },
           onSaveConfirm: () {
             bloc.saveDailyPlan();
@@ -234,14 +206,43 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
     );
   }
 
-  Widget _getListModeView(
-      BuildContext context, List<DailyActivityFoodModel> modelList) {
-    return SingleChildScrollView(
-      padding: EdgeInsets.only(top: 5, left: 5, right: 5, bottom: 50),
-      child: Column(
-        children: _getDailyActivityFood(context, modelList),
-      ),
-      physics: BouncingScrollPhysics(),
+  Widget _getListModeView(BuildContext context,
+      List<DailyActivityFoodModel> modelList, DailyFoodModel dailyModel) {
+    return Column(
+      children: <Widget>[
+        Expanded(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.only(top: 5, left: 5, right: 5, bottom: 50),
+            child: Column(
+              children: <Widget>[
+                ..._getDailyActivityFood(context, modelList),
+              ],
+//        children: _getDailyActivityFood(context, modelList),
+            ),
+            physics: BouncingScrollPhysics(),
+          ),
+        ),
+        Container(
+          width: double.infinity,
+          padding: EdgeInsets.symmetric(vertical: 5, horizontal: 50),
+          child: TXButtonWidget(
+              onPressed: () {
+                if (dailyModel.hasFoods == null)
+                  Fluttertoast.showToast(msg: R.string.emptyFoodList);
+                else {
+                  if (bloc.showResume)
+                    showTXModalBottomSheet(
+                        context: context,
+                        builder: (context) {
+                          return _showResume(context, dailyModel);
+                        });
+                  else
+                    bloc.saveDailyPlan();
+                }
+              },
+              title: R.string.save),
+        )
+      ],
     );
   }
 
@@ -423,10 +424,56 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
     return SingleChildScrollView(
       child: Column(
         children: <Widget>[
-          IconButton(
-            icon: Icon(Icons.arrow_back_ios),
-            onPressed: (){},
-          ),
+//          Container(
+//            padding: EdgeInsets.symmetric(
+//              horizontal: 15,
+//            ).copyWith(top: 5),
+//            child: StreamBuilder<int>(
+//              stream: bloc.calendarPageResult,
+//              initialData: 0,
+//              builder: (ctx, snapshot) {
+//                return Row(
+//                  children: <Widget>[
+//                    Container(
+//                      width: 50,
+//                      child: RaisedButton(
+//                        color: R.color.primary_color,
+//                        child: Icon(
+//                          Icons.keyboard_arrow_left,
+//                          size: 20,
+//                          color: Colors.white,
+//                        ),
+//                        onPressed: () {
+//                        },
+//                        shape: RoundedRectangleBorder(
+//                            borderRadius: BorderRadius.circular(45)),
+//                      ),
+//                    ),
+//                    Expanded(
+//                      child: TXTextWidget(
+//                        text: CalendarUtils.showInFormat(
+//                            "m/yyyy", bloc.selectedDate),
+//                      ),
+//                    ),
+//                    Container(
+//                      width: 50,
+//                      child: RaisedButton(
+//                        color: R.color.primary_color,
+//                        child: Icon(
+//                          Icons.keyboard_arrow_right,
+//                          size: 20,
+//                          color: Colors.white,
+//                        ),
+//                        onPressed: () {},
+//                        shape: RoundedRectangleBorder(
+//                            borderRadius: BorderRadius.circular(45)),
+//                      ),
+//                    ),
+//                  ],
+//                );
+//              },
+//            ),
+//          ),
           TableCalendar(
             availableGestures: AvailableGestures.none,
             locale: AppConfig.locale == AppLocale.EN
@@ -436,17 +483,23 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
             startDay: bloc.firstDate,
             endDay: bloc.lastDate,
             onDaySelected: (datetime, events) {
-              bloc.selectedDate = datetime;
-
-              bloc.loadInitialDailyData();
+              if (CalendarUtils.compare(datetime, bloc.selectedDate) != 0) {
+                bloc.selectedDate = datetime;
+                bloc.loadInitialDailyData();
+              }
             },
-            enabledDayPredicate: (datetime){
-              return CalendarUtils.compare(datetime, bloc.firstDateHealthResult) >= 0;
+            enabledDayPredicate: (datetime) {
+              return CalendarUtils.compare(
+                      datetime, bloc.firstDateHealthResult) >=
+                  0;
             },
             initialSelectedDay: bloc.selectedDate,
             events: bloc.dailyFoodModelMap,
             initialCalendarFormat: CalendarFormat.month,
             availableCalendarFormats: Map.of({CalendarFormat.month: ""}),
+            calendarStyle: CalendarStyle(
+              outsideDaysVisible: false,
+            ),
             headerStyle: HeaderStyle(
                 centerHeaderTitle: true,
                 rightChevronIcon: Icon(
@@ -469,6 +522,40 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                 }
                 return children;
               },
+              dowWeekendBuilder: (context, str) {
+                return TXTextWidget(
+                  text: str.toCapitalize().substring(0, str.length - 1),
+                  textAlign: TextAlign.center,
+                );
+              },
+              dowWeekdayBuilder: (context, str) {
+                return TXTextWidget(
+                  text: str.toCapitalize().substring(0, str.length - 1),
+                  textAlign: TextAlign.center,
+                );
+              },
+              dayBuilder: (context, date, events) {
+                bool isValidDay = (CalendarUtils.compare(
+                            date,
+                            (CalendarUtils.compare(bloc.firstDate,
+                                        bloc.firstDateHealthResult) >
+                                    0
+                                ? bloc.firstDate
+                                : bloc.firstDateHealthResult)) >=
+                        0 &&
+                    CalendarUtils.compare(date, bloc.lastDate) <= 0);
+                return Container(
+                  height: double.infinity,
+                  width: double.infinity,
+                  child: Center(
+                    child: TXTextWidget(
+                      text: "${date.day}",
+                      color: isValidDay ? Colors.black : R.color.gray,
+                      size: isValidDay ? 14 : 11,
+                    ),
+                  ),
+                );
+              },
               selectedDayBuilder: (context, date, events) {
                 return Container(
                   height: double.infinity,
@@ -486,7 +573,7 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                           child: TXTextWidget(
                             text: "${date.day}",
                             color: Colors.white,
-                            size: 12,
+                            size: 14,
                           ),
                         )
                       ],
@@ -510,7 +597,7 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                         Center(
                           child: TXTextWidget(
                             text: "${date.day}",
-                            size: 12,
+                            size: 14,
                           ),
                         )
                       ],
@@ -520,12 +607,53 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
               },
             ),
           ),
-          Wrap(children: <Widget>[
-            TXTextLinkWidget(title: "Planificar", onTap: (){}, textColor: R.color.accent_color,),
-            TXTextLinkWidget(title: "Copiar", onTap: (){}, textColor: R.color.accent_color,),
-            TXTextLinkWidget(title: "Editar", onTap: (){}, textColor: R.color.accent_color,),
-            TXTextLinkWidget(title: "Ver resumen", onTap: (){}, textColor: R.color.accent_color,),
-          ],)
+          StreamBuilder<DailyFoodModel>(
+              stream: bloc.calendarOptionsResult,
+              initialData: null,
+              builder: (context, snapshot) {
+                return snapshot.data == null
+                    ? Container()
+                    : Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        alignment: WrapAlignment.spaceBetween,
+                        children: <Widget>[
+                          TXTextLinkWidget(
+                            title: "Copiar",
+                            onTap: snapshot.data.hasFoods != null
+                                ? () {
+                                    _selectDate(context);
+                                  }
+                                : null,
+                            textColor: snapshot.data.hasFoods != null
+                                ? R.color.accent_color
+                                : R.color.gray,
+                          ),
+                          TXTextLinkWidget(
+                            title: "Editar",
+                            onTap: () {
+                              bloc.changePage(0);
+                            },
+                            textColor: R.color.accent_color,
+                          ),
+                          TXTextLinkWidget(
+                            title: "Resumen",
+                            onTap: snapshot.data.hasFoods != null
+                                ? () {
+                                    showTXModalBottomSheet(
+                                        context: context,
+                                        builder: (context) {
+                                          return _showResume(
+                                              context, snapshot.data, showConfirm: false);
+                                        });
+                                  }
+                                : null,
+                            textColor: snapshot.data.hasFoods != null
+                                ? R.color.accent_color
+                                : R.color.gray,
+                          ),
+                        ],
+                      );
+              })
         ],
       ),
     );
@@ -565,9 +693,19 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
         firstDate: bloc.firstDate,
         lastDate: bloc.lastDate,
         selectableDayPredicate: (date) {
-          return true;
+          return (CalendarUtils.compare(
+                      date,
+                      (CalendarUtils.compare(
+                                  bloc.firstDate, bloc.firstDateHealthResult) >
+                              0
+                          ? bloc.firstDate
+                          : bloc.firstDateHealthResult)) >=
+                  0 &&
+              CalendarUtils.compare(date, bloc.lastDate) <= 0);
         });
-    if (picked != null && picked != bloc.selectedDate) {}
+    if (picked != null && picked != bloc.selectedDate) {
+      bloc.saveDailyPlan();
+    }
   }
 
   @override

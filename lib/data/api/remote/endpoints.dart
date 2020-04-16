@@ -34,4 +34,5 @@ class Endpoint {
   static const String dish_tags = "/api/tag";
 
   static const String eat_by_date_range = "/api/eat/by-date";
+  static const String save_daily_food_plan = "/api/eat/bulk-eats";
 }

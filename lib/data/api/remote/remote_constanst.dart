@@ -47,6 +47,7 @@ class RemoteConstants {
   static const role = 'role';
   static const role_id = 'roleId';
   static const daily_kcal = 'kCal';
+  static const first_date_health_result = 'firstHealthMeasured';
   static const imc = 'imc';
   static const password = 'password';
   static const confirmation_password = 'confirmationPassword';

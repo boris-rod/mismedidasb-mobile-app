@@ -12,19 +12,21 @@ class TXBottomResumeFoodPlanWidget extends StatelessWidget {
   final ValueChanged<bool> setShowDailyResume;
   final Function onSaveConfirm;
   final bool showValue;
+  final bool showConfirm;
 
   const TXBottomResumeFoodPlanWidget(
       {Key key,
       this.dailyFoodModel,
       this.setShowDailyResume,
       this.onSaveConfirm,
-      this.showValue})
+      this.showValue,
+      this.showConfirm = true})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height / 4 * 3,
+      height: MediaQuery.of(context).size.height / 9 * 6,
       child: Container(
         padding: EdgeInsets.only(left: 10),
         alignment: Alignment.topLeft,
@@ -57,47 +59,70 @@ class TXBottomResumeFoodPlanWidget extends StatelessWidget {
                 child: Column(
                   children: <Widget>[
                     Expanded(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: <Widget>[
-                            Container(
-                              height: 200,
-                              color: R.color.accent_color,
-                            ),
-                            Container(
-                              height: 200,
-                              color: R.color.primary_color,
-                            ),
-                            Container(
-                              height: 200,
-                              color: R.color.accent_color,
-                            ),
-                            Container(
-                              height: 200,
-                              color: R.color.primary_color,
-                            ),
-                          ],
-                        ),
+                      child: ListView.builder(
+                        itemBuilder: (ctx, index) {
+                          final activityModel =
+                              dailyFoodModel.dailyActivityFoodModelList[index];
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              TXTextWidget(
+                                text: activityModel.name,
+                                fontWeight: FontWeight.bold,
+                                size: 16,
+                              ),
+                              Container(
+                                child: ListView.builder(
+                                  itemBuilder: (ctx, indexFoods) {
+                                    final foodModel =
+                                        activityModel.foods[indexFoods];
+                                    return Container(
+                                      padding: EdgeInsets.only(bottom: 5),
+                                      child: TXTextWidget(
+                                        text: "${indexFoods + 1}- ${foodModel.name}",
+                                      ),
+                                    );
+                                  },
+                                  padding: EdgeInsets.only(left: 20),
+                                  itemCount: activityModel.foods.length,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                ),
+                              ),
+                              SizedBox(height: 20,)
+                            ],
+                          );
+                        },
+                        shrinkWrap: true,
+                        physics: BouncingScrollPhysics(),
+                        itemCount:
+                            dailyFoodModel.dailyActivityFoodModelList.length,
                       ),
                     ),
                     SizedBox(
                       height: 10,
                     ),
-                    TXButtonWidget(
-                        onPressed: () {
-                          NavigationUtils.pop(context);
-                          onSaveConfirm();
-                        },
-                        title: R.string.confirm),
-                    TXCheckBoxWidget(
-                      text: R.string.notShowAgain,
-                      leading: true,
-                      textColor: R.color.accent_color,
-                      value: showValue,
-                      onChange: (value) {
-                        setShowDailyResume(value);
-                      },
-                    ),
+                    showConfirm
+                        ? Column(
+                            children: <Widget>[
+                              TXButtonWidget(
+                                  onPressed: () {
+                                    NavigationUtils.pop(context);
+                                    onSaveConfirm();
+                                  },
+                                  title: R.string.confirm),
+                              TXCheckBoxWidget(
+                                text: R.string.notShowAgain,
+                                leading: true,
+                                textColor: R.color.accent_color,
+                                value: showValue,
+                                onChange: (value) {
+                                  setShowDailyResume(value);
+                                },
+                              ),
+                            ],
+                          )
+                        : Container()
                   ],
                 ),
               ),

@@ -17,6 +17,7 @@ class UserConverter implements IUserConverter {
       role: json[RemoteConstants.role],
       roleId: json[RemoteConstants.role_id],
       dailyKCal: json[RemoteConstants.daily_kcal],
+      firstDateHealthResult: DateTime.parse(json[RemoteConstants.first_date_health_result]).toLocal(),
       imc: json[RemoteConstants.imc]
     );
   }
@@ -28,12 +29,12 @@ class UserConverter implements IUserConverter {
       RemoteConstants.full_name: userModel.fullName,
       RemoteConstants.email: userModel.email,
       RemoteConstants.phone: userModel.phone,
-      RemoteConstants.status_id: userModel.statusId,
-      RemoteConstants.status: userModel.status,
-      RemoteConstants.avatar: userModel.avatar,
-      RemoteConstants.avatar_mime_type: userModel.avatarMimeType,
-      RemoteConstants.role: userModel.role,
-      RemoteConstants.role_id: userModel.roleId
+//      RemoteConstants.status_id: userModel.statusId,
+//      RemoteConstants.status: userModel.status,
+//      RemoteConstants.avatar: userModel.avatar,
+//      RemoteConstants.avatar_mime_type: userModel.avatarMimeType,
+//      RemoteConstants.role: userModel.role,
+//      RemoteConstants.role_id: userModel.roleId
     };
   }
 }

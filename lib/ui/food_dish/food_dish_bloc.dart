@@ -38,6 +38,14 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
   Stream<int> get pageResult => _pageController.stream;
 
+  BehaviorSubject<int> _calendarPageController = new BehaviorSubject();
+
+  Stream<int> get calendarPageResult => _calendarPageController.stream;
+
+  BehaviorSubject<DailyFoodModel> _calendarOptionsController = new BehaviorSubject();
+
+  Stream<DailyFoodModel> get calendarOptionsResult => _calendarOptionsController.stream;
+
   bool tagsLoaded = false;
   bool foodsLoaded = false;
   bool showResume = false;
@@ -90,21 +98,13 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     });
   }
 
-//  Map getDailyFoodModelListAsMap() {
-//    final Map<DateTime, List<DailyFoodModel>> map = {};
-//    dailyFoodModelList.forEach((d) {
-//      map[d.dateTime] = [d];
-//    });
-//    return map;
-//  }
-
   void loadInitialDailyData() {
-//    CalendarUtils.compareByMonth(datetime1, datetime2);
-
     DailyFoodModel daily = dailyFoodModelList.firstWhere(
         (d) => CalendarUtils.isSameDay(d.dateTime, selectedDate), orElse: () {
       return DailyFoodModel.getDailyFoodModel(dailyKCal, imc, selectedDate);
     });
+
+    _calendarOptionsController.sinkAddSafe(daily);
 
     daily.currentCaloriesSum = 0;
     daily.currentSumProteins = 0;
@@ -295,9 +295,17 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     });
   }
 
-  void changePage(int value) async {
+  void changePage(int value) {
     currentPage = value;
     _pageController.sinkAddSafe(currentPage);
+  }
+
+
+  void changeCalendarPage(bool next) async{
+//    final currentPage = await calendarPageResult.first;
+//    if(next && currentPage < 1){
+//      _calendarPageController.sinkAddSafe(currentPage + 1);
+//    }
   }
 
   @override
@@ -305,6 +313,8 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     _foodsController.close();
     _dailyFoodController.close();
     _showResumeController.close();
+    _calendarPageController.close();
+    _calendarOptionsController.close();
     _pageController.close();
     disposeErrorHandlerBloC();
     disposeLoadingBloC();

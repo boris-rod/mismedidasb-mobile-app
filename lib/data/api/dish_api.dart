@@ -51,4 +51,14 @@ class DishApi extends BaseApi implements IDishApi {
     } else
       throw serverException(res);
   }
+
+  @override
+  Future<bool> saveDailyFoodModel(CreateDailyPlanModel model) async {
+    final map = _foodConverter.toJsonCreateDailyPlanModel(model);
+    final body = jsonEncode(map);
+    final res = await _networkHandler.post(
+        path: Endpoint.save_daily_food_plan, body: body);
+    if (res.statusCode == RemoteConstants.code_success) return true;
+    throw serverException(res);
+  }
 }

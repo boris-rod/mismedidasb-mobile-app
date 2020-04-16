@@ -66,14 +66,14 @@ class LoginBloC extends BaseBloC
         LoginModel(email: email, password: password), saveCredentials);
     if (res is ResultSuccess<UserModel>) {
       //Cleaning DB in case of different user login
+      if(await _sharedPreferencesManager.getUserId() != res.value.id){
+
+      }
       await _iCommonRepository.cleanDB();
       final dishes =
           await _iDishRepository.getDailyActivityFoodModelListByDateRange(
               CalendarUtils.getFirstDateOfMonthAgo(),
               CalendarUtils.getLastDateOfMonthLater());
-//      if (dishes is ResultSuccess<List<DailyFoodModel>>) {
-//        print((dishes.value.length));
-//      }
       _loginController.sinkAddSafe(res.value);
     } else {
       if ((res as ResultError).code == RemoteConstants.code_forbidden) {

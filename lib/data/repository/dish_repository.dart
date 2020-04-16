@@ -102,7 +102,8 @@ class DishRepository extends BaseRepository implements IDishRepository {
             CalendarUtils.getTimeIdBasedDay(dateTime: list[0].dateTime));
       }
       await _iDishDao.saveDailyFoodModel(dailyFoodModel);
-      final l = await _iDishDao.getDailyFoodModelList();
+      await _dishApi.saveDailyFoodModel(
+          CreateDailyPlanModel.fromDailyFoodModel(dailyFoodModel));
       return true;
     } catch (ex) {
       return false;
@@ -110,16 +111,15 @@ class DishRepository extends BaseRepository implements IDishRepository {
   }
 
   @override
-  Future<Result<List<DailyFoodModel>>>
-      getDailyActivityFoodModelListByDateRange(
-          DateTime start, DateTime end) async {
+  Future<Result<List<DailyFoodModel>>> getDailyActivityFoodModelListByDateRange(
+      DateTime start, DateTime end) async {
     try {
       double kCal = await _sharedPreferencesManager.getDailyKCal();
       double imc = await _sharedPreferencesManager.getIMC();
 
       //Obtain list of Eats
-      List<DailyActivityFoodModel> list =
-          await _dishApi.getDailyActivityFoodModelListByDateRange(start.toUtc(), end.toUtc());
+      List<DailyActivityFoodModel> list = await _dishApi
+          .getDailyActivityFoodModelListByDateRange(start.toUtc(), end.toUtc());
 
       //Converting UTC to Local time
       list.map((f) => f.dateTime = f.dateTime.toLocal()).toList();
@@ -156,7 +156,8 @@ class DishRepository extends BaseRepository implements IDishRepository {
               dailyActivityFoodModelList:
                   DailyActivityFoodModel.getDailyActivityFoodModelList(
                       DailyFoodPlanModel(dailyKCal: kCal, imc: imc), initial),
-              dailyFoodPlanModel: DailyFoodPlanModel(dailyKCal: kCal, imc: imc));
+              dailyFoodPlanModel:
+                  DailyFoodPlanModel(dailyKCal: kCal, imc: imc));
         }
         initial = initial.add(Duration(days: 1));
       }

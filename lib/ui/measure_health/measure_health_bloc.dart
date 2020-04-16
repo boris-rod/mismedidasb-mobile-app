@@ -17,8 +17,11 @@ import 'package:mismedidasb/utils/extensions.dart';
 
 class MeasureHealthBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   final IPollRepository _iPollRepository;
+  final IUserRepository _iUserRepository;
+  final SharedPreferencesManager _sharedPreferencesManager;
 
-  MeasureHealthBloC(this._iPollRepository);
+  MeasureHealthBloC(this._iPollRepository, this._iUserRepository,
+      this._sharedPreferencesManager);
 
   BehaviorSubject<int> _pageController = new BehaviorSubject();
 
@@ -104,6 +107,14 @@ class MeasureHealthBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     final polls = await pollsResult.first;
     final res = await _iPollRepository.setPollResult(polls);
     if (res is ResultSuccess<String>) {
+      final profileRes = await _iUserRepository.getProfile();
+      if (profileRes is ResultSuccess<UserModel>) {
+        await _sharedPreferencesManager
+            .setDailyKCal(profileRes.value.dailyKCal);
+        await _sharedPreferencesManager.setIMC(profileRes.value.imc);
+        await _sharedPreferencesManager
+            .setFirstDateHealthResult(profileRes.value.firstDateHealthResult);
+      }
       _pollSaveController.sinkAddSafe(res.value);
     } else {
       showErrorMessage(res);

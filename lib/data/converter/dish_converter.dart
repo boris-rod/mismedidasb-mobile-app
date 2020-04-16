@@ -25,7 +25,9 @@ class DishConverter extends IDishConverter {
         name: json["name"],
         typeId: json["eatTypeId"],
         type: json["eatType"],
-        dateTime: DateTime.parse(json[fromAPI ? "createdAt" : "dateTime"]),
+        dateTime: fromAPI
+            ? DateTime.parse(json["createdAt"]).toLocal()
+            : DateTime.parse(json["datetime"]),
         plan: DailyFoodPlanModel(
             dailyKCal: json["dailyKCal"] ?? 1, imc: json["imc"] ?? 1),
         foods: (json[fromAPI ? "eatDishResponse" : "foods"] as List<dynamic>)
@@ -122,7 +124,7 @@ class DishConverter extends IDishConverter {
   @override
   Map<String, dynamic> toJsonCreateDailyPlanModel(CreateDailyPlanModel model) {
     return {
-      "dateInUtc": model.dateInUtc.toUtc().toIso8601String(),
+      "dateInUtc": model.dateTime.toUtc().toIso8601String(),
       "eats": model.activities
           .map((m) => toJsonCreateDailyActivityModel(m))
           .toList()
