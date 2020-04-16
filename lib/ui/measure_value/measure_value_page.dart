@@ -92,7 +92,7 @@ class _MeasureValueState
                                 child: TXTextWidget(
                                     color: R.color.primary_color,
                                     textAlign: TextAlign.justify,
-                                    text: R.string.valuesMeasureTip),
+                                    text: snapshot.data.topTip()),
                               ),
                               SizedBox(
                                 height: 30,

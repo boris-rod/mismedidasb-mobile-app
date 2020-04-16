@@ -99,6 +99,12 @@ class _MeasureWellnessState
                                   itemCount: snapshot.data.questions.length,
                                 ),
                               ),
+                              TXTextWidget(
+                                textAlign: TextAlign.center,
+                                text: snapshot.data.bottomTip(),
+                                size: 12,
+                                color: R.color.accent_color,
+                              ),
                               StreamBuilder<int>(
                                 stream: bloc.pageResult,
                                 initialData: bloc.currentPage,

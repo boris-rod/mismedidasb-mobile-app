@@ -1,3 +1,4 @@
+import 'package:mismedidasb/data/api/remote/remote_constanst.dart';
 import 'package:mismedidasb/domain/health_concept/health_concept.dart';
 import 'package:mismedidasb/domain/question/question_model.dart';
 
@@ -12,6 +13,24 @@ class PollModel {
   HealthConceptModel conceptModel;
   List<PollTipModel> tips;
   List<QuestionModel> questions;
+
+  String topTip() {
+    PollTipModel tip = tips.firstWhere(
+        (t) => (t.tipPositionString == RemoteConstants.top_tip && t.isActive),
+        orElse: () {
+      return null;
+    });
+    return tip != null ? tip.content ?? "" : "";
+  }
+
+  String bottomTip() {
+    PollTipModel tip = tips.firstWhere(
+            (t) => (t.tipPositionString == RemoteConstants.bottom_tip && t.isActive),
+        orElse: () {
+          return null;
+        });
+    return tip != null ? tip.content ?? "" : "";
+  }
 
   PollModel(
       {this.id = -1,
@@ -67,6 +86,14 @@ class PollTipModel {
   int pollId;
   String content;
   bool isActive;
+  String tipPositionString;
+  int tipPosition;
 
-  PollTipModel({this.id, this.pollId, this.content, this.isActive});
+  PollTipModel(
+      {this.id,
+      this.pollId,
+      this.content,
+      this.isActive,
+      this.tipPositionString,
+      this.tipPosition});
 }

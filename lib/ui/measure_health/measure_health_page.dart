@@ -99,7 +99,7 @@ class _MeasureHealthState
                           ),
                           TXTextWidget(
                             textAlign: TextAlign.center,
-                            text: R.string.appClinicalWarning,
+                            text: snapshot.data.isNotEmpty ? snapshot.data[bloc.currentPage].bottomTip() : "",
                             size: 12,
                             color: R.color.accent_color,
                           )

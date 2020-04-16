@@ -290,9 +290,8 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
       dailyFoodModelMap[d.dateTime] = [d];
     });
 
-    Future.delayed(Duration(seconds: 2), () {
-      isLoading = false;
-    });
+    loadInitialDailyData();
+    isLoading = false;
   }
 
   void changePage(int value) {

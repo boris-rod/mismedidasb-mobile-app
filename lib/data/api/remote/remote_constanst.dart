@@ -69,8 +69,12 @@ class RemoteConstants {
   static const tips = 'tips';
   static const poll_id = 'pollId';
   static const content = 'content';
-  static const is_active = 'isACtive';
+  static const is_active = 'isActive';
+  static const tip_position_str = 'tipPositionString';
+  static const tip_position = 'tipPosition';
   static const questions_results = 'questionsResults';
+  static const top_tip = 'TOP';
+  static const bottom_tip = 'BOTTOM';
 
 
 

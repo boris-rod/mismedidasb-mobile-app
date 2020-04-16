@@ -46,6 +46,8 @@ class PollConverter implements IPollConverter {
         id: json[RemoteConstants.id],
         pollId: json[RemoteConstants.poll_id],
         content: json[RemoteConstants.content],
-        isActive: json[RemoteConstants.is_active]);
+        isActive: json[RemoteConstants.is_active],
+        tipPositionString: json[RemoteConstants.tip_position_str],
+        tipPosition: json[RemoteConstants.tip_position]);
   }
 }
