@@ -24,8 +24,10 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginState extends StateWithBloC<LoginPage, LoginBloC> {
-  TextEditingController emailTextController = TextEditingController();
-  TextEditingController passwordTextController = TextEditingController();
+  TextEditingController emailTextController = TextEditingController(text: "yaraiza.reyes@gmail.com");
+  TextEditingController passwordTextController = TextEditingController(text: "Corachi8512*-");
+//  TextEditingController emailTextController = TextEditingController(text: "enrique.anchia84@gmail.com");
+//  TextEditingController passwordTextController = TextEditingController(text: "Password1234!");
   final _keyFormLogin = new GlobalKey<FormState>();
 
   @override

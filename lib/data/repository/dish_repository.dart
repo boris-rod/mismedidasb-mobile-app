@@ -116,10 +116,11 @@ class DishRepository extends BaseRepository implements IDishRepository {
   Future<Result<Map<DateTime, DailyFoodModel>>> syncData() async {
     try {
       List<DailyFoodModel> localList = await _iDishDao.getDailyFoodModelList();
-      List<DailyFoodModel> notSavedList = localList.where((p) => !p.synced);
+      List<DailyFoodModel> notSavedList =
+          localList.where((p) => !p.synced).toList();
       List<DailyFoodModel> syncedList = [];
 
-      Future.forEach<DailyFoodModel>(notSavedList, (obj) async {
+      await Future.forEach<DailyFoodModel>(notSavedList, (obj) async {
         final apiObj = CreateDailyPlanModel.fromDailyFoodModel(obj);
         obj.synced = await _dishApi.saveDailyFoodModel(apiObj);
         if (obj.synced) syncedList.add(obj);

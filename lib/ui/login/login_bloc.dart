@@ -60,13 +60,13 @@ class LoginBloC extends BaseBloC
     isLoading = true;
     final saveCredentials =
         await _sharedPreferencesManager.getSaveCredentials();
-    final previousLogin = await _sharedPreferencesManager.getUserId();
+    final previousUserId = await _sharedPreferencesManager.getUserId();
 
     final res = await _iSessionRepository.login(
         LoginModel(email: email, password: password), saveCredentials);
     if (res is ResultSuccess<UserModel>) {
       //Cleaning DB in case of different user login
-      if(await _sharedPreferencesManager.getUserId() != res.value.id){
+      if(previousUserId != res.value.id){
         await _iCommonRepository.cleanDB();
       }
       _loginController.sinkAddSafe(res.value);
