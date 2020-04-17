@@ -37,7 +37,7 @@ class DishApi extends BaseApi implements IDishApi {
   }
 
   @override
-  Future<List<DailyActivityFoodModel>> getDailyActivityFoodModelListByDateRange(
+  Future<List<DailyActivityFoodModel>> getPlansMergedAPI(
       DateTime start, DateTime end) async {
     final res = await _networkHandler.get(
         path: Endpoint.eat_by_date_range,

@@ -119,10 +119,7 @@ class FCMFeature extends IFCMFeature {
 
   Future<dynamic> _processMessageForeground(
       Map<String, dynamic> message) async {
-    print('FCM Message Foreground');
     print(message);
-    Fluttertoast.showToast(
-        msg: message.toString(), toastLength: Toast.LENGTH_SHORT);
 
 //    final fcmMessage = FCMJsonParser.parseJson(message);
 //    if (fcmMessage.todoId != null) {

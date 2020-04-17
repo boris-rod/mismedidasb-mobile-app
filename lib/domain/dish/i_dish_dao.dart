@@ -7,17 +7,17 @@ abstract class IDishDao {
 
   Future<bool> saveDailyFoodModelList(List<DailyFoodModel> list);
 
+  Future<bool> removeDailyFoodModel(String id);
+
   Future<List<FoodModel>> getFoodModeList();
+
+  Future<bool> saveFoodModelList(List<FoodModel> list);
+
+  Future<bool> clearFoodModelList();
 
   Future<List<TagModel>> getFoodTagList();
 
   Future<bool> saveFoodTagList(List<TagModel> list);
 
-  Future<bool> saveFoodModelList(List<FoodModel> list);
-
   Future<bool> clearFoodTagList();
-
-  Future<bool> clearFoodModelList();
-
-  Future<bool> removeDailyFoodModel(String id);
 }

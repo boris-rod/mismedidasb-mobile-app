@@ -25,14 +25,12 @@ class _FCMAwareBodyState extends State<FCMAwareBody> {
     final fcmFeature = Injector.instance.getDependency<IFCMFeature>();
     subscription = fcmFeature.onMessageActionBackground().listen((fcmMessage) {
       print('onFcmClicked $fcmMessage');
-      if (fcmMessage?.todoId != null) {
-        fcmFeature.clearBackgroundNotification();
-        NavigationUtils.pushModal(
-            context,
-            FoodDishPage(
-              fromNotificationScope: true,
-            ));
-      }
+      fcmFeature.clearBackgroundNotification();
+      NavigationUtils.pushModal(
+          context,
+          FoodDishPage(
+            fromNotificationScope: true,
+          ));
     });
   }
 

@@ -485,7 +485,7 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
             onDaySelected: (datetime, events) {
               if (CalendarUtils.compare(datetime, bloc.selectedDate) != 0) {
                 bloc.selectedDate = datetime;
-                bloc.loadInitialDailyData();
+                bloc.loadDailyPlanData();
               }
             },
             enabledDayPredicate: (datetime) {
@@ -494,7 +494,7 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                   0;
             },
             initialSelectedDay: bloc.selectedDate,
-            events: bloc.dailyFoodModelMap,
+            events: bloc.getEvents(),
             initialCalendarFormat: CalendarFormat.month,
             availableCalendarFormats: Map.of({CalendarFormat.month: ""}),
             calendarStyle: CalendarStyle(

@@ -30,41 +30,20 @@ class DailyFoodPlanModel {
 
   double get dinnerCalValExtra => kCalOffSetVal * 25 / 100;
 
-  double get kCalMin =>
-      imc <= 18.5
-          ? dailyKCal
-          : (imc > 18.5 && imc < 25 ? dailyKCal - 100 : dailyKCal - 500);
+  double get kCalMin => imc <= 18.5
+      ? dailyKCal
+      : (imc > 18.5 && imc < 25 ? dailyKCal - 100 : dailyKCal - 500);
 
-  double get kCalMax =>
-      imc <= 18.5
-          ? dailyKCal + 500
-          : (imc > 18.5 && imc < 25 ? dailyKCal + 100 : dailyKCal);
-
-//  String get breakfastCalStr => "$breakFastCalVal calorías";
-//
-//  String get snack1CalStr => "$snack1CalVal calorías";
-//
-//  String get lunchCalStr => "$lunchCalVal calorías";
-//
-//  String get snack2CalStr => "$snack2CalVal calorías";
-//
-//  String get dinnerCalStr => "$dinnerCalVal calorías";
-//
-//  String get imcStr => "Índice de masa corporal ${imc.toStringAsFixed(2)}";
-//
-//  String get kCalStr => "Calorías diarias $dailyKCal";
-//
-//  String get kCalRange => imc <= 18.5
-//      ? "Calorías entre $kCalMin <-> $kCalMax"
-//      : (imc > 18.5 && imc < 25
-//          ? "Calorías entre $kCalMin <-> $kCalMax"
-//          : "Calorías entre $kCalMin <-> $kCalMax");
+  double get kCalMax => imc <= 18.5
+      ? dailyKCal + 500
+      : (imc > 18.5 && imc < 25 ? dailyKCal + 100 : dailyKCal);
 }
 
 class DailyFoodModel {
   DateTime dateTime;
   List<DailyActivityFoodModel> dailyActivityFoodModelList;
   DailyFoodPlanModel dailyFoodPlanModel;
+  bool synced;
   bool headerExpanded;
   double currentCaloriesSum;
   double currentSumProteins;
@@ -72,38 +51,31 @@ class DailyFoodModel {
   double currentSumFat;
   double currentSumFiber;
 
-  DailyActivityFoodModel get hasFoods =>
-      dailyActivityFoodModelList.firstWhere((dA) => dA.foods.isNotEmpty,
-          orElse: () {
-            return null;
-          });
+  double get currentCaloriesSumTest => dailyActivityFoodModelList
+      .map((d) => d.calories)
+      .reduce((v1, v2) => v1 + v2);
 
-  DailyFoodModel({this.dateTime,
-    this.dailyActivityFoodModelList,
-    this.dailyFoodPlanModel,
-    this.currentCaloriesSum = 0,
-    this.currentSumCarbohydrates = 0,
-    this.currentSumFat = 0,
-    this.currentSumFiber = 0,
-    this.currentSumProteins = 0,
-    this.headerExpanded = true});
+  DailyActivityFoodModel get hasFoods => dailyActivityFoodModelList
+          .firstWhere((dA) => dA.foods.isNotEmpty, orElse: () {
+        return null;
+      });
 
-  static DailyFoodModel getDailyFoodModel(double dailyKCal, double imc,
-      DateTime dateTime) {
-    final plan = DailyFoodPlanModel(imc: imc, dailyKCal: dailyKCal);
-    return DailyFoodModel(
-        dateTime: dateTime,
-        dailyFoodPlanModel: plan,
-        dailyActivityFoodModelList:
-        DailyActivityFoodModel.getDailyActivityFoodModelList(plan, dateTime));
-  }
+  DailyFoodModel(
+      {this.dateTime,
+      this.synced = true,
+      this.dailyActivityFoodModelList,
+      this.dailyFoodPlanModel,
+      this.currentCaloriesSum = 0,
+      this.currentSumCarbohydrates = 0,
+      this.currentSumFat = 0,
+      this.currentSumFiber = 0,
+      this.currentSumProteins = 0,
+      this.headerExpanded = true});
 }
 
 class DailyActivityFoodModel {
   int id;
-  int typeId;
   String type;
-  String name;
   List<FoodModel> foods;
   double calories;
   double carbohydrates;
@@ -122,53 +94,38 @@ class DailyActivityFoodModel {
   double fiberDishCalories;
   double carbohydratesDishCalories;
 
-  DailyActivityFoodModel({this.id,
-    this.typeId,
-    this.type,
-    this.name,
-    this.foods,
-    this.calories = 0,
-    this.carbohydrates = 0,
-    this.proteins = 0,
-    this.fat = 0,
-    this.fiber = 0,
-    this.dateTime,
-    this.plan,
-    this.isExpanded = true});
+  String get name => id == 0
+      ? R.string.breakfast
+      : (id == 3
+          ? R.string.lunch
+          : (id == 4 ? R.string.dinner : R.string.snack));
+
+  DailyActivityFoodModel(
+      {this.id,
+      this.type,
+      this.foods,
+      this.calories = 0,
+      this.carbohydrates = 0,
+      this.proteins = 0,
+      this.fat = 0,
+      this.fiber = 0,
+      this.dateTime,
+      this.plan,
+      this.isExpanded = true});
 
   static List<DailyActivityFoodModel> getDailyActivityFoodModelList(
       DailyFoodPlanModel dailyFoodPlanModel, DateTime dateTime) {
     return [
       DailyActivityFoodModel(
-          id: 0,
-          name: R.string.breakfast,
-          foods: [],
-          plan: dailyFoodPlanModel,
-          dateTime: dateTime),
+          id: 0, foods: [], plan: dailyFoodPlanModel, dateTime: dateTime),
       DailyActivityFoodModel(
-          id: 1,
-          name: R.string.snack,
-          foods: [],
-          plan: dailyFoodPlanModel,
-          dateTime: dateTime),
+          id: 1, foods: [], plan: dailyFoodPlanModel, dateTime: dateTime),
       DailyActivityFoodModel(
-          id: 2,
-          name: R.string.lunch,
-          foods: [],
-          plan: dailyFoodPlanModel,
-          dateTime: dateTime),
+          id: 2, foods: [], plan: dailyFoodPlanModel, dateTime: dateTime),
       DailyActivityFoodModel(
-          id: 3,
-          name: R.string.snack,
-          foods: [],
-          plan: dailyFoodPlanModel,
-          dateTime: dateTime),
+          id: 3, foods: [], plan: dailyFoodPlanModel, dateTime: dateTime),
       DailyActivityFoodModel(
-          id: 4,
-          name: R.string.dinner,
-          foods: [],
-          plan: dailyFoodPlanModel,
-          dateTime: dateTime),
+          id: 4, foods: [], plan: dailyFoodPlanModel, dateTime: dateTime),
     ];
   }
 }
@@ -222,9 +179,9 @@ class CreateDailyPlanModel {
   static CreateDailyPlanModel fromDailyFoodModel(DailyFoodModel model) {
     return CreateDailyPlanModel(
         dateTime: model.dateTime,
-        activities: model.dailyActivityFoodModelList.map((a) =>
-            CreateDailyActivityModel.fromDailyActivityFoodModel(a)).toList()
-    );
+        activities: model.dailyActivityFoodModelList
+            .map((a) => CreateDailyActivityModel.fromDailyActivityFoodModel(a))
+            .toList());
   }
 }
 
@@ -238,8 +195,8 @@ class CreateDailyActivityModel {
       DailyActivityFoodModel model) {
     return CreateDailyActivityModel(
         id: model.id,
-        foods: model.foods.map((f) => CreateFoodModel.fromFoodModel(f)).toList()
-    );
+        foods:
+            model.foods.map((f) => CreateFoodModel.fromFoodModel(f)).toList());
   }
 }
 
@@ -250,9 +207,6 @@ class CreateFoodModel {
   CreateFoodModel({this.id, this.quantity = 1});
 
   static CreateFoodModel fromFoodModel(FoodModel model) {
-    return CreateFoodModel(
-        id: model.id,
-        quantity: 1
-    );
+    return CreateFoodModel(id: model.id, quantity: 1);
   }
 }

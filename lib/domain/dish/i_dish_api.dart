@@ -5,7 +5,7 @@ abstract class IDishApi {
 
   Future<List<TagModel>> getTagList();
 
-  Future<List<DailyActivityFoodModel>> getDailyActivityFoodModelListByDateRange(DateTime start, DateTime end);
+  Future<List<DailyActivityFoodModel>> getPlansMergedAPI(DateTime start, DateTime end);
 
   Future<bool> saveDailyFoodModel(CreateDailyPlanModel model);
 }
