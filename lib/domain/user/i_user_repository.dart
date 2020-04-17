@@ -8,5 +8,5 @@ abstract class IUserRepository {
 
   Future<Result<UserModel>> updateProfile(UserModel userModel);
 
-  Future<Result<UserModel>> uploadAvatar(File photo);
+  Future<Result<bool>> uploadAvatar(File photo);
 }

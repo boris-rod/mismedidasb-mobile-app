@@ -32,7 +32,7 @@ class UserRepository extends BaseRepository implements IUserRepository {
   }
 
   @override
-  Future<Result<UserModel>> uploadAvatar(File photo) async {
+  Future<Result<bool>> uploadAvatar(File photo) async {
     try {
       final result = await _iUserApi.uploadAvatar(photo);
       return Result.success(value: result);

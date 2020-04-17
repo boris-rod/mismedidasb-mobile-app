@@ -214,4 +214,19 @@ class StringsEn implements StringsBase {
 
   @override
   String get fillHealthPoll => "Debe rellenar el formulario de medidas de salud antes de planificar sus platos";
+
+  @override
+  String get camera => "Cámara";
+
+  @override
+  String get deniedPermissionContent => "Debe ir a las configuraciones de la aplicación para reestablecer el permiso.";
+
+  @override
+  String get deniedPermissionTitle => "Información sobre permisos";
+
+  @override
+  String get gallery => "Galería";
+
+  @override
+  String get help => "Help";
 }

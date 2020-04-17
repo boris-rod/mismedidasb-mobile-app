@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mismedidasb/domain/user/user_model.dart';
@@ -18,7 +19,10 @@ import 'package:mismedidasb/ui/_tx_widget/tx_network_image.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
 import 'package:mismedidasb/ui/change_password/change_password_page.dart';
 import 'package:mismedidasb/ui/profile/profile_bloc.dart';
+import 'package:mismedidasb/ui/profile/tx_profile_item_option_widget.dart';
 import 'package:mismedidasb/utils/file_manager.dart';
+import 'package:mismedidasb/utils/mail_manager.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 enum profileAction { logout, changeAvatar, updateProfile, changePassword }
 
@@ -67,93 +71,122 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                       children: <Widget>[
                         Container(
                           height: 220,
+                          color: R.color.gray_light,
                           width: double.infinity,
                           child: Stack(
                             children: <Widget>[
-                              TXNetworkImage(
-                                width: double.infinity,
-                                height: double.infinity,
-                                imageUrl: user.avatar,
-                                placeholderImage: R.image.user,
-                              ),
-                              Container(
-                                margin: EdgeInsets.only(right: 15),
-                                alignment: Alignment.bottomRight,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(45))),
-                                  height: 60,
-                                  width: 60,
-                                  child: Card(
-                                    color: R.color.primary_color,
-                                    shape: CircleBorder(),
-                                    child: InkWell(
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(45)),
-                                      onTap: () {
-                                        _showMediaSelector(context);
-                                      },
-                                      child: Icon(Icons.edit,
-                                          size: 30, color: Colors.white),
+                              Column(
+                                children: <Widget>[
+                                  Expanded(
+                                    child: Container(
+                                      child: TXNetworkImage(
+                                        width: double.infinity,
+                                        height: double.infinity,
+                                        imageUrl: user.avatar,
+                                        placeholderImage: R.image.logo_blue,
+                                      ),
                                     ),
                                   ),
+                                  Container(
+                                    height: .5,
+                                    color: R.color.gray,
+                                    width: double.infinity,
+                                    margin: EdgeInsets.only(bottom: 25),
+                                  )
+                                ],
+                              ),
+                              Positioned(
+                                  bottom: 0,
+                                  right: 20,
+                                  child: InkWell(
+                                    onTap: () {
+                                      _showMediaSelector(context);
+                                    },
+                                    child: CircleAvatar(
+                                      radius: 25,
+                                      child: Icon(Icons.edit,
+                                          size: 25, color: Colors.white),
+                                      backgroundColor: R.color.primary_color,
+                                    ),
+                                  )),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(bottom: 10),
+                          color: R.color.gray_light,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Container(
+                                child: TXNetworkImage(
+                                  width: 60,
+                                  height: 60,
+                                  imageUrl: R.image.logo_blue,
+                                  placeholderImage: R.image.logo_blue,
                                 ),
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  TXTextWidget(
+                                    text: user.fullName ?? "---",
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  TXTextWidget(
+                                    text: user.email ?? "---",
+                                    fontWeight: FontWeight.bold,
+                                    size: 16,
+                                  ),
+                                ],
                               )
                             ],
                           ),
                         ),
-                        Divider(
+                        Container(
+                          height: .5,
                           color: R.color.gray,
+                          width: double.infinity,
                         ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        TXTextWidget(
-                          text: user.fullName ?? "asdasd",
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        TXTextWidget(
-                          text: user.email,
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        TXTextWidget(
-                          text: user.phone,
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        TXTextWidget(
-                          text: user.status,
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        TXTextWidget(
-                          text: user.role,
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        TXButtonWidget(
-                          title: R.string.changePassword,
-                          onPressed: () {
+                        TXProfileItemOptionWidget(
+                          icon: Icons.visibility,
+                          optionName: R.string.changePassword,
+                          onOptionTap: () {
                             NavigationUtils.push(context, ChangePasswordPage());
                           },
                         ),
-                        SizedBox(
-                          height: 30,
+                        Container(
+                          height: .5,
+                          color: R.color.gray,
+                          width: double.infinity,
                         ),
-                        TXButtonWidget(
-                          title: R.string.logout,
-                          onPressed: () {
-                            _showDemoDialog(context: context);
+                        TXProfileItemOptionWidget(
+                          icon: Icons.help_outline,
+                          optionName: R.string.help,
+                          onOptionTap: () async {
+//                            await MainManager.sendEmail(
+//                                recipient: "borisrod@gmail.com");
                           },
-                        )
+                        ),
+                        Container(
+                          height: .5,
+                          color: R.color.gray,
+                          width: double.infinity,
+                        ),
+                        TXProfileItemOptionWidget(
+                          icon: Icons.exit_to_app,
+                          optionName: R.string.logout,
+                          onOptionTap: () {
+                            _showDemoDialogLogout(context: context);
+                          },
+                        ),
+                        Container(
+                          height: .5,
+                          color: R.color.gray,
+                          width: double.infinity,
+                        ),
                       ],
                     ),
                   ),
@@ -232,13 +265,42 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
   }
 
   void _launchMediaView(BuildContext context, ImageSource imageSource) async {
-    final file = await FileManager.getImageFromSource(imageSource);
-    if (file != null && file.existsSync()) {
-      bloc.uploadAvatar(file);
+    try {
+      final file = await FileManager.getImageFromSource(imageSource);
+      if (file != null && file.existsSync()) {
+        bloc.uploadAvatar(file);
+      }
+    } catch (ex) {
+      if (ex is PlatformException) {
+        if (ex.code == "photo_access_denied") {
+          _showDialogPermissions(
+              context: context,
+              onOkAction: () async {
+                openAppSettings();
+              });
+        }
+      }
     }
   }
 
-  void _showDemoDialog({BuildContext context}) {
+  void _showDialogPermissions({BuildContext context, Function onOkAction}) {
+    showCupertinoDialog<String>(
+      context: context,
+      builder: (BuildContext context) => TXCupertinoDialogWidget(
+        title: R.string.deniedPermissionTitle,
+        content: R.string.deniedPermissionContent,
+        onOK: () {
+          Navigator.pop(context, R.string.ok);
+          onOkAction();
+        },
+        onCancel: () {
+          Navigator.pop(context, R.string.cancel);
+        },
+      ),
+    );
+  }
+
+  void _showDemoDialogLogout({BuildContext context}) {
     showCupertinoDialog<String>(
       context: context,
       builder: (BuildContext context) => TXCupertinoDialogWidget(
@@ -246,10 +308,10 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
         content: R.string.logoutContent,
         onOK: () {
           bloc.logout();
-          Navigator.pop(context, 'Permitir');
+          Navigator.pop(context, R.string.logout);
         },
         onCancel: () {
-          Navigator.pop(context, 'Denegar');
+          Navigator.pop(context, R.string.cancel);
         },
       ),
     );

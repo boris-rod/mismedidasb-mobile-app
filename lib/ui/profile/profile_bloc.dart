@@ -45,8 +45,13 @@ class ProfileBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   void uploadAvatar(File file) async {
     isLoading = true;
     final res = await _iUserRepository.uploadAvatar(file);
+    if (res is ResultSuccess<bool>) {
+      getProfile();
+    } else{
+      isLoading = false;
+      showErrorMessage(res);
+    }
 
-    isLoading = false;
   }
 
   void removeAvatar() async {}

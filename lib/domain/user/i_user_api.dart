@@ -7,5 +7,5 @@ abstract class IUserApi {
 
   Future<UserModel> updateProfile(UserModel userModel);
 
-  Future<UserModel> uploadAvatar(File photo);
+  Future<bool> uploadAvatar(File photo);
 }

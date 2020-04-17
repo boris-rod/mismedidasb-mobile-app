@@ -139,4 +139,14 @@ abstract class StringsBase implements WidgetsLocalizations {
   String get notShowAgain;
 
   String get fillHealthPoll;
+
+  String get deniedPermissionTitle;
+
+  String get deniedPermissionContent;
+
+  String get camera;
+
+  String get gallery;
+
+  String get help;
 }

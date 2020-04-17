@@ -39,14 +39,11 @@ class UserApi extends BaseApi implements IUserApi {
   }
 
   @override
-  Future<UserModel> uploadAvatar(File photo) async {
+  Future<bool> uploadAvatar(File photo) async {
     final res = await _networkHandler.postFile(
       path: Endpoint.upload_avatar,
       files: photo,
     );
-    if (res.statusCode == RemoteConstants.code_success)
-      return _iUserConverter.fromJson(res.data[RemoteConstants.result]);
-    else
-      throw null;
+    return res.statusCode == RemoteConstants.code_success;
   }
 }

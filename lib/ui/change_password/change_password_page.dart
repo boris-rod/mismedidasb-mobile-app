@@ -58,6 +58,15 @@ class _ChangePasswordState
                       SizedBox(
                         height: 30,
                       ),
+                      Image.asset(
+                        R.image.logo,
+                        width: 100,
+                        height: 100,
+                        color: R.color.primary_color,
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
                       StreamBuilder<String>(
                         stream: bloc.initResult,
                         initialData: "",
