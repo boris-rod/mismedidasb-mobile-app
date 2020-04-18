@@ -211,7 +211,7 @@ class StringsEs implements StringsBase {
   String get confirm => "Confirmar";
 
   @override
-  String get notShowAgain => "No volver a mostrar";
+  String get showAlways => "Mostrar resumen antes de salvar";
 
   @override
   String get fillHealthPoll => "Debe rellenar el formulario de medidas de salud antes de planificar sus platos";
@@ -239,4 +239,16 @@ class StringsEs implements StringsBase {
 
   @override
   String get resumePlan => "Resumen";
+
+  @override
+  String get settings => "Configuraciones";
+
+  @override
+  String get showResumePlanBeforeSave => "Mostrar resumen antes de salvar";
+
+  @override
+  String get warningReplacePlanContent => "El día seleccionado contiene datos de un plan. Si decide continuar se reemplazará el plan para ese día.";
+
+  @override
+  String get warningTitle => "Advertencia";
 }

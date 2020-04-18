@@ -37,7 +37,7 @@ class TXBottomResumeFoodPlanWidget extends StatelessWidget {
               children: <Widget>[
                 Expanded(
                   child: TXTextWidget(
-                    text: "Resumen",
+                    text: R.string.resumePlan,
                     maxLines: 2,
                     textOverflow: TextOverflow.ellipsis,
                     size: 18,
@@ -45,7 +45,7 @@ class TXBottomResumeFoodPlanWidget extends StatelessWidget {
                 ),
                 Container(
                   child: TXTextLinkWidget(
-                      title: "Cerrar",
+                      title: R.string.cancel,
                       textColor: R.color.primary_color,
                       onTap: () {
                         NavigationUtils.pop(context);
@@ -112,13 +112,18 @@ class TXBottomResumeFoodPlanWidget extends StatelessWidget {
                                   },
                                   title: R.string.confirm),
                               TXCheckBoxWidget(
-                                text: R.string.notShowAgain,
+                                text: R.string.showAlways,
                                 leading: true,
                                 textColor: R.color.accent_color,
                                 value: showValue,
                                 onChange: (value) {
                                   setShowDailyResume(value);
                                 },
+                              ),
+                              Container(
+                                height: .5,
+                                color: R.color.gray,
+                                width: double.infinity,
                               ),
                             ],
                           )

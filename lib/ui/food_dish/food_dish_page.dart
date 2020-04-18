@@ -62,9 +62,8 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
     showCupertinoDialog<String>(
       context: context,
       builder: (BuildContext context) => TXCupertinoDialogWidget(
-        title: "Advertencia",
-        content:
-            "El día seleccionado contiene datos de un plan. Si decide continuar se reemplazará el plan para ese día.",
+        title: R.string.warningTitle,
+        content: R.string.warningReplacePlanContent,
         onOK: () {
           Navigator.pop(context, R.string.ok);
           onOkAction();
@@ -219,13 +218,14 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
       {bool showConfirm = true}) {
     return StreamBuilder<bool>(
       stream: bloc.showResumeResult,
-      initialData: true,
+      initialData: bloc.showResume,
       builder: (ctx, showSnapshot) {
         return TXBottomResumeFoodPlanWidget(
           dailyFoodModel: dailyModel,
           showValue: showSnapshot.data,
           showConfirm: showConfirm,
           setShowDailyResume: (value) {
+            bloc.showResume = value;
             bloc.setShowDailyResume(value);
           },
           onSaveConfirm: () {

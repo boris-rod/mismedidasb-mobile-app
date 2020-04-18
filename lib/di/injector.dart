@@ -80,6 +80,7 @@ import 'package:mismedidasb/ui/measure_wellness/measure_wellness_bloc.dart';
 import 'package:mismedidasb/ui/profile/profile_bloc.dart';
 import 'package:mismedidasb/ui/recover_password/recover_password_bloc.dart';
 import 'package:mismedidasb/ui/register/register_bloc.dart';
+import 'package:mismedidasb/ui/settings/settings_bloc.dart';
 import 'package:mismedidasb/ui/splash/splash_bloc.dart';
 import 'package:mismedidasb/utils/logger.dart';
 
@@ -268,6 +269,8 @@ class Injector {
         (c) => ChangePasswordBloC(container.resolve(), container.resolve()));
     container.registerFactory((c) => ProfileBloC(container.resolve(),
         container.resolve(), container.resolve(), container.resolve()));
+    container.registerFactory((c) => SettingsBloC(c.resolve()));
+
   }
 
   _registerCommon() {

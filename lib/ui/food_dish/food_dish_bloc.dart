@@ -274,6 +274,8 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
   void saveDailyPlan() async {
     isLoading = true;
+    await _sharedPreferencesManager.setShowDailyResume(showResume);
+
     final dishesRes = await _iDishRepository.syncData();
     if (dishesRes is ResultSuccess<Map<DateTime, DailyFoodModel>>) {
       dailyFoodModelMap = dishesRes.value;
@@ -283,7 +285,6 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   }
 
   void setShowDailyResume(bool value) async {
-    await _sharedPreferencesManager.setShowDailyResume(value);
     _showResumeController.sinkAddSafe(value);
   }
 

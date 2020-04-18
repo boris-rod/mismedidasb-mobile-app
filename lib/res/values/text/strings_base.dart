@@ -136,7 +136,7 @@ abstract class StringsBase implements WidgetsLocalizations {
 
   String get confirm;
 
-  String get notShowAgain;
+  String get showAlways;
 
   String get fillHealthPoll;
 
@@ -155,4 +155,12 @@ abstract class StringsBase implements WidgetsLocalizations {
   String get editPlan;
 
   String get resumePlan;
+
+  String get warningTitle;
+
+  String get warningReplacePlanContent;
+
+  String get settings;
+
+  String get showResumePlanBeforeSave;
 }

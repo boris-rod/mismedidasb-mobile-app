@@ -8,13 +8,14 @@ class TXCheckBoxWidget extends StatelessWidget {
   final ValueChanged<bool> onChange;
   final bool leading;
   final Color textColor;
+  final EdgeInsetsGeometry padding;
 
   TXCheckBoxWidget(
       {this.text,
       this.onChange,
       this.value = false,
       this.leading = false,
-      this.textColor});
+      this.textColor, this.padding});
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +24,7 @@ class TXCheckBoxWidget extends StatelessWidget {
         onChange(!value);
       },
       child: Container(
+        padding: padding,
         child: leading ? leadingWidget() : trailingWidget(),
       ),
     );
@@ -34,13 +36,10 @@ class TXCheckBoxWidget extends StatelessWidget {
           Expanded(
             child: TXTextWidget(
               text: text,
-              color: R.color.primary_color,
+              color: textColor ?? R.color.primary_color,
             ),
           ),
           Checkbox(
-            checkColor: R.color.primary_color,
-            activeColor: R.color.primary_color,
-            focusColor: R.color.primary_color,
             onChanged: (value) {
               onChange(value);
             },

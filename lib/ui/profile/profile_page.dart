@@ -20,6 +20,8 @@ import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
 import 'package:mismedidasb/ui/change_password/change_password_page.dart';
 import 'package:mismedidasb/ui/profile/profile_bloc.dart';
 import 'package:mismedidasb/ui/profile/tx_profile_item_option_widget.dart';
+import 'package:mismedidasb/ui/settings/settings_bloc.dart';
+import 'package:mismedidasb/ui/settings/settings_page.dart';
 import 'package:mismedidasb/utils/file_manager.dart';
 import 'package:mismedidasb/utils/mail_manager.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -72,7 +74,6 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                         Container(
                           height: 220,
                           color: R.color.gray_light,
-                          width: double.infinity,
                           child: Stack(
                             children: <Widget>[
                               Column(
@@ -90,7 +91,6 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                                   Container(
                                     height: .5,
                                     color: R.color.gray,
-                                    width: double.infinity,
                                     margin: EdgeInsets.only(bottom: 25),
                                   )
                                 ],
@@ -148,7 +148,6 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                         Container(
                           height: .5,
                           color: R.color.gray,
-                          width: double.infinity,
                         ),
                         TXProfileItemOptionWidget(
                           icon: Icons.visibility,
@@ -160,7 +159,17 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                         Container(
                           height: .5,
                           color: R.color.gray,
-                          width: double.infinity,
+                        ),
+                        TXProfileItemOptionWidget(
+                          icon: Icons.settings,
+                          optionName: R.string.settings,
+                          onOptionTap: () {
+                            NavigationUtils.push(context, SettingsPage());
+                          },
+                        ),
+                        Container(
+                          height: .5,
+                          color: R.color.gray,
                         ),
                         TXProfileItemOptionWidget(
                           icon: Icons.help_outline,
@@ -173,7 +182,6 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                         Container(
                           height: .5,
                           color: R.color.gray,
-                          width: double.infinity,
                         ),
                         TXProfileItemOptionWidget(
                           icon: Icons.exit_to_app,
@@ -185,7 +193,6 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                         Container(
                           height: .5,
                           color: R.color.gray,
-                          width: double.infinity,
                         ),
                       ],
                     ),
