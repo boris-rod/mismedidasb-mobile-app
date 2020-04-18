@@ -2,17 +2,17 @@ import 'package:mismedidasb/domain/session/session_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesManager {
-  final _accessToken = "access_token";
-  final _refreshToken = "refresh_token";
-  final _userEmail = "user_email";
-  final _password = "password";
-  final _userId = "user_id";
-  final _saveCredentials = "save_credentials";
-  final _activeAccount = "active_account";
-  final _dailyKCal = "daily_cal";
-  final _imc = "imc";
-  final _firstDateHealthResult = "first_date_health_result";
-  final _showDailyResume = "true";
+  final _accessToken = "access_token1";
+  final _refreshToken = "refresh_token1";
+  final _userEmail = "user_email1";
+  final _password = "password1";
+  final _userId = "user_id1";
+  final _saveCredentials = "save_credentials1";
+  final _activeAccount = "active_account1";
+  final _dailyKCal = "daily_cal1";
+  final _imc = "imc1";
+  final _firstDateHealthResult = "first_date_health_result1";
+  final _showDailyResume = "show_daily_resume";
 
   Future<bool> cleanAll() async {
 //    setUserEmail('');

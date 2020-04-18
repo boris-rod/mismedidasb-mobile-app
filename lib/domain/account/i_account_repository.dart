@@ -11,5 +11,5 @@ abstract class IAccountRepository {
 
   Future<Result<int>> recoverPassword(String email);
 
-  Future<Result<int>> changePassword(ChangePasswordModel changePasswordModel);
+  Future<Result<bool>> changePassword(ChangePasswordModel changePasswordModel);
 }

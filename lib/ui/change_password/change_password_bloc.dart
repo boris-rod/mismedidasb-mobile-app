@@ -1,4 +1,5 @@
 import 'package:mismedidasb/data/_shared_prefs.dart';
+import 'package:mismedidasb/data/api/remote/result.dart';
 import 'package:mismedidasb/domain/account/account_model.dart';
 import 'package:mismedidasb/domain/account/i_account_repository.dart';
 import 'package:mismedidasb/ui/_base/bloc_base.dart';
@@ -15,18 +16,9 @@ class ChangePasswordBloC extends BaseBloC
 
   ChangePasswordBloC(this._sharedPreferencesManager, this._iAccountRepository);
 
-  BehaviorSubject<String> _initController = new BehaviorSubject();
-
-  Stream<String> get initResult => _initController.stream;
-
   BehaviorSubject<bool> _changeController = new BehaviorSubject();
 
   Stream<bool> get changeResult => _changeController.stream;
-
-  void initView() async {
-    final currentPassword = await _sharedPreferencesManager.getPassword();
-    _initController.sinkAddSafe(currentPassword);
-  }
 
   void changePassword(
       String oldPass, String newPass, String confirmPass) async {
@@ -35,18 +27,16 @@ class ChangePasswordBloC extends BaseBloC
         oldPassword: oldPass,
         newPassword: newPass,
         confirmPassword: confirmPass));
-    if (res is int){
+    if (res is ResultSuccess<bool>) {
       await _sharedPreferencesManager.setPassword(newPass);
       _changeController.sinkAddSafe(true);
-    }
-    else
+    } else
       showErrorMessage(res);
     isLoading = false;
   }
 
   @override
   void dispose() {
-    _initController.close();
     _changeController.close();
     disposeLoadingBloC();
     disposeErrorHandlerBloC();

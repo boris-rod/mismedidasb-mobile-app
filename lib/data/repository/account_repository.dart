@@ -10,7 +10,7 @@ class AccountRepository extends BaseRepository implements IAccountRepository {
   AccountRepository(this._accountApi);
 
   @override
-  Future<Result<int>> changePassword(
+  Future<Result<bool>> changePassword(
       ChangePasswordModel changePasswordModel) async {
     try {
       final result = await _accountApi.changePassword(changePasswordModel);

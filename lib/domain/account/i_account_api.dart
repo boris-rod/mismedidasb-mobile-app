@@ -9,5 +9,5 @@ abstract class IAccountApi {
 
   Future<int> recoverPassword(String email);
 
-  Future<int> changePassword(ChangePasswordModel changePasswordModel);
+  Future<bool> changePassword(ChangePasswordModel changePasswordModel);
 }

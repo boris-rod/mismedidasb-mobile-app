@@ -16,13 +16,13 @@ class AccountApi extends BaseApi implements IAccountApi {
   AccountApi(this._iAccountConverter, this._networkHandler);
 
   @override
-  Future<int> changePassword(ChangePasswordModel changePasswordModel) async {
+  Future<bool> changePassword(ChangePasswordModel changePasswordModel) async {
     final body = jsonEncode(
         _iAccountConverter.toJsonChangePasswordModel(changePasswordModel));
     final res =
         await _networkHandler.post(path: Endpoint.change_password, body: body);
-    if (res.statusCode == RemoteConstants.code_success_created)
-      return RemoteConstants.code_success_created;
+    if (res.statusCode == RemoteConstants.code_success)
+      return true;
     else
       throw serverException(res);
   }

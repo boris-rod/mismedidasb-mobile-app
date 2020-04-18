@@ -178,7 +178,7 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                           icon: Icons.visibility,
                           optionName: R.string.changePassword,
                           onOptionTap: () {
-                            NavigationUtils.push(context, ChangePasswordPage());
+                            NavigationUtils.push(context, ChangePasswordPage(oldPassword: bloc.currentPassword,));
                           },
                         ),
                         Container(
@@ -192,18 +192,18 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                             NavigationUtils.push(context, SettingsPage());
                           },
                         ),
-                        Container(
-                          height: .5,
-                          color: R.color.gray,
-                        ),
-                        TXProfileItemOptionWidget(
-                          icon: Icons.help_outline,
-                          optionName: R.string.help,
-                          onOptionTap: () async {
+//                        Container(
+//                          height: .5,
+//                          color: R.color.gray,
+//                        ),
+//                        TXProfileItemOptionWidget(
+//                          icon: Icons.help_outline,
+//                          optionName: R.string.help,
+//                          onOptionTap: () async {
 //                            await MainManager.sendEmail(
 //                                recipient: "borisrod@gmail.com");
-                          },
-                        ),
+//                          },
+//                        ),
                         Container(
                           height: .5,
                           color: R.color.gray,
