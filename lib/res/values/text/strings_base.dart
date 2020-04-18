@@ -149,4 +149,10 @@ abstract class StringsBase implements WidgetsLocalizations {
   String get gallery;
 
   String get help;
+
+  String get copyPlan;
+
+  String get editPlan;
+
+  String get resumePlan;
 }

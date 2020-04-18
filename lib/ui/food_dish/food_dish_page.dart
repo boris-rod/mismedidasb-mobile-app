@@ -1,4 +1,5 @@
 import 'package:charts_flutter/flutter.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rounded_progress_bar/flutter_rounded_progress_bar.dart';
 import 'package:flutter_rounded_progress_bar/rounded_progress_bar_style.dart';
@@ -12,6 +13,7 @@ import 'package:mismedidasb/ui/_tx_widget/tx_action_chip_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_bottom_sheet.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_combo_progress_bar_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_cupertino_dialog_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_icon_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_main_app_bar_widget.dart';
@@ -56,6 +58,24 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
       NavigationUtils.pop(context);
   }
 
+  void _showDialogConfirmCopyPlan({BuildContext context, Function onOkAction}) {
+    showCupertinoDialog<String>(
+      context: context,
+      builder: (BuildContext context) => TXCupertinoDialogWidget(
+        title: "Advertencia",
+        content:
+            "El día seleccionado contiene datos de un plan. Si decide continuar se reemplazará el plan para ese día.",
+        onOK: () {
+          Navigator.pop(context, R.string.ok);
+          onOkAction();
+        },
+        onCancel: () {
+          Navigator.pop(context, R.string.cancel);
+        },
+      ),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -63,6 +83,16 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
     bloc.pageResult.listen((onData) {
       _pageController.animateToPage(onData,
           duration: Duration(milliseconds: 300), curve: Curves.linear);
+    });
+
+    bloc.copyPlanResult.listen((onData) {
+      if (onData is DateTime) {
+        _showDialogConfirmCopyPlan(
+            context: context,
+            onOkAction: () {
+              bloc.copyPlan(true, onData);
+            });
+      }
     });
     bloc.loadInitialData();
   }
@@ -167,7 +197,6 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                                       : _getCalendarView(context, []);
                                 },
                                 itemCount: 2,
-                                physics: NeverScrollableScrollPhysics(),
                                 controller: _pageController,
                               ),
                               color: R.color.gray_light,
@@ -186,7 +215,8 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
     );
   }
 
-  Widget _showResume(BuildContext context, DailyFoodModel dailyModel, {bool showConfirm = true}) {
+  Widget _showResume(BuildContext context, DailyFoodModel dailyModel,
+      {bool showConfirm = true}) {
     return StreamBuilder<bool>(
       stream: bloc.showResumeResult,
       initialData: true,
@@ -222,26 +252,28 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
             physics: BouncingScrollPhysics(),
           ),
         ),
-        Container(
-          width: double.infinity,
-          padding: EdgeInsets.symmetric(vertical: 5, horizontal: 50),
-          child: TXButtonWidget(
-              onPressed: () {
-                if (dailyModel.hasFoods == null)
-                  Fluttertoast.showToast(msg: R.string.emptyFoodList);
-                else {
-                  if (bloc.showResume)
-                    showTXModalBottomSheet(
-                        context: context,
-                        builder: (context) {
-                          return _showResume(context, dailyModel);
-                        });
-                  else
-                    bloc.saveDailyPlan();
-                }
-              },
-              title: R.string.save),
-        )
+        dailyModel.synced
+            ? Container()
+            : Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(vertical: 5, horizontal: 50),
+                child: TXButtonWidget(
+                    onPressed: () {
+                      if (dailyModel.hasFoods == null)
+                        Fluttertoast.showToast(msg: R.string.emptyFoodList);
+                      else {
+                        if (bloc.showResume)
+                          showTXModalBottomSheet(
+                              context: context,
+                              builder: (context) {
+                                return _showResume(context, dailyModel);
+                              });
+                        else
+                          bloc.saveDailyPlan();
+                      }
+                    },
+                    title: R.string.save),
+              )
       ],
     );
   }
@@ -363,6 +395,7 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                   : Container()
             ],
           ),
+          color: Colors.white,
         ),
       );
       list.add(w);
@@ -421,6 +454,10 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
 
   Widget _getCalendarView(
       BuildContext context, List<DailyFoodModel> modelList) {
+    if(bloc.isCopying){
+      _calendarController.setSelectedDay(bloc.selectedDate);
+      bloc.isCopying = false;
+    }
     return SingleChildScrollView(
       child: Column(
         children: <Widget>[
@@ -618,7 +655,7 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                         alignment: WrapAlignment.spaceBetween,
                         children: <Widget>[
                           TXTextLinkWidget(
-                            title: "Copiar",
+                            title: R.string.copyPlan,
                             onTap: snapshot.data.hasFoods != null
                                 ? () {
                                     _selectDate(context);
@@ -629,21 +666,22 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                                 : R.color.gray,
                           ),
                           TXTextLinkWidget(
-                            title: "Editar",
+                            title: R.string.editPlan,
                             onTap: () {
                               bloc.changePage(0);
                             },
                             textColor: R.color.accent_color,
                           ),
                           TXTextLinkWidget(
-                            title: "Resumen",
+                            title: R.string.resumePlan,
                             onTap: snapshot.data.hasFoods != null
                                 ? () {
                                     showTXModalBottomSheet(
                                         context: context,
                                         builder: (context) {
                                           return _showResume(
-                                              context, snapshot.data, showConfirm: false);
+                                              context, snapshot.data,
+                                              showConfirm: false);
                                         });
                                   }
                                 : null,
@@ -704,7 +742,7 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
               CalendarUtils.compare(date, bloc.lastDate) <= 0);
         });
     if (picked != null && picked != bloc.selectedDate) {
-      bloc.saveDailyPlan();
+      bloc.copyPlan(false, picked);
     }
   }
 

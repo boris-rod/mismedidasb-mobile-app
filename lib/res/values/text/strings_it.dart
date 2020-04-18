@@ -230,4 +230,13 @@ class StringsIt implements StringsBase {
 
   @override
   String get help => "Help";
+
+  @override
+  String get copyPlan => "Copy";
+
+  @override
+  String get editPlan => "Edit";
+
+  @override
+  String get resumePlan => "Resumen";
 }

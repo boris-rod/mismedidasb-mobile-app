@@ -48,6 +48,10 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   Stream<DailyFoodModel> get calendarOptionsResult =>
       _calendarOptionsController.stream;
 
+  BehaviorSubject<DateTime> _copyPlanController = new BehaviorSubject();
+
+  Stream<DateTime> get copyPlanResult => _copyPlanController.stream;
+
   bool tagsLoaded = false;
   bool foodsLoaded = false;
   bool showResume = false;
@@ -57,6 +61,7 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   DateTime firstDate = DateTime.now();
   DateTime lastDate = DateTime.now();
   DateTime firstDateHealthResult = DateTime.now();
+  bool isCopying = false;
 
   void loadInitialData() async {
     dailyFoodModelMap = {};
@@ -226,6 +231,47 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     _dailyFoodController.sink.add(rootModel);
   }
 
+  void copyPlan(bool forceCopy, DateTime newSelectedDate) async {
+    final rootModel = await dailyFoodResult.first;
+    if (rootModel.hasFoods != null) {
+      final key = dailyFoodModelMap.keys.firstWhere(
+          (d) => CalendarUtils.isSameDay(d, newSelectedDate), orElse: () {
+        return null;
+      });
+      DailyFoodModel daily = dailyFoodModelMap[key];
+      if (forceCopy) {
+        daily.synced = false;
+        daily.dailyActivityFoodModelList[0].foods = rootModel.dailyActivityFoodModelList[0].foods;
+        daily.dailyActivityFoodModelList[1].foods = rootModel.dailyActivityFoodModelList[1].foods;
+        daily.dailyActivityFoodModelList[2].foods = rootModel.dailyActivityFoodModelList[2].foods;
+        daily.dailyActivityFoodModelList[3].foods = rootModel.dailyActivityFoodModelList[3].foods;
+        daily.dailyActivityFoodModelList[4].foods = rootModel.dailyActivityFoodModelList[4].foods;
+
+        await _iDishRepository.savePlanLocal(daily);
+
+        isCopying = true;
+        selectedDate = newSelectedDate;
+        loadDailyPlanData();
+
+      } else if (daily.hasFoods != null) {
+        _copyPlanController.sinkAddSafe(newSelectedDate);
+      } else {
+        daily.synced = false;
+        daily.dailyActivityFoodModelList[0].foods = rootModel.dailyActivityFoodModelList[0].foods;
+        daily.dailyActivityFoodModelList[1].foods = rootModel.dailyActivityFoodModelList[1].foods;
+        daily.dailyActivityFoodModelList[2].foods = rootModel.dailyActivityFoodModelList[2].foods;
+        daily.dailyActivityFoodModelList[3].foods = rootModel.dailyActivityFoodModelList[3].foods;
+        daily.dailyActivityFoodModelList[4].foods = rootModel.dailyActivityFoodModelList[4].foods;
+
+        await _iDishRepository.savePlanLocal(daily);
+
+        isCopying = true;
+        selectedDate = newSelectedDate;
+        loadDailyPlanData();
+      }
+    }
+  }
+
   void saveDailyPlan() async {
     isLoading = true;
     final dishesRes = await _iDishRepository.syncData();
@@ -319,6 +365,7 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     _showResumeController.close();
     _calendarPageController.close();
     _calendarOptionsController.close();
+    _copyPlanController.close();
     _pageController.close();
     disposeErrorHandlerBloC();
     disposeLoadingBloC();

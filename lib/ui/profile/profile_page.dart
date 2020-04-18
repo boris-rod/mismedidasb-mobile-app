@@ -225,7 +225,7 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                         width: 5,
                       ),
                       TXTextWidget(
-                        text: 'Gallery',
+                        text: R.string.gallery,
                         color: R.color.primary_color,
                       ),
                     ],
@@ -248,7 +248,7 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                         width: 5,
                       ),
                       TXTextWidget(
-                        text: 'Camera',
+                        text: R.string.camera,
                         color: R.color.primary_color,
                       ),
                     ],
