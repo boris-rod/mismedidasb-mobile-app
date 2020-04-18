@@ -10,5 +10,5 @@ class AppColor {
   final gray = Color(0xFF97A0AE);
   final gray_light = Color(0xFFF6F7FB);
 
-  final dialog_background = Color(0xFFFCFCFC);
+  final dialog_background = Color(0xc8b4b4b4);
 }

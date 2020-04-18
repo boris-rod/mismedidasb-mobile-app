@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -79,13 +80,37 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                               Column(
                                 children: <Widget>[
                                   Expanded(
-                                    child: Container(
-                                      child: TXNetworkImage(
-                                        width: double.infinity,
-                                        height: double.infinity,
-                                        imageUrl: user.avatar,
-                                        placeholderImage: R.image.logo_blue,
-                                      ),
+                                    child: Stack(
+                                      children: <Widget>[
+                                        Container(
+                                          child: Stack(
+                                            children: <Widget>[
+                                              TXNetworkImage(
+                                                width: double.infinity,
+                                                height: double.infinity,
+                                                imageUrl: user.avatar,
+                                                placeholderImage:
+                                                    R.image.logo_blue,
+                                                boxFitImage: BoxFit.cover,
+                                              ),
+                                              Container(
+                                                width: double.infinity,
+                                                height: double.infinity,
+                                                color:
+                                                    R.color.dialog_background,
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        Container(
+                                          child: TXNetworkImage(
+                                            width: double.infinity,
+                                            height: double.infinity,
+                                            imageUrl: user.avatar,
+                                            placeholderImage: R.image.logo_blue,
+                                          ),
+                                        )
+                                      ],
                                     ),
                                   ),
                                   Container(
