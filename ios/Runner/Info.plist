@@ -54,5 +54,7 @@
 	<true/>
 	<key>FirebaseAppDelegateProxyEnabled</key>
 	<false/>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Mis medidas solicita acceso al calendario para apoyar la gestión de los platos</string>
 </dict>
 </plist>

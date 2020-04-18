@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_apns/apns.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mismedidasb/data/api/remote/network_handler.dart';
 import 'package:mismedidasb/fcm/fcm_message_model.dart';

@@ -33,7 +33,6 @@ import 'package:mismedidasb/ui/food_dish/tx_ideal_pie_chart_food_widget.dart';
 import 'package:mismedidasb/ui/food_dish/tx_instrucctions_widget.dart';
 import 'package:mismedidasb/ui/home/home_page.dart';
 import 'package:mismedidasb/utils/calendar_utils.dart';
-import 'package:mp_chart/mp/chart/pie_chart.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:mismedidasb/utils/extensions.dart';
 
