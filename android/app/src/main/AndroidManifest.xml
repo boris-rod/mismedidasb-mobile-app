@@ -34,7 +34,7 @@
 
         <meta-data
                 android:name="com.google.firebase.messaging.default_notification_icon"
-                android:resource="@drawable/dishes_home" />
+                android:resource="@drawable/logo" />
 
         <meta-data
             android:name="flutterEmbedding"

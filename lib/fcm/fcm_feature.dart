@@ -92,15 +92,17 @@ class FCMFeature extends IFCMFeature {
 //    connector.configure(onBackgroundMessage: (map) async {
 //      print(map.toString());
 //    });
-
-    _fireBaseMessaging.requestNotificationPermissions(
-        const IosNotificationSettings(
-            sound: true, badge: true, alert: true, provisional: true));
     _fireBaseMessaging.configure(
       onLaunch: _processMessageFromNotification,
       onResume: _processMessageFromNotification,
       onMessage: _processMessageForeground,
     );
+
+    _fireBaseMessaging.requestNotificationPermissions(
+        const IosNotificationSettings(
+            sound: true, badge: true, alert: true, provisional: true));
+    _fireBaseMessaging.onIosSettingsRegistered
+        .listen((IosNotificationSettings iosNotificationSettings) {});
   }
 
   Future<dynamic> _processMessageFromNotification(
@@ -108,9 +110,9 @@ class FCMFeature extends IFCMFeature {
     print('FCM Message Background');
 //    Title = "Recordatorio",
 //    Body = "Recuerde planificar lo que va a comer mañana."
-    print(message);
-    Fluttertoast.showToast(
-        msg: message.toString(), toastLength: Toast.LENGTH_SHORT);
+//    print(message);
+//    Fluttertoast.showToast(
+//        msg: message.toString(), toastLength: Toast.LENGTH_SHORT);
 //    final fcmMessage = FCMJsonParser.parseJson(message);
 //    if (fcmMessage.todoId != null) {
 //      onMessageActionBackgroundSubject.sink.add(fcmMessage);
