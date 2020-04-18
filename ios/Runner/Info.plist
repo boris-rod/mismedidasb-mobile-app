@@ -22,10 +22,6 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSCameraUsageDescription</key>
-	<string>Mis medidas solicita acceso a la cámara para que pueda tomar fotos que le permitan actualizar su foto de perfil.</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Mis Medidas solicita acceso a las fotos para que pueda escoger su foto de perfil.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
@@ -56,5 +52,23 @@
 	<false/>
 	<key>NSCalendarsUsageDescription</key>
 	<string>Mis medidas solicita acceso al calendario para apoyar la gestión de los platos</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Mis Medidas solicita acceso a las fotos para que pueda escoger su foto de perfil.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Mis medidas solicita acceso a la cámara para que pueda tomar fotos que le permitan actualizar su foto de perfil.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Mis medidas solicita acceso a los datos de su GPS para apoyar el correcto funcionamiento.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Mis medidas solicita acceso a los datos de su GPS para apoyar el correcto funcionamiento.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Mis medidas solicita acceso al reconocimiento de voz para apoyar el correcto funcionamiento.</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Mis medidas solicita acceso al sensor de movimiento para apoyar el correcto funcionamiento.</string>
+	<key>kTCCServiceMediaLibrary</key>
+	<string>Mis medidas solicita acceso a los archivos de audio para apoyar el correcto funcionamiento.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Mis medidas solicita acceso al sensor de reconocimiento facial para apoyar el correcto funcionamiento.</string>
+	<key>NSContactsUsageDescription</key>
+	<string>Mis medidas solicita acceso a los datos de contactos para apoyar el correcto funcionamiento.</string>
 </dict>
 </plist>

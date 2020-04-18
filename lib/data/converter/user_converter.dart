@@ -6,20 +6,23 @@ class UserConverter implements IUserConverter {
   @override
   UserModel fromJson(Map<String, dynamic> json) {
     return UserModel(
-      id: json[RemoteConstants.id],
-      fullName: json[RemoteConstants.full_name],
-      email: json[RemoteConstants.email],
-      phone: json[RemoteConstants.phone],
-      statusId: json[RemoteConstants.status_id],
-      status: json[RemoteConstants.status],
-      avatar: json[RemoteConstants.avatar],
-      avatarMimeType: json[RemoteConstants.avatar_mime_type],
-      role: json[RemoteConstants.role],
-      roleId: json[RemoteConstants.role_id],
-      dailyKCal: json[RemoteConstants.daily_kcal],
-      firstDateHealthResult: DateTime.parse(json[RemoteConstants.first_date_health_result]).toLocal(),
-      imc: json[RemoteConstants.imc]
-    );
+        id: json[RemoteConstants.id],
+        fullName: json[RemoteConstants.full_name],
+        email: json[RemoteConstants.email],
+        phone: json[RemoteConstants.phone],
+        statusId: json[RemoteConstants.status_id],
+        status: json[RemoteConstants.status],
+        avatar: json[RemoteConstants.avatar],
+        avatarMimeType: json[RemoteConstants.avatar_mime_type],
+        role: json[RemoteConstants.role],
+        roleId: json[RemoteConstants.role_id],
+        dailyKCal: json[RemoteConstants.daily_kcal],
+        firstDateHealthResult:
+            json[RemoteConstants.first_date_health_result] != null
+                ? DateTime.parse(json[RemoteConstants.first_date_health_result])
+                    .toLocal()
+                : DateTime.now(),
+        imc: json[RemoteConstants.imc]);
   }
 
   @override
