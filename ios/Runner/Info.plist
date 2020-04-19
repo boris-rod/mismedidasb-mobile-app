@@ -70,7 +70,7 @@
 	<string>Mis medidas solicita acceso al sensor de reconocimiento facial para apoyar el correcto funcionamiento.</string>
 	<key>NSContactsUsageDescription</key>
 	<string>Mis medidas solicita acceso a los datos de contactos para apoyar el correcto funcionamiento.</string>
-	<key>NSAppleMusicUsageDescription </key>
-	<string>Mis medidas solicita acceso a los archivos de audio para apoyar el correcto funcionamiento.</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Mis Medidas solicita acceso a los archivos media para que pueda escoger su foto de perfil.</string>
 </dict>
 </plist>
