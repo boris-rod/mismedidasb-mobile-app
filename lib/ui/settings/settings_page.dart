@@ -28,7 +28,7 @@ class _SettingsState extends StateWithBloC<SettingsPage, SettingsBloC> {
       children: <Widget>[
         TXMainAppBarWidget(
           leading: TXIconButtonWidget(
-            icon: Icon(Icons.close),
+            icon: Icon(Icons.arrow_back),
             onPressed: () {
               NavigationUtils.pop(context);
             },

@@ -96,7 +96,7 @@ class DailyActivityFoodModel {
 
   String get name => id == 0
       ? R.string.breakfast
-      : (id == 3
+      : (id == 2
           ? R.string.lunch
           : (id == 4 ? R.string.dinner : R.string.snack));
 

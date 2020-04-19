@@ -89,7 +89,16 @@ class FoodBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
     if (currentQuery.isNotEmpty)
       foodsAll.forEach((f) {
-        if (f.name.trim().toLowerCase().contains(currentQuery))
+        String food = f.name.trim().toLowerCase();
+        String q = currentQuery.trim().toLowerCase();
+
+        food  = food.replaceAll(RegExp("[á]"), "a");
+        food  = food.replaceAll(RegExp("[é]"), "e");
+        food  = food.replaceAll(RegExp("[í]"), "i");
+        food  = food.replaceAll(RegExp("[ó]"), "o");
+        food  = food.replaceAll(RegExp("[üú]"), "u");
+
+        if (food.contains(q))
           resultListQuery.add(f);
       });
     else

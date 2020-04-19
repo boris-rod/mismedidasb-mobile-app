@@ -65,7 +65,7 @@ class _MeasureHealthState
       children: <Widget>[
         TXMainAppBarWidget(
           leading: TXIconButtonWidget(
-            icon: Icon(Icons.close),
+            icon: Icon(Icons.arrow_back),
             onPressed: () {
               NavigationUtils.pop(context);
             },
@@ -99,7 +99,10 @@ class _MeasureHealthState
                           ),
                           TXTextWidget(
                             textAlign: TextAlign.center,
-                            text: snapshot.data.isNotEmpty ? snapshot.data[bloc.currentPage].bottomTip() : "",
+                            text: snapshot.data.isNotEmpty
+                                ? snapshot.data[bloc.currentPage - 1]
+                                    .bottomTip()
+                                : "",
                             size: 12,
                             color: R.color.accent_color,
                           )

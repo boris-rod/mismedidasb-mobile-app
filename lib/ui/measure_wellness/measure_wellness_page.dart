@@ -58,7 +58,7 @@ class _MeasureWellnessState
       children: <Widget>[
         TXMainAppBarWidget(
           leading: TXIconButtonWidget(
-            icon: Icon(Icons.close),
+            icon: Icon(Icons.arrow_back),
             onPressed: () {
               NavigationUtils.pop(context);
             },

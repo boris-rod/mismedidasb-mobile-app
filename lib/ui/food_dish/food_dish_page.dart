@@ -107,7 +107,7 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
           TXMainAppBarWidget(
             title: R.string.foodDishes,
             leading: TXIconButtonWidget(
-              icon: Icon(Icons.close),
+              icon: Icon(Icons.arrow_back),
               onPressed: () {
                 _navBack();
               },
@@ -435,7 +435,7 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
             bloc.setFoodList(dailyActivityFoodModel);
           },
           icon: Icon(
-            Icons.close,
+            Icons.arrow_back,
             color: R.color.primary_color,
           ),
         ),
