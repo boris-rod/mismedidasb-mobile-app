@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/bloc_state.dart';
 import 'package:mismedidasb/ui/_base/navigation_utils.dart';
@@ -35,8 +36,10 @@ class _ChangePasswordState
     super.initState();
     oldTextController.text = widget.oldPassword;
     bloc.changeResult.listen((onData){
-      if(onData == true)
+      if(onData == true){
+        Fluttertoast.showToast(msg: R.string.changePasswordSuccess);
         NavigationUtils.pop(context);
+      }
     });
   }
 
@@ -127,8 +130,8 @@ class _ChangePasswordState
     showCupertinoDialog<String>(
       context: context,
       builder: (BuildContext context) => TXCupertinoDialogWidget(
-        title: "Cambiar contraseña",
-        content: "Su contraseña sera actualizada.",
+        title: R.string.changePassword,
+        content: R.string.changePasswordContent,
         onOK: () {
           bloc.changePassword(oldTextController.text,
               newTextController.text, confirmTextController.text);

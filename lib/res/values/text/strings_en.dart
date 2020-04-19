@@ -251,4 +251,10 @@ class StringsEn implements StringsBase {
 
   @override
   String get warningTitle => "Advertencia";
+
+  @override
+  String get changePasswordContent => "Su contraseña será actualizada.";
+
+  @override
+  String get changePasswordSuccess => "Su contraseña se ha actualizado satisfactoriamente.";
 }

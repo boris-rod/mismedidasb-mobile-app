@@ -163,4 +163,8 @@ abstract class StringsBase implements WidgetsLocalizations {
   String get settings;
 
   String get showResumePlanBeforeSave;
+
+  String get changePasswordContent;
+
+  String get changePasswordSuccess;
 }
