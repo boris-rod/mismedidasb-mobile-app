@@ -91,17 +91,12 @@ class FCMFeature extends IFCMFeature {
 //    connector.configure(onBackgroundMessage: (map) async {
 //      print(map.toString());
 //    });
+    _fireBaseMessaging.requestNotificationPermissions();
     _fireBaseMessaging.configure(
       onLaunch: _processMessageFromNotification,
       onResume: _processMessageFromNotification,
       onMessage: _processMessageForeground,
     );
-
-    _fireBaseMessaging.requestNotificationPermissions(
-        const IosNotificationSettings(
-            sound: true, badge: true, alert: true, provisional: true));
-    _fireBaseMessaging.onIosSettingsRegistered
-        .listen((IosNotificationSettings iosNotificationSettings) {});
   }
 
   Future<dynamic> _processMessageFromNotification(

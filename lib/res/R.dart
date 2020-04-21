@@ -1,3 +1,4 @@
+import 'package:mismedidasb/di/injector.dart';
 import 'package:mismedidasb/res/values/colors.dart';
 import 'package:mismedidasb/res/values/dimens.dart';
 import 'package:mismedidasb/res/values/images.dart';
@@ -8,5 +9,6 @@ class R {
   static StringsBase get string => CustomLocalizationsDelegate.stringsBase;
   static final AppImage image = AppImage();
   static final AppDimens dim = AppDimens();
-  static final AppColor color = AppColor();
+  static final AppColor color =
+      AppColor(isDarkTheme: Injector.instance.darkTheme);
 }

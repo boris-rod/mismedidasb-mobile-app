@@ -90,6 +90,7 @@ import 'package:mismedidasb/utils/logger.dart';
 class Injector {
   ///Singleton instance
   static Injector instance;
+  bool darkTheme = false;
 
   Container container = Container();
 
@@ -206,13 +207,13 @@ class Injector {
     container.registerSingleton((c) => AppDatabase.instance);
 
     container.registerSingleton<ICommonDao, CommonDao>(
-            (c) => CommonDao(container.resolve()));
+        (c) => CommonDao(container.resolve()));
 
     container.registerSingleton<IDishDao, DishDao>(
         (c) => DishDao(container.resolve(), container.resolve()));
 
     container.registerSingleton<IPersonalDataDao, PersonalDataDao>(
-            (c) => PersonalDataDao(container.resolve(), container.resolve()));
+        (c) => PersonalDataDao(container.resolve(), container.resolve()));
   }
 
   _registerRepositoryLayer() {
@@ -222,8 +223,9 @@ class Injector {
     container.registerSingleton<ICommonRepository, CommonRepository>(
         (c) => CommonRepository(container.resolve()));
 
-    container.registerSingleton<ISessionRepository, SessionRepository>(
-        (c) => SessionRepository(container.resolve(), container.resolve(), container.resolve()));
+    container.registerSingleton<ISessionRepository, SessionRepository>((c) =>
+        SessionRepository(
+            container.resolve(), container.resolve(), container.resolve()));
 
     container.registerSingleton<IUserRepository, UserRepository>(
         (c) => UserRepository(container.resolve()));
@@ -235,9 +237,10 @@ class Injector {
         .registerSingleton<IHealthConceptRepository, HealthConceptRepository>(
             (c) => HealthConceptRepository(container.resolve()));
 
-    container
-        .registerSingleton<IPersonalDataRepository, PersonalDataRepository>(
-            (c) => PersonalDataRepository(container.resolve(), container.resolve()));
+    container.registerSingleton<IPersonalDataRepository,
+            PersonalDataRepository>(
+        (c) =>
+            PersonalDataRepository(container.resolve(), container.resolve()));
 
     container.registerSingleton<IPollRepository, PollRepository>(
         (c) => PollRepository(container.resolve()));
@@ -245,22 +248,25 @@ class Injector {
     container.registerSingleton<IQuestionRepository, QuestionRepository>(
         (c) => QuestionRepository(container.resolve()));
 
-    container.registerSingleton<IDishRepository, DishRepository>(
-        (c) => DishRepository(container.resolve(), container.resolve(), container.resolve()));
+    container.registerSingleton<IDishRepository, DishRepository>((c) =>
+        DishRepository(
+            container.resolve(), container.resolve(), container.resolve()));
   }
 
   _registerBloCs() {
     container.registerFactory(
         (c) => SplashBloC(container.resolve(), container.resolve()));
-    container.registerFactory((c) => LoginBloC(
-        container.resolve(), container.resolve(), container.resolve(), container.resolve()));
+    container.registerFactory((c) => LoginBloC(container.resolve(),
+        container.resolve(), container.resolve(), container.resolve()));
     container.registerFactory((c) => RecoverPasswordBloC(container.resolve()));
     container.registerFactory((c) => RegisterBloC(
         container.resolve(), container.resolve(), container.resolve()));
-    container.registerFactory((c) => HomeBloC(container.resolve(), container.resolve(), container.resolve()));
+    container.registerFactory((c) => HomeBloC(
+        container.resolve(), container.resolve(), container.resolve()));
     container.registerFactory((c) => HabitBloC(container.resolve()));
     container.registerFactory((c) => FoodCravingBloC(container.resolve()));
-    container.registerFactory((c) => MeasureHealthBloC(container.resolve(),container.resolve(), container.resolve()));
+    container.registerFactory((c) => MeasureHealthBloC(
+        container.resolve(), container.resolve(), container.resolve()));
     container.registerFactory((c) => MeasureValueBloC(container.resolve()));
     container.registerFactory((c) => MeasureWellnessBloC(container.resolve()));
     container.registerFactory((c) => FoodDishBloC(c.resolve(), c.resolve()));
@@ -270,7 +276,6 @@ class Injector {
     container.registerFactory((c) => ProfileBloC(container.resolve(),
         container.resolve(), container.resolve(), container.resolve()));
     container.registerFactory((c) => SettingsBloC(c.resolve()));
-
   }
 
   _registerCommon() {
@@ -280,7 +285,7 @@ class Injector {
       (c) => NetworkHandler(container.resolve(), container.resolve()),
     );
     container.registerSingleton<IFCMFeature, FCMFeature>(
-          (c) => FCMFeature(
+      (c) => FCMFeature(
         c.resolve(),
         c.resolve(),
       ),
