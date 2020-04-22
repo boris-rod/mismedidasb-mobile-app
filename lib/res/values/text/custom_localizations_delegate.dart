@@ -7,14 +7,13 @@ import 'package:mismedidasb/res/values/text/strings_es.dart';
 import 'package:mismedidasb/res/values/text/strings_it.dart';
 
 class CustomLocalizationsDelegate extends LocalizationsDelegate<StringsBase> {
-
   static StringsBase stringsBase = StringsEs();
 
   List<Locale> get supportedLocales {
     return const <Locale>[
-      Locale("es", "ES"),
-      Locale("en", "US"),
-      Locale("it", "IT"),
+      Locale("es", ""),
+      Locale("en", ""),
+      Locale("it", ""),
     ];
   }
 
@@ -67,25 +66,10 @@ class CustomLocalizationsDelegate extends LocalizationsDelegate<StringsBase> {
 
   @override
   bool isSupported(Locale locale) {
-    if (locale != null) {
-      for (Locale supportedLocale in supportedLocales) {
-        // Language must always match both locales.
-        if (supportedLocale.languageCode != locale.languageCode) {
-          continue;
-        }
-
-        // If country code matches, return this locale.
-        if (supportedLocale.countryCode == locale.countryCode) {
-          return true;
-        }
-
-        if (supportedLocale.countryCode == null ||
-            supportedLocale.countryCode.isEmpty) {
-          return true;
-        }
-      }
-    }
-    return false;
+    return supportedLocales
+        .map((l) => l.languageCode)
+        .toList()
+        .contains(locale.languageCode);
   }
 
   @override
