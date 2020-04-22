@@ -1,13 +1,8 @@
 import 'dart:ui';
 
+import 'package:mismedidasb/domain/setting/setting_model.dart';
 import 'package:rxdart/subjects.dart';
 
-class GlobalBloC {
-  PublishSubject<Locale> _languageController = PublishSubject();
+PublishSubject<SettingModel> languageCodeController = PublishSubject();
 
-  Stream<Locale> get languageResult => _languageController.stream;
-
-  void disposeControllers() {
-    _languageController.close();
-  }
-}
+Stream<SettingModel> get languageCodeResult => languageCodeController.stream;

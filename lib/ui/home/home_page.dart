@@ -52,6 +52,8 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
                   if (res is profileAction) {
                     if (res == profileAction.logout) {
                       NavigationUtils.pushReplacement(context, LoginPage());
+                    }else if(res == profileAction.languageCodeChanged){
+                      bloc.loadHomeData();
                     }
                   }
                 },

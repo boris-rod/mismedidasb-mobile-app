@@ -30,7 +30,9 @@ class ProfileBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
   Stream<UserModel> get userResult => _userController.stream;
 
+  bool mustReload = false;
   String currentPassword = "";
+
   void getProfile() async {
     currentPassword = await _sharedPreferencesManager.getPassword();
     isLoading = true;

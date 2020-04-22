@@ -6,7 +6,7 @@ class StringsEn implements StringsBase {
   @override
   TextDirection get textDirection => TextDirection.ltr;
 
-  String get appName => "My Measures Wellness";
+  String get appName => "My Wellness Measures";
 
   @override
   String get foodDishes => "My food dishes";
@@ -100,7 +100,7 @@ class StringsEn implements StringsBase {
   String get profile => "Profile";
 
   @override
-  String get logout => "Logout";
+  String get logout => "Sign off";
 
   @override
   String get changePassword => "Change password";
@@ -241,10 +241,10 @@ class StringsEn implements StringsBase {
 
 
   @override
-  String get settings => "Configuraciones";
+  String get settings => "Settings";
 
   @override
-  String get showResumePlanBeforeSave => "Mostrar resumen antes de salvar";
+  String get showResumePlanBeforeSave => "Show summary before saving";
 
   @override
   String get warningReplacePlanContent => "El día seleccionado contiene datos de un plan. Si decide continuar se reemplazará el plan para ese día.";
@@ -257,4 +257,16 @@ class StringsEn implements StringsBase {
 
   @override
   String get changePasswordSuccess => "Su contraseña se ha actualizado satisfactoriamente.";
+
+  @override
+  String get english => "English";
+
+  @override
+  String get italian => "Italian";
+
+  @override
+  String get preferredLanguage => "Preferred language";
+
+  @override
+  String get spanish => "Spanish";
 }

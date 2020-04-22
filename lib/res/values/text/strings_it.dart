@@ -6,10 +6,10 @@ class StringsIt implements StringsBase {
   @override
   TextDirection get textDirection => TextDirection.ltr;
 
-  String get appName => "Mis Medidas Bienestar";
+  String get appName => "Le mie misure di benessere";
 
   @override
-  String get foodDishes => "Mis platos";
+  String get foodDishes => "I miei piatti";
 
   @override
   String get myMeasureHealth => "Mis medidas de salud";
@@ -98,22 +98,22 @@ class StringsIt implements StringsBase {
       "Revise su correo para obtener el código de activación.";
 
   @override
-  String get profile => "Perfil";
+  String get profile => "Profilo";
 
   @override
-  String get logout => "Salir";
+  String get logout => "Esci";
 
   @override
-  String get changePassword => "Cambiar contraseña";
+  String get changePassword => "Cambia password";
 
   @override
-  String get confirmPassword => "Confirmar contraseña";
+  String get confirmPassword => "Conferma password";
 
   @override
-  String get newPassword => "Nueva contraseña";
+  String get newPassword => "Nuova password";
 
   @override
-  String get oldPassword => "Contraseña anterior";
+  String get oldPassword => "Vecchia password";
 
   @override
   String get cancel => "Cancelar";
@@ -241,10 +241,10 @@ class StringsIt implements StringsBase {
   String get resumePlan => "Resumen";
 
   @override
-  String get settings => "Configuraciones";
+  String get settings => "Impostazioni";
 
   @override
-  String get showResumePlanBeforeSave => "Mostrar resumen antes de salvar";
+  String get showResumePlanBeforeSave => "Mostra il riepilogo prima di salvare";
 
   @override
   String get warningReplacePlanContent => "El día seleccionado contiene datos de un plan. Si decide continuar se reemplazará el plan para ese día.";
@@ -257,4 +257,16 @@ class StringsIt implements StringsBase {
 
   @override
   String get changePasswordSuccess => "Su contraseña se ha actualizado satisfactoriamente.";
+
+  @override
+  String get english => "Inglese";
+
+  @override
+  String get italian => "Italiano";
+
+  @override
+  String get preferredLanguage => "Lingua preferita";
+
+  @override
+  String get spanish => "Español";
 }

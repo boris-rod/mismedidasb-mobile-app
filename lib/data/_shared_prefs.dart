@@ -13,6 +13,7 @@ class SharedPreferencesManager {
   final _imc = "imc1";
   final _firstDateHealthResult = "first_date_health_result1";
   final _showDailyResume = "show_daily_resume";
+  final _languageCode = "language_code";
 
   Future<bool> cleanAll() async {
 //    setUserEmail('');
@@ -129,6 +130,21 @@ class SharedPreferencesManager {
   Future<bool> setUserEmail(String newValue) async {
     var res =
         (await SharedPreferences.getInstance()).setString(_userEmail, newValue);
+    return res;
+  }
+
+  Future<String> getLanguageCode() async {
+    var value = (await SharedPreferences.getInstance()).getString(_languageCode);
+    if (value == null) {
+      value = '';
+      setLanguageCode(value);
+    }
+    return value;
+  }
+
+  Future<bool> setLanguageCode(String newValue) async {
+    var res =
+    (await SharedPreferences.getInstance()).setString(_languageCode, newValue);
     return res;
   }
 

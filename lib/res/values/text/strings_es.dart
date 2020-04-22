@@ -58,7 +58,7 @@ class StringsEs implements StringsBase {
   String get remember => "Recordar";
 
   @override
-  String get userName => "Nombre de ususario";
+  String get userName => "Nombre de usuario";
 
   @override
   String get email => "Correo";
@@ -101,7 +101,7 @@ class StringsEs implements StringsBase {
   String get profile => "Perfil";
 
   @override
-  String get logout => "Salir";
+  String get logout => "Cerrar sesión";
 
   @override
   String get changePassword => "Cambiar contraseña";
@@ -241,7 +241,7 @@ class StringsEs implements StringsBase {
   String get resumePlan => "Resumen";
 
   @override
-  String get settings => "Configuraciones";
+  String get settings => "Ajustes";
 
   @override
   String get showResumePlanBeforeSave => "Mostrar resumen antes de salvar";
@@ -257,4 +257,16 @@ class StringsEs implements StringsBase {
 
   @override
   String get changePasswordSuccess => "Su contraseña se ha actualizado satisfactoriamente.";
+
+  @override
+  String get english => "Inglés";
+
+  @override
+  String get italian => "Italiano";
+
+  @override
+  String get preferredLanguage => "Idioma preferido";
+
+  @override
+  String get spanish => "Español";
 }

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:mismedidasb/app_bloc.dart';
+import 'package:mismedidasb/domain/setting/setting_model.dart';
 import 'package:mismedidasb/fcm/i_fcm_feature.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/res/values/text/custom_localizations_delegate.dart';
+import 'package:mismedidasb/ui/_base/bloc_global.dart';
 import 'package:mismedidasb/ui/_base/bloc_state.dart';
+import 'dart:ui' as ui;
 
 class MyMeasuresBApp extends StatefulWidget {
   final Widget initPage;
@@ -22,15 +25,20 @@ class _MyMeasuresBState extends StateWithBloC<MyMeasuresBApp, AppBloC> {
   @override
   void initState() {
     super.initState();
+    String sysLanCode = ui.window.locale.languageCode;
+
+    bloc.resolveInitialSettings(
+        SettingModel(languageCode: sysLanCode, isDarkMode: false));
     widget.fcmFeature.setUp();
   }
 
   @override
   Widget buildWidget(BuildContext context) {
     final localizationDelegate = CustomLocalizationsDelegate();
-    return StreamBuilder(
-      stream: bloc.languageResult,
-      initialData: Locale("es"),
+    return StreamBuilder<SettingModel>(
+      stream: languageCodeResult,
+      initialData: SettingModel(
+          languageCode: "es", isDarkMode: false, showResumeBeforeSave: true),
       builder: (ctx, snapshot) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
@@ -62,9 +70,9 @@ class _MyMeasuresBState extends StateWithBloC<MyMeasuresBApp, AppBloC> {
           ],
           supportedLocales: localizationDelegate.supportedLocales,
           localeResolutionCallback: localizationDelegate.resolution(
-            fallback: Locale("es"),
+            fallback: ui.Locale("es"),
           ),
-          locale: snapshot.data,
+          locale: ui.Locale(snapshot.data.languageCode),
           home: widget.initPage,
           title: R.string.appName,
 //      initialRoute: AppRoutes.SPLASH,

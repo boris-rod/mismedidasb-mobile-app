@@ -1,4 +1,5 @@
 import 'package:kiwi/kiwi.dart';
+import 'package:mismedidasb/app_bloc.dart';
 import 'package:mismedidasb/data/_shared_prefs.dart';
 import 'package:mismedidasb/data/api/account_api.dart';
 import 'package:mismedidasb/data/api/answer_api.dart';
@@ -254,6 +255,8 @@ class Injector {
   }
 
   _registerBloCs() {
+    container.registerFactory(
+        (c) => AppBloC(container.resolve()));
     container.registerFactory(
         (c) => SplashBloC(container.resolve(), container.resolve()));
     container.registerFactory((c) => LoginBloC(container.resolve(),

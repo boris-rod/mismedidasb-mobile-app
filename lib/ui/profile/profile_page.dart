@@ -27,7 +27,7 @@ import 'package:mismedidasb/utils/file_manager.dart';
 import 'package:mismedidasb/utils/mail_manager.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-enum profileAction { logout, changeAvatar, updateProfile, changePassword }
+enum profileAction { logout, languageCodeChanged }
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -37,6 +37,15 @@ class ProfilePage extends StatefulWidget {
 class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
   TextEditingController userNameTextController = TextEditingController();
   final _keyFormProfile = new GlobalKey<FormState>();
+
+  _navBack() {
+    if (bloc.mustReload)
+      NavigationUtils.pop(context, result: profileAction.languageCodeChanged);
+    else
+      NavigationUtils.pop(
+        context,
+      );
+  }
 
   @override
   void initState() {
@@ -49,149 +58,162 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
 
   @override
   Widget buildWidget(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        TXMainAppBarWidget(
-          leading: TXIconButtonWidget(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              NavigationUtils.pop(context);
-            },
-          ),
-          title: R.string.profile,
-          body: SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-            padding: EdgeInsets.only(bottom: 30),
-            child: StreamBuilder<UserModel>(
-              stream: bloc.userResult,
-              initialData: UserModel(),
-              builder: (context, snapshot) {
-                final user = snapshot.data;
-                return Form(
-                  key: _keyFormProfile,
-                  child: Container(
-                    child: Column(
-                      children: <Widget>[
-                        Container(
-                          height: 220,
-                          color: R.color.gray_light,
-                          child: Stack(
-                            children: <Widget>[
-                              Column(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: Stack(
-                                      children: <Widget>[
-                                        Container(
-                                          child: Stack(
-                                            children: <Widget>[
-                                              TXNetworkImage(
-                                                width: double.infinity,
-                                                height: double.infinity,
-                                                imageUrl: user.avatar,
-                                                placeholderImage:
-                                                    R.image.logo_blue,
-                                                boxFitImage: BoxFit.cover,
-                                              ),
-                                              Container(
-                                                width: double.infinity,
-                                                height: double.infinity,
-                                                color:
-                                                    R.color.dialog_background,
-                                              )
-                                            ],
+    return WillPopScope(
+      onWillPop: () async {
+        _navBack();
+        return false;
+      },
+      child: Stack(
+        children: <Widget>[
+          TXMainAppBarWidget(
+            leading: TXIconButtonWidget(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                _navBack();
+              },
+            ),
+            title: R.string.profile,
+            body: SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
+              padding: EdgeInsets.only(bottom: 30),
+              child: StreamBuilder<UserModel>(
+                stream: bloc.userResult,
+                initialData: UserModel(),
+                builder: (context, snapshot) {
+                  final user = snapshot.data;
+                  return Form(
+                    key: _keyFormProfile,
+                    child: Container(
+                      child: Column(
+                        children: <Widget>[
+                          Container(
+                            height: 220,
+                            color: R.color.gray_light,
+                            child: Stack(
+                              children: <Widget>[
+                                Column(
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: Stack(
+                                        children: <Widget>[
+                                          Container(
+                                            child: Stack(
+                                              children: <Widget>[
+                                                TXNetworkImage(
+                                                  width: double.infinity,
+                                                  height: double.infinity,
+                                                  imageUrl: user.avatar,
+                                                  placeholderImage:
+                                                      R.image.logo_blue,
+                                                  boxFitImage: BoxFit.cover,
+                                                ),
+                                                Container(
+                                                  width: double.infinity,
+                                                  height: double.infinity,
+                                                  color:
+                                                      R.color.dialog_background,
+                                                )
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                        Container(
-                                          child: TXNetworkImage(
-                                            width: double.infinity,
-                                            height: double.infinity,
-                                            imageUrl: user.avatar,
-                                            placeholderImage: R.image.logo_blue,
-                                          ),
-                                        )
-                                      ],
+                                          Container(
+                                            child: TXNetworkImage(
+                                              width: double.infinity,
+                                              height: double.infinity,
+                                              imageUrl: user.avatar,
+                                              placeholderImage:
+                                                  R.image.logo_blue,
+                                            ),
+                                          )
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  Container(
-                                    height: .5,
-                                    color: R.color.gray,
-                                    margin: EdgeInsets.only(bottom: 25),
-                                  )
-                                ],
-                              ),
-                              Positioned(
-                                  bottom: 0,
-                                  right: 20,
-                                  child: InkWell(
-                                    onTap: () {
-                                      _showMediaSelector(context);
-                                    },
-                                    child: CircleAvatar(
-                                      radius: 25,
-                                      child: Icon(Icons.edit,
-                                          size: 25, color: Colors.white),
-                                      backgroundColor: R.color.primary_color,
-                                    ),
-                                  )),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.only(bottom: 10),
-                          color: R.color.gray_light,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              Container(
-                                child: TXNetworkImage(
-                                  width: 60,
-                                  height: 60,
-                                  imageUrl: R.image.logo_blue,
-                                  placeholderImage: R.image.logo_blue,
+                                    Container(
+                                      height: .5,
+                                      color: R.color.gray,
+                                      margin: EdgeInsets.only(bottom: 25),
+                                    )
+                                  ],
                                 ),
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  TXTextWidget(
-                                    text: user.fullName ?? "---",
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  TXTextWidget(
-                                    text: user.email ?? "---",
-                                    fontWeight: FontWeight.bold,
-                                    size: 16,
-                                  ),
-                                ],
-                              )
-                            ],
+                                Positioned(
+                                    bottom: 0,
+                                    right: 20,
+                                    child: InkWell(
+                                      onTap: () {
+                                        _showMediaSelector(context);
+                                      },
+                                      child: CircleAvatar(
+                                        radius: 25,
+                                        child: Icon(Icons.edit,
+                                            size: 25, color: Colors.white),
+                                        backgroundColor: R.color.primary_color,
+                                      ),
+                                    )),
+                              ],
+                            ),
                           ),
-                        ),
-                        Container(
-                          height: .5,
-                          color: R.color.gray,
-                        ),
-                        TXProfileItemOptionWidget(
-                          icon: Icons.visibility,
-                          optionName: R.string.changePassword,
-                          onOptionTap: () {
-                            NavigationUtils.push(context, ChangePasswordPage(oldPassword: bloc.currentPassword,));
-                          },
-                        ),
-                        Container(
-                          height: .5,
-                          color: R.color.gray,
-                        ),
-                        TXProfileItemOptionWidget(
-                          icon: Icons.settings,
-                          optionName: R.string.settings,
-                          onOptionTap: () {
-                            NavigationUtils.push(context, SettingsPage());
-                          },
-                        ),
+                          Container(
+                            padding: EdgeInsets.only(bottom: 10),
+                            color: R.color.gray_light,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                Container(
+                                  child: TXNetworkImage(
+                                    width: 60,
+                                    height: 60,
+                                    imageUrl: R.image.logo_blue,
+                                    placeholderImage: R.image.logo_blue,
+                                  ),
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    TXTextWidget(
+                                      text: user.fullName ?? "---",
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    TXTextWidget(
+                                      text: user.email ?? "---",
+                                      fontWeight: FontWeight.bold,
+                                      size: 16,
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                          Container(
+                            height: .5,
+                            color: R.color.gray,
+                          ),
+                          TXProfileItemOptionWidget(
+                            icon: Icons.visibility,
+                            optionName: R.string.changePassword,
+                            onOptionTap: () {
+                              NavigationUtils.push(
+                                  context,
+                                  ChangePasswordPage(
+                                    oldPassword: bloc.currentPassword,
+                                  ));
+                            },
+                          ),
+                          Container(
+                            height: .5,
+                            color: R.color.gray,
+                          ),
+                          TXProfileItemOptionWidget(
+                            icon: Icons.settings,
+                            optionName: R.string.settings,
+                            onOptionTap: () async {
+                              final result = await NavigationUtils.push(
+                                  context, SettingsPage());
+                              if (result is bool && result)
+                                bloc.mustReload = true;
+                            },
+                          ),
 //                        Container(
 //                          height: .5,
 //                          color: R.color.gray,
@@ -204,33 +226,34 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
 //                                recipient: "borisrod@gmail.com");
 //                          },
 //                        ),
-                        Container(
-                          height: .5,
-                          color: R.color.gray,
-                        ),
-                        TXProfileItemOptionWidget(
-                          icon: Icons.exit_to_app,
-                          optionName: R.string.logout,
-                          onOptionTap: () {
-                            _showDemoDialogLogout(context: context);
-                          },
-                        ),
-                        Container(
-                          height: .5,
-                          color: R.color.gray,
-                        ),
-                      ],
+                          Container(
+                            height: .5,
+                            color: R.color.gray,
+                          ),
+                          TXProfileItemOptionWidget(
+                            icon: Icons.exit_to_app,
+                            optionName: R.string.logout,
+                            onOptionTap: () {
+                              _showDemoDialogLogout(context: context);
+                            },
+                          ),
+                          Container(
+                            height: .5,
+                            color: R.color.gray,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
           ),
-        ),
-        TXLoadingWidget(
-          loadingStream: bloc.isLoadingStream,
-        )
-      ],
+          TXLoadingWidget(
+            loadingStream: bloc.isLoadingStream,
+          )
+        ],
+      ),
     );
   }
 
