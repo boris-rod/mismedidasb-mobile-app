@@ -21,7 +21,7 @@ class TXDishNutritionalInfoWidget extends StatelessWidget{
               Colors.blueAccent[100],
               child: TXTextWidget(
                 text:
-                "${model.foodsProteinsPercentage}",
+                "",
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
                 size: 9,
@@ -46,7 +46,7 @@ class TXDishNutritionalInfoWidget extends StatelessWidget{
               Colors.blueAccent[200],
               child: TXTextWidget(
                 text:
-                "${model.foodsCarbohydratesPercentage}",
+                "",
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
                 size: 9,
@@ -71,7 +71,7 @@ class TXDishNutritionalInfoWidget extends StatelessWidget{
               Colors.blueAccent[700],
               child: TXTextWidget(
                 text:
-                "${model.foodsFiberPercentage}",
+                "",
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
                 size: 9,

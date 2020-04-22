@@ -204,7 +204,7 @@ class StringsEn implements StringsBase {
   String get foodInstructionsTitle => "Instrucciones";
 
   @override
-  String get ideal => "Ideal";
+  String get ideal => "Distribución ideal";
 
   @override
   String get confirm => "Confirmar";
