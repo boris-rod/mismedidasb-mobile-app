@@ -31,12 +31,12 @@ class TXComboProgressBarWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
-        value.ceilToDouble() < mark1.ceilToDouble()
+        value < mark1
             ? RoundedProgressBar(
                 height: height ?? 20,
                 paddingChildLeft: EdgeInsets.only(left: 10),
                 paddingChildRight: EdgeInsets.only(right: 0),
-                percent: percentage.ceilToDouble(),
+                percent: percentage,
                 childLeft: TXTextWidget(
                   text: title,
                   color: Colors.black,
@@ -61,13 +61,13 @@ class TXComboProgressBarWidget extends StatelessWidget {
                     borderWidth: 0),
               )
             : Container(),
-        value.ceilToDouble() >= mark1.ceilToDouble() &&
-                value.ceilToDouble() <= mark2.ceilToDouble()
+        value >= mark1 &&
+                percentage <= 101
             ? RoundedProgressBar(
                 height: height ?? 20,
                 paddingChildLeft: EdgeInsets.only(left: 10),
                 paddingChildRight: EdgeInsets.only(right: 0),
-                percent: percentage.ceilToDouble(),
+                percent: percentage,
                 childLeft: TXTextWidget(
                   text: title,
                   color: Colors.black,
@@ -89,12 +89,12 @@ class TXComboProgressBarWidget extends StatelessWidget {
                     borderWidth: 0),
               )
             : Container(),
-        value.ceilToDouble() > mark2.ceilToDouble()
+        percentage > 101
             ? RoundedProgressBar(
                 height: height ?? 20,
                 paddingChildLeft: EdgeInsets.only(left: 10),
                 paddingChildRight: EdgeInsets.only(right: 0),
-                percent: percentage.ceilToDouble(),
+                percent: percentage,
                 childLeft: TXTextWidget(
                   text: title,
                   color: Colors.black,

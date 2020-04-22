@@ -6,6 +6,7 @@ import 'package:mismedidasb/ui/_base/bloc_state.dart';
 import 'package:mismedidasb/ui/_base/navigation_utils.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_action_chip_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_checkbox_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_gesture_hide_key_board.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_icon_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_main_app_bar_widget.dart';
@@ -95,39 +96,40 @@ class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
                           stream: bloc.foodsResult,
                           initialData: [],
                           builder: (context, snapshot) {
-                            return ListView.builder(
-                                padding: EdgeInsets.only(top: 5, bottom: 30),
-                                physics: BouncingScrollPhysics(),
-                                itemCount: snapshot.data.length,
-                                itemBuilder: (context, index) {
-                                  final model = snapshot.data[index];
-                                  return ListTile(
-                                    trailing: Checkbox(
-                                      checkColor: R.color.primary_color,
-                                      onChanged: (value) {
+                            return TXGestureHideKeyBoard(
+                              child: ListView.builder(
+                                  padding: EdgeInsets.only(top: 5, bottom: 30),
+                                  physics: BouncingScrollPhysics(),
+                                  itemCount: snapshot.data.length,
+                                  itemBuilder: (context, index) {
+                                    final model = snapshot.data[index];
+                                    return ListTile(
+                                      trailing: Checkbox(
+                                        checkColor: R.color.primary_color,
+                                        onChanged: (value) {
+                                          model.isSelected = !model.isSelected;
+                                          bloc.setSelectedFood(model);
+                                        },
+                                        value: model.isSelected,
+                                      ),
+                                      leading: TXNetworkImage(
+                                        imageUrl: model.image,
+                                        placeholderImage: R.image.logo_blue,
+                                        height: 40,
+                                        width: 40,
+                                      ),
+                                      contentPadding: EdgeInsets.symmetric(
+                                          vertical: 0, horizontal: 10),
+                                      onTap: () {
                                         model.isSelected = !model.isSelected;
                                         bloc.setSelectedFood(model);
                                       },
-                                      value: model.isSelected,
-                                    ),
-                                    leading: TXNetworkImage(
-                                      imageUrl: model.image,
-                                      placeholderImage: R.image.logo_blue,
-                                      height: 40,
-                                      width: 40,
-                                    ),
-                                    contentPadding: EdgeInsets.symmetric(
-                                        vertical: 0, horizontal: 10),
-                                    onTap: () {
-                                      model.isSelected = !model.isSelected;
-                                      bloc.setSelectedFood(model);
-                                    },
-                                    title: TXTextWidget(
-                                      text: "${model.name} ${model.calories.toStringAsFixed(2)}kCal",
-                                      color: model.isSelected
-                                          ? R.color.primary_color
-                                          : Colors.black,
-                                    ),
+                                      title: TXTextWidget(
+                                        text: "${model.name} ${model.calories.toStringAsFixed(2)}kCal",
+                                        color: model.isSelected
+                                            ? R.color.primary_color
+                                            : Colors.black,
+                                      ),
 //                                    subtitle: Column(
 //                                      crossAxisAlignment: CrossAxisAlignment.start,
 //                                      children: <Widget>[
@@ -139,8 +141,9 @@ class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
 //                                        ..._getCategories(model.tags),
 //                                      ],
 //                                    ),
-                                  );
-                                });
+                                    );
+                                  }),
+                            );
                           },
                         ),
                       )

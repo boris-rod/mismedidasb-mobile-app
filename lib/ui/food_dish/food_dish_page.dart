@@ -435,7 +435,7 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
             bloc.setFoodList(dailyActivityFoodModel);
           },
           icon: Icon(
-            Icons.arrow_back,
+            Icons.close,
             color: R.color.primary_color,
           ),
         ),
@@ -453,7 +453,7 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
 
   Widget _getCalendarView(
       BuildContext context, List<DailyFoodModel> modelList) {
-    if(bloc.isCopying){
+    if (bloc.isCopying) {
       _calendarController.setSelectedDay(bloc.selectedDate);
       bloc.isCopying = false;
     }
