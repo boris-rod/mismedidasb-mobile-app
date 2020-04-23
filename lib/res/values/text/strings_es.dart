@@ -196,7 +196,7 @@ class StringsEs implements StringsBase {
   String get snack => "Merienda";
 
   @override
-  String get emptyFoodList => "Debe escoger al menos un alimentos";
+  String get emptyFoodList => "Debe escoger al menos un alimento.";
 
   @override
   String get save => "Salvar";
@@ -214,7 +214,7 @@ class StringsEs implements StringsBase {
   String get showAlways => "Mostrar resumen antes de salvar";
 
   @override
-  String get fillHealthPoll => "Debe rellenar el formulario de medidas de salud antes de planificar sus platos";
+  String get fillHealthPoll => "Debe rellenar el formulario de medidas de salud antes de planificar sus platos.";
 
   @override
   String get camera => "Cámara";

@@ -1,6 +1,7 @@
 import 'package:mismedidasb/data/api/remote/remote_constanst.dart';
 import 'package:mismedidasb/domain/account/account_model.dart';
 import 'package:mismedidasb/domain/account/i_account_converter.dart';
+import 'package:mismedidasb/domain/setting/setting_model.dart';
 
 class AccountConverter implements IAccountConverter {
   @override
@@ -28,7 +29,21 @@ class AccountConverter implements IAccountConverter {
       RemoteConstants.email: registerModel.email,
       RemoteConstants.full_name: registerModel.fullName,
       RemoteConstants.password: registerModel.password,
-      RemoteConstants.confirmation_password: registerModel.confirmationPassword
+      RemoteConstants.confirmation_password: registerModel.confirmationPassword,
+      RemoteConstants.language: registerModel.language
     };
+  }
+
+  @override
+  SettingAPIModel fromJsonSettingAPIModel(Map<String, dynamic> json) {
+    return SettingAPIModel(
+        settingId: json["settingId"],
+        setting: json["setting"],
+        value: json["value"]);
+  }
+
+  @override
+  Map<String, dynamic> toJsonSettingModel(SettingAPIModel registerModel) {
+    return {"settingId": registerModel.settingId, "value": registerModel.value};
   }
 }

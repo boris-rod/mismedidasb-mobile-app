@@ -15,7 +15,7 @@ class StringsEn implements StringsBase {
   String get myMeasureHealth => "My health measures";
 
   @override
-  String get myMeasureValues => "My values measures";
+  String get myMeasureValues => "My measures of value";
 
   @override
   String get myMeasureWellness => "My wellness measures";
@@ -58,7 +58,7 @@ class StringsEn implements StringsBase {
   String get remember => "Remember";
 
   @override
-  String get userName => "User Name";
+  String get userName => "Username";
 
   @override
   String get email => "Email";
@@ -135,7 +135,7 @@ class StringsEn implements StringsBase {
       "Nuestra App te brinda la posibilidad de realizar una planificación de tu alimentación diaria ajustada a tus necesidades. Toma en cuenta para ello tu peso, estatura, edad, sexo y práctica de ejercicio físico. No se trata de una dieta, aunque se basa en la moderación en la ingestión de los alimentos. \n Te brindamos una guía visual de la adecuación de tu selección en cuanto a calorías y balance de proteínas, grasas, carbohidratos y fibra. Podrás visualizar si te acerca o alejas del porcentaje adecuado, pero no ofreceremos la cantidad de calorías o peso. Hemos observado en nuestra práctica clínica que numerosas personas pueden obsesionarse con estas cifras. \n Hemos calculado las porciones de forma sencilla, las puedes medir usando las dimensiones tu mano y sentido común. No significa que debas tomar los alimentos con tus manos, o en tus manos, para comerlos o servirlos. Se trata solo de una guía visual basada en un cálculo aproximado. \n Si estás interesado en obtener una dieta médica personalizada puedes ponerte en contacto con nosotros.";
 
   @override
-  String get appClinicalWarning => "Factores como el embarazo o algunas enfermedades médicas podrían afectar la interpretación de los resultados.";
+  String get appClinicalWarning => "Factors such as pregnancy or some medical conditions could affect the interpretation of the results.";
 
   @override
   String get appClinicalWarningForAdvice => "Factores como el embarazo o algunas enfermedades médicas podrían afectar la interpretación de esta información";
@@ -162,70 +162,70 @@ class StringsEn implements StringsBase {
   String get noPollData => "No poll data";
 
   @override
-  String get fiberAndVegetables => "Frutas y/o Vegetales";
+  String get fiberAndVegetables => "Fruits and/or Vegetables";
 
   @override
-  String get breakfast => "Desayuno";
+  String get breakfast => "Breakfast";
 
   @override
-  String get calories => "Calorías";
+  String get calories => "Calories";
 
   @override
-  String get carbohydrates => "Carbohidratos";
+  String get carbohydrates => "Carbohydrates";
 
   @override
-  String get dinner => "Cena";
+  String get dinner => "Dinner";
 
   @override
-  String get fat => "Grasa";
+  String get fat => "Fat";
 
   @override
-  String get fiber => "Fibra";
+  String get fiber => "Fiber";
 
   @override
-  String get lunch => "Almuerzo";
+  String get lunch => "Lunch";
 
   @override
-  String get nutritionalInfo => "Información nutricional";
+  String get nutritionalInfo => "Nutritional information";
 
   @override
-  String get proteins => "Proteínas";
+  String get proteins => "Proteins";
 
   @override
-  String get snack => "Merienda";
+  String get snack => "Snack";
 
   @override
-  String get emptyFoodList => "Debe escoger al menos un alimentos";
+  String get emptyFoodList => "You must choose at least one food";
 
   @override
-  String get save => "Salvar";
+  String get save => "Save";
 
   @override
-  String get foodInstructionsTitle => "Instrucciones";
+  String get foodInstructionsTitle => "Instructions";
 
   @override
-  String get ideal => "Distribución ideal";
+  String get ideal => "Ideal distribution";
 
   @override
-  String get confirm => "Confirmar";
+  String get confirm => "Confirm";
 
   @override
-  String get showAlways => "Mostrar resumen antes de salvar";
+  String get showAlways => "Show summary before saving";
 
   @override
-  String get fillHealthPoll => "Debe rellenar el formulario de medidas de salud antes de planificar sus platos";
+  String get fillHealthPoll => "You must fill out the health measures form before planning your dishes.";
 
   @override
-  String get camera => "Cámara";
+  String get camera => "Camera";
 
   @override
-  String get deniedPermissionContent => "Debe ir a las configuraciones de la aplicación para reestablecer el permiso.";
+  String get deniedPermissionContent => "You must go to the app settings to reset the permission.";
 
   @override
-  String get deniedPermissionTitle => "Información sobre permisos";
+  String get deniedPermissionTitle => "Permit information";
 
   @override
-  String get gallery => "Galería";
+  String get gallery => "Gallery";
 
   @override
   String get help => "Help";
@@ -237,7 +237,7 @@ class StringsEn implements StringsBase {
   String get editPlan => "Edit";
 
   @override
-  String get resumePlan => "Resumen";
+  String get resumePlan => "Summary";
 
 
   @override
@@ -247,16 +247,16 @@ class StringsEn implements StringsBase {
   String get showResumePlanBeforeSave => "Show summary before saving";
 
   @override
-  String get warningReplacePlanContent => "El día seleccionado contiene datos de un plan. Si decide continuar se reemplazará el plan para ese día.";
+  String get warningReplacePlanContent => "The selected day contains data from a plan. If you decide to continue, the plan will be replaced for that day.";
 
   @override
-  String get warningTitle => "Advertencia";
+  String get warningTitle => "Warning";
 
   @override
-  String get changePasswordContent => "Su contraseña será actualizada.";
+  String get changePasswordContent => "Your password will be updated.";
 
   @override
-  String get changePasswordSuccess => "Su contraseña se ha actualizado satisfactoriamente.";
+  String get changePasswordSuccess => "Your password has been successfully updated.";
 
   @override
   String get english => "English";

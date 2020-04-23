@@ -3,9 +3,10 @@ class RegisterModel {
   String fullName;
   String password;
   String confirmationPassword;
+  String language;
 
   RegisterModel(
-      {this.email, this.fullName, this.password, this.confirmationPassword});
+      {this.email, this.fullName, this.password, this.confirmationPassword, this.language});
 }
 
 

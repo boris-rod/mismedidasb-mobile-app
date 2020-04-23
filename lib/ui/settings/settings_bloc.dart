@@ -1,6 +1,9 @@
 import 'dart:ui';
 
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mismedidasb/data/_shared_prefs.dart';
+import 'package:mismedidasb/data/api/remote/result.dart';
+import 'package:mismedidasb/domain/account/i_account_repository.dart';
 import 'package:mismedidasb/domain/setting/setting_model.dart';
 import 'package:mismedidasb/res/values/text/custom_localizations_delegate.dart';
 import 'package:mismedidasb/ui/_base/bloc_base.dart';
@@ -12,8 +15,9 @@ import 'package:mismedidasb/utils/extensions.dart';
 
 class SettingsBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   final SharedPreferencesManager _sharedPreferencesManager;
+  final IAccountRepository _iAccountRepository;
 
-  SettingsBloC(this._sharedPreferencesManager);
+  SettingsBloC(this._sharedPreferencesManager, this._iAccountRepository);
 
   BehaviorSubject<SettingModel> _settingsController = new BehaviorSubject();
 
@@ -22,28 +26,52 @@ class SettingsBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   bool mustReload = false;
 
   void initData() async {
+    isLoading = true;
     final settingModel = SettingModel();
+    final locale = await _sharedPreferencesManager.getLanguageCode();
     final showResumeBeforeSave =
         await _sharedPreferencesManager.getShowDailyResume();
-    final locale = await _sharedPreferencesManager.getLanguageCode();
-
     settingModel.showResumeBeforeSave = showResumeBeforeSave;
-    settingModel.languageCode = locale;
+
+    final settingRes = await _iAccountRepository.getSettings();
+    if (settingRes is ResultSuccess<SettingModel>) {
+      await _sharedPreferencesManager
+          .setLanguageCodeId(settingRes.value.languageCodeId);
+
+      settingModel.languageCodeId = settingRes.value.languageCodeId;
+      settingModel.languageCode = settingRes.value.languageCode;
+
+      if (locale != settingModel.languageCode) {
+        await _sharedPreferencesManager
+            .setLanguageCode(settingModel.languageCode);
+        languageCodeController.sinkAddSafe(settingModel);
+      }
+    } else {
+      settingModel.languageCode = locale;
+      showErrorMessage(settingRes);
+    }
 
     _settingsController.sinkAddSafe(settingModel);
+    isLoading = false;
   }
 
   void setLanguageCode(String code) async {
     isLoading = true;
-    Future.delayed(Duration(seconds: 2), () async {
+    final currentSetting = await settingsResult.first;
+    final res = await _iAccountRepository.saveSettings(SettingModel(
+        languageCodeId: currentSetting.languageCodeId,
+        languageCode: code,
+        isDarkMode: false));
+    if (res is ResultSuccess<bool>) {
+      currentSetting.languageCode = code;
       await _sharedPreferencesManager.setLanguageCode(code);
-      languageCodeController.sinkAddSafe(SettingModel(languageCode: code, isDarkMode: false));
-      final settings = await settingsResult.first;
-      settings.languageCode = code;
-      _settingsController.sinkAddSafe(settings);
+      languageCodeController.sinkAddSafe(currentSetting);
+      _settingsController.sinkAddSafe(currentSetting);
       mustReload = true;
-      isLoading = false;
-    });
+    } else {
+      showErrorMessage(res);
+    }
+    isLoading = false;
   }
 
   void setShowResumeBeforeSave(bool value) async {

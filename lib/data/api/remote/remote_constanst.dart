@@ -51,6 +51,7 @@ class RemoteConstants {
   static const imc = 'imc';
   static const password = 'password';
   static const confirmation_password = 'confirmationPassword';
+  static const language = 'language';
   static const old_password = 'oldPassword';
   static const new_password = 'newPassword';
   static const confirm_password = 'confirmPassword';

@@ -14,6 +14,7 @@ class SharedPreferencesManager {
   final _firstDateHealthResult = "first_date_health_result1";
   final _showDailyResume = "show_daily_resume";
   final _languageCode = "language_code";
+  final _languageCodeId = "language_code_id";
 
   Future<bool> cleanAll() async {
 //    setUserEmail('');
@@ -205,6 +206,20 @@ class SharedPreferencesManager {
 
   Future<bool> setUserId(int newValue) async {
     var res = (await SharedPreferences.getInstance()).setInt(_userId, newValue);
+    return res;
+  }
+
+  Future<int> getLanguageCodeId() async {
+    var value = (await SharedPreferences.getInstance()).getInt(_languageCodeId);
+    if (value == null) {
+      value = 0;
+      setLanguageCodeId(value);
+    }
+    return value;
+  }
+
+  Future<bool> setLanguageCodeId(int newValue) async {
+    var res = (await SharedPreferences.getInstance()).setInt(_languageCodeId, newValue);
     return res;
   }
 }

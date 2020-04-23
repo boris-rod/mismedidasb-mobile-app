@@ -12,15 +12,14 @@ import 'package:mismedidasb/ui/_base/bloc_form_validator.dart';
 import 'package:mismedidasb/ui/_base/bloc_loading.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:mismedidasb/utils/extensions.dart';
+import 'dart:ui' as ui;
 
 class RegisterBloC extends BaseBloC
     with LoadingBloC, ErrorHandlerBloC, FormValidatorBloC {
   final IAccountRepository _iAccountRepository;
   final SharedPreferencesManager _sharedPreferencesManager;
-  final ISessionRepository _iSessionRepository;
 
-  RegisterBloC(this._iAccountRepository, this._sharedPreferencesManager,
-      this._iSessionRepository);
+  RegisterBloC(this._iAccountRepository, this._sharedPreferencesManager);
 
   BehaviorSubject<bool> _registerController = new BehaviorSubject();
 
@@ -35,11 +34,20 @@ class RegisterBloC extends BaseBloC
   void register(String userName, String email, String password,
       String confirmPassword) async {
     isLoading = true;
-    final res = await _iAccountRepository.register(RegisterModel(
+    String locale = await _sharedPreferencesManager.getLanguageCode();
+
+    final model = RegisterModel(
         fullName: userName,
         email: email,
         password: password,
-        confirmationPassword: confirmPassword));
+        confirmationPassword: confirmPassword,
+        language: locale);
+
+//    print(model.toString());
+//    Future.delayed(Duration(seconds: 2), (){
+//      isLoading = false;
+//    });
+    final res = await _iAccountRepository.register(model);
 
     if (res is ResultSuccess<int>) {
       _registerController.sinkAddSafe(true);

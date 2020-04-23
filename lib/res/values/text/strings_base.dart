@@ -18,9 +18,9 @@ abstract class StringsBase implements WidgetsLocalizations {
 
   String get update;
 
-  String get valuesConcept;
+//  String get valuesConcept;
 
-  String get healthHabits;
+//  String get healthHabits;
 
   String get checkNetworkConnection;
 
@@ -82,21 +82,21 @@ abstract class StringsBase implements WidgetsLocalizations {
 
   String get logoutContent;
 
-  String get foodCraving;
+//  String get foodCraving;
 
-  String get foodsInstructions;
+//  String get foodsInstructions;
 
   String get appClinicalWarning;
 
-  String get appClinicalWarningForAdvice;
+//  String get appClinicalWarningForAdvice;
 
-  String get appWellnessResultText;
+//  String get appWellnessResultText;
 
-  String get appValuesResultText;
+//  String get appValuesResultText;
 
-  String get appFooPlaResultText;
+//  String get appFooPlaResultText;
 
-  String get valuesMeasureTip;
+//  String get valuesMeasureTip;
 
   String get answer;
 

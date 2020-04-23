@@ -263,7 +263,7 @@ class Injector {
         container.resolve(), container.resolve(), container.resolve()));
     container.registerFactory((c) => RecoverPasswordBloC(container.resolve()));
     container.registerFactory((c) => RegisterBloC(
-        container.resolve(), container.resolve(), container.resolve()));
+        container.resolve(), container.resolve()));
     container.registerFactory((c) => HomeBloC(
         container.resolve(), container.resolve(), container.resolve()));
     container.registerFactory((c) => HabitBloC(container.resolve()));
@@ -278,7 +278,7 @@ class Injector {
         (c) => ChangePasswordBloC(container.resolve(), container.resolve()));
     container.registerFactory((c) => ProfileBloC(container.resolve(),
         container.resolve(), container.resolve(), container.resolve()));
-    container.registerFactory((c) => SettingsBloC(c.resolve()));
+    container.registerFactory((c) => SettingsBloC(c.resolve(), c.resolve()));
   }
 
   _registerCommon() {

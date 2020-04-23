@@ -12,22 +12,22 @@ class StringsIt implements StringsBase {
   String get foodDishes => "I miei piatti";
 
   @override
-  String get myMeasureHealth => "Mis medidas de salud";
+  String get myMeasureHealth => "Le mie misure sanitarie";
 
   @override
-  String get myMeasureValues => "Mis medidas de valores";
+  String get myMeasureValues => "Le mie misure di magazzino";
 
   @override
-  String get myMeasureWellness => "Mis medidas de bienestar";
+  String get myMeasureWellness => "Le mie misure di benessere";
 
   @override
-  String get next => "Siguiente";
+  String get next => "Seguente";
 
   @override
-  String get previous => "Anterior";
+  String get previous => "Anteriore";
 
   @override
-  String get update => "Analizar";
+  String get update => "Analizzare";
 
   @override
   String get valuesConcept =>
@@ -37,65 +37,65 @@ class StringsIt implements StringsBase {
   String get healthHabits => "10 Hábitos Saludables";
 
   @override
-  String get checkNetworkConnection => "Por favor revise su conexión de red.";
+  String get checkNetworkConnection => "Verifica la connessione di rete.";
 
   @override
-  String get failedOperation => "Falló la operación.";
+  String get failedOperation => "Operazione fallita.";
 
   @override
-  String get forgotPassword => "Olvidó su contraseña?";
+  String get forgotPassword => "Hai dimenticato la password";
 
   @override
-  String get login => "Entrar";
+  String get login => "ISCRIVITI";
 
   @override
-  String get password => "Contraseña";
+  String get password => "Password";
 
   @override
-  String get register => "Registrarse";
+  String get register => "Iscriviti";
 
   @override
-  String get remember => "Recordar";
+  String get remember => "Ricordare";
 
   @override
-  String get userName => "Nombre de ususario";
+  String get userName => "Nome utente";
 
   @override
-  String get email => "Correo";
+  String get email => "E-mail";
 
   @override
-  String get invalidEmail => "Correo inválido.";
+  String get invalidEmail => "E-mail non valido";
 
   @override
-  String get minCharsLength => "Al menos 6 caractéres.";
+  String get minCharsLength => "Almeno 6 caratteri.";
 
   @override
-  String get requiredField => "Campo requerido.";
+  String get requiredField => "Campo obbligatorio.";
 
   @override
-  String get especialCharRequired => "Al menos 1 caractér especial.";
+  String get especialCharRequired => "Almeno 1 carattere speciale.";
 
   @override
-  String get upperLetterCharRequired => "Al menos 1 caractér en mayúscula.";
+  String get upperLetterCharRequired => "Almeno 1 carattere maiuscolo.";
 
   @override
-  String get passwordMatch => "La contraseña no coincide.";
+  String get passwordMatch => "La password non corrisponde";
 
   @override
-  String get recover => "Recuperar";
+  String get recover => "Recuperare";
 
   @override
-  String get code => "Código";
+  String get code => "Codice";
 
   @override
-  String get activateAccount => "Activar cuenta";
+  String get activateAccount => "Attiva account";
 
   @override
-  String get reSendCode => "Enviar código otra vez";
+  String get reSendCode => "Invia di nuovo il codice";
 
   @override
   String get checkEmail =>
-      "Revise su correo para obtener el código de activación.";
+      "Controlla la tua e-mail per ottenere il codice di attivazione.";
 
   @override
   String get profile => "Profilo";
@@ -116,17 +116,17 @@ class StringsIt implements StringsBase {
   String get oldPassword => "Vecchia password";
 
   @override
-  String get cancel => "Cancelar";
+  String get cancel => "Annullare";
 
   @override
   String get emailWillBeReceived =>
-      "Recibirá un correo con la nueva contraseña.";
+      "Riceverai un'email con la nuova password.";
 
   @override
   String get ok => "Ok";
 
   @override
-  String get logoutContent => "Está seguro que desea salir?";
+  String get logoutContent => "Sei sicuro di voler uscire?";
 
   @override
   String get foodCraving => "Recursos de autocontrol";
@@ -136,7 +136,7 @@ class StringsIt implements StringsBase {
       "Nuestra App te brinda la posibilidad de realizar una planificación de tu alimentación diaria ajustada a tus necesidades. Toma en cuenta para ello tu peso, estatura, edad, sexo y práctica de ejercicio físico. No se trata de una dieta, aunque se basa en la moderación en la ingestión de los alimentos. \n Te brindamos una guía visual de la adecuación de tu selección en cuanto a calorías y balance de proteínas, grasas, carbohidratos y fibra. Podrás visualizar si te acerca o alejas del porcentaje adecuado, pero no ofreceremos la cantidad de calorías o peso. Hemos observado en nuestra práctica clínica que numerosas personas pueden obsesionarse con estas cifras. \n Hemos calculado las porciones de forma sencilla, las puedes medir usando las dimensiones tu mano y sentido común. No significa que debas tomar los alimentos con tus manos, o en tus manos, para comerlos o servirlos. Se trata solo de una guía visual basada en un cálculo aproximado. \n Si estás interesado en obtener una dieta médica personalizada puedes ponerte en contacto con nosotros.";
 
   @override
-  String get appClinicalWarning => "Factores como el embarazo o algunas enfermedades médicas podrían afectar la interpretación de los resultados.";
+  String get appClinicalWarning => "Fattori come la gravidanza o alcune condizioni mediche potrebbero influenzare l'interpretazione dei risultati.";
 
   @override
   String get appClinicalWarningForAdvice => "Factores como el embarazo o algunas enfermedades médicas podrían afectar la interpretación de esta información";
@@ -154,91 +154,91 @@ class StringsIt implements StringsBase {
   String get valuesMeasureTip => "Los valores son ideas o principios universales que dirigen nuestra conducta. Por favor, indique grado de importancia otorga usted a los siguientes valores";
 
   @override
-  String get answer => "Respuesta";
+  String get answer => "Risposta";
 
   @override
-  String get thanks => "Gracias";
+  String get thanks => "Grazie";
 
   @override
-  String get noPollData => "Cuestionario vacío";
+  String get noPollData => "Questionario vuoto";
 
   @override
-  String get fiberAndVegetables => "Frutas y/o Vegetales";
+  String get fiberAndVegetables => "Frutta e / o Verdure";
 
   @override
-  String get breakfast => "Desayuno";
+  String get breakfast => "Prima colazione";
 
   @override
-  String get calories => "Calorías";
+  String get calories => "Calorie";
 
   @override
-  String get carbohydrates => "Carbohidratos";
+  String get carbohydrates => "Carboidrati";
 
   @override
   String get dinner => "Cena";
 
   @override
-  String get fat => "Grasa";
+  String get fat => "Grasso";
 
   @override
   String get fiber => "Fibra";
 
   @override
-  String get lunch => "Almuerzo";
+  String get lunch => "Pranzo";
 
   @override
-  String get nutritionalInfo => "Información nutricional";
+  String get nutritionalInfo => "Informazioni nutrizionali";
 
   @override
-  String get proteins => "Proteínas";
+  String get proteins => "Proteina";
 
   @override
-  String get snack => "Merienda";
+  String get snack => "Picnic";
 
   @override
-  String get emptyFoodList => "Debe escoger al menos un alimentos";
+  String get emptyFoodList => "Devi scegliere almeno un alimento";
 
   @override
-  String get save => "Salvar";
+  String get save => "Salva";
 
   @override
-  String get foodInstructionsTitle => "Instrucciones";
+  String get foodInstructionsTitle => "Istruzione";
 
   @override
-  String get ideal => "Distribución ideal";
+  String get ideal => "Distribuzione ideale";
 
   @override
-  String get confirm => "Confirmar";
+  String get confirm => "Conferma";
 
   @override
-  String get showAlways => "Mostrar resumen antes de salvar";
+  String get showAlways => "Mostra il riepilogo prima di salvare";
 
   @override
-  String get fillHealthPoll => "Debe rellenar el formulario de medidas de salud antes de planificar sus platos";
+  String get fillHealthPoll => "È necessario compilare il modulo di misure sanitarie prima di pianificare i tuoi piatti";
 
   @override
-  String get camera => "Cámara";
+  String get camera => "Macchina fotografica";
 
   @override
-  String get deniedPermissionContent => "Usted puede ir a las configuraciones de la aplicación y permitirle usar el permiso.";
+  String get deniedPermissionContent => "Puoi andare alle impostazioni dell'applicazione e permetterti di usare l'autorizzazione.";
 
   @override
-  String get deniedPermissionTitle => "Información sobre permisos";
+  String get deniedPermissionTitle => "Consenti informazioni";
 
   @override
-  String get gallery => "Galería";
+  String get gallery => "Galleria";
 
   @override
-  String get help => "Help";
+  String get help => "Aiuto";
 
   @override
-  String get copyPlan => "Copy";
+  String get copyPlan => "Copia";
 
   @override
-  String get editPlan => "Edit";
+  String get editPlan => "Modifica";
 
   @override
-  String get resumePlan => "Resumen";
+  String get resumePlan => "Sommario";
 
   @override
   String get settings => "Impostazioni";
@@ -247,16 +247,16 @@ class StringsIt implements StringsBase {
   String get showResumePlanBeforeSave => "Mostra il riepilogo prima di salvare";
 
   @override
-  String get warningReplacePlanContent => "El día seleccionado contiene datos de un plan. Si decide continuar se reemplazará el plan para ese día.";
+  String get warningReplacePlanContent => "Il giorno selezionato contiene i dati di un piano. Se decidi di continuare, il piano verrà sostituito per quel giorno.";
 
   @override
-  String get warningTitle => "Advertencia";
+  String get warningTitle => "Avvertimento";
 
   @override
-  String get changePasswordContent => "Su contraseña será actualizada.";
+  String get changePasswordContent => "La tua password verrà aggiornata.";
 
   @override
-  String get changePasswordSuccess => "Su contraseña se ha actualizado satisfactoriamente.";
+  String get changePasswordSuccess => "La tua password è stata aggiornata con successo";
 
   @override
   String get english => "Inglese";

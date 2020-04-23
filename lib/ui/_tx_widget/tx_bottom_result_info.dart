@@ -47,7 +47,7 @@ class TXBottomResultInfo extends StatelessWidget {
                 child: Center(
                   child: TXTextWidget(
                       textAlign: TextAlign.justify,
-                      text: content ?? R.string.appValuesResultText),
+                      text: content ?? ""),
                 ),
               ),
             )

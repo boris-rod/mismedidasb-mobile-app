@@ -8,6 +8,7 @@ import 'package:mismedidasb/data/api/remote/remote_constanst.dart';
 import 'package:mismedidasb/domain/account/account_model.dart';
 import 'package:mismedidasb/domain/account/i_account_api.dart';
 import 'package:mismedidasb/domain/account/i_account_converter.dart';
+import 'package:mismedidasb/domain/setting/setting_model.dart';
 
 class AccountApi extends BaseApi implements IAccountApi {
   final IAccountConverter _iAccountConverter;
@@ -67,6 +68,32 @@ class AccountApi extends BaseApi implements IAccountApi {
         path: Endpoint.resend_code, params: "?email=$email");
     if (res.statusCode == RemoteConstants.code_success)
       return RemoteConstants.code_success;
+    throw serverException(res);
+  }
+
+  @override
+  Future<List<SettingAPIModel>> getSettings() async {
+    final res = await _networkHandler.get(
+      path: Endpoint.save_settings,
+    );
+    if (res.statusCode == RemoteConstants.code_success) {
+      Iterable l = jsonDecode(res.body)[RemoteConstants.result];
+      return l
+          .map((model) => _iAccountConverter.fromJsonSettingAPIModel(model))
+          .toList();
+    }
+    throw serverException(res);
+  }
+
+  @override
+  Future<bool> saveSettings(List<SettingAPIModel> list) async {
+    final map = list
+        .map((model) => _iAccountConverter.toJsonSettingModel(model))
+        .toList();
+    final body = jsonEncode(map);
+    final res =
+        await _networkHandler.post(path: Endpoint.save_settings, body: body);
+    if (res.statusCode == RemoteConstants.code_success) return true;
     throw serverException(res);
   }
 }

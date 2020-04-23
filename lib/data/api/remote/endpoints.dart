@@ -12,6 +12,7 @@ class Endpoint {
   static const String activation_account = "/api/account/activate-account";
   static const String resend_code = "/api/account/resend-code";
   static const String profile = "/api/account/profile";
+  static const String save_settings = "/api/account/settings";
 
   static const String health_concept = "/api/concept"; //id
 

@@ -56,7 +56,7 @@ class _SettingsState extends StateWithBloC<SettingsPage, SettingsBloC> {
                         Container(
                           child: TXCheckBoxWidget(
                             padding: EdgeInsets.only(left: 10),
-                            text: R.string.showResumePlanBeforeSave,
+                            text: R.string. showResumePlanBeforeSave,
                             leading: false,
                             value: snapshot.data.showResumeBeforeSave,
                             onChange: (value) {
