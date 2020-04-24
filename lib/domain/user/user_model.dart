@@ -12,6 +12,8 @@ class UserModel {
   double dailyKCal;
   double imc;
   DateTime firstDateHealthResult;
+  String language;
+  bool termsAndConditionsAccepted;
 
   UserModel(
       {this.id,
@@ -25,6 +27,8 @@ class UserModel {
       this.status,
       this.avatar = "",
       this.avatarMimeType = "",
+      this.language,
+      this.termsAndConditionsAccepted,
       this.role,
       this.roleId});
 }

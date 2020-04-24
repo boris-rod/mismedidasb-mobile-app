@@ -3,8 +3,6 @@ import 'package:mismedidasb/data/_shared_prefs.dart';
 import 'package:mismedidasb/data/api/remote/result.dart';
 import 'package:mismedidasb/domain/account/account_model.dart';
 import 'package:mismedidasb/domain/account/i_account_repository.dart';
-import 'package:mismedidasb/domain/session/i_session_repository.dart';
-import 'package:mismedidasb/domain/user/user_model.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/bloc_base.dart';
 import 'package:mismedidasb/ui/_base/bloc_error_handler.dart';
@@ -12,7 +10,6 @@ import 'package:mismedidasb/ui/_base/bloc_form_validator.dart';
 import 'package:mismedidasb/ui/_base/bloc_loading.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:mismedidasb/utils/extensions.dart';
-import 'dart:ui' as ui;
 
 class RegisterBloC extends BaseBloC
     with LoadingBloC, ErrorHandlerBloC, FormValidatorBloC {
@@ -42,11 +39,6 @@ class RegisterBloC extends BaseBloC
         password: password,
         confirmationPassword: confirmPassword,
         language: locale);
-
-//    print(model.toString());
-//    Future.delayed(Duration(seconds: 2), (){
-//      isLoading = false;
-//    });
     final res = await _iAccountRepository.register(model);
 
     if (res is ResultSuccess<int>) {

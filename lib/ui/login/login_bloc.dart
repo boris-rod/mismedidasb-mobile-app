@@ -17,6 +17,8 @@ import 'package:mismedidasb/utils/calendar_utils.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:mismedidasb/utils/extensions.dart';
 
+enum LOGIN_RESULT { HOME, CONFIRMATION_CODE, TERMS_COND }
+
 class LoginBloC extends BaseBloC
     with LoadingBloC, ErrorHandlerBloC, FormValidatorBloC {
   final IDishRepository _iDishRepository;
@@ -27,9 +29,9 @@ class LoginBloC extends BaseBloC
   LoginBloC(this._iDishRepository, this._sharedPreferencesManager,
       this._iSessionRepository, this._iCommonRepository);
 
-  BehaviorSubject<UserModel> _loginController = new BehaviorSubject();
+  BehaviorSubject<LOGIN_RESULT> _loginController = new BehaviorSubject();
 
-  Stream<UserModel> get loginResult => _loginController.stream;
+  Stream<LOGIN_RESULT> get loginResult => _loginController.stream;
 
   BehaviorSubject<UserCredentialsModel> _userInitController =
       new BehaviorSubject();
@@ -66,13 +68,16 @@ class LoginBloC extends BaseBloC
         LoginModel(email: email, password: password), saveCredentials);
     if (res is ResultSuccess<UserModel>) {
       //Cleaning DB in case of different user login
-      if(previousUserId != res.value.id){
+      if (previousUserId != res.value.id) {
         await _iCommonRepository.cleanDB();
       }
-      _loginController.sinkAddSafe(res.value);
+      _sharedPreferencesManager.setTermsCond(res.value.termsAndConditionsAccepted);
+      _loginController.sinkAddSafe(res.value.termsAndConditionsAccepted
+          ? LOGIN_RESULT.HOME
+          : LOGIN_RESULT.TERMS_COND);
     } else {
-      if ((res as ResultError).code == RemoteConstants.code_forbidden) {
-        _loginController.sinkAddSafe(null);
+      if (res is ResultError && (res as ResultError).code == RemoteConstants.code_forbidden) {
+        _loginController.sinkAddSafe(LOGIN_RESULT.CONFIRMATION_CODE);
       } else
         showErrorMessage(res);
     }

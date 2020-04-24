@@ -269,4 +269,13 @@ class StringsEs implements StringsBase {
 
   @override
   String get spanish => "Español";
+
+  @override
+  String get privacyPolicies => "Políticas de privacidad";
+
+  @override
+  String get termsCond => "Términos y condiciones";
+
+  @override
+  String get iAgree => "Estoy de acuerdo";
 }

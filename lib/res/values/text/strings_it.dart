@@ -269,4 +269,13 @@ class StringsIt implements StringsBase {
 
   @override
   String get spanish => "Español";
+
+  @override
+  String get privacyPolicies => "Politiche sulla privacy";
+
+  @override
+  String get termsCond => "Termini e condizioni";
+
+  @override
+  String get iAgree => "Sono d'accordo";
 }

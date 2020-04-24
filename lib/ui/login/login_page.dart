@@ -13,6 +13,7 @@ import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_textfield_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_textlink_widget.dart';
 import 'package:mismedidasb/ui/home/home_page.dart';
+import 'package:mismedidasb/ui/legacy/legacy_page.dart';
 import 'package:mismedidasb/ui/login/login_bloc.dart';
 import 'package:mismedidasb/ui/recover_password/recover_password_page.dart';
 import 'package:mismedidasb/ui/register/register_confirmation_page.dart';
@@ -24,27 +25,36 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginState extends StateWithBloC<LoginPage, LoginBloC> {
-  TextEditingController emailTextController = TextEditingController(text: "yaraiza.reyes@gmail.com");
-  TextEditingController passwordTextController = TextEditingController(text: "Corachi8512*-");
-//  TextEditingController emailTextController = TextEditingController(text: "enrique.anchia84@gmail.com");
-//  TextEditingController passwordTextController = TextEditingController(text: "Password1234!");
+  TextEditingController emailTextController = TextEditingController();
+  TextEditingController passwordTextController = TextEditingController();
   final _keyFormLogin = new GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
     bloc.loginResult.listen((onData) async {
-      if (onData is UserModel)
-        NavigationUtils.pushReplacement(context, HomePage());
-      else {
-        final res = await NavigationUtils.push(
-            context,
-            RegisterConfirmationPage(
-              email: emailTextController.text,
-              password: passwordTextController.text,
-            ));
+      if (onData is LOGIN_RESULT) {
+        if (onData == LOGIN_RESULT.HOME) {
+          NavigationUtils.pushReplacement(context, HomePage());
+        } else if (onData == LOGIN_RESULT.CONFIRMATION_CODE) {
+          final res = await NavigationUtils.push(
+              context,
+              RegisterConfirmationPage(
+                email: emailTextController.text,
+                password: passwordTextController.text,
+              ));
 
-        if (res is bool && res) bloc.initView();
+          if (res is bool && res) bloc.initView();
+        } else {
+          final res = await NavigationUtils.push(
+              context,
+              LegacyPage(
+                contentType: 1,
+              ));
+          if (res is bool && res) {
+            NavigationUtils.pushReplacement(context, HomePage());
+          }
+        }
       }
     });
     bloc.initView();
@@ -66,7 +76,7 @@ class _LoginState extends StateWithBloC<LoginPage, LoginBloC> {
                   child: TXGestureHideKeyBoard(
                     child: SingleChildScrollView(
                       padding:
-                      EdgeInsets.symmetric(horizontal: 30, vertical: 30),
+                          EdgeInsets.symmetric(horizontal: 30, vertical: 30),
                       child: Container(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,

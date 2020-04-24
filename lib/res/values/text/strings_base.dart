@@ -175,4 +175,10 @@ abstract class StringsBase implements WidgetsLocalizations {
   String get italian;
 
   String get english;
+
+  String get termsCond;
+
+  String get privacyPolicies;
+
+  String get iAgree;
 }

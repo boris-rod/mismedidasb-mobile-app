@@ -17,6 +17,8 @@ class UserConverter implements IUserConverter {
         role: json[RemoteConstants.role],
         roleId: json[RemoteConstants.role_id],
         dailyKCal: json[RemoteConstants.daily_kcal],
+        language: json[RemoteConstants.language],
+        termsAndConditionsAccepted: json[RemoteConstants.terms_cond],
         firstDateHealthResult:
             json[RemoteConstants.first_date_health_result] != null
                 ? DateTime.parse(json[RemoteConstants.first_date_health_result])

@@ -24,7 +24,8 @@ class TXProfileItemOptionWidget extends StatelessWidget {
           children: <Widget>[
             Icon(
               icon,
-              color: R.color.gray_darkest,
+              color: R.color.primary_color,
+              size: 20,
             ),
             SizedBox(
               width: 10,
@@ -34,7 +35,7 @@ class TXProfileItemOptionWidget extends StatelessWidget {
               text: optionName,
               maxLines: 1,
               textOverflow: TextOverflow.ellipsis,
-              color: R.color.gray_darkest,
+              color: Colors.black,
             )),
             Icon(
               Icons.keyboard_arrow_right,

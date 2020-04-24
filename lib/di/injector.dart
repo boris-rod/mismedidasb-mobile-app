@@ -5,6 +5,7 @@ import 'package:mismedidasb/data/api/account_api.dart';
 import 'package:mismedidasb/data/api/answer_api.dart';
 import 'package:mismedidasb/data/api/dish_api.dart';
 import 'package:mismedidasb/data/api/health_concept_api.dart';
+import 'package:mismedidasb/data/api/legacy_api.dart';
 import 'package:mismedidasb/data/api/personal_data_api.dart';
 import 'package:mismedidasb/data/api/poll_api.dart';
 import 'package:mismedidasb/data/api/question_api.dart';
@@ -15,6 +16,7 @@ import 'package:mismedidasb/data/converter/account_converter.dart';
 import 'package:mismedidasb/data/converter/answer_converter.dart';
 import 'package:mismedidasb/data/converter/dish_converter.dart';
 import 'package:mismedidasb/data/converter/health_concept_converter.dart';
+import 'package:mismedidasb/data/converter/legacy_converter.dart';
 import 'package:mismedidasb/data/converter/personal_data_converter.dart';
 import 'package:mismedidasb/data/converter/poll_converter.dart';
 import 'package:mismedidasb/data/converter/question_converter.dart';
@@ -29,6 +31,7 @@ import 'package:mismedidasb/data/repository/answer_repository.dart';
 import 'package:mismedidasb/data/repository/common_repository.dart';
 import 'package:mismedidasb/data/repository/dish_repository.dart';
 import 'package:mismedidasb/data/repository/health_concept_repository.dart';
+import 'package:mismedidasb/data/repository/legacy_repository.dart';
 import 'package:mismedidasb/data/repository/personal_data_repository.dart';
 import 'package:mismedidasb/data/repository/poll_repository.dart';
 import 'package:mismedidasb/data/repository/question_repository.dart';
@@ -49,6 +52,9 @@ import 'package:mismedidasb/domain/dish/i_dish_repository.dart';
 import 'package:mismedidasb/domain/health_concept/i_health_concept_api.dart';
 import 'package:mismedidasb/domain/health_concept/i_health_concept_converter.dart';
 import 'package:mismedidasb/domain/health_concept/i_health_concept_repository.dart';
+import 'package:mismedidasb/domain/legacy/i_legacy_api.dart';
+import 'package:mismedidasb/domain/legacy/i_legacy_converter.dart';
+import 'package:mismedidasb/domain/legacy/i_legacy_repository.dart';
 import 'package:mismedidasb/domain/personal_data/i_personal_data_api.dart';
 import 'package:mismedidasb/domain/personal_data/i_personal_data_converter.dart';
 import 'package:mismedidasb/domain/personal_data/i_personal_data_dao.dart';
@@ -74,6 +80,7 @@ import 'package:mismedidasb/ui/food_craving/food_craving_bloc.dart';
 import 'package:mismedidasb/ui/food_dish/food_dish_bloc.dart';
 import 'package:mismedidasb/ui/habit/habit_bloc.dart';
 import 'package:mismedidasb/ui/home/home_bloc.dart';
+import 'package:mismedidasb/ui/legacy/legacy_bloc.dart';
 import 'package:mismedidasb/ui/login/login_bloc.dart';
 import 'package:mismedidasb/ui/measure_health/measure_health_bloc.dart';
 import 'package:mismedidasb/ui/measure_value/measure_value_bloc.dart';
@@ -170,6 +177,9 @@ class Injector {
 
     container.registerSingleton<IDishConverter, DishConverter>(
         (c) => DishConverter());
+
+    container.registerSingleton<ILegacyConverter, LegacyConverter>(
+        (c) => LegacyConverter());
   }
 
   _registerApiLayer() {
@@ -202,6 +212,9 @@ class Injector {
 
     container.registerSingleton<IDishApi, DishApi>(
         (c) => DishApi(container.resolve(), container.resolve()));
+
+    container.registerSingleton<ILegacyApi, LegacyApi>(
+        (c) => LegacyApi(container.resolve(), container.resolve()));
   }
 
   _registerDaoLayer() {
@@ -252,18 +265,20 @@ class Injector {
     container.registerSingleton<IDishRepository, DishRepository>((c) =>
         DishRepository(
             container.resolve(), container.resolve(), container.resolve()));
+
+    container.registerSingleton<ILegacyRepository, LegacyRepository>(
+        (c) => LegacyRepository(container.resolve()));
   }
 
   _registerBloCs() {
-    container.registerFactory(
-        (c) => AppBloC(container.resolve()));
+    container.registerFactory((c) => AppBloC(container.resolve()));
     container.registerFactory(
         (c) => SplashBloC(container.resolve(), container.resolve()));
     container.registerFactory((c) => LoginBloC(container.resolve(),
         container.resolve(), container.resolve(), container.resolve()));
     container.registerFactory((c) => RecoverPasswordBloC(container.resolve()));
-    container.registerFactory((c) => RegisterBloC(
-        container.resolve(), container.resolve()));
+    container.registerFactory(
+        (c) => RegisterBloC(container.resolve(), container.resolve()));
     container.registerFactory((c) => HomeBloC(
         container.resolve(), container.resolve(), container.resolve()));
     container.registerFactory((c) => HabitBloC(container.resolve()));
@@ -279,6 +294,7 @@ class Injector {
     container.registerFactory((c) => ProfileBloC(container.resolve(),
         container.resolve(), container.resolve(), container.resolve()));
     container.registerFactory((c) => SettingsBloC(c.resolve(), c.resolve()));
+    container.registerFactory((c) => LegacyBloC(c.resolve()));
   }
 
   _registerCommon() {

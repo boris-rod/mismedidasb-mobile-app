@@ -269,4 +269,13 @@ class StringsEn implements StringsBase {
 
   @override
   String get spanish => "Spanish";
+
+  @override
+  String get privacyPolicies => "Privacy policies";
+
+  @override
+  String get termsCond => "Terms and Conditions";
+
+  @override
+  String get iAgree => "I agree";
 }

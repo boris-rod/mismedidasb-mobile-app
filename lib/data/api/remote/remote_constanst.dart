@@ -52,6 +52,7 @@ class RemoteConstants {
   static const password = 'password';
   static const confirmation_password = 'confirmationPassword';
   static const language = 'language';
+  static const terms_cond = 'termsAndConditionsAccepted';
   static const old_password = 'oldPassword';
   static const new_password = 'newPassword';
   static const confirm_password = 'confirmPassword';
@@ -76,6 +77,8 @@ class RemoteConstants {
   static const questions_results = 'questionsResults';
   static const top_tip = 'TOP';
   static const bottom_tip = 'BOTTOM';
+  static const content_type = 'contentType';
+  static const content_type_id = 'contentTypeId';
 
 
 

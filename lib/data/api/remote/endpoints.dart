@@ -1,6 +1,10 @@
 class Endpoint {
   static String apiBaseUrl = "http://ec2-52-15-173-73.us-east-2.compute.amazonaws.com";
 
+  ///General content
+  static const String accept_terms_cond = "/api/general-content/accept-terms-conditions";
+  static const String legacy_content_by_type = "/api/general-content/by-type";
+
   ///Account
   static const String register = "/api/account/register";
   static const String login = "/api/account/login";

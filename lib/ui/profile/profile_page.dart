@@ -19,6 +19,7 @@ import 'package:mismedidasb/ui/_tx_widget/tx_main_app_bar_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_network_image.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
 import 'package:mismedidasb/ui/change_password/change_password_page.dart';
+import 'package:mismedidasb/ui/legacy/legacy_page.dart';
 import 'package:mismedidasb/ui/profile/profile_bloc.dart';
 import 'package:mismedidasb/ui/profile/tx_profile_item_option_widget.dart';
 import 'package:mismedidasb/ui/settings/settings_bloc.dart';
@@ -212,6 +213,38 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                                   context, SettingsPage());
                               if (result is bool && result)
                                 bloc.mustReload = true;
+                            },
+                          ),
+                          Container(
+                            height: .5,
+                            color: R.color.gray,
+                          ),
+                          TXProfileItemOptionWidget(
+                            icon: Icons.announcement,
+                            optionName: R.string.termsCond,
+                            onOptionTap: () {
+                              NavigationUtils.push(
+                                  context,
+                                  LegacyPage(
+                                    contentType: 0,
+                                    termsCondAccepted: true,
+                                  ));
+                            },
+                          ),
+                          Container(
+                            height: .5,
+                            color: R.color.gray,
+                          ),
+                          TXProfileItemOptionWidget(
+                            icon: Icons.description,
+                            optionName: R.string.privacyPolicies,
+                            onOptionTap: () {
+                              NavigationUtils.push(
+                                  context,
+                                  LegacyPage(
+                                    contentType: 0,
+                                    termsCondAccepted: true,
+                                  ));
                             },
                           ),
 //                        Container(

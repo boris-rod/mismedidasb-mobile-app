@@ -15,6 +15,7 @@ class SharedPreferencesManager {
   final _showDailyResume = "show_daily_resume";
   final _languageCode = "language_code";
   final _languageCodeId = "language_code_id";
+  final _termsCond = "terms_cond";
 
   Future<bool> cleanAll() async {
 //    setUserEmail('');
@@ -42,8 +43,24 @@ class SharedPreferencesManager {
     return res;
   }
 
+  Future<bool> getTermsCond() async {
+    var value = (await SharedPreferences.getInstance()).getBool(_termsCond);
+    if (value == null) {
+      value = false;
+      setTermsCond(value);
+    }
+    return value;
+  }
+
+  Future<bool> setTermsCond(bool newValue) async {
+    var res =
+        (await SharedPreferences.getInstance()).setBool(_termsCond, newValue);
+    return res;
+  }
+
   Future<DateTime> getFirstDateHealthResult() async {
-    var value = (await SharedPreferences.getInstance()).getString(_firstDateHealthResult);
+    var value = (await SharedPreferences.getInstance())
+        .getString(_firstDateHealthResult);
     if (value == null) {
       final now = DateTime.now();
       value = now.toIso8601String();
@@ -135,7 +152,8 @@ class SharedPreferencesManager {
   }
 
   Future<String> getLanguageCode() async {
-    var value = (await SharedPreferences.getInstance()).getString(_languageCode);
+    var value =
+        (await SharedPreferences.getInstance()).getString(_languageCode);
     if (value == null) {
       value = '';
       setLanguageCode(value);
@@ -144,8 +162,8 @@ class SharedPreferencesManager {
   }
 
   Future<bool> setLanguageCode(String newValue) async {
-    var res =
-    (await SharedPreferences.getInstance()).setString(_languageCode, newValue);
+    var res = (await SharedPreferences.getInstance())
+        .setString(_languageCode, newValue);
     return res;
   }
 
@@ -219,7 +237,8 @@ class SharedPreferencesManager {
   }
 
   Future<bool> setLanguageCodeId(int newValue) async {
-    var res = (await SharedPreferences.getInstance()).setInt(_languageCodeId, newValue);
+    var res = (await SharedPreferences.getInstance())
+        .setInt(_languageCodeId, newValue);
     return res;
   }
 }
