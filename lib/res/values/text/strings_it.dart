@@ -6,7 +6,7 @@ class StringsIt implements StringsBase {
   @override
   TextDirection get textDirection => TextDirection.ltr;
 
-  String get appName => "Le mie misure di benessere";
+  String get appName => "MisMedidasB";
 
   @override
   String get foodDishes => "I miei piatti";

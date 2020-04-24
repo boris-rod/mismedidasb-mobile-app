@@ -7,6 +7,8 @@ import 'package:mismedidasb/fcm/fcm_background_notification_aware_widget.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/bloc_state.dart';
 import 'package:mismedidasb/ui/_base/navigation_utils.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_bottom_result_info.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_bottom_sheet.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_icon_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_main_app_bar_widget.dart';
@@ -52,7 +54,7 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
                   if (res is profileAction) {
                     if (res == profileAction.logout) {
                       NavigationUtils.pushReplacement(context, LoginPage());
-                    }else if(res == profileAction.languageCodeChanged){
+                    } else if (res == profileAction.languageCodeChanged) {
                       bloc.loadHomeData();
                     }
                   }
@@ -87,7 +89,7 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
       final w = Container(
         width: screenW / totalRowCount,
         height: screenW / totalRowCount,
-        child: _getHomeButton(model, () async{
+        child: _getHomeButton(model, () async {
           Widget page;
           if (model.codeName == RemoteConstants.concept_health_measure)
             page = MeasureHealthPage(
@@ -113,8 +115,15 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
             );
           if (page != null) {
             if (page is FoodDishPage && !(await bloc.canNavigateToDishes())) {
-              Fluttertoast.showToast(
-                  msg: R.string.fillHealthPoll);
+              showTXModalBottomSheet(
+                  context: context,
+                  builder: (ctx) {
+                    return TXBottomResultInfo(
+                      content: R.string.fillHealthPoll,
+                      height: 200,
+                      title: R.string.foodInstructionsTitle,
+                    );
+                  });
             } else
               NavigationUtils.push(context, page);
           }

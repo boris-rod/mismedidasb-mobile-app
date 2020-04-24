@@ -69,11 +69,11 @@ class AccountRepository extends BaseRepository implements IAccountRepository {
       final SettingModel model =
           SettingModel(languageCode: "es", languageCodeId: 0);
 
-      final obj = result.firstWhere((m) => m.setting.toLowerCase() == "language", orElse: () {
+      final obj = result.firstWhere((m) => m.setting == "language", orElse: () {
         return null;
       });
       if(obj != null){
-        model.languageCode = obj.value;
+        model.languageCode = obj.value.toLowerCase();
         model.languageCodeId = obj.settingId;
       }
       return Result.success(value: model);

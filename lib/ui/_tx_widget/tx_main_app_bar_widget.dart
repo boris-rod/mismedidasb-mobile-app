@@ -23,7 +23,7 @@ class TXMainAppBarWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        centerTitle: centeredTitle,
+        centerTitle: true,
         leading: leading ??
             TXIconButtonWidget(
               icon: Image.asset(R.image.logo),
@@ -31,6 +31,8 @@ class TXMainAppBarWidget extends StatelessWidget {
         title: TXTextWidget(
           text: title,
           color: Colors.white,
+          maxLines: 1,
+          textOverflow: TextOverflow.ellipsis,
           size: 18,
         ),
         actions: actions,

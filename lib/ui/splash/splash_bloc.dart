@@ -1,11 +1,13 @@
 import 'package:mismedidasb/data/_shared_prefs.dart';
 import 'package:mismedidasb/data/api/remote/result.dart';
 import 'package:mismedidasb/domain/session/i_session_repository.dart';
+import 'package:mismedidasb/domain/setting/setting_model.dart';
 import 'package:mismedidasb/ui/_base/bloc_base.dart';
+import 'package:mismedidasb/ui/_base/bloc_global.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:mismedidasb/utils/extensions.dart';
 
-class SplashBloC extends BaseBloC{
+class SplashBloC extends BaseBloC {
   final ISessionRepository _iSessionRepository;
   final SharedPreferencesManager _sharedPreferencesManager;
 
@@ -16,17 +18,16 @@ class SplashBloC extends BaseBloC{
   Stream<bool> get navigateResult => _navigateController.stream;
 
   void shouldNavigateToLogin() async {
-
     final bool saveCredentials =
-    await _sharedPreferencesManager.getSaveCredentials();
+        await _sharedPreferencesManager.getSaveCredentials();
     if (saveCredentials) {
       final String email = await _sharedPreferencesManager.getUserEmail();
       final String password = await _sharedPreferencesManager.getPassword();
 
       final String accessToken =
-      await _sharedPreferencesManager.getAccessToken();
+          await _sharedPreferencesManager.getAccessToken();
       final String refreshToken =
-      await _sharedPreferencesManager.getRefreshToken();
+          await _sharedPreferencesManager.getRefreshToken();
 
       if (email.isEmpty ||
           password.isEmpty ||
@@ -45,9 +46,20 @@ class SplashBloC extends BaseBloC{
     }
   }
 
+  void resolveInitialSettings(SettingModel settingModel) async {
+    String locale = await _sharedPreferencesManager.getLanguageCode();
+    if (locale.isEmpty ||
+        !["es", "en", "it"].contains(settingModel.languageCode)) {
+      settingModel.languageCode = "es";
+    } else {
+      settingModel.languageCode = locale;
+    }
+    await _sharedPreferencesManager.setLanguageCode(settingModel.languageCode);
+    languageCodeController.sinkAddSafe(settingModel);
+  }
+
   @override
   void dispose() {
     _navigateController.close();
   }
-
 }

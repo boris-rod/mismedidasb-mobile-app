@@ -25,10 +25,7 @@ class _MyMeasuresBState extends StateWithBloC<MyMeasuresBApp, AppBloC> {
   @override
   void initState() {
     super.initState();
-    String sysLanCode = ui.window.locale.languageCode;
 
-    bloc.resolveInitialSettings(
-        SettingModel(languageCode: sysLanCode, isDarkMode: false));
     widget.fcmFeature.setUp();
   }
 

@@ -6,7 +6,7 @@ class StringsEs implements StringsBase {
   @override
   TextDirection get textDirection => TextDirection.ltr;
 
-  String get appName => "Mis Medidas Bienestar";
+  String get appName => "MisMedidasB";
 
   @override
   String get foodDishes => "Mis platos";
