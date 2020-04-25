@@ -398,7 +398,7 @@
 					"$(PROJECT_DIR)/Flutter",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.metriri.mismedidas;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Runner;
 				PROVISIONING_PROFILE_SPECIFIER = mismedidas_prov_pro;
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -537,7 +537,7 @@
 					"$(PROJECT_DIR)/Flutter",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.metriri.mismedidas;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Runner;
 				PROVISIONING_PROFILE_SPECIFIER = mismedidas_prov_pro;
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -569,7 +569,7 @@
 					"$(PROJECT_DIR)/Flutter",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.metriri.mismedidas;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Runner;
 				PROVISIONING_PROFILE_SPECIFIER = mismedidas_prov_pro;
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
