@@ -130,7 +130,7 @@ class _MeasureValueState
                                     nextTitle: snapshot.data.questions.length >
                                             bloc.currentPage
                                         ? R.string.next
-                                        : R.string.update,
+                                        : R.string.save,
                                     previousTitle: R.string.previous,
                                   );
                                 },
