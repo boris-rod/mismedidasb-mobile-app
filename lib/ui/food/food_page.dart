@@ -125,7 +125,7 @@ class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
                                         bloc.setSelectedFood(model);
                                       },
                                       title: TXTextWidget(
-                                        text: "${model.name} ${model.calories.toStringAsFixed(2)}kCal",
+                                        text: model.name,
                                         color: model.isSelected
                                             ? R.color.primary_color
                                             : Colors.black,
