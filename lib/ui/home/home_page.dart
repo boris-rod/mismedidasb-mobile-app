@@ -104,7 +104,9 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
               conceptModel: model,
             );
           else if (model.codeName == RemoteConstants.concept_dishes)
-            page = FoodDishPage();
+            page = FoodDishPage(
+              instructions: model.instructions,
+            );
           else if (model.codeName == RemoteConstants.concept_habits)
             page = HabitPage(
               conceptModel: model,

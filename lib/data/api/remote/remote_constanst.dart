@@ -36,6 +36,7 @@ class RemoteConstants {
   static const description = 'description';
   static const code_name = 'codename';
   static const image = 'image';
+  static const instructions = 'instructions';
   static const code = 'code';
   static const email = 'email';
   static const full_name = 'fullName';

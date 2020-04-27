@@ -19,8 +19,8 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   final IUserRepository _iUserRepository;
   final SharedPreferencesManager _sharedPreferencesManager;
 
-  HomeBloC(this._iHealthConceptRepository,
-      this._iUserRepository, this._sharedPreferencesManager);
+  HomeBloC(this._iHealthConceptRepository, this._iUserRepository,
+      this._sharedPreferencesManager);
 
   BehaviorSubject<List<HealthConceptModel>> _conceptController =
       new BehaviorSubject();
@@ -34,7 +34,8 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     if (profileRes is ResultSuccess<UserModel>) {
       await _sharedPreferencesManager.setDailyKCal(profileRes.value.dailyKCal);
       await _sharedPreferencesManager.setIMC(profileRes.value.imc);
-      await _sharedPreferencesManager.setFirstDateHealthResult(profileRes.value.firstDateHealthResult);
+      await _sharedPreferencesManager
+          .setFirstDateHealthResult(profileRes.value.firstDateHealthResult);
       final res = await _iHealthConceptRepository.getHealthConceptList();
       if (res is ResultSuccess<List<HealthConceptModel>>) {
         _conceptController.sinkAddSafe(res.value);
@@ -45,7 +46,7 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     isLoading = false;
   }
 
-  Future<bool> canNavigateToDishes()async{
+  Future<bool> canNavigateToDishes() async {
     final kCal = await _sharedPreferencesManager.getDailyKCal();
     final imc = await _sharedPreferencesManager.getIMC();
     return kCal > 1 && imc > 1;
@@ -61,19 +62,19 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     return count;
   }
 
-  String getDefaultHomeImage(HealthConceptModel model){
+  String getDefaultHomeImage(HealthConceptModel model) {
     String resDir = R.image.logo;
-    if(model.codeName == RemoteConstants.concept_health_measure)
+    if (model.codeName == RemoteConstants.concept_health_measure)
       resDir = R.image.health_home;
-    else if(model.codeName == RemoteConstants.concept_values_measure)
+    else if (model.codeName == RemoteConstants.concept_values_measure)
       resDir = R.image.values_home;
-    else if(model.codeName == RemoteConstants.concept_wellness_measure)
+    else if (model.codeName == RemoteConstants.concept_wellness_measure)
       resDir = R.image.wellness_home;
-    else if(model.codeName == RemoteConstants.concept_dishes)
+    else if (model.codeName == RemoteConstants.concept_dishes)
       resDir = R.image.dishes_home;
-    else if(model.codeName == RemoteConstants.concept_habits)
+    else if (model.codeName == RemoteConstants.concept_habits)
       resDir = R.image.habits_home;
-    else if(model.codeName == RemoteConstants.concept_craving)
+    else if (model.codeName == RemoteConstants.concept_craving)
       resDir = R.image.food_craving_home;
 
     return resDir;

@@ -1,15 +1,11 @@
-import 'package:charts_flutter/flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rounded_progress_bar/flutter_rounded_progress_bar.dart';
-import 'package:flutter_rounded_progress_bar/rounded_progress_bar_style.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mismedidasb/domain/dish/dish_model.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/res/values/config.dart';
 import 'package:mismedidasb/ui/_base/bloc_state.dart';
 import 'package:mismedidasb/ui/_base/navigation_utils.dart';
-import 'package:mismedidasb/ui/_tx_widget/tx_action_chip_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_bottom_sheet.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_combo_progress_bar_widget.dart';
@@ -18,17 +14,13 @@ import 'package:mismedidasb/ui/_tx_widget/tx_icon_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_main_app_bar_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_network_image.dart';
-import 'package:mismedidasb/ui/_tx_widget/tx_progress_bar_checked_widget.dart';
-import 'package:mismedidasb/ui/_tx_widget/tx_serie_progress_bar_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_textlink_widget.dart';
 import 'package:mismedidasb/ui/food/food_page.dart';
 import 'package:mismedidasb/ui/food_dish/food_dish_bloc.dart';
-import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:mismedidasb/ui/food_dish/tx_bottom_resume_food_plan_widget.dart';
 import 'package:mismedidasb/ui/food_dish/tx_daily_nutritional_info_widget.dart';
 import 'package:mismedidasb/ui/food_dish/tx_dish_nutritional_info_widget.dart';
-import 'package:mismedidasb/ui/food_dish/tx_food_menu_action_widget.dart';
 import 'package:mismedidasb/ui/food_dish/tx_ideal_pie_chart_food_widget.dart';
 import 'package:mismedidasb/ui/food_dish/tx_instrucctions_widget.dart';
 import 'package:mismedidasb/ui/home/home_page.dart';
@@ -38,8 +30,9 @@ import 'package:mismedidasb/utils/extensions.dart';
 
 class FoodDishPage extends StatefulWidget {
   final bool fromNotificationScope;
+  final String instructions;
 
-  const FoodDishPage({Key key, this.fromNotificationScope = false})
+  const FoodDishPage({Key key, this.fromNotificationScope = false, this.instructions})
       : super(key: key);
 
   @override
@@ -122,7 +115,7 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                   showTXModalBottomSheet(
                       context: context,
                       builder: (context) {
-                        return TXInstructionsWidget();
+                        return TXInstructionsWidget(instructions: widget.instructions,);
                       });
                 },
               ),
