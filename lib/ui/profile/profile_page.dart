@@ -226,7 +226,7 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                               NavigationUtils.push(
                                   context,
                                   LegacyPage(
-                                    contentType: 0,
+                                    contentType: 1,
                                     termsCondAccepted: true,
                                   ));
                             },
