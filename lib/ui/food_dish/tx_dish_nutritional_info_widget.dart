@@ -16,7 +16,7 @@ class TXDishNutritionalInfoWidget extends StatelessWidget{
         Row(
           children: <Widget>[
             CircleAvatar(
-              radius: 9,
+              radius: 6,
               backgroundColor:
               Colors.blueAccent[100],
               child: TXTextWidget(
@@ -41,7 +41,7 @@ class TXDishNutritionalInfoWidget extends StatelessWidget{
         Row(
           children: <Widget>[
             CircleAvatar(
-              radius: 9,
+              radius: 6,
               backgroundColor:
               Colors.blueAccent[200],
               child: TXTextWidget(
@@ -66,7 +66,7 @@ class TXDishNutritionalInfoWidget extends StatelessWidget{
         Row(
           children: <Widget>[
             CircleAvatar(
-              radius: 9,
+              radius: 6,
               backgroundColor:
               Colors.blueAccent[700],
               child: TXTextWidget(
