@@ -1,5 +1,5 @@
 class Endpoint {
-  static String apiBaseUrl = "http://ec2-52-15-173-73.us-east-2.compute.amazonaws.com";
+  static String apiBaseUrl = "http://ec2-34-244-181-197.eu-west-1.compute.amazonaws.com";
 
   ///General content
   static const String accept_terms_cond = "/api/general-content/accept-terms-conditions";
