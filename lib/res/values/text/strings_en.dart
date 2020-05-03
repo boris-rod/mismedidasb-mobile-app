@@ -100,7 +100,7 @@ class StringsEn implements StringsBase {
   String get profile => "Profile";
 
   @override
-  String get logout => "Sign off";
+  String get logout => "Logout";
 
   @override
   String get changePassword => "Change password";
@@ -278,4 +278,32 @@ class StringsEn implements StringsBase {
 
   @override
   String get iAgree => "I agree";
+
+  @override
+  String get contactUs => "Contact Us";
+
+  @override
+  String get sendInfo => "Send information";
+
+  @override
+  String get description => "Description";
+
+  @override
+  String get subject => "Title";
+
+  @override
+  String get forceRemove => "Delete immediately";
+
+  @override
+  String get removeAccount => "Delete account";
+
+  @override
+  String get removeAccountWarning =>
+      "If you decide to delete your account, you have the possibility of recovering it within 30 days. In case of \"Delete immediately\", all your data will be permanently lost.";
+
+  @override
+  String get emptyList => "Empty list";
+  @override
+  String get contactUsResult => "Your message has been sent successfully. We will be responding to you via email if necessary.";
+
 }

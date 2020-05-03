@@ -3,6 +3,7 @@ import 'package:mismedidasb/app_bloc.dart';
 import 'package:mismedidasb/data/_shared_prefs.dart';
 import 'package:mismedidasb/data/api/account_api.dart';
 import 'package:mismedidasb/data/api/answer_api.dart';
+import 'package:mismedidasb/data/api/contact_us_api.dart';
 import 'package:mismedidasb/data/api/dish_api.dart';
 import 'package:mismedidasb/data/api/health_concept_api.dart';
 import 'package:mismedidasb/data/api/legacy_api.dart';
@@ -14,6 +15,7 @@ import 'package:mismedidasb/data/api/session_api.dart';
 import 'package:mismedidasb/data/api/user_api.dart';
 import 'package:mismedidasb/data/converter/account_converter.dart';
 import 'package:mismedidasb/data/converter/answer_converter.dart';
+import 'package:mismedidasb/data/converter/contact_us_converter.dart';
 import 'package:mismedidasb/data/converter/dish_converter.dart';
 import 'package:mismedidasb/data/converter/health_concept_converter.dart';
 import 'package:mismedidasb/data/converter/legacy_converter.dart';
@@ -29,6 +31,7 @@ import 'package:mismedidasb/data/dao/personal_data_dao.dart';
 import 'package:mismedidasb/data/repository/account_repository.dart';
 import 'package:mismedidasb/data/repository/answer_repository.dart';
 import 'package:mismedidasb/data/repository/common_repository.dart';
+import 'package:mismedidasb/data/repository/contact_us_repository.dart';
 import 'package:mismedidasb/data/repository/dish_repository.dart';
 import 'package:mismedidasb/data/repository/health_concept_repository.dart';
 import 'package:mismedidasb/data/repository/legacy_repository.dart';
@@ -45,6 +48,9 @@ import 'package:mismedidasb/domain/answer/i_answer_converter.dart';
 import 'package:mismedidasb/domain/answer/i_answer_repository.dart';
 import 'package:mismedidasb/domain/common_db/i_common_dao.dart';
 import 'package:mismedidasb/domain/common_db/i_common_repository.dart';
+import 'package:mismedidasb/domain/contact_us/i_contact_us_api.dart';
+import 'package:mismedidasb/domain/contact_us/i_contact_us_converter.dart';
+import 'package:mismedidasb/domain/contact_us/i_contact_us_repository.dart';
 import 'package:mismedidasb/domain/dish/i_dish_api.dart';
 import 'package:mismedidasb/domain/dish/i_dish_converter.dart';
 import 'package:mismedidasb/domain/dish/i_dish_dao.dart';
@@ -75,6 +81,7 @@ import 'package:mismedidasb/fcm/fcm_feature.dart';
 import 'package:mismedidasb/fcm/i_fcm_feature.dart';
 import 'package:mismedidasb/ui/_base/bloc_base.dart';
 import 'package:mismedidasb/ui/change_password/change_password_bloc.dart';
+import 'package:mismedidasb/ui/contact_us/contact_us_bloc.dart';
 import 'package:mismedidasb/ui/food/food_bloc.dart';
 import 'package:mismedidasb/ui/food_craving/food_craving_bloc.dart';
 import 'package:mismedidasb/ui/food_dish/food_dish_bloc.dart';
@@ -180,6 +187,9 @@ class Injector {
 
     container.registerSingleton<ILegacyConverter, LegacyConverter>(
         (c) => LegacyConverter());
+
+    container.registerSingleton<IContactUsConverter, ContactUsConverter>(
+        (c) => ContactUsConverter());
   }
 
   _registerApiLayer() {
@@ -215,6 +225,9 @@ class Injector {
 
     container.registerSingleton<ILegacyApi, LegacyApi>(
         (c) => LegacyApi(container.resolve(), container.resolve()));
+
+    container.registerSingleton<IContactUsApi, ContactUsApi>(
+        (c) => ContactUsApi(container.resolve(), container.resolve()));
   }
 
   _registerDaoLayer() {
@@ -268,6 +281,9 @@ class Injector {
 
     container.registerSingleton<ILegacyRepository, LegacyRepository>(
         (c) => LegacyRepository(container.resolve()));
+
+    container.registerSingleton<IContactUsRepository, ContactUsRepository>(
+        (c) => ContactUsRepository(container.resolve()));
   }
 
   _registerBloCs() {
@@ -292,9 +308,10 @@ class Injector {
     container.registerFactory(
         (c) => ChangePasswordBloC(container.resolve(), container.resolve()));
     container.registerFactory((c) => ProfileBloC(container.resolve(),
-        container.resolve(), container.resolve(), container.resolve()));
-    container.registerFactory((c) => SettingsBloC(c.resolve(), c.resolve()));
+        container.resolve()));
+    container.registerFactory((c) => SettingsBloC(c.resolve(), c.resolve(), c.resolve()));
     container.registerFactory((c) => LegacyBloC(c.resolve()));
+    container.registerFactory((c) => ContactUsBloC(c.resolve()));
   }
 
   _registerCommon() {

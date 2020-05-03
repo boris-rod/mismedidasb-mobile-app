@@ -15,4 +15,6 @@ abstract class IAccountApi {
   Future<List<SettingAPIModel>> getSettings();
 
   Future<bool> saveSettings(List<SettingAPIModel> list);
+
+  Future<bool> removeAccount(bool softDeletion);
 }

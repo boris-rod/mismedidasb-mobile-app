@@ -57,13 +57,14 @@ class _ChangePasswordState
           title: R.string.changePassword,
           body: TXGestureHideKeyBoard(
             child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: 30, vertical: 30),
+              physics: BouncingScrollPhysics(),
+                padding: EdgeInsets.symmetric(horizontal: 30).copyWith(bottom: 30),
                 child: Form(
                   key: _keyFormChangePassword,
                   child: Column(
                     children: <Widget>[
                       SizedBox(
-                        height: 30,
+                        height: 10,
                       ),
                       Image.asset(
                         R.image.logo_blue,
@@ -71,7 +72,7 @@ class _ChangePasswordState
                         height: 100,
                       ),
                       SizedBox(
-                        height: 30,
+                        height: 10,
                       ),
                       TXTextFieldWidget(
                         label: R.string.oldPassword,

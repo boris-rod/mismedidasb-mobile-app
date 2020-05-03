@@ -23,6 +23,7 @@ import 'package:mismedidasb/ui/measure_health/measure_health_page.dart';
 import 'package:mismedidasb/ui/measure_value/measure_value_page.dart';
 import 'package:mismedidasb/ui/measure_wellness/measure_wellness_page.dart';
 import 'package:mismedidasb/ui/profile/profile_page.dart';
+import 'package:mismedidasb/ui/settings/settings_page.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -51,10 +52,11 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
                 onPressed: () async {
                   final res =
                       await NavigationUtils.push(context, ProfilePage());
-                  if (res is profileAction) {
-                    if (res == profileAction.logout) {
+                  if (res is SettingAction) {
+                    if (res == SettingAction.logout ||
+                        res == SettingAction.removeAccount) {
                       NavigationUtils.pushReplacement(context, LoginPage());
-                    } else if (res == profileAction.languageCodeChanged) {
+                    } else if (res == SettingAction.languageCodeChanged) {
                       bloc.loadHomeData();
                     }
                   }

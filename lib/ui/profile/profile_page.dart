@@ -19,6 +19,7 @@ import 'package:mismedidasb/ui/_tx_widget/tx_main_app_bar_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_network_image.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
 import 'package:mismedidasb/ui/change_password/change_password_page.dart';
+import 'package:mismedidasb/ui/contact_us/contact_us_page.dart';
 import 'package:mismedidasb/ui/legacy/legacy_page.dart';
 import 'package:mismedidasb/ui/profile/profile_bloc.dart';
 import 'package:mismedidasb/ui/profile/tx_profile_item_option_widget.dart';
@@ -27,8 +28,6 @@ import 'package:mismedidasb/ui/settings/settings_page.dart';
 import 'package:mismedidasb/utils/file_manager.dart';
 import 'package:mismedidasb/utils/mail_manager.dart';
 import 'package:permission_handler/permission_handler.dart';
-
-enum profileAction { logout, languageCodeChanged }
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -40,20 +39,12 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
   final _keyFormProfile = new GlobalKey<FormState>();
 
   _navBack() {
-    if (bloc.mustReload)
-      NavigationUtils.pop(context, result: profileAction.languageCodeChanged);
-    else
-      NavigationUtils.pop(
-        context,
-      );
+    NavigationUtils.pop(context, result: bloc.settingAction);
   }
 
   @override
   void initState() {
     super.initState();
-    bloc.logoutResult.listen((res) {
-      NavigationUtils.pop(context, result: profileAction.logout);
-    });
     bloc.getProfile();
   }
 
@@ -211,8 +202,13 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                             onOptionTap: () async {
                               final result = await NavigationUtils.push(
                                   context, SettingsPage());
-                              if (result is bool && result)
-                                bloc.mustReload = true;
+                              if (result is SettingAction) {
+                                bloc.settingAction = result;
+                                if (result == SettingAction.logout ||
+                                    result == SettingAction.removeAccount) {
+                                  _navBack();
+                                }
+                              }
                             },
                           ),
                           Container(
@@ -247,6 +243,17 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                                   ));
                             },
                           ),
+                          Container(
+                            height: .5,
+                            color: R.color.gray,
+                          ),
+                          TXProfileItemOptionWidget(
+                            icon: Icons.contact_mail,
+                            optionName: R.string.contactUs,
+                            onOptionTap: () {
+                              NavigationUtils.push(context, ContactUsPage());
+                            },
+                          ),
 //                        Container(
 //                          height: .5,
 //                          color: R.color.gray,
@@ -259,17 +266,6 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
 //                                recipient: "borisrod@gmail.com");
 //                          },
 //                        ),
-                          Container(
-                            height: .5,
-                            color: R.color.gray,
-                          ),
-                          TXProfileItemOptionWidget(
-                            icon: Icons.exit_to_app,
-                            optionName: R.string.logout,
-                            onOptionTap: () {
-                              _showDemoDialogLogout(context: context);
-                            },
-                          ),
                           Container(
                             height: .5,
                             color: R.color.gray,
@@ -380,23 +376,6 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
         onOK: () {
           Navigator.pop(context, R.string.ok);
           onOkAction();
-        },
-        onCancel: () {
-          Navigator.pop(context, R.string.cancel);
-        },
-      ),
-    );
-  }
-
-  void _showDemoDialogLogout({BuildContext context}) {
-    showCupertinoDialog<String>(
-      context: context,
-      builder: (BuildContext context) => TXCupertinoDialogWidget(
-        title: R.string.logout,
-        content: R.string.logoutContent,
-        onOK: () {
-          bloc.logout();
-          Navigator.pop(context, R.string.logout);
         },
         onCancel: () {
           Navigator.pop(context, R.string.cancel);

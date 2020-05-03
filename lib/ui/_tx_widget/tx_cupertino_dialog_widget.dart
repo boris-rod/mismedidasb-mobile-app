@@ -27,12 +27,13 @@ class TXCupertinoDialogWidget extends StatelessWidget {
         ),
       ),
       actions: <Widget>[
-        CupertinoDialogAction(
-          child: TXTextWidget(
-            text: R.string.cancel,
+        if (onCancel != null)
+          CupertinoDialogAction(
+            child: TXTextWidget(
+              text: R.string.cancel,
+            ),
+            onPressed: onCancel,
           ),
-          onPressed: onCancel,
-        ),
         CupertinoDialogAction(
           child: TXTextWidget(
             text: R.string.ok,

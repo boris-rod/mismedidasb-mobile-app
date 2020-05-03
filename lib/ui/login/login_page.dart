@@ -42,6 +42,7 @@ class _LoginState extends StateWithBloC<LoginPage, LoginBloC> {
               RegisterConfirmationPage(
                 email: emailTextController.text,
                 password: passwordTextController.text,
+                generateCode: true,
               ));
 
           if (res is bool && res) bloc.initView();

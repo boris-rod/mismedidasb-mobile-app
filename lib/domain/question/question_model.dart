@@ -7,6 +7,7 @@ class QuestionModel {
   int order;
   String title;
   List<AnswerModel> answers;
+  int lastAnswer;
   int selectedAnswerId;
 
   QuestionModel(
@@ -15,6 +16,7 @@ class QuestionModel {
       this.order,
       this.title,
       this.answers,
+      this.lastAnswer,
       this.selectedAnswerId = -1});
 
   List<SingleSelectionModel> convertAnswersToSelectionModel() {

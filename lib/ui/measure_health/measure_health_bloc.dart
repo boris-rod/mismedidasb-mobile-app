@@ -55,45 +55,11 @@ class MeasureHealthBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     isLoading = false;
   }
 
-//  void setDataResult(HealthMeasureResultModel model) {
-//    _measureController.sinkAddSafe(model);
-//  }
-//
-//  void setAge(int data) async {
-//    healthMeasureResultModel.age = data;
-//    _measureController.sinkAddSafe(healthMeasureResultModel);
-//  }
-//
-//  void setWeight(int data) async {
-//    healthMeasureResultModel.weight = data;
-//    _measureController.sinkAddSafe(healthMeasureResultModel);
-//  }
-
-//  void setHeight(int data) async {
-//    healthMeasureResultModel.height = data;
-//    _measureController.sinkAddSafe(healthMeasureResultModel);
-//  }
-//
-//  void setSex(int data) async {
-//    healthMeasureResultModel.sex = data;
-//    _measureController.sinkAddSafe(healthMeasureResultModel);
-//  }
-//
-//  void setPhysicalExercise(int data, String name) async {
-//    healthMeasureResultModel.physicalExercise = data;
-//    healthMeasureResultModel.physicalExerciseValue = name;
-//    _measureController.sinkAddSafe(healthMeasureResultModel);
-//  }
-//
-//  void setDiet(int data, String name, int index) async {
-//    healthMeasureResultModel.diet[index] = data;
-//    healthMeasureResultModel.dietValue[index] = name;
-//    _measureController.sinkAddSafe(healthMeasureResultModel);
-//  }
 
   void setAnswerValue(int pollIndex, int questionIndex, int answerId) async {
     final polls = await pollsResult.first;
     polls[pollIndex].questions[questionIndex].selectedAnswerId = answerId;
+    polls[pollIndex].questions[questionIndex].lastAnswer = answerId;
     _pollsController.sinkAddSafe(polls);
   }
 

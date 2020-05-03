@@ -19,7 +19,7 @@ class TXProfileItemOptionWidget extends StatelessWidget {
       onTap: onOptionTap,
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 10).copyWith(left: 15),
-        height: 45,
+        height: 50,
         child: Row(
           children: <Widget>[
             Icon(

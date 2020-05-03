@@ -29,6 +29,7 @@ class MeasureValueBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   void setAnswerValue(int questionIndex, int answerId) async {
     final poll = await pollsResult.first;
     poll.questions[questionIndex].selectedAnswerId = answerId;
+    poll.questions[questionIndex].lastAnswer = answerId;
     _pollsController.sinkAddSafe(poll);
   }
 

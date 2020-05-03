@@ -39,7 +39,7 @@ class TXBottomSheetSelectorWidget extends StatelessWidget {
       onTap: () {
         if (list.isEmpty)
           Fluttertoast.showToast(
-              msg: "Lista vacía", toastLength: Toast.LENGTH_SHORT);
+              msg: R.string.emptyList, toastLength: Toast.LENGTH_SHORT);
         else
           showTXModalBottomSheet(
               context: context,

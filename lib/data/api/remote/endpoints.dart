@@ -4,6 +4,7 @@ class Endpoint {
   ///General content
   static const String accept_terms_cond = "/api/general-content/accept-terms-conditions";
   static const String legacy_content_by_type = "/api/general-content/by-type";
+  static const String contact_us_send_info = "/api/contact-us";
 
   ///Account
   static const String register = "/api/account/register";
@@ -17,6 +18,7 @@ class Endpoint {
   static const String resend_code = "/api/account/resend-code";
   static const String profile = "/api/account/profile";
   static const String save_settings = "/api/account/settings";
+  static const String remove_account = "/api/account/remove-account";
 
   static const String health_concept = "/api/concept"; //id
 

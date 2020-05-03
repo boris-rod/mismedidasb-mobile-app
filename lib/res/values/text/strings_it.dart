@@ -278,4 +278,33 @@ class StringsIt implements StringsBase {
 
   @override
   String get iAgree => "Sono d'accordo";
+
+  @override
+  String get contactUs => "Contattaci";
+
+  @override
+  String get sendInfo => "Inviare informazioni";
+
+  @override
+  String get description => "Descrizione";
+
+  @override
+  String get subject => "Titolo";
+
+  @override
+  String get forceRemove => "Elimina immediatamente";
+
+  @override
+  String get removeAccount => "Elimina account";
+
+  @override
+  String get removeAccountWarning =>
+      "Se decidi di eliminare il tuo account, hai la possibilità di recuperarlo entro 30 giorni. In caso di \"Elimina immediatamente\" utti i tuoi dati andranno persi in modo permanente.";
+
+  @override
+  String get emptyList => "Elenco vuoto";
+
+  @override
+  String get contactUsResult => "Il tuo messaggio è stato inviato con successo Ti risponderemo via e-mail, se necessario.";
+
 }

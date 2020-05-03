@@ -15,6 +15,7 @@ class QuestionConverter implements IQuestionConverter {
         pollId: json[RemoteConstants.poll_id],
         order: json[RemoteConstants.order],
         title: json[RemoteConstants.title],
+        lastAnswer: json[RemoteConstants.last_answers],
         answers: (json[RemoteConstants.answers] as List<dynamic>)
             .map((model) => _iAnswerConverter.fromJson(model))
             .toList());

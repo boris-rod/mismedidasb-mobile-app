@@ -10,27 +10,22 @@ import 'package:mismedidasb/domain/user/user_model.dart';
 import 'package:mismedidasb/ui/_base/bloc_base.dart';
 import 'package:mismedidasb/ui/_base/bloc_error_handler.dart';
 import 'package:mismedidasb/ui/_base/bloc_loading.dart';
+import 'package:mismedidasb/ui/settings/settings_page.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:mismedidasb/utils/extensions.dart';
 
 class ProfileBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
-  final ISessionRepository _iSessionRepository;
-  final ICommonRepository _iCommonRepository;
   final IUserRepository _iUserRepository;
   final SharedPreferencesManager _sharedPreferencesManager;
 
-  ProfileBloC(this._iSessionRepository, this._iCommonRepository,
+  ProfileBloC(
       this._iUserRepository, this._sharedPreferencesManager);
-
-  BehaviorSubject<bool> _logoutController = new BehaviorSubject();
-
-  Stream<bool> get logoutResult => _logoutController.stream;
 
   BehaviorSubject<UserModel> _userController = new BehaviorSubject();
 
   Stream<UserModel> get userResult => _userController.stream;
 
-  bool mustReload = false;
+  SettingAction settingAction;
   String currentPassword = "";
 
   void getProfile() async {
@@ -60,17 +55,8 @@ class ProfileBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
   void removeAvatar() async {}
 
-  void logout() async {
-    isLoading = true;
-    final res = await _iSessionRepository.logout();
-    await _sharedPreferencesManager.cleanAll();
-    _logoutController.sinkAddSafe(true);
-    isLoading = false;
-  }
-
   @override
   void dispose() {
-    _logoutController.close();
     _userController.close();
     disposeLoadingBloC();
     disposeErrorHandlerBloC();

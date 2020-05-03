@@ -72,7 +72,7 @@ class AccountRepository extends BaseRepository implements IAccountRepository {
       final obj = result.firstWhere((m) => m.setting == "language", orElse: () {
         return null;
       });
-      if(obj != null){
+      if (obj != null) {
         model.languageCode = obj.value.toLowerCase();
         model.languageCodeId = obj.settingId;
       }
@@ -88,6 +88,16 @@ class AccountRepository extends BaseRepository implements IAccountRepository {
         settingId: model.languageCodeId, value: model.languageCode);
     try {
       final result = await _accountApi.saveSettings([language]);
+      return Result.success(value: result);
+    } catch (ex) {
+      return resultError(ex);
+    }
+  }
+
+  @override
+  Future<Result<bool>> removeAccount(bool softDeletion) async {
+    try {
+      final result = await _accountApi.removeAccount(softDeletion);
       return Result.success(value: result);
     } catch (ex) {
       return resultError(ex);

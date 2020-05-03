@@ -17,4 +17,7 @@ abstract class IAccountRepository {
   Future<Result<SettingModel>> getSettings();
 
   Future<Result<bool>> saveSettings(SettingModel model);
+
+  Future<Result<bool>> removeAccount(bool softDeletion);
+
 }

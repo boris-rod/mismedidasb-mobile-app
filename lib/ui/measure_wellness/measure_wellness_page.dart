@@ -145,7 +145,8 @@ class _MeasureWellnessState
   }
 
   Widget _getPageView(
-      BuildContext context, QuestionModel model, int pageIndex) {
+      BuildContext context, QuestionModel question, int pageIndex) {
+    question.selectedAnswerId = question.lastAnswer != 0 ? question.lastAnswer : question.selectedAnswerId;
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -154,18 +155,18 @@ class _MeasureWellnessState
             alignment: Alignment.center,
             padding: EdgeInsets.all(20),
             child: TXTextWidget(
-              text: model.title,
+              text: question.title,
               textAlign: TextAlign.justify,
               size: 16,
             ),
           ),
           TXBottomSheetSelectorWidget(
-            list: model.convertAnswersToSelectionModel(),
+            list: question.convertAnswersToSelectionModel(),
             onItemSelected: (value) {
               bloc.setAnswerValue(pageIndex, value.id);
             },
             title: R.string.answer,
-            initialId: model.selectedAnswerId,
+            initialId: question.selectedAnswerId,
           ),
         ],
       ),

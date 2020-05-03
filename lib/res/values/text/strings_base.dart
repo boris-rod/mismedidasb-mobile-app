@@ -164,6 +164,8 @@ abstract class StringsBase implements WidgetsLocalizations {
 
   String get showResumePlanBeforeSave;
 
+  String get emptyList;
+
   String get changePasswordContent;
 
   String get changePasswordSuccess;
@@ -181,4 +183,22 @@ abstract class StringsBase implements WidgetsLocalizations {
   String get privacyPolicies;
 
   String get iAgree;
+
+  String get contactUs;
+
+  String get sendInfo;
+
+  String get subject;
+
+  String get description;
+
+  String get removeAccount;
+
+  String get removeAccountWarning;
+
+  String get forceRemove;
+
+  String get contactUsResult;
+
+
 }
