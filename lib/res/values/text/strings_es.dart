@@ -316,4 +316,13 @@ class StringsEs implements StringsBase {
 
   @override
   String get contactUsResult => "Su mensaje ha sido enviado satisfactoriamente. Le estaremos respondiendo vía correo en caso de ser necesario.";
+
+  @override
+  String get editProfile => "Editar perfil";
+
+  @override
+  String get aboutUs => "Quienes somos";
+
+  @override
+  String get faq => "Preguntas frecuentes";
 }

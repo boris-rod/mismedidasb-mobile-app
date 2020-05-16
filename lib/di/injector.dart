@@ -95,6 +95,7 @@ import 'package:mismedidasb/ui/measure_health/measure_health_bloc.dart';
 import 'package:mismedidasb/ui/measure_value/measure_value_bloc.dart';
 import 'package:mismedidasb/ui/measure_wellness/measure_wellness_bloc.dart';
 import 'package:mismedidasb/ui/profile/profile_bloc.dart';
+import 'package:mismedidasb/ui/profile_edit/profile_edit_bloc.dart';
 import 'package:mismedidasb/ui/recover_password/recover_password_bloc.dart';
 import 'package:mismedidasb/ui/register/register_bloc.dart';
 import 'package:mismedidasb/ui/settings/settings_bloc.dart';
@@ -316,6 +317,7 @@ class Injector {
     container.registerFactory((c) => ContactUsBloC(c.resolve()));
     container.registerFactory((c) => AboutUsBloC());
     container.registerFactory((c) => FAQBloC());
+    container.registerFactory((c) => ProfileEditBloC(c.resolve(), c.resolve()));
   }
 
   _registerCommon() {

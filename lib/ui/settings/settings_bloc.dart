@@ -54,23 +54,23 @@ class SettingsBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
         await _sharedPreferencesManager.getShowDailyResume();
     settingModel.showResumeBeforeSave = showResumeBeforeSave;
 
-    final settingRes = await _iAccountRepository.getSettings();
-    if (settingRes is ResultSuccess<SettingModel>) {
-      await _sharedPreferencesManager
-          .setLanguageCodeId(settingRes.value.languageCodeId);
-
-      settingModel.languageCodeId = settingRes.value.languageCodeId;
-      settingModel.languageCode = settingRes.value.languageCode;
-
-      if (locale != settingModel.languageCode) {
-        await _sharedPreferencesManager
-            .setLanguageCode(settingModel.languageCode);
-        languageCodeController.sinkAddSafe(settingModel);
-      }
-    } else {
-      settingModel.languageCode = locale;
-      showErrorMessage(settingRes);
-    }
+//    final settingRes = await _iAccountRepository.getSettings();
+//    if (settingRes is ResultSuccess<SettingModel>) {
+//      await _sharedPreferencesManager
+//          .setLanguageCodeId(settingRes.value.languageCodeId);
+//
+//      settingModel.languageCodeId = settingRes.value.languageCodeId;
+//      settingModel.languageCode = settingRes.value.languageCode;
+//
+//      if (locale != settingModel.languageCode) {
+//        await _sharedPreferencesManager
+//            .setLanguageCode(settingModel.languageCode);
+//        languageCodeController.sinkAddSafe(settingModel);
+//      }
+//    } else {
+//      settingModel.languageCode = locale;
+//      showErrorMessage(settingRes);
+//    }
 
     _settingsController.sinkAddSafe(settingModel);
 

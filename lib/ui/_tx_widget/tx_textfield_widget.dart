@@ -12,6 +12,7 @@ class TXTextFieldWidget extends StatefulWidget {
   final bool obscureText;
   final IconData iconData;
   final ValueChanged<String> onChanged;
+  final ValueChanged<String> onSubmitted;
   final int maxLine;
 
   const TXTextFieldWidget(
@@ -23,7 +24,9 @@ class TXTextFieldWidget extends StatefulWidget {
       this.textInputType,
       this.obscureText = false,
       this.iconData,
-      this.onChanged, this.maxLine})
+      this.onChanged,
+      this.maxLine,
+      this.onSubmitted})
       : super(key: key);
 
   @override
@@ -50,6 +53,7 @@ class _TXTextFieldWidgetState extends State<TXTextFieldWidget> {
       textInputAction: widget.textInputAction ?? TextInputAction.done,
       obscureText: widget.obscureText && !passwordVisible,
       onChanged: widget.onChanged,
+      onFieldSubmitted: widget.onSubmitted,
       decoration: InputDecoration(
           labelText: widget.label,
           suffixIcon: TXIconButtonWidget(

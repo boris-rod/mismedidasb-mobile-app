@@ -307,4 +307,12 @@ class StringsIt implements StringsBase {
   @override
   String get contactUsResult => "Il tuo messaggio è stato inviato con successo Ti risponderemo via e-mail, se necessario.";
 
+  @override
+  String get editProfile => "Editar perfil";
+
+  @override
+  String get aboutUs => "About Us";
+
+  @override
+  String get faq => "FAQs";
 }

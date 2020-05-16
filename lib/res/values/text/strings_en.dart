@@ -306,4 +306,13 @@ class StringsEn implements StringsBase {
   @override
   String get contactUsResult => "Your message has been sent successfully. We will be responding to you via email if necessary.";
 
+  @override
+  String get editProfile => "Edit profile";
+
+  @override
+  String get aboutUs => "About Us";
+
+  @override
+  String get faq => "FAQs";
+
 }

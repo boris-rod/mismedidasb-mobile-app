@@ -7,22 +7,28 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mismedidasb/domain/user/user_model.dart';
+import 'package:mismedidasb/enums.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/bloc_state.dart';
 import 'package:mismedidasb/ui/_base/navigation_utils.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_bottom_sheet.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_cupertino_dialog_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_divider_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_icon_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_main_app_bar_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_network_image.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
+import 'package:mismedidasb/ui/about_us/about_us_page.dart';
 import 'package:mismedidasb/ui/change_password/change_password_page.dart';
 import 'package:mismedidasb/ui/contact_us/contact_us_page.dart';
+import 'package:mismedidasb/ui/faq/faq_page.dart';
 import 'package:mismedidasb/ui/legacy/legacy_page.dart';
 import 'package:mismedidasb/ui/profile/profile_bloc.dart';
 import 'package:mismedidasb/ui/profile/tx_profile_item_option_widget.dart';
+import 'package:mismedidasb/ui/profile/tx_stat_widget.dart';
+import 'package:mismedidasb/ui/profile_edit/profile_edit_page.dart';
 import 'package:mismedidasb/ui/settings/settings_bloc.dart';
 import 'package:mismedidasb/ui/settings/settings_page.dart';
 import 'package:mismedidasb/utils/file_manager.dart';
@@ -65,6 +71,36 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
               },
             ),
             title: R.string.profile,
+            actions: <Widget>[
+              PopupMenuButton(
+                icon: Icon(
+                  Icons.more_vert,
+                  color: Colors.white,
+                ),
+                itemBuilder: (ctx) {
+                  return [..._popupActions()];
+                },
+                onSelected: (key) async {
+                  if (key == PopupActionKey.faq) {
+                    NavigationUtils.push(context, FAQPage());
+                  } else if (key == PopupActionKey.about_us) {
+                    NavigationUtils.push(context, AboutUsPage());
+                  } else if (key == PopupActionKey.contact_us) {
+                    NavigationUtils.push(context, ContactUsPage());
+                  } else if (key == PopupActionKey.profile_settings) {
+                    final result =
+                        await NavigationUtils.push(context, SettingsPage());
+                    if (result is SettingAction) {
+                      bloc.settingAction = result;
+                      if (result == SettingAction.logout ||
+                          result == SettingAction.removeAccount) {
+                        _navBack();
+                      }
+                    }
+                  }
+                },
+              )
+            ],
             body: SingleChildScrollView(
               physics: BouncingScrollPhysics(),
               padding: EdgeInsets.only(bottom: 30),
@@ -91,6 +127,12 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                                           Container(
                                             child: Stack(
                                               children: <Widget>[
+                                                Container(
+                                                  width: double.infinity,
+                                                  height: double.infinity,
+                                                  color:
+                                                      R.color.dialog_background,
+                                                ),
                                                 TXNetworkImage(
                                                   width: double.infinity,
                                                   height: double.infinity,
@@ -99,12 +141,6 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                                                       R.image.logo_blue,
                                                   boxFitImage: BoxFit.cover,
                                                 ),
-                                                Container(
-                                                  width: double.infinity,
-                                                  height: double.infinity,
-                                                  color:
-                                                      R.color.dialog_background,
-                                                )
                                               ],
                                             ),
                                           ),
@@ -131,8 +167,16 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                                     bottom: 0,
                                     right: 20,
                                     child: InkWell(
-                                      onTap: () {
-                                        _showMediaSelector(context);
+                                      onTap: () async {
+                                        final res = await NavigationUtils.push(
+                                            context,
+                                            ProfileEditPage(
+                                              userModel:
+                                                  await bloc.userResult.first,
+                                            ));
+                                        if (res != null) {
+                                          bloc.updateUser = res;
+                                        }
                                       },
                                       child: CircleAvatar(
                                         radius: 25,
@@ -177,98 +221,156 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                               ],
                             ),
                           ),
+                          TXDividerWidget(),
+                          SizedBox(height: 10,),
                           Container(
-                            height: .5,
-                            color: R.color.gray,
-                          ),
-                          TXProfileItemOptionWidget(
-                            icon: Icons.visibility,
-                            optionName: R.string.changePassword,
-                            onOptionTap: () {
-                              NavigationUtils.push(
-                                  context,
-                                  ChangePasswordPage(
-                                    oldPassword: bloc.currentPassword,
-                                  ));
-                            },
-                          ),
-                          Container(
-                            height: .5,
-                            color: R.color.gray,
-                          ),
-                          TXProfileItemOptionWidget(
-                            icon: Icons.settings,
-                            optionName: R.string.settings,
-                            onOptionTap: () async {
-                              final result = await NavigationUtils.push(
-                                  context, SettingsPage());
-                              if (result is SettingAction) {
-                                bloc.settingAction = result;
-                                if (result == SettingAction.logout ||
-                                    result == SettingAction.removeAccount) {
-                                  _navBack();
-                                }
-                              }
-                            },
-                          ),
-                          Container(
-                            height: .5,
-                            color: R.color.gray,
-                          ),
-                          TXProfileItemOptionWidget(
-                            icon: Icons.announcement,
-                            optionName: R.string.termsCond,
-                            onOptionTap: () {
-                              NavigationUtils.push(
-                                  context,
-                                  LegacyPage(
-                                    contentType: 1,
-                                    termsCondAccepted: true,
-                                  ));
-                            },
-                          ),
-                          Container(
-                            height: .5,
-                            color: R.color.gray,
-                          ),
-                          TXProfileItemOptionWidget(
-                            icon: Icons.description,
-                            optionName: R.string.privacyPolicies,
-                            onOptionTap: () {
-                              NavigationUtils.push(
-                                  context,
-                                  LegacyPage(
-                                    contentType: 0,
-                                    termsCondAccepted: true,
-                                  ));
-                            },
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            child: Card(
+                              color: R.color.gray_light,
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 10, horizontal: 10),
+                                child: Column(
+                                  children: <Widget>[
+                                    TXTextWidget(
+                                      text: "General",
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Expanded(
+                                          flex: 1,
+                                          child: TXStatWidget(
+                                            title: "Puntuación máxima",
+                                            value: "900",
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 1,
+                                          child: TXStatWidget(
+                                            title: "Puntuación actual",
+                                            value: "850",
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 1,
+                                          child: TXStatWidget(
+                                            title: "Máxima racha",
+                                            value: "135",
+                                          ),
+                                        )
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
                           ),
                           Container(
-                            height: .5,
-                            color: R.color.gray,
-                          ),
-                          TXProfileItemOptionWidget(
-                            icon: Icons.contact_mail,
-                            optionName: R.string.contactUs,
-                            onOptionTap: () {
-                              NavigationUtils.push(context, ContactUsPage());
-                            },
-                          ),
-//                        Container(
-//                          height: .5,
-//                          color: R.color.gray,
-//                        ),
-//                        TXProfileItemOptionWidget(
-//                          icon: Icons.help_outline,
-//                          optionName: R.string.help,
-//                          onOptionTap: () async {
-//                            await MainManager.sendEmail(
-//                                recipient: "borisrod@gmail.com");
-//                          },
-//                        ),
-                          Container(
-                            height: .5,
-                            color: R.color.gray,
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Expanded(
+                                  flex: 1,
+                                  child: Card(
+                                    color: R.color.gray_light,
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 10, horizontal: 10),
+                                      child: Column(
+                                        children: <Widget>[
+                                          TXTextWidget(
+                                            text: "Platos saludables",
+                                            fontWeight: FontWeight.bold,
+                                            size: 10,
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              Expanded(
+                                                flex: 1,
+                                                child: TXStatWidget(
+                                                  title: "Maxima racha",
+                                                  value: "100",
+                                                  titleSize: 10,
+                                                  valueSize: 20,
+                                                ),
+                                              ),
+                                              Expanded(
+                                                flex: 1,
+                                                child: TXStatWidget(
+                                                  title: "Racha actual",
+                                                  value: "40",
+                                                  titleSize: 10,
+                                                  valueSize: 20,
+                                                ),
+                                              ),
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 5,),
+                                Expanded(
+                                  flex: 1,
+                                  child: Card(
+                                    color: R.color.gray_light,
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 10, horizontal: 10),
+                                      child: Column(
+                                        children: <Widget>[
+                                          TXTextWidget(
+                                            text: "Platos balanceados",
+                                            fontWeight: FontWeight.bold,
+                                            size: 10,
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              Expanded(
+                                                flex: 1,
+                                                child: TXStatWidget(
+                                                  title: "Maxima racha",
+                                                  value: "60",
+                                                  titleSize: 10,
+                                                  valueSize: 20,
+                                                ),
+                                              ),
+                                              Expanded(
+                                                flex: 1,
+                                                child: TXStatWidget(
+                                                  title: "Racha actual",
+                                                  value: "55",
+                                                  titleSize: 10,
+                                                  valueSize: 20,
+                                                ),
+                                              ),
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
                         ],
                       ),
@@ -286,101 +388,105 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
     );
   }
 
-  void _showMediaSelector(BuildContext context) {
-    showTXModalBottomSheet(
-        context: context,
-        builder: (ctx) {
-          return Container(
-            height: 100,
-            width: double.infinity,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                FlatButton(
-                  padding: EdgeInsets.all(5),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Icon(
-                        Icons.photo_library,
-                        color: R.color.primary_color,
-                      ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      TXTextWidget(
-                        text: R.string.gallery,
-                        color: R.color.primary_color,
-                      ),
-                    ],
-                  ),
-                  onPressed: () async {
-                    await NavigationUtils.pop(context);
-                    _launchMediaView(context, ImageSource.gallery);
-                  },
-                ),
-                FlatButton(
-                  padding: EdgeInsets.all(5),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Icon(
-                        Icons.camera,
-                        color: R.color.primary_color,
-                      ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      TXTextWidget(
-                        text: R.string.camera,
-                        color: R.color.primary_color,
-                      ),
-                    ],
-                  ),
-                  onPressed: () async {
-                    await NavigationUtils.pop(context);
-                    _launchMediaView(context, ImageSource.camera);
-                  },
-                ),
-              ],
+  List<PopupMenuItem> _popupActions() {
+    List<PopupMenuItem> list = [];
+
+    final faq = PopupMenuItem(
+      value: PopupActionKey.faq,
+      child: Container(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Icon(
+              Icons.assignment,
+              size: 20,
+              color: R.color.primary_color,
             ),
-          );
-        });
-  }
-
-  void _launchMediaView(BuildContext context, ImageSource imageSource) async {
-    try {
-      final file = await FileManager.getImageFromSource(imageSource);
-      if (file != null && file.existsSync()) {
-        bloc.uploadAvatar(file);
-      }
-    } catch (ex) {
-      if (ex is PlatformException) {
-        if (ex.code == "photo_access_denied") {
-          _showDialogPermissions(
-              context: context,
-              onOkAction: () async {
-                openAppSettings();
-              });
-        }
-      }
-    }
-  }
-
-  void _showDialogPermissions({BuildContext context, Function onOkAction}) {
-    showCupertinoDialog<String>(
-      context: context,
-      builder: (BuildContext context) => TXCupertinoDialogWidget(
-        title: R.string.deniedPermissionTitle,
-        content: R.string.deniedPermissionContent,
-        onOK: () {
-          Navigator.pop(context, R.string.ok);
-          onOkAction();
-        },
-        onCancel: () {
-          Navigator.pop(context, R.string.cancel);
-        },
+            SizedBox(
+              width: 10,
+            ),
+            TXTextWidget(
+              text: R.string.faq,
+              color: Colors.black,
+            )
+          ],
+        ),
       ),
     );
+    final aboutUs = PopupMenuItem(
+      value: PopupActionKey.about_us,
+      child: Container(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Icon(
+              Icons.insert_emoticon,
+              size: 20,
+              color: R.color.primary_color,
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            TXTextWidget(
+              text: R.string.aboutUs,
+              color: Colors.black,
+            )
+          ],
+        ),
+      ),
+    );
+    final contactUs = PopupMenuItem(
+      value: PopupActionKey.contact_us,
+      child: Container(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Icon(
+              Icons.contact_mail,
+              size: 20,
+              color: R.color.primary_color,
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            TXTextWidget(
+              text: R.string.contactUs,
+              color: Colors.black,
+            )
+          ],
+        ),
+      ),
+    );
+    final settings = PopupMenuItem(
+      value: PopupActionKey.profile_settings,
+      child: Container(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Icon(
+              Icons.settings,
+              size: 20,
+              color: R.color.primary_color,
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            TXTextWidget(
+              text: R.string.settings,
+              color: Colors.black,
+            )
+          ],
+        ),
+      ),
+    );
+    list.add(aboutUs);
+    list.add(contactUs);
+    list.add(faq);
+    list.add(settings);
+    return list;
   }
 }
