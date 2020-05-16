@@ -64,10 +64,9 @@ class _RegisterState extends StateWithBloC<RegisterPage, RegisterBloC> {
                       height: 30,
                     ),
                     Image.asset(
-                      R.image.logo,
-                      width: 100,
-                      height: 100,
-                      color: R.color.primary_color,
+                      R.image.logo_blue,
+                      width: R.dim.logoInBody,
+                      height: R.dim.logoInBody,
                     ),
 //                    SizedBox(
 //                      height: 30,
