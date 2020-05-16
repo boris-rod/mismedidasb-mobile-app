@@ -168,7 +168,10 @@ class _LoginState extends StateWithBloC<LoginPage, LoginBloC> {
                                   textColor: R.color.accent_color,
                                   onTap: () async {
                                     final result = await NavigationUtils.push(
-                                        context, RegisterPage());
+                                        context, RegisterPage(
+                                      email: emailTextController.text,
+                                      password: passwordTextController.text,
+                                    ));
 
                                     if (result is bool && result) {
                                       bloc.initView();

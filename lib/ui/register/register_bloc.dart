@@ -28,13 +28,15 @@ class RegisterBloC extends BaseBloC
 
   String currentPassword = "";
 
-  void register(String userName, String email, String password,
+  void register(String email, String password,
       String confirmPassword) async {
     isLoading = true;
     String locale = await _sharedPreferencesManager.getLanguageCode();
 
+    final usrName = email.split('@');
+
     final model = RegisterModel(
-        fullName: userName,
+        fullName: usrName[0] ?? '',
         email: email,
         password: password,
         confirmationPassword: confirmPassword,

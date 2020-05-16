@@ -12,12 +12,17 @@ import 'package:mismedidasb/ui/register/register_bloc.dart';
 import 'package:mismedidasb/ui/register/register_confirmation_page.dart';
 
 class RegisterPage extends StatefulWidget {
+  final String email;
+  final String password;
+
+  const RegisterPage({Key key, this.email, this.password}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => _RegisterState();
 }
 
 class _RegisterState extends StateWithBloC<RegisterPage, RegisterBloC> {
-  TextEditingController nameTextController = TextEditingController();
+//  TextEditingController nameTextController = TextEditingController();
   TextEditingController emailTextController = TextEditingController();
   TextEditingController passwordTextController = TextEditingController();
   TextEditingController confirmPasswordTextController = TextEditingController();
@@ -26,6 +31,9 @@ class _RegisterState extends StateWithBloC<RegisterPage, RegisterBloC> {
   @override
   void initState() {
     super.initState();
+    emailTextController.text = widget.email ?? '';
+    passwordTextController.text = widget.password ?? '';
+
     bloc.registerResult.listen((res) {
       if (res) {
         NavigationUtils.pushReplacement(
@@ -61,15 +69,15 @@ class _RegisterState extends StateWithBloC<RegisterPage, RegisterBloC> {
                       height: 100,
                       color: R.color.primary_color,
                     ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    TXTextFieldWidget(
-                      label: R.string.userName,
-                      iconData: Icons.person,
-                      controller: nameTextController,
-                      validator: bloc.required(),
-                    ),
+//                    SizedBox(
+//                      height: 30,
+//                    ),
+//                    TXTextFieldWidget(
+//                      label: R.string.userName,
+//                      iconData: Icons.person,
+//                      controller: nameTextController,
+//                      validator: bloc.required(),
+//                    ),
                     SizedBox(
                       height: 30,
                     ),
@@ -96,7 +104,7 @@ class _RegisterState extends StateWithBloC<RegisterPage, RegisterBloC> {
                       height: 30,
                     ),
                     TXTextFieldWidget(
-                      label: R.string.password,
+                      label: R.string.confirmPassword,
                       validator: (value) {
                         if (value != passwordTextController.text) {
                           return R.string.passwordMatch;
@@ -115,7 +123,6 @@ class _RegisterState extends StateWithBloC<RegisterPage, RegisterBloC> {
                       onPressed: () {
                         if (_keyFormRegister.currentState.validate()) {
                           bloc.register(
-                              nameTextController.text,
                               emailTextController.text,
                               passwordTextController.text,
                               confirmPasswordTextController.text);
@@ -128,7 +135,7 @@ class _RegisterState extends StateWithBloC<RegisterPage, RegisterBloC> {
                       children: <Widget>[
                         Icon(Icons.arrow_back, size: 10, color: R.color.accent_color,),
                         TXTextLinkWidget(
-                          title: R.string.login,
+                          title: R.string.previous,
                           textColor: R.color.accent_color,
                           onTap: () {
                             NavigationUtils.pop(context);

@@ -33,12 +33,14 @@ class FormValidatorBloC {
         return R.string.requiredField;
       } else if (value.toString().length < 6) {
         return R.string.minCharsLength;
-      } else if (RegExp(password_especial_char).hasMatch(value.toString())) {
-        return R.string.especialCharRequired;
-      } else if (!RegExp(password_upper_case_letter)
-          .hasMatch(value.toString())) {
-        return R.string.upperLetterCharRequired;
-      } else {
+      }
+//      else if (RegExp(password_especial_char).hasMatch(value.toString())) {
+//        return R.string.especialCharRequired;
+//      } else if (!RegExp(password_upper_case_letter)
+//          .hasMatch(value.toString())) {
+//        return R.string.upperLetterCharRequired;
+//      }
+      else {
         return null;
       }
     };
