@@ -92,13 +92,16 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: Fira
+    - family: Gotham
       fonts:
-        - asset: lib/res/assets/fonts/fira_code_bold_700.ttf
-        - asset: lib/res/assets/fonts/fira_code_light_300.ttf
-        - asset: lib/res/assets/fonts/fira_code_medium_500.ttf
-        - asset: lib/res/assets/fonts/fira_code_regular_400.ttf
-        - asset: lib/res/assets/fonts/fira_code_retina_450.ttf
+        - asset: lib/res/assets/fonts/GothamBold.ttf
+        - asset: lib/res/assets/fonts/GothamBoldItalic.ttf
+        - asset: lib/res/assets/fonts/GothamBook.ttf
+        - asset: lib/res/assets/fonts/GothamBookItalic.ttf
+        - asset: lib/res/assets/fonts/GothamLight.ttf
+        - asset: lib/res/assets/fonts/GothamLightItalic.ttf
+        - asset: lib/res/assets/fonts/GothamMedium.ttf
+        - asset: lib/res/assets/fonts/GothamMediumItalic.ttf
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf
