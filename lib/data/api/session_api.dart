@@ -24,7 +24,7 @@ class SessionApi extends BaseApi implements ISessionApi {
   @override
   Future<UserModel> login(LoginModel loginModel) async {
     final body = jsonEncode(_iSessionConverter.toJsonLoginModel(loginModel));
-    final res = await _networkHandler.post(path: Endpoint.login, body: body, doRefreshToken: false);
+    final res = await _networkHandler.post(path: Endpoint.login, body: body);
     if (res.statusCode == RemoteConstants.code_success) {
       final token = res.headers["authorization"];
       final refreshToken = res.headers["refreshtoken"];

@@ -86,10 +86,9 @@ class _LoginState extends StateWithBloC<LoginPage, LoginBloC> {
                               height: 30,
                             ),
                             Image.asset(
-                              R.image.logo,
-                              width: 100,
-                              height: 100,
-                              color: R.color.primary_color,
+                              R.image.logo_blue,
+                              width: R.dim.logoInBody,
+                              height: R.dim.logoInBody,
                             ),
                             SizedBox(
                               height: 30,
@@ -168,7 +167,10 @@ class _LoginState extends StateWithBloC<LoginPage, LoginBloC> {
                                   textColor: R.color.accent_color,
                                   onTap: () async {
                                     final result = await NavigationUtils.push(
-                                        context, RegisterPage());
+                                        context, RegisterPage(
+                                      email: emailTextController.text,
+                                      password: passwordTextController.text,
+                                    ));
 
                                     if (result is bool && result) {
                                       bloc.initView();
