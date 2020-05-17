@@ -201,6 +201,12 @@ abstract class StringsBase implements WidgetsLocalizations {
   String get contactUsResult;
 
   String get editProfile;
+
   String get aboutUs;
+
   String get faq;
+
+  String get galleryPermissionContent;
+
+  String get cameraPermissionContent;
 }

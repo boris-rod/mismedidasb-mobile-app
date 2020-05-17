@@ -116,7 +116,7 @@ class _ProfileEditState
                           height: 15,
                         ),
                         Container(
-                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          padding: EdgeInsets.symmetric(horizontal: 10),
                           child: TXTextFieldWidget(
                             label: R.string.userName,
                             iconData: Icons.person,

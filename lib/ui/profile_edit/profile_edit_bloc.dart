@@ -8,6 +8,7 @@ import 'package:mismedidasb/ui/_base/bloc_base.dart';
 import 'package:mismedidasb/ui/_base/bloc_error_handler.dart';
 import 'package:mismedidasb/ui/_base/bloc_form_validator.dart';
 import 'package:mismedidasb/ui/_base/bloc_loading.dart';
+import 'package:mismedidasb/utils/file_manager.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:mismedidasb/utils/extensions.dart';
 
@@ -55,6 +56,7 @@ class ProfileEditBloC extends BaseBloC
     isLoading = true;
     final res = await _iUserRepository.uploadAvatar(file);
     if (res is ResultSuccess<bool>) {
+      await FileManager.deleteFile(file.path);
       final profileRes = await _iUserRepository.getProfile();
       if (profileRes is ResultSuccess<UserModel>)
         _userController.sinkAddSafe(profileRes.value);

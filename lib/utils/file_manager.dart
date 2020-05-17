@@ -19,14 +19,33 @@ class FileManager {
       BuildContext context, ImageSource source) async {
     try {
       final File image = await ImagePicker.pickImage(source: source);
-      return Future.value(image);
+
+      if (image == null) {
+        if (source == ImageSource.gallery &&
+            !await Permission.storage.isGranted) {
+          _showPermissionRequired(
+              context: context, content: R.string.galleryPermissionContent);
+        } else if (source == ImageSource.camera &&
+            !await Permission.camera.isGranted) {
+          _showPermissionRequired(
+              context: context, content: R.string.cameraPermissionContent);
+        }
+        return image;
+      }
+      String fileName = "${CalendarUtils.getTimeIdBasedSeconds()}.png";
+      String rootDir = await getRootFilesDir();
+      File file = await image.copy("$rootDir/$fileName");
+
+      return Future.value(file);
     } catch (ex) {
       if (ex is PlatformException) {
         if (ex.code == "photo_access_denied" ||
             ex.code == "camera_access_denied") {
-          _showPermissionRequired(context: context, content: ex.code == "photo_access_denied"
-              ? "Se requiere permiso para acceder a sus fotos"
-              : "Se requiere permiso para acceder a la cámara");
+          _showPermissionRequired(
+              context: context,
+              content: ex.code == "photo_access_denied"
+                  ? R.string.galleryPermissionContent
+                  : R.string.cameraPermissionContent);
           return null;
         }
       }
@@ -34,11 +53,58 @@ class FileManager {
     }
   }
 
+  static Future<bool> deleteFile(String filePath) async {
+    try {
+      String rootDir = await getRootFilesDir();
+      File f = File(filePath);
+      if (f.existsSync()) f.deleteSync();
+      return true;
+    } catch (ex) {
+      return false;
+    }
+  }
+
+  static Future<String> getRootFilesDir() async {
+    try {
+      Directory appDocDir = Platform.isIOS
+          ? await getApplicationDocumentsDirectory()
+          : await getExternalStorageDirectory();
+      return appDocDir.path;
+    } catch (ex) {
+      return '';
+    }
+  }
+
+  static Future<Directory> getRootFilesDirectory() async {
+    Directory appDocDir = Platform.isIOS
+        ? await getApplicationDocumentsDirectory()
+        : await getExternalStorageDirectory();
+    return appDocDir;
+  }
+
+  static Future<void> retrieveLostData() async {
+    final LostDataResponse response = await ImagePicker.retrieveLostData();
+    if (response == null) {
+      return;
+    }
+    if (response.file != null) {
+//      setState(() {
+//        if (response.type == RetrieveType.video) {
+//          _handleVideo(response.file);
+//        } else {
+//          _handleImage(response.file);
+//        }
+//      });
+    } else {
+//      _handleError(response.exception);
+    }
+  }
+
   static void _showPermissionRequired({BuildContext context, String content}) {
     showCupertinoDialog<String>(
       context: context,
       builder: (BuildContext context) => TXCupertinoDialogWidget(
-        title: "Permisio requerido",
+        title: R.string.deniedPermissionTitle,
         content: content,
         onOK: () {
           Navigator.pop(context, R.string.logout);

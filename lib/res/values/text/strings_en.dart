@@ -315,4 +315,10 @@ class StringsEn implements StringsBase {
   @override
   String get faq => "FAQs";
 
+  @override
+  String get cameraPermissionContent => "Se requiere permiso para acceder a la cámara";
+
+  @override
+  String get galleryPermissionContent => "Se requiere permiso para acceder a sus fotos";
+
 }
