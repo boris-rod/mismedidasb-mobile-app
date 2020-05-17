@@ -56,7 +56,6 @@ class ProfileEditBloC extends BaseBloC
     isLoading = true;
     final res = await _iUserRepository.uploadAvatar(file);
     if (res is ResultSuccess<bool>) {
-      await FileManager.deleteFile(file.path);
       final profileRes = await _iUserRepository.getProfile();
       if (profileRes is ResultSuccess<UserModel>)
         _userController.sinkAddSafe(profileRes.value);
@@ -67,6 +66,7 @@ class ProfileEditBloC extends BaseBloC
       isLoading = false;
       showErrorMessage(res);
     }
+    await FileManager.deleteFile(file.path);
   }
 
   @override

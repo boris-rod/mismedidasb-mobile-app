@@ -209,7 +209,7 @@ class NetworkHandler {
     String baseUrl,
     Map<String, String> body = const {},
     Map<String, String> headers = const {},
-    @required File files,
+    @required File file,
   }) async {
     final _url = (baseUrl ?? Endpoint.apiBaseUrl) + path;
     final _headers = await _commonHeaders();
@@ -222,17 +222,20 @@ class NetworkHandler {
       _logger.log("-> HEADERS: $_headers");
       _logger.log("-> BODY: $body");
 
-      FormData formData = FormData();
+//      if (file != null) {
+//        var pathParts = file.path.split('/');
+//        String name = pathParts[pathParts.length - 1];
+//        print('NAME -> $name');
 
-      if (files != null) {
-        var pathParts = files.path.split('/');
-        String name = pathParts[pathParts.length - 1];
-        print('NAME -> $name');
-        formData.add(
-            'file',
-            new UploadFileInfo(files, name,
-                contentType: ContentType('image', 'jpeg')));
-      }
+        FormData formData = FormData.fromMap({
+          "file": await MultipartFile.fromFile(file.path, filename: file.path.split("/").last)
+        });
+
+//        formData.add(
+//            'file',
+//            new UploadFileInfo(files, name,
+//                contentType: ContentType('image', 'jpeg')));
+//      }
       Dio dio = new Dio();
       final res = await dio.post(_url,
           data: formData,

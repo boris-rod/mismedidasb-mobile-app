@@ -42,7 +42,7 @@ class UserApi extends BaseApi implements IUserApi {
   Future<bool> uploadAvatar(File photo) async {
     final res = await _networkHandler.postFile(
       path: Endpoint.upload_avatar,
-      files: photo,
+      file: photo,
     );
     return res.statusCode == RemoteConstants.code_success;
   }
