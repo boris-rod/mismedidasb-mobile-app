@@ -451,6 +451,7 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
       bloc.isCopying = false;
     }
     return SingleChildScrollView(
+      physics: BouncingScrollPhysics(),
       child: Column(
         children: <Widget>[
 //          Container(

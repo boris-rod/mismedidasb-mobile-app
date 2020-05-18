@@ -72,6 +72,7 @@ class _HabitState extends StateWithBloC<HabitPage, HabitBloC> {
 //                              ),
                               Expanded(
                                 child: SingleChildScrollView(
+                                  physics: BouncingScrollPhysics(),
                                   child: Html(
                                     data: poll.htmlContent,
                                   ),

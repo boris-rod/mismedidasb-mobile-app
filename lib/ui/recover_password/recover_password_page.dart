@@ -39,6 +39,7 @@ class _RecoverPasswordState
               key: _keyFormRecover,
               child: TXGestureHideKeyBoard(
                   child: SingleChildScrollView(
+                    physics: BouncingScrollPhysics(),
                     padding: EdgeInsets.symmetric(horizontal: 30, vertical: 30),
                     child: Container(
                       child: Column(

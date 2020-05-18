@@ -13,10 +13,10 @@ class TXInstructionsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(left: 10),
       alignment: Alignment.topLeft,
       child: SingleChildScrollView(
-        padding: EdgeInsets.only(left: 10, right: 20,bottom: 30),
+        physics: BouncingScrollPhysics(),
+        padding: EdgeInsets.only(left: 10, right: 10,bottom: 30),
         child: Column(
           children: <Widget>[
             Row(
@@ -31,7 +31,6 @@ class TXInstructionsWidget extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  width: 50,
                   child: TXTextLinkWidget(
                     title: R.string.ok,
                     textColor: R.color.primary_color,

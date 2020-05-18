@@ -32,7 +32,6 @@ class TXBottomResultInfo extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  width: 50,
                   child: TXTextLinkWidget(
                     title: R.string.ok,
                     textColor: R.color.primary_color,

@@ -66,6 +66,7 @@ class _FoodCravingState
 //                        ),
                         Expanded(
                           child: SingleChildScrollView(
+                            physics: BouncingScrollPhysics(),
                             child: Html(
                               data: poll.htmlContent,
                             ),

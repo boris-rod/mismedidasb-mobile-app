@@ -68,8 +68,8 @@ class _ChangePasswordState
                       ),
                       Image.asset(
                         R.image.logo_blue,
-                        width: 100,
-                        height: 100,
+                        width: R.dim.logoInBody,
+                        height: R.dim.logoInBody,
                       ),
                       SizedBox(
                         height: 10,

@@ -55,6 +55,7 @@ class _RegisterState extends StateWithBloC<RegisterPage, RegisterBloC> {
             key: _keyFormRegister,
             child: TXGestureHideKeyBoard(
               child: SingleChildScrollView(
+                  physics: BouncingScrollPhysics(),
                   child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 30, vertical: 30),
                 child: Column(
