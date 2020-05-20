@@ -7,6 +7,7 @@ import 'package:mismedidasb/ui/_tx_widget/tx_gesture_hide_key_board.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_textfield_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_textlink_widget.dart';
+import 'package:mismedidasb/ui/login/login_bloc.dart';
 import 'package:mismedidasb/ui/register/register_bloc.dart';
 
 class RegisterConfirmationPage extends StatefulWidget {
@@ -36,7 +37,7 @@ class _RegisterConfirmationState
 
     bloc.confirmedResult.listen((onData) {
       if (onData != null && onData) {
-        NavigationUtils.pop(context, result: true);
+        NavigationUtils.pop(context, result: LOGIN_RESULT.HOME);
       }
     });
   }

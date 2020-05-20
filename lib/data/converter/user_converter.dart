@@ -8,6 +8,7 @@ class UserConverter implements IUserConverter {
     return UserModel(
         id: json[RemoteConstants.id],
         fullName: json[RemoteConstants.full_name],
+        username: json[RemoteConstants.user_name],
         email: json[RemoteConstants.email],
         phone: json[RemoteConstants.phone],
         statusId: json[RemoteConstants.status_id],
@@ -30,16 +31,9 @@ class UserConverter implements IUserConverter {
   @override
   Map<String, dynamic> toJson(UserModel userModel) {
     return {
-      RemoteConstants.id: userModel.id,
       RemoteConstants.full_name: userModel.fullName,
-      RemoteConstants.email: userModel.email,
+      RemoteConstants.user_name: userModel.username,
       RemoteConstants.phone: userModel.phone,
-//      RemoteConstants.status_id: userModel.statusId,
-//      RemoteConstants.status: userModel.status,
-//      RemoteConstants.avatar: userModel.avatar,
-//      RemoteConstants.avatar_mime_type: userModel.avatarMimeType,
-//      RemoteConstants.role: userModel.role,
-//      RemoteConstants.role_id: userModel.roleId
     };
   }
 }

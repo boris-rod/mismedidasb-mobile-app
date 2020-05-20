@@ -53,7 +53,7 @@ class SessionApi extends BaseApi implements ISessionApi {
     final jsonValidateToken = _iSessionConverter
         .toJsonValidateTokenModel(ValidateTokenModel(token: token));
     final res = await _networkHandler.post(
-        path: Endpoint.validate_token, body: jsonEncode(jsonValidateToken), doRefreshToken: false);
+        path: Endpoint.validate_token, body: jsonEncode(jsonValidateToken));
     if (res.statusCode == RemoteConstants.code_success)
       return true;
     else

@@ -79,7 +79,7 @@ class SharedPreferencesManager {
     var value =
         (await SharedPreferences.getInstance()).getBool(_saveCredentials);
     if (value == null) {
-      value = false;
+      value = true;
       setSaveCredentials(value);
     }
     return value;
@@ -163,7 +163,7 @@ class SharedPreferencesManager {
 
   Future<bool> setLanguageCode(String newValue) async {
     var res = (await SharedPreferences.getInstance())
-        .setString(_languageCode, newValue);
+        .setString(_languageCode, 'es');
     return res;
   }
 

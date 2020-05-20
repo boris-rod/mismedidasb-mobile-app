@@ -18,7 +18,7 @@ class SplashBloC extends BaseBloC {
   Stream<bool> get navigateResult => _navigateController.stream;
 
   void shouldNavigateToLogin() async {
-    final termsCond = await _sharedPreferencesManager.getTermsCond();
+//    final termsCond = await _sharedPreferencesManager.getTermsCond();
     final bool saveCredentials =
         await _sharedPreferencesManager.getSaveCredentials();
     if (saveCredentials) {
@@ -33,8 +33,9 @@ class SplashBloC extends BaseBloC {
       if (email.isEmpty ||
           password.isEmpty ||
           accessToken.isEmpty ||
-          refreshToken.isEmpty ||
-          !termsCond)
+          refreshToken.isEmpty
+//          || !termsCond
+      )
         _navigateController.sinkAddSafe(true);
       else {
         final res = await _iSessionRepository.validateToken();

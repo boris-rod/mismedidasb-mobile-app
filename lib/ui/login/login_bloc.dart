@@ -17,7 +17,7 @@ import 'package:mismedidasb/utils/calendar_utils.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:mismedidasb/utils/extensions.dart';
 
-enum LOGIN_RESULT { HOME, CONFIRMATION_CODE, TERMS_COND }
+enum LOGIN_RESULT { HOME, CONFIRMATION_CODE, TERMS_COND, REGISTER }
 
 class LoginBloC extends BaseBloC
     with LoadingBloC, ErrorHandlerBloC, FormValidatorBloC {
@@ -42,7 +42,7 @@ class LoginBloC extends BaseBloC
 
   BehaviorSubject<bool> _saveCredentialsController = new BehaviorSubject();
 
-  void initView() async {
+  Future<void> initView() async {
     final UserCredentialsModel userCredentials = UserCredentialsModel();
     userCredentials.saveCredentials =
         await _sharedPreferencesManager.getSaveCredentials();
@@ -52,11 +52,20 @@ class LoginBloC extends BaseBloC
     _userInitController.sinkAddSafe(userCredentials);
   }
 
-  void saveCredentials(bool value) async {
+  Future<void> saveCredentials(bool value) async {
     (await userInitResult.first).saveCredentials = value;
     await _sharedPreferencesManager.setSaveCredentials(value);
     _saveCredentialsController.sinkAddSafe(value);
   }
+
+  Future<String> userEmail()async{
+    return await _sharedPreferencesManager.getUserEmail();
+  }
+
+  Future<String> userPassword()async{
+    return await _sharedPreferencesManager.getPassword();
+  }
+
 
   void login(String email, String password) async {
     isLoading = true;
@@ -78,7 +87,9 @@ class LoginBloC extends BaseBloC
     } else {
       if (res is ResultError && (res as ResultError).code == RemoteConstants.code_forbidden) {
         _loginController.sinkAddSafe(LOGIN_RESULT.CONFIRMATION_CODE);
-      } else
+      } if (res is ResultError && (res as ResultError).code == RemoteConstants.code_not_found) {
+        _loginController.sinkAddSafe(LOGIN_RESULT.REGISTER);
+      }else
         showErrorMessage(res);
     }
     isLoading = false;

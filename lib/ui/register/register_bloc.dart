@@ -3,6 +3,8 @@ import 'package:mismedidasb/data/_shared_prefs.dart';
 import 'package:mismedidasb/data/api/remote/result.dart';
 import 'package:mismedidasb/domain/account/account_model.dart';
 import 'package:mismedidasb/domain/account/i_account_repository.dart';
+import 'package:mismedidasb/domain/session/i_session_repository.dart';
+import 'package:mismedidasb/domain/session/session_model.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/bloc_base.dart';
 import 'package:mismedidasb/ui/_base/bloc_error_handler.dart';
@@ -15,8 +17,9 @@ class RegisterBloC extends BaseBloC
     with LoadingBloC, ErrorHandlerBloC, FormValidatorBloC {
   final IAccountRepository _iAccountRepository;
   final SharedPreferencesManager _sharedPreferencesManager;
+  final ISessionRepository _iSessionRepository;
 
-  RegisterBloC(this._iAccountRepository, this._sharedPreferencesManager);
+  RegisterBloC(this._iAccountRepository, this._sharedPreferencesManager, this._iSessionRepository);
 
   BehaviorSubject<bool> _registerController = new BehaviorSubject();
 
@@ -44,6 +47,10 @@ class RegisterBloC extends BaseBloC
     final res = await _iAccountRepository.register(model);
 
     if (res is ResultSuccess<int>) {
+      await _sharedPreferencesManager.setUserEmail(email);
+      await _sharedPreferencesManager.setPassword(password);
+      await _sharedPreferencesManager.setSaveCredentials(true);
+
       _registerController.sinkAddSafe(true);
     } else {
       showErrorMessage(res);
@@ -58,7 +65,7 @@ class RegisterBloC extends BaseBloC
     if (res is ResultSuccess<int>) {
       await _sharedPreferencesManager.setUserEmail(email);
       await _sharedPreferencesManager.setPassword(password);
-      await _sharedPreferencesManager.setSaveCredentials(false);
+      await _sharedPreferencesManager.setSaveCredentials(true);
 
       _confirmationController.sinkAddSafe(true);
     } else {

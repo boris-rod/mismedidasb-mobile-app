@@ -36,6 +36,8 @@ class _LoginState extends StateWithBloC<LoginPage, LoginBloC> {
       if (onData is LOGIN_RESULT) {
         if (onData == LOGIN_RESULT.HOME) {
           NavigationUtils.pushReplacement(context, HomePage());
+        } else if (onData == LOGIN_RESULT.REGISTER) {
+          registrationProcess();
         } else if (onData == LOGIN_RESULT.CONFIRMATION_CODE) {
           final res = await NavigationUtils.push(
               context,
@@ -45,8 +47,10 @@ class _LoginState extends StateWithBloC<LoginPage, LoginBloC> {
                 generateCode: true,
               ));
 
-          if (res is bool && res) bloc.initView();
-        } else {
+          if (res == LOGIN_RESULT.HOME) {
+            NavigationUtils.pushReplacement(context, HomePage());
+          }
+        } else if (onData == LOGIN_RESULT.TERMS_COND) {
           final res = await NavigationUtils.push(
               context,
               LegacyPage(
@@ -55,6 +59,8 @@ class _LoginState extends StateWithBloC<LoginPage, LoginBloC> {
           if (res is bool && res) {
             NavigationUtils.pushReplacement(context, HomePage());
           }
+        } else {
+          bloc.initView();
         }
       }
     });
@@ -121,8 +127,8 @@ class _LoginState extends StateWithBloC<LoginPage, LoginBloC> {
                                   leading: true,
                                   textColor: R.color.accent_color,
                                   value: snapshotSave.data,
-                                  onChange: (value) {
-                                    bloc.saveCredentials(value);
+                                  onChange: (value) async {
+                                    await bloc.saveCredentials(value);
                                   },
                                 );
                               },
@@ -166,16 +172,8 @@ class _LoginState extends StateWithBloC<LoginPage, LoginBloC> {
                                 TXTextLinkWidget(
                                   title: R.string.register,
                                   textColor: R.color.accent_color,
-                                  onTap: () async {
-                                    final result = await NavigationUtils.push(
-                                        context, RegisterPage(
-                                      email: emailTextController.text,
-                                      password: passwordTextController.text,
-                                    ));
-
-                                    if (result is bool && result) {
-                                      bloc.initView();
-                                    }
+                                  onTap: () {
+                                    registrationProcess();
                                   },
                                 ),
                                 Icon(
@@ -198,5 +196,31 @@ class _LoginState extends StateWithBloC<LoginPage, LoginBloC> {
         )
       ],
     );
+  }
+
+  void registrationProcess() async {
+    final registerRes = await NavigationUtils.push(
+        context,
+        RegisterPage(
+          email: emailTextController.text,
+          password: passwordTextController.text,
+        ));
+
+    final email = await bloc.userEmail();
+    final password = await bloc.userPassword();
+    await bloc.saveCredentials(true);
+
+    final confirmRes = await NavigationUtils.push(
+        context,
+        RegisterConfirmationPage(
+          email: email,
+          password: password,
+        ));
+
+    await bloc.initView();
+
+    if (confirmRes is LOGIN_RESULT && confirmRes == LOGIN_RESULT.HOME) {
+      bloc.login(email, password);
+    }
   }
 }

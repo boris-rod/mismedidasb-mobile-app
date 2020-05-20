@@ -36,12 +36,7 @@ class _RegisterState extends StateWithBloC<RegisterPage, RegisterBloC> {
 
     bloc.registerResult.listen((res) {
       if (res) {
-        NavigationUtils.pushReplacement(
-            context,
-            RegisterConfirmationPage(
-              email: emailTextController.text,
-              password: passwordTextController.text,
-            ));
+        NavigationUtils.pop(context,);
       }
     });
   }
@@ -57,18 +52,18 @@ class _RegisterState extends StateWithBloC<RegisterPage, RegisterBloC> {
               child: SingleChildScrollView(
                   physics: BouncingScrollPhysics(),
                   child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 30, vertical: 30),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(
-                      height: 30,
-                    ),
-                    Image.asset(
-                      R.image.logo_blue,
-                      width: R.dim.logoInBody,
-                      height: R.dim.logoInBody,
-                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 30),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        SizedBox(
+                          height: 30,
+                        ),
+                        Image.asset(
+                          R.image.logo_blue,
+                          width: R.dim.logoInBody,
+                          height: R.dim.logoInBody,
+                        ),
 //                    SizedBox(
 //                      height: 30,
 //                    ),
@@ -78,74 +73,78 @@ class _RegisterState extends StateWithBloC<RegisterPage, RegisterBloC> {
 //                      controller: nameTextController,
 //                      validator: bloc.required(),
 //                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    TXTextFieldWidget(
-                      label: R.string.email,
-                      iconData: Icons.email,
-                      controller: emailTextController,
-                      validator: bloc.email(),
-                      textInputType: TextInputType.emailAddress,
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    TXTextFieldWidget(
-                      label: R.string.password,
-                      validator: bloc.password(),
-                      controller: passwordTextController,
-                      obscureText: true,
-                      onChanged: (value) {
-                        bloc.currentPassword = value;
-                      },
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    TXTextFieldWidget(
-                      label: R.string.confirmPassword,
-                      validator: (value) {
-                        if (value != passwordTextController.text) {
-                          return R.string.passwordMatch;
-                        } else {
-                          return null;
-                        }
-                      },
-                      obscureText: true,
-                      controller: confirmPasswordTextController,
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    TXButtonWidget(
-                      title: R.string.register,
-                      onPressed: () {
-                        if (_keyFormRegister.currentState.validate()) {
-                          bloc.register(
-                              emailTextController.text,
-                              passwordTextController.text,
-                              confirmPasswordTextController.text);
-                        }
-                      },
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Icon(Icons.arrow_back, size: 10, color: R.color.accent_color,),
-                        TXTextLinkWidget(
-                          title: R.string.previous,
-                          textColor: R.color.accent_color,
-                          onTap: () {
-                            NavigationUtils.pop(context);
+                        SizedBox(
+                          height: 30,
+                        ),
+                        TXTextFieldWidget(
+                          label: R.string.email,
+                          iconData: Icons.email,
+                          controller: emailTextController,
+                          validator: bloc.email(),
+                          textInputType: TextInputType.emailAddress,
+                        ),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        TXTextFieldWidget(
+                          label: R.string.password,
+                          validator: bloc.password(),
+                          controller: passwordTextController,
+                          obscureText: true,
+                          onChanged: (value) {
+                            bloc.currentPassword = value;
                           },
+                        ),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        TXTextFieldWidget(
+                          label: R.string.confirmPassword,
+                          validator: (value) {
+                            if (value != passwordTextController.text) {
+                              return R.string.passwordMatch;
+                            } else {
+                              return null;
+                            }
+                          },
+                          obscureText: true,
+                          controller: confirmPasswordTextController,
+                        ),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        TXButtonWidget(
+                          title: R.string.register,
+                          onPressed: () {
+                            if (_keyFormRegister.currentState.validate()) {
+                              bloc.register(
+                                  emailTextController.text,
+                                  passwordTextController.text,
+                                  confirmPasswordTextController.text);
+                            }
+                          },
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Icon(
+                              Icons.arrow_back,
+                              size: 10,
+                              color: R.color.accent_color,
+                            ),
+                            TXTextLinkWidget(
+                              title: R.string.previous,
+                              textColor: R.color.accent_color,
+                              onTap: () {
+                                NavigationUtils.pop(context);
+                              },
+                            )
+                          ],
                         )
                       ],
-                    )
-                  ],
-                ),
-              )),
+                    ),
+                  )),
             ),
           ),
         ),

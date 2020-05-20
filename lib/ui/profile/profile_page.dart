@@ -223,155 +223,155 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                           ),
                           TXDividerWidget(),
                           SizedBox(height: 10,),
-                          Container(
-                            padding: EdgeInsets.symmetric(horizontal: 10),
-                            child: Card(
-                              color: R.color.gray_light,
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 10, horizontal: 10),
-                                child: Column(
-                                  children: <Widget>[
-                                    TXTextWidget(
-                                      text: "General",
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Expanded(
-                                          flex: 1,
-                                          child: TXStatWidget(
-                                            title: "Puntuación máxima",
-                                            value: "900",
-                                          ),
-                                        ),
-                                        Expanded(
-                                          flex: 1,
-                                          child: TXStatWidget(
-                                            title: "Puntuación actual",
-                                            value: "850",
-                                          ),
-                                        ),
-                                        Expanded(
-                                          flex: 1,
-                                          child: TXStatWidget(
-                                            title: "Máxima racha",
-                                            value: "135",
-                                          ),
-                                        )
-                                      ],
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            padding: EdgeInsets.symmetric(horizontal: 10),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Expanded(
-                                  flex: 1,
-                                  child: Card(
-                                    color: R.color.gray_light,
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                          vertical: 10, horizontal: 10),
-                                      child: Column(
-                                        children: <Widget>[
-                                          TXTextWidget(
-                                            text: "Platos saludables",
-                                            fontWeight: FontWeight.bold,
-                                            size: 10,
-                                          ),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: <Widget>[
-                                              Expanded(
-                                                flex: 1,
-                                                child: TXStatWidget(
-                                                  title: "Maxima racha",
-                                                  value: "100",
-                                                  titleSize: 10,
-                                                  valueSize: 20,
-                                                ),
-                                              ),
-                                              Expanded(
-                                                flex: 1,
-                                                child: TXStatWidget(
-                                                  title: "Racha actual",
-                                                  value: "40",
-                                                  titleSize: 10,
-                                                  valueSize: 20,
-                                                ),
-                                              ),
-                                            ],
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(width: 5,),
-                                Expanded(
-                                  flex: 1,
-                                  child: Card(
-                                    color: R.color.gray_light,
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                          vertical: 10, horizontal: 10),
-                                      child: Column(
-                                        children: <Widget>[
-                                          TXTextWidget(
-                                            text: "Platos balanceados",
-                                            fontWeight: FontWeight.bold,
-                                            size: 10,
-                                          ),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: <Widget>[
-                                              Expanded(
-                                                flex: 1,
-                                                child: TXStatWidget(
-                                                  title: "Maxima racha",
-                                                  value: "60",
-                                                  titleSize: 10,
-                                                  valueSize: 20,
-                                                ),
-                                              ),
-                                              Expanded(
-                                                flex: 1,
-                                                child: TXStatWidget(
-                                                  title: "Racha actual",
-                                                  value: "55",
-                                                  titleSize: 10,
-                                                  valueSize: 20,
-                                                ),
-                                              ),
-                                            ],
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
+//                          Container(
+//                            padding: EdgeInsets.symmetric(horizontal: 10),
+//                            child: Card(
+//                              color: R.color.gray_light,
+//                              child: Container(
+//                                padding: EdgeInsets.symmetric(
+//                                    vertical: 10, horizontal: 10),
+//                                child: Column(
+//                                  children: <Widget>[
+//                                    TXTextWidget(
+//                                      text: "General",
+//                                      fontWeight: FontWeight.bold,
+//                                    ),
+//                                    SizedBox(
+//                                      height: 10,
+//                                    ),
+//                                    Row(
+//                                      crossAxisAlignment:
+//                                          CrossAxisAlignment.start,
+//                                      children: <Widget>[
+//                                        Expanded(
+//                                          flex: 1,
+//                                          child: TXStatWidget(
+//                                            title: "Puntuación máxima",
+//                                            value: "900",
+//                                          ),
+//                                        ),
+//                                        Expanded(
+//                                          flex: 1,
+//                                          child: TXStatWidget(
+//                                            title: "Puntuación actual",
+//                                            value: "850",
+//                                          ),
+//                                        ),
+//                                        Expanded(
+//                                          flex: 1,
+//                                          child: TXStatWidget(
+//                                            title: "Máxima racha",
+//                                            value: "135",
+//                                          ),
+//                                        )
+//                                      ],
+//                                    )
+//                                  ],
+//                                ),
+//                              ),
+//                            ),
+//                          ),
+//                          Container(
+//                            padding: EdgeInsets.symmetric(horizontal: 10),
+//                            child: Row(
+//                              crossAxisAlignment: CrossAxisAlignment.start,
+//                              children: <Widget>[
+//                                Expanded(
+//                                  flex: 1,
+//                                  child: Card(
+//                                    color: R.color.gray_light,
+//                                    child: Container(
+//                                      padding: EdgeInsets.symmetric(
+//                                          vertical: 10, horizontal: 10),
+//                                      child: Column(
+//                                        children: <Widget>[
+//                                          TXTextWidget(
+//                                            text: "Platos saludables",
+//                                            fontWeight: FontWeight.bold,
+//                                            size: 10,
+//                                          ),
+//                                          SizedBox(
+//                                            height: 10,
+//                                          ),
+//                                          Row(
+//                                            crossAxisAlignment:
+//                                                CrossAxisAlignment.start,
+//                                            children: <Widget>[
+//                                              Expanded(
+//                                                flex: 1,
+//                                                child: TXStatWidget(
+//                                                  title: "Maxima racha",
+//                                                  value: "100",
+//                                                  titleSize: 10,
+//                                                  valueSize: 20,
+//                                                ),
+//                                              ),
+//                                              Expanded(
+//                                                flex: 1,
+//                                                child: TXStatWidget(
+//                                                  title: "Racha actual",
+//                                                  value: "40",
+//                                                  titleSize: 10,
+//                                                  valueSize: 20,
+//                                                ),
+//                                              ),
+//                                            ],
+//                                          )
+//                                        ],
+//                                      ),
+//                                    ),
+//                                  ),
+//                                ),
+//                                SizedBox(width: 5,),
+//                                Expanded(
+//                                  flex: 1,
+//                                  child: Card(
+//                                    color: R.color.gray_light,
+//                                    child: Container(
+//                                      padding: EdgeInsets.symmetric(
+//                                          vertical: 10, horizontal: 10),
+//                                      child: Column(
+//                                        children: <Widget>[
+//                                          TXTextWidget(
+//                                            text: "Platos balanceados",
+//                                            fontWeight: FontWeight.bold,
+//                                            size: 10,
+//                                          ),
+//                                          SizedBox(
+//                                            height: 10,
+//                                          ),
+//                                          Row(
+//                                            crossAxisAlignment:
+//                                                CrossAxisAlignment.start,
+//                                            children: <Widget>[
+//                                              Expanded(
+//                                                flex: 1,
+//                                                child: TXStatWidget(
+//                                                  title: "Maxima racha",
+//                                                  value: "60",
+//                                                  titleSize: 10,
+//                                                  valueSize: 20,
+//                                                ),
+//                                              ),
+//                                              Expanded(
+//                                                flex: 1,
+//                                                child: TXStatWidget(
+//                                                  title: "Racha actual",
+//                                                  value: "55",
+//                                                  titleSize: 10,
+//                                                  valueSize: 20,
+//                                                ),
+//                                              ),
+//                                            ],
+//                                          )
+//                                        ],
+//                                      ),
+//                                    ),
+//                                  ),
+//                                )
+//                              ],
+//                            ),
+//                          ),
                         ],
                       ),
                     ),

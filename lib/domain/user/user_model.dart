@@ -2,6 +2,7 @@ class UserModel {
   int id;
   String fullName;
   String email;
+  String username;
   String phone;
   int statusId;
   String status;
@@ -18,6 +19,7 @@ class UserModel {
   UserModel(
       {this.id,
       this.dailyKCal,
+        this.username,
       this.imc,
       this.firstDateHealthResult,
       this.fullName = "",
