@@ -20,10 +20,8 @@ import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_main_app_bar_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_network_image.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
-import 'package:mismedidasb/ui/about_us/about_us_page.dart';
 import 'package:mismedidasb/ui/change_password/change_password_page.dart';
 import 'package:mismedidasb/ui/contact_us/contact_us_page.dart';
-import 'package:mismedidasb/ui/faq/faq_page.dart';
 import 'package:mismedidasb/ui/legacy/legacy_page.dart';
 import 'package:mismedidasb/ui/profile/profile_bloc.dart';
 import 'package:mismedidasb/ui/profile/tx_profile_item_option_widget.dart';
@@ -82,9 +80,17 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                 },
                 onSelected: (key) async {
                   if (key == PopupActionKey.faq) {
-                    NavigationUtils.push(context, FAQPage());
+                    NavigationUtils.push(
+                        context,
+                        LegacyPage(
+                          contentType: 3,
+                        ));
                   } else if (key == PopupActionKey.about_us) {
-                    NavigationUtils.push(context, AboutUsPage());
+                    NavigationUtils.push(
+                        context,
+                        LegacyPage(
+                          contentType: 2,
+                        ));
                   } else if (key == PopupActionKey.contact_us) {
                     NavigationUtils.push(context, ContactUsPage());
                   } else if (key == PopupActionKey.profile_settings) {

@@ -80,10 +80,8 @@ import 'package:mismedidasb/domain/user/i_user_repository.dart';
 import 'package:mismedidasb/fcm/fcm_feature.dart';
 import 'package:mismedidasb/fcm/i_fcm_feature.dart';
 import 'package:mismedidasb/ui/_base/bloc_base.dart';
-import 'package:mismedidasb/ui/about_us/about_us_bloc.dart';
 import 'package:mismedidasb/ui/change_password/change_password_bloc.dart';
 import 'package:mismedidasb/ui/contact_us/contact_us_bloc.dart';
-import 'package:mismedidasb/ui/faq/faq_bloc.dart';
 import 'package:mismedidasb/ui/food/food_bloc.dart';
 import 'package:mismedidasb/ui/food_craving/food_craving_bloc.dart';
 import 'package:mismedidasb/ui/food_dish/food_dish_bloc.dart';
@@ -315,8 +313,6 @@ class Injector {
     container.registerFactory((c) => SettingsBloC(c.resolve(), c.resolve(), c.resolve()));
     container.registerFactory((c) => LegacyBloC(c.resolve()));
     container.registerFactory((c) => ContactUsBloC(c.resolve()));
-    container.registerFactory((c) => AboutUsBloC());
-    container.registerFactory((c) => FAQBloC());
     container.registerFactory((c) => ProfileEditBloC(c.resolve(), c.resolve()));
   }
 

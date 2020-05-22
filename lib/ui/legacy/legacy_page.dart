@@ -17,7 +17,7 @@ class LegacyPage extends StatefulWidget {
   final int contentType;
   final bool termsCondAccepted;
 
-  const LegacyPage({Key key, this.contentType, this.termsCondAccepted = false})
+  const LegacyPage({Key key, this.contentType, this.termsCondAccepted = true})
       : super(key: key);
 
   @override
@@ -50,9 +50,7 @@ class _LegacyState extends StateWithBloC<LegacyPage, LegacyBloC> {
       child: Stack(
         children: <Widget>[
           TXMainAppBarWidget(
-            title: widget.contentType == 0
-                ? R.string.privacyPolicies
-                : R.string.termsCond,
+            title: bloc.getTitleBar(widget.contentType),
             leading: widget.termsCondAccepted
                 ? TXIconButtonWidget(
                     icon: Icon(Icons.arrow_back),
@@ -112,4 +110,5 @@ class _LegacyState extends StateWithBloC<LegacyPage, LegacyBloC> {
             mimeType: 'text/html', encoding: Encoding.getByName('utf-8'))
         .toString());
   }
+
 }

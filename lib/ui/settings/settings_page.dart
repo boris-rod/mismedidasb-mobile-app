@@ -85,7 +85,6 @@ class _SettingsState extends StateWithBloC<SettingsPage, SettingsBloC> {
                                       context,
                                       LegacyPage(
                                         contentType: 1,
-                                        termsCondAccepted: true,
                                       ));
                                 } else if (key ==
                                     PopupActionKey.privacy_policies) {
@@ -93,7 +92,6 @@ class _SettingsState extends StateWithBloC<SettingsPage, SettingsBloC> {
                                       context,
                                       LegacyPage(
                                         contentType: 0,
-                                        termsCondAccepted: true,
                                       ));
                                 }else if(key == PopupActionKey.logout){
                                   _showDemoDialogLogout(context: context);

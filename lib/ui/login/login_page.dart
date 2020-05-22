@@ -55,6 +55,7 @@ class _LoginState extends StateWithBloC<LoginPage, LoginBloC> {
               context,
               LegacyPage(
                 contentType: 1,
+                termsCondAccepted: false,
               ));
           if (res is bool && res) {
             NavigationUtils.pushReplacement(context, HomePage());

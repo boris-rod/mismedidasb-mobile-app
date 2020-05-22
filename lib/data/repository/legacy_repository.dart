@@ -4,13 +4,13 @@ import 'package:mismedidasb/domain/legacy/i_legacy_api.dart';
 import 'package:mismedidasb/domain/legacy/i_legacy_repository.dart';
 import 'package:mismedidasb/domain/legacy/legacy_model.dart';
 
-class LegacyRepository extends BaseRepository implements ILegacyRepository{
+class LegacyRepository extends BaseRepository implements ILegacyRepository {
   final ILegacyApi _iLegacyApi;
 
   LegacyRepository(this._iLegacyApi);
 
   @override
-  Future<Result<bool>> acceptTermsCond() async{
+  Future<Result<bool>> acceptTermsCond() async {
     try {
       final result = await _iLegacyApi.acceptTermsCond();
       return Result.success(value: result);
@@ -20,7 +20,7 @@ class LegacyRepository extends BaseRepository implements ILegacyRepository{
   }
 
   @override
-  Future<Result<LegacyModel>> getLegacyContent(int contentType) async{
+  Future<Result<LegacyModel>> getLegacyContent(int contentType) async {
     try {
       final result = await _iLegacyApi.getLegacyContent(contentType);
       return Result.success(value: result);
@@ -28,5 +28,4 @@ class LegacyRepository extends BaseRepository implements ILegacyRepository{
       return resultError(ex);
     }
   }
-
 }

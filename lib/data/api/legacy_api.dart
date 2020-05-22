@@ -12,13 +12,11 @@ class LegacyApi extends BaseApi implements ILegacyApi {
   final NetworkHandler _networkHandler;
   final ILegacyConverter _iLegacyConverter;
 
-
   LegacyApi(this._networkHandler, this._iLegacyConverter);
 
   @override
   Future<bool> acceptTermsCond() async {
-    final res = await _networkHandler.post(
-        path: Endpoint.accept_terms_cond);
+    final res = await _networkHandler.post(path: Endpoint.accept_terms_cond);
     if (res.statusCode == RemoteConstants.code_success)
       return true;
     else
@@ -27,7 +25,9 @@ class LegacyApi extends BaseApi implements ILegacyApi {
 
   @override
   Future<LegacyModel> getLegacyContent(int contentType) async {
-    final res = await _networkHandler.get(path: Endpoint.legacy_content_by_type, params: "?contentType=$contentType");
+    final res = await _networkHandler.get(
+        path: Endpoint.legacy_content_by_type,
+        params: "?contentType=$contentType");
     if (res.statusCode == RemoteConstants.code_success)
       return _iLegacyConverter
           .fromJson(jsonDecode(res.body)[RemoteConstants.result]);

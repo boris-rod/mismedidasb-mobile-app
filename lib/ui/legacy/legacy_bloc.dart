@@ -1,6 +1,7 @@
 import 'package:mismedidasb/data/api/remote/result.dart';
 import 'package:mismedidasb/domain/legacy/i_legacy_repository.dart';
 import 'package:mismedidasb/domain/legacy/legacy_model.dart';
+import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/bloc_base.dart';
 import 'package:mismedidasb/ui/_base/bloc_error_handler.dart';
 import 'package:mismedidasb/ui/_base/bloc_loading.dart';
@@ -43,6 +44,18 @@ class LegacyBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
       showErrorMessage(res);
     }
     isLoading = false;
+  }
+
+  String getTitleBar(int contentType) {
+    String result = R.string.aboutUs;
+    if (contentType == 0)
+      result = R.string.privacyPolicies;
+    else if (contentType == 1)
+      result = R.string.termsCond;
+    else if (contentType == 2)
+      result = R.string.aboutUs;
+    else if (contentType == 3) result = R.string.faq;
+    return result;
   }
 
   @override
