@@ -45,6 +45,7 @@ class DailyFoodModel {
   DailyFoodPlanModel dailyFoodPlanModel;
   bool synced;
   bool headerExpanded;
+  bool showKCalPercentages;
   double currentCaloriesSum;
   double currentSumProteins;
   double currentSumCarbohydrates;
@@ -70,7 +71,8 @@ class DailyFoodModel {
       this.currentSumFat = 0,
       this.currentSumFiber = 0,
       this.currentSumProteins = 0,
-      this.headerExpanded = true});
+      this.headerExpanded = true,
+      this.showKCalPercentages = false});
 }
 
 class DailyActivityFoodModel {

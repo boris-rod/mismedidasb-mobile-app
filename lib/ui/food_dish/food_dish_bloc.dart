@@ -52,6 +52,15 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
   Stream<DateTime> get copyPlanResult => _copyPlanController.stream;
 
+  BehaviorSubject<bool> _nutriInfoHeaderController = new BehaviorSubject();
+
+  Stream<bool> get nutriInfoHeaderResult => _nutriInfoHeaderController.stream;
+
+  BehaviorSubject<bool> _kCalPercentageHideController = new BehaviorSubject();
+
+  Stream<bool> get kCalPercentageHideResult =>
+      _kCalPercentageHideController.stream;
+
   bool tagsLoaded = false;
   bool foodsLoaded = false;
   bool showResume = false;
@@ -73,6 +82,14 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     isLoading = true;
     firstDateHealthResult =
         await _sharedPreferencesManager.getFirstDateHealthResult();
+
+    final headerExpanded = await _sharedPreferencesManager
+        .getBoolValue(SharedKey.nutriInfoExpanded);
+    _nutriInfoHeaderController.sinkAddSafe(headerExpanded);
+
+    final kCalPercentageHide = await _sharedPreferencesManager
+        .getBoolValue(SharedKey.kCalPercentageHide);
+    _kCalPercentageHideController.sinkAddSafe(kCalPercentageHide);
 
     final resPlans =
         await _iDishRepository.getPlansMergedAPI(firstDate, lastDate);
@@ -241,27 +258,36 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
       DailyFoodModel daily = dailyFoodModelMap[key];
       if (forceCopy) {
         daily.synced = false;
-        daily.dailyActivityFoodModelList[0].foods = rootModel.dailyActivityFoodModelList[0].foods;
-        daily.dailyActivityFoodModelList[1].foods = rootModel.dailyActivityFoodModelList[1].foods;
-        daily.dailyActivityFoodModelList[2].foods = rootModel.dailyActivityFoodModelList[2].foods;
-        daily.dailyActivityFoodModelList[3].foods = rootModel.dailyActivityFoodModelList[3].foods;
-        daily.dailyActivityFoodModelList[4].foods = rootModel.dailyActivityFoodModelList[4].foods;
+        daily.dailyActivityFoodModelList[0].foods =
+            rootModel.dailyActivityFoodModelList[0].foods;
+        daily.dailyActivityFoodModelList[1].foods =
+            rootModel.dailyActivityFoodModelList[1].foods;
+        daily.dailyActivityFoodModelList[2].foods =
+            rootModel.dailyActivityFoodModelList[2].foods;
+        daily.dailyActivityFoodModelList[3].foods =
+            rootModel.dailyActivityFoodModelList[3].foods;
+        daily.dailyActivityFoodModelList[4].foods =
+            rootModel.dailyActivityFoodModelList[4].foods;
 
         await _iDishRepository.savePlanLocal(daily);
 
         isCopying = true;
         selectedDate = newSelectedDate;
         loadDailyPlanData();
-
       } else if (daily.hasFoods != null) {
         _copyPlanController.sinkAddSafe(newSelectedDate);
       } else {
         daily.synced = false;
-        daily.dailyActivityFoodModelList[0].foods = rootModel.dailyActivityFoodModelList[0].foods;
-        daily.dailyActivityFoodModelList[1].foods = rootModel.dailyActivityFoodModelList[1].foods;
-        daily.dailyActivityFoodModelList[2].foods = rootModel.dailyActivityFoodModelList[2].foods;
-        daily.dailyActivityFoodModelList[3].foods = rootModel.dailyActivityFoodModelList[3].foods;
-        daily.dailyActivityFoodModelList[4].foods = rootModel.dailyActivityFoodModelList[4].foods;
+        daily.dailyActivityFoodModelList[0].foods =
+            rootModel.dailyActivityFoodModelList[0].foods;
+        daily.dailyActivityFoodModelList[1].foods =
+            rootModel.dailyActivityFoodModelList[1].foods;
+        daily.dailyActivityFoodModelList[2].foods =
+            rootModel.dailyActivityFoodModelList[2].foods;
+        daily.dailyActivityFoodModelList[3].foods =
+            rootModel.dailyActivityFoodModelList[3].foods;
+        daily.dailyActivityFoodModelList[4].foods =
+            rootModel.dailyActivityFoodModelList[4].foods;
 
         await _iDishRepository.savePlanLocal(daily);
 
@@ -359,8 +385,22 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     return map;
   }
 
+  void changeNutriInfoHeader(bool value) async {
+    await _sharedPreferencesManager.setBoolValue(
+        SharedKey.nutriInfoExpanded, value);
+    _nutriInfoHeaderController.sinkAddSafe(value);
+  }
+
+  void changeKCalPercentageHide(bool value) async {
+    await _sharedPreferencesManager.setBoolValue(
+        SharedKey.kCalPercentageHide, value);
+    _kCalPercentageHideController.sinkAddSafe(value);
+  }
+
   @override
   void dispose() {
+    _nutriInfoHeaderController.close();
+    _kCalPercentageHideController.close();
     _foodsController.close();
     _dailyFoodController.close();
     _showResumeController.close();

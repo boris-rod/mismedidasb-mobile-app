@@ -8,6 +8,7 @@ import 'package:mismedidasb/ui/_base/bloc_state.dart';
 import 'package:mismedidasb/ui/_base/navigation_utils.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_bottom_sheet.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_button_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_checkbox_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_combo_progress_bar_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_cupertino_dialog_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_icon_button_widget.dart';
@@ -28,11 +29,14 @@ import 'package:mismedidasb/utils/calendar_utils.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:mismedidasb/utils/extensions.dart';
 
+import '../../enums.dart';
+
 class FoodDishPage extends StatefulWidget {
   final bool fromNotificationScope;
   final String instructions;
 
-  const FoodDishPage({Key key, this.fromNotificationScope = false, this.instructions})
+  const FoodDishPage(
+      {Key key, this.fromNotificationScope = false, this.instructions})
       : super(key: key);
 
   @override
@@ -106,19 +110,6 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
               },
             ),
             actions: <Widget>[
-              TXIconButtonWidget(
-                icon: Icon(
-                  Icons.live_help,
-//                  color: Colors.yellow,
-                ),
-                onPressed: () {
-                  showTXModalBottomSheet(
-                      context: context,
-                      builder: (context) {
-                        return TXInstructionsWidget(instructions: widget.instructions,);
-                      });
-                },
-              ),
               StreamBuilder<int>(
                 stream: bloc.pageResult,
                 initialData: 0,
@@ -139,6 +130,34 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                   );
                 },
               ),
+              StreamBuilder(
+                stream: bloc.kCalPercentageHideResult,
+                initialData: false,
+                builder: (ctx, snapshot) {
+                  return PopupMenuButton(
+                      icon: Icon(
+                        Icons.more_vert,
+                        color: Colors.white,
+                      ),
+                      itemBuilder: (ctx) {
+                        return [..._popupActions(snapshot.data)];
+                      },
+                      onSelected: (key) async {
+                        if (key == PopupActionKey.show_kcal_percentage) {
+                          bloc.changeKCalPercentageHide(!snapshot.data);
+                        } else if (key ==
+                            PopupActionKey.daily_plan_instructions) {
+                          showTXModalBottomSheet(
+                              context: context,
+                              builder: (context) {
+                                return TXInstructionsWidget(
+                                  instructions: widget.instructions,
+                                );
+                              });
+                        }
+                      });
+                },
+              ),
             ],
             body: StreamBuilder<DailyFoodModel>(
               stream: bloc.dailyFoodResult,
@@ -147,53 +166,70 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                 final dailyModel = snapshot.data;
                 return dailyModel == null
                     ? Container()
-                    : Column(
-                        children: <Widget>[
-                          Container(
-                            color: Colors.white,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                SizedBox(
-                                  height: 10,
+                    : StreamBuilder<bool>(
+                        stream: bloc.kCalPercentageHideResult,
+                        initialData: false,
+                        builder: (ctx, snapshotHidPercentages) {
+                          dailyModel.showKCalPercentages =
+                              snapshotHidPercentages.data;
+                          return Column(
+                            children: <Widget>[
+                              Container(
+                                color: Colors.white,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    StreamBuilder(
+                                      stream: bloc.nutriInfoHeaderResult,
+                                      initialData: false,
+                                      builder: (ctx, snapshotNutriInfoHeader) {
+                                        dailyModel.headerExpanded =
+                                            snapshotNutriInfoHeader.data;
+                                        return TXDailyNutritionalInfoWidget(
+                                          currentCaloriesPercentage:
+                                              bloc.getCurrentCaloriesPercentage(
+                                                  dailyModel),
+                                          dailyModel: dailyModel,
+                                          onHeaderTap: () {
+                                            dailyModel.headerExpanded =
+                                                !dailyModel.headerExpanded;
+                                            bloc.changeNutriInfoHeader(
+                                                dailyModel.headerExpanded);
+                                          },
+                                        );
+                                      },
+                                    ),
+                                    Container(
+                                      color: R.color.gray,
+                                      height: .5,
+                                    )
+                                  ],
                                 ),
-                                TXDailyNutritionalInfoWidget(
-                                  currentCaloriesPercentage: bloc
-                                      .getCurrentCaloriesPercentage(dailyModel),
-                                  dailyModel: dailyModel,
-                                  onHeaderTap: () {
-                                    setState(() {
-                                      dailyModel.headerExpanded =
-                                          !dailyModel.headerExpanded;
-                                    });
-                                  },
-                                ),
-                                Container(
-                                  color: R.color.gray,
-                                  height: .5,
-                                )
-                              ],
-                            ),
-                          ),
-                          Expanded(
-                            child: Container(
-                              child: PageView.builder(
-                                itemBuilder: (ctx, index) {
-                                  return index == 0
-                                      ? _getListModeView(
-                                          context,
-                                          snapshot
-                                              .data.dailyActivityFoodModelList,
-                                          dailyModel)
-                                      : _getCalendarView(context, []);
-                                },
-                                itemCount: 2,
-                                controller: _pageController,
                               ),
-                              color: R.color.gray_light,
-                            ),
-                          ),
-                        ],
+                              Expanded(
+                                child: Container(
+                                  child: PageView.builder(
+                                    itemBuilder: (ctx, index) {
+                                      return index == 0
+                                          ? _getListModeView(
+                                              context,
+                                              snapshot.data
+                                                  .dailyActivityFoodModelList,
+                                              dailyModel)
+                                          : _getCalendarView(context, []);
+                                    },
+                                    itemCount: 2,
+                                    controller: _pageController,
+                                  ),
+                                  color: R.color.gray_light,
+                                ),
+                              ),
+                            ],
+                          );
+                        },
                       );
               },
             ),
@@ -204,6 +240,60 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
         ],
       ),
     );
+  }
+
+  List<PopupMenuItem> _popupActions(bool showKCalPer) {
+    List<PopupMenuItem> list = [];
+    final showKCalPercentage = PopupMenuItem(
+      value: PopupActionKey.show_kcal_percentage,
+      child: Container(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Icon(
+              showKCalPer ? Icons.check_box : Icons.check_box_outline_blank,
+              size: 20,
+              color: R.color.primary_color,
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            TXTextWidget(
+              text: R.string.showBarPercentages,
+              color: Colors.black,
+            )
+          ],
+        ),
+      ),
+    );
+    final instrctions = PopupMenuItem(
+      value: PopupActionKey.daily_plan_instructions,
+      child: Container(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Icon(
+              Icons.live_help,
+              size: 20,
+              color: R.color.primary_color,
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            TXTextWidget(
+              text: R.string.foodInstructionsTitle,
+              color: Colors.black,
+            )
+          ],
+        ),
+      ),
+    );
+
+    list.add(showKCalPercentage);
+    list.add(instrctions);
+    return list;
   }
 
   Widget _showResume(BuildContext context, DailyFoodModel dailyModel,
@@ -237,7 +327,8 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
             padding: EdgeInsets.only(top: 5, left: 5, right: 5, bottom: 50),
             child: Column(
               children: <Widget>[
-                ..._getDailyActivityFood(context, modelList),
+                ..._getDailyActivityFood(
+                    context, modelList, dailyModel.showKCalPercentages),
               ],
 //        children: _getDailyActivityFood(context, modelList),
             ),
@@ -270,8 +361,8 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
     );
   }
 
-  List<Widget> _getDailyActivityFood(
-      BuildContext context, List<DailyActivityFoodModel> modelList) {
+  List<Widget> _getDailyActivityFood(BuildContext context,
+      List<DailyActivityFoodModel> modelList, bool showKCalPercentage) {
     List<Widget> list = [];
     modelList.forEach((model) {
       final w = Container(
@@ -320,6 +411,7 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                       width: 160,
                       child: TXComboProgressBarWidget(
                         title: "",
+                        showPercentageInfo: showKCalPercentage,
                         percentage:
                             bloc.getCurrentCaloriesPercentageByFood(model),
                         mark1: bloc.getActivityFoodCalories(model) -

@@ -31,7 +31,7 @@ class SharedPreferencesManager {
     await setBoolValue(SharedKey.firstUse, true);
     await setBoolValue(SharedKey.saveCredentials, true);
     await setBoolValue(SharedKey.showDailyResume, true);
-    await setBoolValue(SharedKey.kCalPercentageHide, true);
+    await setBoolValue(SharedKey.kCalPercentageHide, false);
     await setBoolValue(SharedKey.nutriInfoExpanded, false);
     await setBoolValue(SharedKey.showIntro, true);
 

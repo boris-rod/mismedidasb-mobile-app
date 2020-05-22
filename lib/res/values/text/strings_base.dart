@@ -211,4 +211,6 @@ abstract class StringsBase implements WidgetsLocalizations {
   String get galleryPermissionContent;
 
   String get cameraPermissionContent;
+
+  String get showBarPercentages;
 }

@@ -324,4 +324,7 @@ class StringsIt implements StringsBase {
 
   @override
   String get galleryPermissionContent => "Se requiere permiso para acceder a sus fotos";
+
+  @override
+  String get showBarPercentages => "Mostrar percentiles";
 }

@@ -6,5 +6,7 @@ enum PopupActionKey {
   terms_cond,
   privacy_policies,
   logout,
-  remove_account
+  remove_account,
+  show_kcal_percentage,
+  daily_plan_instructions
 }
