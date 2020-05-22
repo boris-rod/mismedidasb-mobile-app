@@ -195,8 +195,8 @@ class NetworkHandler {
       _logger.log("<- RESPONSE CODE: ${res.statusCode}");
       _logger.log("<- RESPONSE BODY: ${res.body}");
 
-      _sharedP.setAccessToken(res.headers[RemoteConstants.authorization] ?? "");
-      _sharedP.setRefreshToken(res.headers[RemoteConstants.refreshToken] ?? "");
+      await _sharedP.setAccessToken(res.headers[RemoteConstants.authorization] ?? "");
+      await _sharedP.setRefreshToken(res.headers[RemoteConstants.refreshToken] ?? "");
 
       return res;
     } catch (ex) {

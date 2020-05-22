@@ -6,7 +6,7 @@ class StringsEn implements StringsBase {
   @override
   TextDirection get textDirection => TextDirection.ltr;
 
-  String get appName => "MiSBD-Medidas";
+  String get appName => "PlaniFive";
 
   @override
   String get foodDishes => "My food dishes";
@@ -192,7 +192,10 @@ class StringsEn implements StringsBase {
   String get proteins => "Proteins";
 
   @override
-  String get snack => "Snack";
+  String get snack1 => "Snack";
+
+  @override
+  String get snack2 => "Snack";
 
   @override
   String get emptyFoodList => "You must choose at least one food";

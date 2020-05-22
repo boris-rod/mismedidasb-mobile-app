@@ -1,35 +1,92 @@
 import 'package:mismedidasb/domain/session/session_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SharedPreferencesManager {
-  final _accessToken = "access_token1";
-  final _refreshToken = "refresh_token1";
-  final _userEmail = "user_email1";
-  final _password = "password1";
-  final _userId = "user_id1";
-  final _saveCredentials = "save_credentials1";
-  final _activeAccount = "active_account1";
-  final _dailyKCal = "daily_cal1";
-  final _imc = "imc1";
-  final _firstDateHealthResult = "first_date_health_result1";
-  final _showDailyResume = "show_daily_resume";
-  final _languageCode = "language_code";
-  final _languageCodeId = "language_code_id";
-  final _termsCond = "terms_cond";
+class SharedKey {
+  static String firstUse = "firstUse";
+  static String accessToken = "accessToken";
+  static String refreshToken = "refreshToken";
+  static String userEmail = "userEmail";
+  static String password = "password";
+  static String userId = "userId";
+  static String saveCredentials = "saveCredentials";
+  static String activeAccount = "activeAccount";
+  static String dailyKCal = "dailyKCal";
+  static String imc = "imc";
+  static String firstDateHealthResult = "firstDateHealthResult";
+  static String showDailyResume = "showDailyResume";
+  static String languageCode = "languageCode";
+  static String languageCodeId = "languageCodeId";
+  static String termsCond = "termsCond";
+  static String kCalPercentageHide = "kCalPercentageHide";
+  static String nutriInfoExpanded = "nutriInfoExpanded";
+  static String showIntro = "showIntro";
+}
 
-  Future<bool> cleanAll() async {
-//    setUserEmail('');
-    setAccessToken('');
-//    setUserId(-1);
-    setPassword('');
-    setSaveCredentials(false);
-    setActivateAccount(ACCOUNT_STATUS.PENDING.index);
-    setShowDailyResume(true);
+class SharedPreferencesManager {
+  Future<bool> init() async {
+    await setStringValue(SharedKey.accessToken, '');
+    await setStringValue(SharedKey.refreshToken, '');
+    await setStringValue(SharedKey.password, '');
+
+    await setBoolValue(SharedKey.firstUse, true);
+    await setBoolValue(SharedKey.saveCredentials, true);
+    await setBoolValue(SharedKey.showDailyResume, true);
+    await setBoolValue(SharedKey.kCalPercentageHide, true);
+    await setBoolValue(SharedKey.nutriInfoExpanded, false);
+    await setBoolValue(SharedKey.showIntro, true);
+
+    await setIntValue(SharedKey.activeAccount, ACCOUNT_STATUS.PENDING.index);
     return true;
   }
 
+  Future<bool> getBoolValue(String key, {bool defValue = false}) async {
+    var value = (await SharedPreferences.getInstance()).getBool(key);
+    if (value == null) {
+      value = defValue;
+      await setBoolValue(key, value);
+    }
+    return value;
+  }
+
+  Future<bool> setBoolValue(String key, bool newValue) async {
+    final sh = await SharedPreferences.getInstance();
+    var res = await sh.setBool(key, newValue);
+    return res;
+  }
+
+  Future<int> getIntValue(String key, {int defValue = 0}) async {
+    var value = (await SharedPreferences.getInstance()).getInt(key);
+    if (value == null) {
+      value = defValue;
+      await setIntValue(key, value);
+    }
+    return value;
+  }
+
+  Future<bool> setIntValue(String key, int newValue) async {
+    final sh = await SharedPreferences.getInstance();
+    var res = await sh.setInt(key, newValue);
+    return res;
+  }
+
+  Future<String> getStringValue(String key, {String defValue = ""}) async {
+    var value = (await SharedPreferences.getInstance()).getString(key);
+    if (value == null) {
+      value = defValue;
+      await setStringValue(key, value);
+    }
+    return value;
+  }
+
+  Future<bool> setStringValue(String key, String newValue) async {
+    final sh = await SharedPreferences.getInstance();
+    var res = await sh.setString(key, newValue);
+    return res;
+  }
+
   Future<int> getActivateAccount() async {
-    var value = (await SharedPreferences.getInstance()).getInt(_activeAccount);
+    var value =
+        (await SharedPreferences.getInstance()).getInt(SharedKey.activeAccount);
     if (value == null) {
       value = ACCOUNT_STATUS.PENDING.index;
       setActivateAccount(value);
@@ -39,12 +96,13 @@ class SharedPreferencesManager {
 
   Future<bool> setActivateAccount(int newValue) async {
     var res = (await SharedPreferences.getInstance())
-        .setInt(_activeAccount, newValue);
+        .setInt(SharedKey.activeAccount, newValue);
     return res;
   }
 
   Future<bool> getTermsCond() async {
-    var value = (await SharedPreferences.getInstance()).getBool(_termsCond);
+    var value =
+        (await SharedPreferences.getInstance()).getBool(SharedKey.termsCond);
     if (value == null) {
       value = false;
       setTermsCond(value);
@@ -53,14 +111,14 @@ class SharedPreferencesManager {
   }
 
   Future<bool> setTermsCond(bool newValue) async {
-    var res =
-        (await SharedPreferences.getInstance()).setBool(_termsCond, newValue);
+    var res = (await SharedPreferences.getInstance())
+        .setBool(SharedKey.termsCond, newValue);
     return res;
   }
 
   Future<DateTime> getFirstDateHealthResult() async {
     var value = (await SharedPreferences.getInstance())
-        .getString(_firstDateHealthResult);
+        .getString(SharedKey.firstDateHealthResult);
     if (value == null) {
       final now = DateTime.now();
       value = now.toIso8601String();
@@ -71,13 +129,13 @@ class SharedPreferencesManager {
 
   Future<bool> setFirstDateHealthResult(DateTime newValue) async {
     var res = (await SharedPreferences.getInstance())
-        .setString(_firstDateHealthResult, newValue.toIso8601String());
+        .setString(SharedKey.firstDateHealthResult, newValue.toIso8601String());
     return res;
   }
 
   Future<bool> getSaveCredentials() async {
-    var value =
-        (await SharedPreferences.getInstance()).getBool(_saveCredentials);
+    var value = (await SharedPreferences.getInstance())
+        .getBool(SharedKey.saveCredentials);
     if (value == null) {
       value = true;
       setSaveCredentials(value);
@@ -87,12 +145,13 @@ class SharedPreferencesManager {
 
   Future<bool> setSaveCredentials(bool newValue) async {
     var res = (await SharedPreferences.getInstance())
-        .setBool(_saveCredentials, newValue);
+        .setBool(SharedKey.saveCredentials, newValue);
     return res;
   }
 
   Future<double> getDailyKCal() async {
-    var value = (await SharedPreferences.getInstance()).getDouble(_dailyKCal);
+    var value =
+        (await SharedPreferences.getInstance()).getDouble(SharedKey.dailyKCal);
     if (value == null || value < 1) {
       value = 1;
       setDailyKCal(value);
@@ -101,13 +160,14 @@ class SharedPreferencesManager {
   }
 
   Future<bool> setDailyKCal(double newValue) async {
-    var res =
-        (await SharedPreferences.getInstance()).setDouble(_dailyKCal, newValue);
+    var res = (await SharedPreferences.getInstance())
+        .setDouble(SharedKey.dailyKCal, newValue);
     return res;
   }
 
   Future<double> getIMC() async {
-    var value = (await SharedPreferences.getInstance()).getDouble(_imc);
+    var value =
+        (await SharedPreferences.getInstance()).getDouble(SharedKey.imc);
     if (value == null || value < 1) {
       value = 1;
       setIMC(value);
@@ -116,13 +176,14 @@ class SharedPreferencesManager {
   }
 
   Future<bool> setIMC(double newValue) async {
-    var res = (await SharedPreferences.getInstance()).setDouble(_imc, newValue);
+    var res = (await SharedPreferences.getInstance())
+        .setDouble(SharedKey.imc, newValue);
     return res;
   }
 
   Future<bool> getShowDailyResume() async {
-    var value =
-        (await SharedPreferences.getInstance()).getBool(_showDailyResume);
+    var value = (await SharedPreferences.getInstance())
+        .getBool(SharedKey.showDailyResume);
     if (value == null) {
       value = true;
       setShowDailyResume(value);
@@ -132,12 +193,13 @@ class SharedPreferencesManager {
 
   Future<bool> setShowDailyResume(bool newValue) async {
     var res = (await SharedPreferences.getInstance())
-        .setBool(_showDailyResume, newValue);
+        .setBool(SharedKey.showDailyResume, newValue);
     return res;
   }
 
   Future<String> getUserEmail() async {
-    var value = (await SharedPreferences.getInstance()).getString(_userEmail);
+    var value =
+        (await SharedPreferences.getInstance()).getString(SharedKey.userEmail);
     if (value == null) {
       value = '';
       setUserEmail(value);
@@ -146,14 +208,14 @@ class SharedPreferencesManager {
   }
 
   Future<bool> setUserEmail(String newValue) async {
-    var res =
-        (await SharedPreferences.getInstance()).setString(_userEmail, newValue);
+    var res = (await SharedPreferences.getInstance())
+        .setString(SharedKey.userEmail, newValue);
     return res;
   }
 
   Future<String> getLanguageCode() async {
-    var value =
-        (await SharedPreferences.getInstance()).getString(_languageCode);
+    var value = (await SharedPreferences.getInstance())
+        .getString(SharedKey.languageCode);
     if (value == null) {
       value = '';
       setLanguageCode(value);
@@ -163,12 +225,13 @@ class SharedPreferencesManager {
 
   Future<bool> setLanguageCode(String newValue) async {
     var res = (await SharedPreferences.getInstance())
-        .setString(_languageCode, 'es');
+        .setString(SharedKey.languageCode, 'es');
     return res;
   }
 
   Future<String> getPassword() async {
-    var value = (await SharedPreferences.getInstance()).getString(_password);
+    var value =
+        (await SharedPreferences.getInstance()).getString(SharedKey.password);
     if (value == null) {
       value = '';
       setPassword(value);
@@ -177,13 +240,14 @@ class SharedPreferencesManager {
   }
 
   Future<bool> setPassword(String newValue) async {
-    var res =
-        (await SharedPreferences.getInstance()).setString(_password, newValue);
+    var res = (await SharedPreferences.getInstance())
+        .setString(SharedKey.password, newValue);
     return res;
   }
 
   Future<String> getAccessToken() async {
-    var value = (await SharedPreferences.getInstance()).getString(_accessToken);
+    var value = (await SharedPreferences.getInstance())
+        .getString(SharedKey.accessToken);
     if (value == null) {
       value = '';
       setAccessToken(value);
@@ -193,13 +257,13 @@ class SharedPreferencesManager {
 
   Future<bool> setAccessToken(String newValue) async {
     var res = (await SharedPreferences.getInstance())
-        .setString(_accessToken, newValue);
+        .setString(SharedKey.accessToken, newValue);
     return res;
   }
 
   Future<String> getRefreshToken() async {
-    var value =
-        (await SharedPreferences.getInstance()).getString(_refreshToken);
+    var value = (await SharedPreferences.getInstance())
+        .getString(SharedKey.refreshToken);
     if (value == null) {
       value = '';
       setRefreshToken(value);
@@ -209,12 +273,13 @@ class SharedPreferencesManager {
 
   Future<bool> setRefreshToken(String newValue) async {
     var res = (await SharedPreferences.getInstance())
-        .setString(_refreshToken, newValue);
+        .setString(SharedKey.refreshToken, newValue);
     return res;
   }
 
   Future<int> getUserId() async {
-    var value = (await SharedPreferences.getInstance()).getInt(_userId);
+    var value =
+        (await SharedPreferences.getInstance()).getInt(SharedKey.userId);
     if (value == null) {
       value = -1;
       setUserId(value);
@@ -223,12 +288,14 @@ class SharedPreferencesManager {
   }
 
   Future<bool> setUserId(int newValue) async {
-    var res = (await SharedPreferences.getInstance()).setInt(_userId, newValue);
+    var res = (await SharedPreferences.getInstance())
+        .setInt(SharedKey.userId, newValue);
     return res;
   }
 
   Future<int> getLanguageCodeId() async {
-    var value = (await SharedPreferences.getInstance()).getInt(_languageCodeId);
+    var value = (await SharedPreferences.getInstance())
+        .getInt(SharedKey.languageCodeId);
     if (value == null) {
       value = 0;
       setLanguageCodeId(value);
@@ -238,7 +305,7 @@ class SharedPreferencesManager {
 
   Future<bool> setLanguageCodeId(int newValue) async {
     var res = (await SharedPreferences.getInstance())
-        .setInt(_languageCodeId, newValue);
+        .setInt(SharedKey.languageCodeId, newValue);
     return res;
   }
 }

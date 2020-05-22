@@ -6,7 +6,7 @@ class StringsIt implements StringsBase {
   @override
   TextDirection get textDirection => TextDirection.ltr;
 
-  String get appName => "MiSBD-Medidas";
+  String get appName => "PlaniFive";
 
   @override
   String get foodDishes => "I miei piatti";
@@ -193,7 +193,10 @@ class StringsIt implements StringsBase {
   String get proteins => "Proteina";
 
   @override
-  String get snack => "Picnic";
+  String get snack1 => "Picnic";
+
+  @override
+  String get snack2 => "Picnic";
 
   @override
   String get emptyFoodList => "Devi scegliere almeno un alimento";

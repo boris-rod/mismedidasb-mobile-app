@@ -106,7 +106,9 @@ abstract class StringsBase implements WidgetsLocalizations {
 
   String get breakfast;
 
-  String get snack;
+  String get snack1;
+
+  String get snack2;
 
   String get lunch;
 

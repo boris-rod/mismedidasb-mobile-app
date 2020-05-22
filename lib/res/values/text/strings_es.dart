@@ -6,7 +6,7 @@ class StringsEs implements StringsBase {
   @override
   TextDirection get textDirection => TextDirection.ltr;
 
-  String get appName => "MiSBD-Medidas";
+  String get appName => "PlaniFive";
 
   @override
   String get foodDishes => "Mis platos";
@@ -190,7 +190,7 @@ class StringsEs implements StringsBase {
   String get fiber => "Fibra";
 
   @override
-  String get lunch => "Almuerzo";
+  String get lunch => "Comida";
 
   @override
   String get nutritionalInfo => "Información nutricional";
@@ -199,7 +199,10 @@ class StringsEs implements StringsBase {
   String get proteins => "Proteínas";
 
   @override
-  String get snack => "Merienda";
+  String get snack1 => "Tentempié";
+
+  @override
+  String get snack2 => "Merienda";
 
   @override
   String get emptyFoodList => "Debe escoger al menos un alimento.";
