@@ -12,12 +12,14 @@ class TXDailyNutritionalInfoWidget extends StatelessWidget {
   final DailyFoodModel dailyModel;
   final double currentCaloriesPercentage;
   final Function onHeaderTap;
+  final double imc;
 
   const TXDailyNutritionalInfoWidget(
       {Key key,
       this.dailyModel,
       this.currentCaloriesPercentage,
-      this.onHeaderTap})
+      this.onHeaderTap,
+      this.imc = 1})
       : super(key: key);
 
   @override
@@ -72,6 +74,7 @@ class TXDailyNutritionalInfoWidget extends StatelessWidget {
                     Container(
                       margin: EdgeInsets.only(left: 10),
                       child: TXComboProgressBarWidget(
+                        imc: imc,
                         title: R.string.calories,
                         titleSize: 10,
                         showPercentageInfo: dailyModel.showKCalPercentages,

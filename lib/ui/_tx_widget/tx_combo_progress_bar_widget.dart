@@ -13,6 +13,7 @@ class TXComboProgressBarWidget extends StatelessWidget {
   final double titleSize;
   final bool showValueInBar;
   final bool showPercentageInfo;
+  final double imc;
 
   const TXComboProgressBarWidget(
       {Key key,
@@ -24,7 +25,8 @@ class TXComboProgressBarWidget extends StatelessWidget {
       this.showPercentageInfo = true,
       this.value,
       this.height,
-      this.titleSize})
+      this.titleSize,
+      this.imc = 1})
       : super(key: key);
 
   @override
@@ -57,12 +59,12 @@ class TXComboProgressBarWidget extends StatelessWidget {
                 style: RoundedProgressBarStyle(
                     widthShadow: 0,
                     backgroundProgress: Colors.grey[200],
-                    colorProgress: Colors.yellowAccent,
+                    colorProgress:
+                        imc < 18.5 ? Colors.redAccent : Colors.yellowAccent,
                     borderWidth: 0),
               )
             : Container(),
-        value >= mark1 &&
-                percentage <= 101
+        value >= mark1 && percentage <= 101
             ? RoundedProgressBar(
                 height: height ?? 20,
                 paddingChildLeft: EdgeInsets.only(left: 10),
@@ -112,7 +114,8 @@ class TXComboProgressBarWidget extends StatelessWidget {
                 style: RoundedProgressBarStyle(
                     widthShadow: 0,
                     backgroundProgress: Colors.grey[200],
-                    colorProgress: Colors.redAccent,
+                    colorProgress:
+                        imc < 18.5 ? Colors.greenAccent : Colors.redAccent,
                     borderWidth: 0),
               )
             : Container()

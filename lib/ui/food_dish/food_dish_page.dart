@@ -189,6 +189,7 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                                         dailyModel.headerExpanded =
                                             snapshotNutriInfoHeader.data;
                                         return TXDailyNutritionalInfoWidget(
+                                          imc: bloc.imc,
                                           currentCaloriesPercentage:
                                               bloc.getCurrentCaloriesPercentage(
                                                   dailyModel),
@@ -410,6 +411,7 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                     Container(
                       width: 160,
                       child: TXComboProgressBarWidget(
+                        imc: bloc.imc,
                         title: "",
                         showPercentageInfo: showKCalPercentage,
                         percentage:

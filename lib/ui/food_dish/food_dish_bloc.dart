@@ -71,6 +71,7 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   DateTime lastDate = DateTime.now();
   DateTime firstDateHealthResult = DateTime.now();
   bool isCopying = false;
+  double imc = 1;
 
   void loadInitialData() async {
     dailyFoodModelMap = {};
@@ -79,6 +80,8 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     tagsLoaded = false;
     foodsLoaded = false;
     showResume = await _sharedPreferencesManager.getShowDailyResume();
+    imc = await _sharedPreferencesManager.getIMC();
+
     isLoading = true;
     firstDateHealthResult =
         await _sharedPreferencesManager.getFirstDateHealthResult();
