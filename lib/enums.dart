@@ -10,3 +10,7 @@ enum PopupActionKey {
   show_kcal_percentage,
   daily_plan_instructions
 }
+
+enum FoodFilterMode { tags, dish_healthy }
+enum FoodHealthy { proteic, caloric, fruitVeg }
+enum PROFILE_OPTION { CHANGE_PASSWORD, LOGOUT, HELP }

@@ -83,8 +83,10 @@ import 'package:mismedidasb/ui/_base/bloc_base.dart';
 import 'package:mismedidasb/ui/change_password/change_password_bloc.dart';
 import 'package:mismedidasb/ui/contact_us/contact_us_bloc.dart';
 import 'package:mismedidasb/ui/food/food_bloc.dart';
+import 'package:mismedidasb/ui/food_add_edit/food_add_edit_bloc.dart';
 import 'package:mismedidasb/ui/food_craving/food_craving_bloc.dart';
 import 'package:mismedidasb/ui/food_dish/food_dish_bloc.dart';
+import 'package:mismedidasb/ui/food_search/food_search_bloc.dart';
 import 'package:mismedidasb/ui/habit/habit_bloc.dart';
 import 'package:mismedidasb/ui/home/home_bloc.dart';
 import 'package:mismedidasb/ui/legacy/legacy_bloc.dart';
@@ -305,7 +307,9 @@ class Injector {
     container.registerFactory((c) => MeasureValueBloC(container.resolve()));
     container.registerFactory((c) => MeasureWellnessBloC(container.resolve()));
     container.registerFactory((c) => FoodDishBloC(c.resolve(), c.resolve()));
-    container.registerFactory((c) => FoodBloC(c.resolve()));
+    container.registerFactory((c) => FoodBloC(c.resolve(), c.resolve()));
+    container.registerFactory((c) => FoodSearchBloC(c.resolve()));
+    container.registerFactory((c) => FoodAddEditBloC(c.resolve()));
     container.registerFactory(
         (c) => ChangePasswordBloC(container.resolve(), container.resolve()));
     container.registerFactory((c) => ProfileBloC(container.resolve(),

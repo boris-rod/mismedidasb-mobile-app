@@ -61,4 +61,43 @@ class DishApi extends BaseApi implements IDishApi {
     if (res.statusCode == RemoteConstants.code_success) return true;
     throw serverException(res);
   }
+
+  @override
+  Future<bool> createFoodCompoundModelList(
+      CreateFoodCompoundModel model) async {
+    final foodsMap = jsonEncode(model.foods
+        .map((f) => _foodConverter.toJsonCreateFoodModel(f))
+        .toList());
+    final map = _foodConverter.toJsonCreateCompoundFoodModel(model);
+    final res = await _networkHandler.uploadMultipartForm(
+        path: Endpoint.dish_compound,
+        name: model.name,
+        dishes: foodsMap,
+        filePath: model.image);
+    if (res == RemoteConstants.code_success) return true;
+    throw serverException(Response("", res));
+  }
+
+  @override
+  Future<bool> deleteFoodCompoundModelList(int id) async {
+    return null;
+  }
+
+  @override
+  Future<List<FoodModel>> getFoodCompoundModelList() async {
+    final res = await _networkHandler.get(
+        path: Endpoint.dish_compound,);
+    if (res.statusCode == RemoteConstants.code_success) {
+      Iterable l = jsonDecode(res.body)[RemoteConstants.result];
+      return l
+          .map((model) => _foodConverter.fromJsonCompoundFoodModel(model))
+          .toList();
+    } else
+      throw serverException(res);
+  }
+
+  @override
+  Future<bool> updateFoodCompoundModelList() async {
+    return null;
+  }
 }

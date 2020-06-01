@@ -210,10 +210,10 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     double pro = 0;
 
     model.foods.forEach((f) {
-      car += f.carbohydrates;
-      fat += f.fat;
-      pro += f.proteins;
-      fib += f.fiber;
+      car += f.carbohydrates * f.count;
+      fat += f.fat * f.count;
+      pro += f.proteins * f.count;
+      fib += f.fiber * f.count;
 
       if (f.tag.id == RemoteConstants.proteins_category_code) {
         model.proteinsDishCalories += f.caloriesFixed;

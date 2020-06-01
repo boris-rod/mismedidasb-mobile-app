@@ -16,7 +16,7 @@ import 'package:mismedidasb/ui/_tx_widget/tx_network_image.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_textfield_widget.dart';
 import 'package:mismedidasb/ui/change_password/change_password_page.dart';
-import 'package:mismedidasb/ui/profile/tx_profile_item_option_widget.dart';
+import 'package:mismedidasb/ui/profile/tx_cell_selection_option_widget.dart';
 import 'package:mismedidasb/ui/profile_edit/profile_edit_bloc.dart';
 import 'package:mismedidasb/utils/file_manager.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -100,8 +100,8 @@ class _ProfileEditState
                           ),
                         ),
                         TXDividerWidget(),
-                        TXProfileItemOptionWidget(
-                          icon: Icons.visibility,
+                        TXCellSelectionOptionWidget(
+                          leading: Icons.visibility,
                           optionName: R.string.changePassword,
                           onOptionTap: () {
                             NavigationUtils.push(

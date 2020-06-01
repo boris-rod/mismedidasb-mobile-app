@@ -326,4 +326,19 @@ class StringsEn implements StringsBase {
 
   @override
   String get showBarPercentages => "Mostrar percentiles";
+
+  @override
+  String get foods => "Alimentos";
+
+  @override
+  String get createFood => "Componer";
+
+  @override
+  String get filter => "Filtro";
+
+  @override
+  String get search => "Buscar";
+
+  @override
+  String get filterAll => "Todos";
 }

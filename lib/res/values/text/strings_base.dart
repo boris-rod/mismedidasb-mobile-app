@@ -12,6 +12,8 @@ abstract class StringsBase implements WidgetsLocalizations {
 
   String get foodDishes;
 
+  String get foods;
+
   String get next;
 
   String get previous;
@@ -213,4 +215,12 @@ abstract class StringsBase implements WidgetsLocalizations {
   String get cameraPermissionContent;
 
   String get showBarPercentages;
+
+  String get search;
+
+  String get filter;
+
+  String get createFood;
+
+  String get filterAll;
 }

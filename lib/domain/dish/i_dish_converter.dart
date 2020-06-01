@@ -27,4 +27,9 @@ abstract class IDishConverter {
       CreateDailyActivityModel model);
 
   Map<String, dynamic> toJsonCreateFoodModel(CreateFoodModel model);
+
+  Map<String, dynamic> toJsonCreateCompoundFoodModel(CreateFoodCompoundModel model);
+
+  FoodModel fromJsonCompoundFoodModel(Map<String, dynamic> json);
+
 }

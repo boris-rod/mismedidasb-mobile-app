@@ -68,6 +68,7 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
               initialData: [],
               builder: (ctx, snapshot) {
                 return GridView.count(
+                  physics: BouncingScrollPhysics(),
                   padding: EdgeInsets.only(top: 20),
                   crossAxisCount: totalRowCount,
                   children:

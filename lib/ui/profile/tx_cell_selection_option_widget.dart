@@ -2,15 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
 
-enum PROFILE_OPTION { CHANGE_PASSWORD, LOGOUT, HELP }
-
-class TXProfileItemOptionWidget extends StatelessWidget {
-  final IconData icon;
+class TXCellSelectionOptionWidget extends StatelessWidget {
+  final IconData leading;
   final String optionName;
   final Function onOptionTap;
+  final IconData trailing;
 
-  const TXProfileItemOptionWidget(
-      {Key key, this.icon, this.optionName, this.onOptionTap})
+  const TXCellSelectionOptionWidget(
+      {Key key, this.optionName, this.onOptionTap, this.trailing, this.leading})
       : super(key: key);
 
   @override
@@ -22,11 +21,13 @@ class TXProfileItemOptionWidget extends StatelessWidget {
         height: 50,
         child: Row(
           children: <Widget>[
-            Icon(
-              icon,
-              color: R.color.primary_color,
-              size: 20,
-            ),
+            leading != null
+                ? Icon(
+                    leading,
+                    color: R.color.primary_color,
+                    size: 20,
+                  )
+                : Container(),
             SizedBox(
               width: 10,
             ),
@@ -38,7 +39,7 @@ class TXProfileItemOptionWidget extends StatelessWidget {
               color: Colors.black,
             )),
             Icon(
-              Icons.keyboard_arrow_right,
+              trailing ?? Icons.keyboard_arrow_right,
               color: R.color.primary_dark_color,
               size: 25,
             )

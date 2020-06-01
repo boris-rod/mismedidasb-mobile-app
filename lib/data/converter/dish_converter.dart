@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:mismedidasb/data/api/remote/remote_constanst.dart';
 import 'package:mismedidasb/domain/dish/dish_model.dart';
 import 'package:mismedidasb/domain/dish/i_dish_converter.dart';
@@ -35,7 +37,7 @@ class DishConverter extends IDishConverter {
       Map<String, dynamic> json,
       {bool fromAPI = true}) {
     return DailyActivityFoodModel(
-        id: json[fromAPI ? "eatTypeId": "id"],
+        id: json[fromAPI ? "eatTypeId" : "id"],
 //        name: json["name"],
 //        typeId: json["eatTypeId"],
         type: json["eatType"],
@@ -43,7 +45,8 @@ class DishConverter extends IDishConverter {
             ? DateTime.parse(json["createdAt"]).toLocal()
             : DateTime.parse(json["dateTime"]),
         plan: DailyFoodPlanModel(
-            dailyKCal: json[fromAPI ? "kCal" : "dailyKCal"] ?? 1, imc: json["imc"] ?? 1),
+            dailyKCal: json[fromAPI ? "kCal" : "dailyKCal"] ?? 1,
+            imc: json["imc"] ?? 1),
         foods: (json[fromAPI ? "eatDishResponse" : "foods"] as List<dynamic>)
             .map((model) => fromAPI
                 ? fromJsonFoodModelWithQTY(model)
@@ -68,7 +71,9 @@ class DishConverter extends IDishConverter {
 
   @override
   FoodModel fromJsonFoodModelWithQTY(Map<String, dynamic> json) {
-    return fromJsonFoodModel(json["dish"]);
+    final food = fromJsonFoodModel(json["dish"]);
+    food.count = json["qty"] * 1.0;
+    return food;
   }
 
   @override
@@ -76,24 +81,30 @@ class DishConverter extends IDishConverter {
     return FoodModel(
         id: json["id"],
         name: json["name"],
+        isProteic: json["isProteic"],
+        isCaloric: json["isCaloric"],
+        isFruitAndVegetables: json["isFruitAndVegetables"],
         calories: json["calories"],
         carbohydrates: json["carbohydrates"],
         proteins: json["proteins"],
         fat: json["fat"],
         fiber: json["fiber"],
         image: json["image"],
+        count: json.containsKey("count") ? json["count"] : 1,
         imageMimeType: json["imageMimeType"],
         tags: (json['tags'] as List<dynamic>)
             .map((model) => fromJsonFoodTagModel(model))
             .toList());
   }
 
-
   @override
   Map<String, dynamic> toJsonFoodModel(FoodModel model) {
     return {
       "id": model.id,
       "name": model.name,
+      "isProteic": model.isProteic,
+      "isCaloric": model.isCaloric,
+      "isFruitAndVegetables": model.isFruitAndVegetables,
       "calories": model.calories,
       "carbohydrates": model.carbohydrates,
       "proteins": model.proteins,
@@ -101,6 +112,7 @@ class DishConverter extends IDishConverter {
       "imageMimeType": model.imageMimeType,
       "fat": model.fat,
       "fiber": model.fiber,
+      "count": model.count,
       "tags": model.tags.map((model) => toJsonFoodModelTag(model)).toList()
     };
   }
@@ -136,6 +148,38 @@ class DishConverter extends IDishConverter {
 
   @override
   Map<String, dynamic> toJsonCreateFoodModel(CreateFoodModel model) {
-    return {"dishId": model.id, "qty": 1};
+    return {"dishId": model.id, "qty": model.quantity};
+  }
+
+  @override
+  FoodModel fromJsonCompoundFoodModel(Map<String, dynamic> json) {
+    return FoodModel(
+        id: json["id"],
+        name: json["name"],
+        isProteic: json["isProteic"],
+        isCaloric: json["isCaloric"],
+        isFruitAndVegetables: json["isFruitAndVegetables"],
+        calories: json["calories"],
+        carbohydrates: json["carbohydrates"],
+        proteins: json["proteins"],
+        fat: json["fat"],
+        fiber: json["fiber"],
+        image: json["image"],
+        count: json.containsKey("count") ? json["count"] : 1,
+        imageMimeType: json["imageMimeType"],
+        children: (json["dishCompoundDishResponse"] as List<dynamic>)
+            .map((model) => fromJsonFoodModelWithQTY(model))
+            .toList());
+  }
+
+  @override
+  Map<String, dynamic> toJsonCreateCompoundFoodModel(
+      CreateFoodCompoundModel model) {
+    return {
+      "name": model.name,
+      "image": model.image,
+      "dishes":
+          jsonEncode(model.foods.map((f) => toJsonCreateFoodModel(f)).toList())
+    };
   }
 }

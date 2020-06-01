@@ -11,6 +11,7 @@ import 'package:mismedidasb/ui/_tx_widget/tx_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_checkbox_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_combo_progress_bar_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_cupertino_dialog_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_divider_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_icon_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_main_app_bar_widget.dart';
@@ -369,10 +370,10 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
       final w = Container(
         width: double.infinity,
         child: Card(
+          elevation: 4,
           child: Column(
             children: <Widget>[
               Container(
-                padding: EdgeInsets.only(left: 5),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -429,7 +430,9 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                         final resultList = await NavigationUtils.push(
                             context,
                             FoodPage(
+                              dailyActivityFoodModel: model,
                               selectedItems: model.foods,
+                              imc: bloc.imc,
                             ));
                         if (resultList is List<FoodModel>) {
                           model.foods = resultList;
@@ -502,19 +505,35 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
     List<Widget> list = [];
     modelList.forEach((model) {
       final w = ListTile(
-        contentPadding: EdgeInsets.only(left: 10, right: 10),
-        leading: TXNetworkImage(
-          width: 40,
-          height: 40,
-          imageUrl: model.image,
-          placeholderImage: R.image.logo_blue,
-        ),
-        title: Wrap(
+        contentPadding: EdgeInsets.only(left: 5, right: 0),
+        leading: Stack(
           children: <Widget>[
-            TXTextWidget(
-              text: "${model.name}",
+            TXNetworkImage(
+              width: 40,
+              height: 40,
+              imageUrl: model.image,
+              placeholderImage: R.image.logo_blue,
             ),
+            Positioned(
+              right: 0,
+              bottom: 0,
+              child: model.count != 1
+                  ? CircleAvatar(
+                      backgroundColor: R.color.accent_color,
+                      child: TXTextWidget(
+                        text: "${model.displayCount}",
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        size: 7,
+                      ),
+                      radius: 8,
+                    )
+                  : Container(),
+            )
           ],
+        ),
+        title: TXTextWidget(
+          text: "${model.name}",
         ),
         trailing: TXIconButtonWidget(
           onPressed: () {

@@ -155,6 +155,10 @@ class DishRepository extends BaseRepository implements IDishRepository {
           final saved = await _iDishDao.saveFoodModelList(list ?? []);
         }
       }
+//      List<FoodModel> listTemp = [];
+//      for(int i = 0; i < 100; i ++){
+//        listTemp.add(list[i]);
+//      }
       return Result.success(value: list);
     } catch (ex) {
       return resultError(ex);
@@ -176,6 +180,47 @@ class DishRepository extends BaseRepository implements IDishRepository {
         }
       }
       return Result.success(value: list);
+    } catch (ex) {
+      return resultError(ex);
+    }
+  }
+
+  @override
+  Future<Result<bool>> createFoodCompoundModelList(
+      CreateFoodCompoundModel model) async {
+    try {
+      final res = await _dishApi.createFoodCompoundModelList(model);
+      return Result.success(value: res);
+    } catch (ex) {
+      return resultError(ex);
+    }
+  }
+
+  @override
+  Future<Result<bool>> deleteFoodCompoundModelList(int id) async {
+    try {
+      final res = await _dishApi.deleteFoodCompoundModelList(id);
+      return Result.success(value: res);
+    } catch (ex) {
+      return resultError(ex);
+    }
+  }
+
+  @override
+  Future<Result<List<FoodModel>>> getFoodCompoundModelList() async {
+    try {
+      final res = await _dishApi.getFoodCompoundModelList();
+      return ResultSuccess(value: res);
+    } catch (ex) {
+      return resultError(ex);
+    }
+  }
+
+  @override
+  Future<Result<bool>> updateFoodCompoundModelList() async {
+    try {
+      final res = await _dishApi.updateFoodCompoundModelList();
+      return Result.success(value: res);
     } catch (ex) {
       return resultError(ex);
     }

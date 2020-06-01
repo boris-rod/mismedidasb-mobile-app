@@ -1,3 +1,4 @@
+import 'package:mismedidasb/domain/single_selection_model.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/measure_health/health_result.dart';
 import 'package:mismedidasb/utils/calendar_utils.dart';
@@ -104,6 +105,44 @@ class DailyActivityFoodModel {
               ? R.string.lunch
               : (id == 3 ? R.string.snack2 : R.string.dinner)));
 
+//  double activityCalories() {
+//    double cal = 0;
+//    foods.forEach((f) {
+//      cal += f.caloriesFixed;
+//    });
+//    return cal;
+//  }
+
+  double get activityCalories => foods.isEmpty
+      ? 0.0
+      : foods.length == 1
+          ? foods[0].caloriesFixed
+          : foods
+              .map((f) => f.caloriesFixed)
+              .toList()
+              .reduce((c1, c2) => c1 + c2);
+
+  double get getActivityFoodCaloriesOffSet => id == 0
+      ? plan.breakFastCalValExtra
+      : (id == 1
+          ? plan.snack1CalValExtra
+          : (id == 2
+              ? plan.lunchCalValExtra
+              : (id == 3 ? plan.snack2CalValExtra : plan.dinnerCalValExtra)));
+
+  double get getCurrentCaloriesPercentageByFood =>
+      activityCalories *
+      100 /
+      (getActivityFoodCalories + getActivityFoodCaloriesOffSet);
+
+  double get getActivityFoodCalories => id == 0
+      ? plan.breakFastCalVal
+      : (id == 1
+          ? plan.snack1CalVal
+          : (id == 2
+              ? plan.lunchCalVal
+              : (id == 3 ? plan.snack2CalVal : plan.dinnerCalVal)));
+
   DailyActivityFoodModel(
       {this.id,
       this.type,
@@ -134,7 +173,12 @@ class DailyActivityFoodModel {
   }
 }
 
-class FoodModel {
+class FoodSelectedModel{
+  FoodBaseModel foodBaseModel;
+  double qty;
+}
+
+abstract class FoodBaseModel{
   int id;
   String name;
   double calories;
@@ -144,26 +188,111 @@ class FoodModel {
   double fiber;
   String image;
   String imageMimeType;
+}
+
+class FoodCompoundModel{
+
+}
+
+class FoodModel {
+  int id;
+  String name;
+  bool isProteic;
+  bool isCaloric;
+  bool isFruitAndVegetables;
+  double calories;
+  double carbohydrates;
+  double proteins;
+  double fat;
+  double fiber;
+  String image;
+  String imageMimeType;
   bool isSelected;
+  List<FoodModel> children;
   List<TagModel> tags;
+  double count;
 
   TagModel get tag => tags.isNotEmpty ? tags[0] : TagModel();
 
-  double get caloriesFixed => carbohydrates * 4 + proteins * 4 + fat * 9;
+  double get caloriesFixed =>
+      (carbohydrates * 4 + proteins * 4 + fat * 9) * count;
 
-  FoodModel({
-    this.id,
-    this.name,
-    this.calories,
-    this.carbohydrates,
-    this.proteins,
-    this.fat,
-    this.fiber,
-    this.image,
-    this.imageMimeType,
-    this.tags,
-    this.isSelected = false,
-  });
+  bool get isCompound => children.length > 1;
+
+  String get displayCount => count == 0.25
+      ? "1/4"
+      : (count == 0.50
+          ? "1/2"
+          : (count == 0.75 ? "3/4" : count.truncate().toString()));
+
+  List<SingleSelectionModel> get availableCounts => [
+        SingleSelectionModel(
+            id: 1,
+            index: 0,
+            partialValue: 0.25,
+            displayName: "1/4",
+            isSelected: true),
+        SingleSelectionModel(
+            id: 2,
+            index: 1,
+            partialValue: 0.50,
+            displayName: "1/2",
+            isSelected: true),
+        SingleSelectionModel(
+            id: 3,
+            index: 2,
+            partialValue: 0.75,
+            displayName: "3/4",
+            isSelected: true),
+        SingleSelectionModel(
+            id: 4,
+            index: 3,
+            partialValue: 1,
+            displayName: "1",
+            isSelected: true),
+        SingleSelectionModel(
+            id: 5,
+            index: 4,
+            displayName: "2",
+            partialValue: 2,
+            isSelected: true),
+        SingleSelectionModel(
+            id: 6,
+            index: 5,
+            displayName: "3",
+            partialValue: 3,
+            isSelected: true),
+        SingleSelectionModel(
+            id: 7,
+            index: 6,
+            displayName: "4",
+            partialValue: 4,
+            isSelected: true),
+        SingleSelectionModel(
+            id: 8,
+            index: 7,
+            displayName: "5",
+            partialValue: 5,
+            isSelected: true),
+      ];
+
+  FoodModel(
+      {this.id,
+      this.name = "",
+      this.isProteic,
+      this.isCaloric,
+      this.isFruitAndVegetables,
+      this.calories,
+      this.carbohydrates,
+      this.proteins,
+      this.fat,
+      this.fiber,
+      this.image = "",
+      this.imageMimeType,
+      this.tags,
+      this.isSelected = false,
+      this.count = 1,
+      this.children = const []});
 }
 
 class TagModel {
@@ -204,13 +333,30 @@ class CreateDailyActivityModel {
   }
 }
 
+class CreateFoodCompoundModel {
+  String name;
+  String image;
+  List<CreateFoodModel> foods;
+
+  CreateFoodCompoundModel({this.name, this.image, this.foods});
+
+  static CreateFoodCompoundModel fromFoodModel(FoodModel model) {
+    return CreateFoodCompoundModel(
+        image: model.image,
+        name: model.name,
+        foods: model.children
+            .map((f) => CreateFoodModel.fromFoodModel(f))
+            .toList());
+  }
+}
+
 class CreateFoodModel {
   int id;
-  int quantity;
+  double quantity;
 
   CreateFoodModel({this.id, this.quantity = 1});
 
   static CreateFoodModel fromFoodModel(FoodModel model) {
-    return CreateFoodModel(id: model.id, quantity: 1);
+    return CreateFoodModel(id: model.id, quantity: model.count);
   }
 }

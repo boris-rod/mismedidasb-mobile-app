@@ -24,7 +24,6 @@ import 'package:mismedidasb/ui/change_password/change_password_page.dart';
 import 'package:mismedidasb/ui/contact_us/contact_us_page.dart';
 import 'package:mismedidasb/ui/legacy/legacy_page.dart';
 import 'package:mismedidasb/ui/profile/profile_bloc.dart';
-import 'package:mismedidasb/ui/profile/tx_profile_item_option_widget.dart';
 import 'package:mismedidasb/ui/profile/tx_stat_widget.dart';
 import 'package:mismedidasb/ui/profile_edit/profile_edit_page.dart';
 import 'package:mismedidasb/ui/settings/settings_bloc.dart';

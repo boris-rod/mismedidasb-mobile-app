@@ -18,7 +18,6 @@ import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_textlink_widget.dart';
 import 'package:mismedidasb/ui/legacy/legacy_page.dart';
 import 'package:mismedidasb/ui/profile/profile_page.dart';
-import 'package:mismedidasb/ui/profile/tx_profile_item_option_widget.dart';
 import 'package:mismedidasb/ui/settings/settings_bloc.dart';
 
 enum SettingAction { logout, languageCodeChanged, removeAccount }

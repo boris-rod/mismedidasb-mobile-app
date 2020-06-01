@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_blur_dialog.dart';
@@ -32,11 +33,11 @@ class FileManager {
         }
         return image;
       }
-      String fileName = "${CalendarUtils.getTimeIdBasedSeconds()}.png";
-      String rootDir = await getRootFilesDir();
-      File file = await image.copy("$rootDir/$fileName");
+//      String fileName = "${CalendarUtils.getTimeIdBasedSeconds()}.png";
+//      String rootDir = await getRootFilesDir();
+//      File file = await image.copy("$rootDir/$fileName");
 
-      return Future.value(file);
+      return image;
     } catch (ex) {
       if (ex is PlatformException) {
         if (ex.code == "photo_access_denied" ||
@@ -80,6 +81,18 @@ class FileManager {
         ? await getApplicationDocumentsDirectory()
         : await getExternalStorageDirectory();
     return appDocDir;
+  }
+
+  static Future<File> testCompressAndGetFile(File file, String targetPath) async {
+    final newFile = File(targetPath);
+    if(await newFile.exists()){
+      await newFile.delete();
+    }
+    var result = await FlutterImageCompress.compressAndGetFile(
+      file.absolute.path, targetPath,
+      quality: 70,
+    );
+    return result;
   }
 
   static Future<void> retrieveLostData() async {

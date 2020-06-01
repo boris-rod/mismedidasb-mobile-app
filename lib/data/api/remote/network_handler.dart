@@ -8,6 +8,7 @@ import 'package:meta/meta.dart';
 import 'package:mismedidasb/data/_shared_prefs.dart';
 import 'package:mismedidasb/data/api/remote/endpoints.dart';
 import 'package:mismedidasb/data/api/remote/remote_constanst.dart';
+import 'package:mismedidasb/domain/dish/dish_model.dart';
 import 'package:mismedidasb/utils/logger.dart';
 
 export 'package:http/http.dart';
@@ -69,12 +70,11 @@ class NetworkHandler {
   ///-The request's content type is application/json
   ///-The request already handles authentication
   ///-The request already handles refresh token implementation
-  Future<http.Response> post({
-    @required String path,
-    String params = '',
-    String body = "",
-    bool  doRefreshToken = true
-  }) async {
+  Future<http.Response> post(
+      {@required String path,
+      String params = '',
+      String body = "",
+      bool doRefreshToken = true}) async {
     final _url = Endpoint.apiBaseUrl + path + params;
     final _headers = await _commonHeaders();
 
@@ -85,12 +85,18 @@ class NetworkHandler {
       final res = await http.post(_url, headers: _headers, body: body);
       _logger.log("<- RESPONSE CODE: ${res.statusCode}");
       _logger.log("<- RESPONSE BODY: ${res.body}");
-      if (doRefreshToken && res.statusCode == RemoteConstants.code_un_authorized) {
+      if (doRefreshToken &&
+          res.statusCode == RemoteConstants.code_un_authorized) {
         final refreshResult = await _refreshToken();
         if (refreshResult.statusCode == RemoteConstants.code_success) {
           final _newHeaders = await _commonHeaders();
+          _logger.log("-> POST: $_url");
+          _logger.log("-> HEADERS: $_headers");
+          _logger.log("-> BODY: $body");
           final resAfterRefresh =
-          await http.post(_url, headers: _newHeaders, body: body);
+              await http.post(_url, headers: _newHeaders, body: body);
+          _logger.log("<- RESPONSE CODE: ${res.statusCode}");
+          _logger.log("<- RESPONSE BODY: ${res.body}");
           return resAfterRefresh;
         } else
           return refreshResult;
@@ -128,7 +134,7 @@ class NetworkHandler {
         if (refreshResult.statusCode == RemoteConstants.code_success) {
           final _newHeaders = await _commonHeaders();
           final resAfterRefresh =
-          await http.put(_url, headers: _newHeaders, body: body);
+              await http.put(_url, headers: _newHeaders, body: body);
           return resAfterRefresh;
         } else
           return refreshResult;
@@ -174,7 +180,6 @@ class NetworkHandler {
     }
   }
 
-
   Future<http.Response> _refreshToken() async {
     final url = "${Endpoint.apiBaseUrl}${Endpoint.refresh_token}";
     final refreshToken = await _sharedP.getRefreshToken();
@@ -189,14 +194,15 @@ class NetworkHandler {
       _logger.log("-> POST: $url");
       _logger.log("-> BODY: $body");
       final _headers = {'Content-Type': 'application/json'};
-
       _logger.log("-> HEADERS: $_headers");
       var res = await http.post(url, headers: _headers, body: body);
       _logger.log("<- RESPONSE CODE: ${res.statusCode}");
       _logger.log("<- RESPONSE BODY: ${res.body}");
 
-      await _sharedP.setAccessToken(res.headers[RemoteConstants.authorization] ?? "");
-      await _sharedP.setRefreshToken(res.headers[RemoteConstants.refreshToken] ?? "");
+      final String accessToken = res.headers["authorization"] ?? "";
+      final String refreshToken = res.headers["refreshtoken"] ?? "";
+      await _sharedP.setAccessToken(accessToken);
+      await _sharedP.setRefreshToken(refreshToken);
 
       return res;
     } catch (ex) {
@@ -212,10 +218,10 @@ class NetworkHandler {
     @required File file,
   }) async {
     final _url = (baseUrl ?? Endpoint.apiBaseUrl) + path;
-    final _headers = await _commonHeaders();
-    _headers.addAll(headers);
+    final _headers = {'Authorization': '${await _sharedP.getAccessToken()}'};
+//    _headers.addAll(headers);
     _headers.addAll({"Content-Type": "multipart/form-data"});
-    _headers.addAll({"type": "image/jpeg"});
+//    _headers.addAll({"type": "image/jpeg"});
 
     try {
       _logger.log("-> POST: $_url");
@@ -227,9 +233,10 @@ class NetworkHandler {
 //        String name = pathParts[pathParts.length - 1];
 //        print('NAME -> $name');
 
-        FormData formData = FormData.fromMap({
-          "file": await MultipartFile.fromFile(file.path, filename: file.path.split("/").last)
-        });
+      final ext = file.path.split(".").last;
+      FormData formData = FormData.fromMap({
+        "file": MultipartFile.fromFileSync(file.path,)
+      });
 
 //        formData.add(
 //            'file',
@@ -240,7 +247,7 @@ class NetworkHandler {
       final res = await dio.post(_url,
           data: formData,
           options: Options(
-            method: 'POST',
+//            method: 'POST',
             responseType: ResponseType.json,
             headers: _headers,
           ));
@@ -254,4 +261,48 @@ class NetworkHandler {
     }
   }
 
+  Future<int> uploadMultipartForm(
+      {@required String path,
+      String name,
+      String dishes,
+      @required String filePath}) async {
+    try {
+      final _url = Endpoint.apiBaseUrl + path;
+      final _headers = {'Authorization': '${await _sharedP.getAccessToken()}'};
+      _headers.addAll({"Content-Type": "multipart/form-data"});
+
+      _logger.log(dishes);
+      final FormData formData = FormData.fromMap({
+        "name": name,
+        "dishes": dishes,
+//        "file": await MultipartFile.fromFile(filePath,
+//            filename: filePath.split("/").last),
+      });
+
+      Dio dio = new Dio();
+      final res = await dio.post(_url,
+          data: formData,
+          options: Options(
+//            method: 'POST',
+            responseType: ResponseType.json,
+            headers: _headers,
+          ));
+
+//      var request = http.MultipartRequest('POST', Uri.parse(_url));
+//
+//      _headers.forEach((k, v) {
+//        request.headers[k] = v;
+//      });
+//
+//      request.files.add(await http.MultipartFile.fromPath(fileName, filePath));
+//
+//      _logger.log("-> POST: $_url");
+//      _logger.log("-> HEADERS: $_headers");
+//      final res = await request.send();
+      return res.statusCode;
+    } catch (ex) {
+      _logger.log("<- EXEPTION: $ex");
+      return 0;
+    }
+  }
 }

@@ -39,11 +39,11 @@ class DishDao extends IDishDao {
       list.forEach((model) async {
         final map = {
           DBConstants.id_key:
-          CalendarUtils.getTimeIdBasedDay(dateTime: model.dateTime),
+              CalendarUtils.getTimeIdBasedDay(dateTime: model.dateTime),
           DBConstants.data_key:
-          jsonEncode(_foodConverter.toJsonDailyFoodModel(model)),
+              jsonEncode(_foodConverter.toJsonDailyFoodModel(model)),
           DBConstants.parent_key:
-          CalendarUtils.getTimeIdBasedDay(dateTime: model.dateTime),
+              CalendarUtils.getTimeIdBasedDay(dateTime: model.dateTime),
         };
         await db.insert(DBConstants.daily_food_activity_table, map,
             conflictAlgorithm: ConflictAlgorithm.replace);
@@ -73,9 +73,11 @@ class DishDao extends IDishDao {
       final data = jsonEncode(_foodConverter.toJsonDailyFoodModel(model));
       if (data.isNotEmpty) {
         final map = {
-          DBConstants.id_key: CalendarUtils.getTimeIdBasedDay(dateTime: model.dateTime),
+          DBConstants.id_key:
+              CalendarUtils.getTimeIdBasedDay(dateTime: model.dateTime),
           DBConstants.data_key: data,
-          DBConstants.parent_key: CalendarUtils.getTimeIdBasedDay(dateTime: model.dateTime)
+          DBConstants.parent_key:
+              CalendarUtils.getTimeIdBasedDay(dateTime: model.dateTime)
         };
         final inserted = await db.insert(
             DBConstants.daily_food_activity_table, map,
@@ -175,6 +177,28 @@ class DishDao extends IDishDao {
     try {
       Database db = await _appDatabase.db;
       await db.delete(DBConstants.food_tag_table);
+      return true;
+    } catch (ex) {
+      return false;
+    }
+  }
+
+  @override
+  Future<List<FoodModel>> getFoodCompoundModelList() async {
+    try {
+      Database db = await _appDatabase.db;
+      await db.delete(DBConstants.food_compound_table);
+      return [];
+    } catch (ex) {
+      return [];
+    }
+  }
+
+  @override
+  Future<bool> saveFoodCompoundModelList() async {
+    try {
+      Database db = await _appDatabase.db;
+      await db.delete(DBConstants.food_compound_table);
       return true;
     } catch (ex) {
       return false;
