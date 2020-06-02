@@ -132,7 +132,9 @@ class DishConverter extends IDishConverter {
       CreateDailyActivityModel model) {
     return {
       "eatType": model.id,
-      "dishes": model.foods.map((f) => toJsonCreateFoodModel(f)).toList()
+      "dishes": model.foods.map((f) => toJsonCreateFoodModel(f)).toList(),
+      "compoundDishes":
+          model.foodsCompound.map((f) => toJsonCreateFoodModel(f)).toList()
     };
   }
 

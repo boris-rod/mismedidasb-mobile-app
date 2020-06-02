@@ -217,9 +217,9 @@ class DishRepository extends BaseRepository implements IDishRepository {
   }
 
   @override
-  Future<Result<bool>> updateFoodCompoundModelList() async {
+  Future<Result<FoodModel>> updateFoodCompoundModelList(int id, CreateFoodCompoundModel model) async {
     try {
-      final res = await _dishApi.updateFoodCompoundModelList();
+      final res = await _dishApi.updateFoodCompoundModelList(id, model);
       return Result.success(value: res);
     } catch (ex) {
       return resultError(ex);

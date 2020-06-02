@@ -77,8 +77,8 @@ class FoodBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     kCalPercentageHide = await _sharedPreferencesManager
         .getBoolValue(SharedKey.kCalPercentageHide);
 
-    foodFilterCategoryIndex = foodFilterCategoryIndex;
-    foodFilterMode = foodFilterMode;
+    this.foodFilterCategoryId = foodFilterCategoryIndex;
+    this.foodFilterMode = foodFilterMode;
 
     await _loadCategoryFilter();
 
@@ -94,6 +94,7 @@ class FoodBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
       foodsAll.addAll(foodsCompoundRes.value);
     }
 
+    selectedItems.forEach((f)=> f.isSelected = true);
     foodsAll.forEach((f) {
       final sF =
           selectedItems.firstWhere((food) => food.id == f.id, orElse: () {
@@ -135,15 +136,15 @@ class FoodBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     if (foodFilterMode == FoodFilterMode.dish_healthy) {
       if (foodFilterCategoryId == FoodHealthy.proteic.index) {
         final List<FoodModel> proteics =
-            foodsAll.where((f) => f.isProteic).toList();
+            foodsAll.where((f) => (f?.isProteic == true) ?? false)?.toList() ?? [];
         foodsFiltered.addAll(proteics);
       } else if (foodFilterCategoryId == FoodHealthy.caloric.index) {
         final List<FoodModel> calorics =
-            foodsAll.where((f) => f.isCaloric).toList();
+            foodsAll.where((f) => (f?.isCaloric == true) ?? false)?.toList() ?? [];
         foodsFiltered.addAll(calorics);
       } else {
         final List<FoodModel> fv =
-            foodsAll.where((f) => f.isFruitAndVegetables).toList();
+            foodsAll.where((f) => (f?.isFruitAndVegetables == true) ?? false)?.toList() ?? [];
         foodsFiltered.addAll(fv);
       }
     } else {
@@ -155,7 +156,7 @@ class FoodBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
           return null;
         });
         if (tag?.id != null) {
-          final res = foodsAll.where((f) => f.tag.id == tag.id).toList();
+          final res = foodsAll.where((f) => f?.tag?.id == tag.id).toList();
           foodsFiltered.addAll(res);
 
           if (foodsFiltered.isEmpty) foodsFiltered.addAll(foodsAll);
@@ -207,17 +208,17 @@ class FoodBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
       }
     } else {
       list.add(TagModel(
-          isSelected: foodFilterCategoryId == FoodHealthy.proteic.index,
-          id: FoodHealthy.proteic.index,
-          name: "Proteico"));
-      list.add(TagModel(
-          isSelected: foodFilterCategoryId == FoodHealthy.caloric.index,
-          id: FoodHealthy.caloric.index,
-          name: "Calorico"));
-      list.add(TagModel(
           isSelected: foodFilterCategoryId == FoodHealthy.fruitVeg.index,
           id: FoodHealthy.fruitVeg.index,
           name: "Frutas y/o Vegetales"));
+      list.add(TagModel(
+          isSelected: foodFilterCategoryId == FoodHealthy.proteic.index,
+          id: FoodHealthy.proteic.index,
+          name: "Protéico"));
+      list.add(TagModel(
+          isSelected: foodFilterCategoryId == FoodHealthy.caloric.index,
+          id: FoodHealthy.caloric.index,
+          name: "Calórico"));
     }
     tagsAll.addAll(list);
   }
@@ -230,6 +231,7 @@ class FoodBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     filterFoodsByTagOrCategory();
 
     syncFoods();
+    _filterController.sinkAddSafe(tagsAll.firstWhere((f) => f.isSelected));
   }
 
   @override

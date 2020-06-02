@@ -29,7 +29,7 @@ class FoodSearchBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     if (foods.isEmpty) {
       final res = await _iDishRepository.getFoodModelList();
       if (res is ResultSuccess<List<FoodModel>>) allFoods.addAll(res.value);
-    }else{
+    } else {
       allFoods.addAll(foods);
     }
     _searchController.sinkAddSafe(allFoods);
@@ -37,24 +37,49 @@ class FoodSearchBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
   void search(String query) async {
     List<FoodModel> resultListQuery = [];
+    List<FoodModel> sortedList = [];
     currentQuery = query;
     if (query.trim().isEmpty) {
+      allFoods.sort((a, b) =>
+          a.name.trim().toLowerCase().compareTo(b.name.trim().toLowerCase()));
       resultListQuery.addAll(allFoods);
     } else {
+      String q = cleanedString(currentQuery);
       allFoods.forEach((f) {
-        String food = f.name.trim().toLowerCase();
-        String q = currentQuery.trim().toLowerCase();
+        String food = cleanedString(f.name);
 
-        food = food.replaceAll(RegExp("[á]"), "a");
-        food = food.replaceAll(RegExp("[é]"), "e");
-        food = food.replaceAll(RegExp("[í]"), "i");
-        food = food.replaceAll(RegExp("[ó]"), "o");
-        food = food.replaceAll(RegExp("[üú]"), "u");
+//        food = food.replaceAll(RegExp("[á]"), "a");
+//        food = food.replaceAll(RegExp("[é]"), "e");
+//        food = food.replaceAll(RegExp("[í]"), "i");
+//        food = food.replaceAll(RegExp("[ó]"), "o");
+//        food = food.replaceAll(RegExp("[üú]"), "u");
+//
+//        q = q.replaceAll(RegExp("[á]"), "a");
+//        q = q.replaceAll(RegExp("[é]"), "e");
+//        q = q.replaceAll(RegExp("[í]"), "i");
+//        q = q.replaceAll(RegExp("[ó]"), "o");
+//        q = q.replaceAll(RegExp("[üú]"), "u");
 
         if (food.contains(q)) resultListQuery.add(f);
       });
+      Comparator<FoodModel> nameComparator = (value1, value2) => cleanedString(value1.name)
+          .split(q)
+          .first
+          .length
+          .compareTo(cleanedString(value2.name).split(q).first.length);
+      resultListQuery.sort(nameComparator);
     }
     _searchController.sinkAddSafe(resultListQuery);
+  }
+
+  String cleanedString(String value){
+    value = value.trim().toLowerCase();
+    value = value.replaceAll(RegExp("[á]"), "a");
+    value = value.replaceAll(RegExp("[é]"), "e");
+    value = value.replaceAll(RegExp("[í]"), "i");
+    value = value.replaceAll(RegExp("[ó]"), "o");
+    value = value.replaceAll(RegExp("[üú]"), "u");
+    return value;
   }
 
   void setSelectedFood(FoodModel foodModel) async {

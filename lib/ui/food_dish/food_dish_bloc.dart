@@ -132,10 +132,10 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     _calendarOptionsController.sinkAddSafe(daily);
 
     daily.currentCaloriesSum = 0;
-    daily.currentSumProteins = 0;
-    daily.currentSumCarbohydrates = 0;
-    daily.currentSumFat = 0;
-    daily.currentSumFiber = 0;
+    daily.currentProteinsSum = 0;
+    daily.currentCarbohydratesSum = 0;
+    daily.currentFatSum = 0;
+    daily.currentFiberSum = 0;
 
     daily.dailyActivityFoodModelList.forEach((dA) {
       dA.proteinsDishCalories = 0;
@@ -149,10 +149,10 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
       double fib = 0;
       double pro = 0;
       dA.foods.forEach((f) {
-        car += f.carbohydrates;
-        fat += f.fat;
-        fib += f.fiber;
-        pro += f.proteins;
+        car += f.carbohydrates * f.count;
+        fat += f.fat * f.count;
+        fib += f.fiber * f.count;
+        pro += f.proteins * f.count;
 
         if (f.tag.id == RemoteConstants.proteins_category_code) {
           dA.proteinsDishCalories += f.caloriesFixed;
@@ -179,10 +179,10 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
           (dA.fiberDishCalories * 100 ~/ activityFoodCalories).toInt();
 
       daily.currentCaloriesSum += dA.calories;
-      daily.currentSumProteins += dA.proteins;
-      daily.currentSumCarbohydrates += dA.carbohydrates;
-      daily.currentSumFat += dA.fat;
-      daily.currentSumFiber += dA.fiber;
+      daily.currentProteinsSum += dA.proteins;
+      daily.currentCarbohydratesSum += dA.carbohydrates;
+      daily.currentFatSum += dA.fat;
+      daily.currentFiberSum += dA.fiber;
     });
     _dailyFoodController.sinkAddSafe(daily);
   }
@@ -193,12 +193,12 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     rootModel.currentCaloriesSum =
         rootModel.currentCaloriesSum - model.calories;
 
-    rootModel.currentSumProteins =
-        rootModel.currentSumProteins - model.proteins;
-    rootModel.currentSumCarbohydrates =
-        rootModel.currentSumCarbohydrates - model.carbohydrates;
-    rootModel.currentSumFat = rootModel.currentSumFat - model.fat;
-    rootModel.currentSumFiber = rootModel.currentSumFiber - model.fiber;
+    rootModel.currentProteinsSum =
+        rootModel.currentProteinsSum - model.proteins;
+    rootModel.currentCarbohydratesSum =
+        rootModel.currentCarbohydratesSum - model.carbohydrates;
+    rootModel.currentFatSum = rootModel.currentFatSum - model.fat;
+    rootModel.currentFiberSum = rootModel.currentFiberSum - model.fiber;
 
     model.proteinsDishCalories = 0;
     model.fiberDishCalories = 0;
@@ -241,10 +241,10 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
         (model.fiberDishCalories * 100 ~/ activityFoodCalories).toInt();
 
     rootModel.currentCaloriesSum += model.calories;
-    rootModel.currentSumProteins += model.proteins;
-    rootModel.currentSumCarbohydrates += model.carbohydrates;
-    rootModel.currentSumFat += model.fat;
-    rootModel.currentSumFiber += model.fiber;
+    rootModel.currentProteinsSum += model.proteins;
+    rootModel.currentCarbohydratesSum += model.carbohydrates;
+    rootModel.currentFatSum += model.fat;
+    rootModel.currentFiberSum += model.fiber;
 
     await _iDishRepository.savePlanLocal(rootModel);
 
@@ -308,6 +308,8 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     final dishesRes = await _iDishRepository.syncData();
     if (dishesRes is ResultSuccess<Map<DateTime, DailyFoodModel>>) {
       dailyFoodModelMap = dishesRes.value;
+    }else{
+      showErrorMessage(dishesRes);
     }
     loadDailyPlanData();
     isLoading = false;

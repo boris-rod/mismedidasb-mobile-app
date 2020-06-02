@@ -22,8 +22,14 @@ class FoodAddEditBloC extends BaseBloC
 
   Stream<FoodModel> get foodResult => _foodController.stream;
 
+  BehaviorSubject<bool> _addEditController = new BehaviorSubject();
+
+  Stream<bool> get addEditResult => _addEditController.stream;
+
   FoodModel currentFoodModel;
   List<FoodModel> allFoods = [];
+  List<FoodModel> currentChildren = [];
+  bool reload = false;
 
   void init(FoodModel foodModel) async {
     final res = await _iDishRepository.getFoodModelList();
@@ -34,6 +40,7 @@ class FoodAddEditBloC extends BaseBloC
       );
     } else {
       currentFoodModel = foodModel;
+      currentChildren.addAll(foodModel.children);
     }
     _foodController.sinkAddSafe(currentFoodModel);
   }
@@ -62,33 +69,56 @@ class FoodAddEditBloC extends BaseBloC
     _foodController.sinkAddSafe(currentFoodModel);
   }
 
-  void addFood() async {
+  void removeCompoundFood() async {
+    isLoading = true;
+    final res =
+        await _iDishRepository.deleteFoodCompoundModelList(currentFoodModel.id);
+    if (res is ResultSuccess<bool>) {
+      reload = true;
+      _addEditController.sinkAddSafe(true);
+    } else {
+      showErrorMessage(res);
+    }
+    reload = true;
+    isLoading = false;
+  }
+
+  String validateFoodsRules() {
+    String rule = "";
     if (currentFoodModel.children.isEmpty) {
       Fluttertoast.showToast(msg: "Debe adicionar al menos un alimento");
     } else if (currentFoodModel.children.length == 1 &&
         currentFoodModel.children[0].count == 1) {
       Fluttertoast.showToast(
           msg: "El número de porciones debe ser mayor que 1.");
-    } else {
+    }
+    return rule;
+  }
+
+  void addFood(bool isAdding) async {
+    if (validateFoodsRules().isEmpty) {
       isLoading = true;
       try {
-//        final File photo = File(currentFoodModel.image);
-//        final ext = photo.path.split(".").last;
-//        final root = await FileManager.getRootFilesDir();
-//        final File newFile = await photo.copy("$root/food_photo.$ext");
-//        final compressedFile =
-//            await FileManager.testCompressAndGetFile(photo, newFile.path);
-//        currentFoodModel.image = compressedFile.path;
-
-        final res = await _iDishRepository.createFoodCompoundModelList(
-            CreateFoodCompoundModel.fromFoodModel(currentFoodModel));
-        if (res is ResultSuccess<bool>) {
-          _foodController.sinkAddSafe(currentFoodModel);
-        } else
-          showErrorMessage(res);
-      } catch (ex) {
-
-      }
+        if (isAdding) {
+          final res = await _iDishRepository.createFoodCompoundModelList(
+              CreateFoodCompoundModel.fromFoodModel(currentFoodModel));
+          if (res is ResultSuccess<bool>) {
+            reload = true;
+            _addEditController.sinkAddSafe(true);
+          } else
+            showErrorMessage(res);
+        } else {
+          final res = await _iDishRepository.updateFoodCompoundModelList(
+              currentFoodModel.id,
+              CreateFoodCompoundModel.fromFoodModel(currentFoodModel));
+          if (res is ResultSuccess<FoodModel>) {
+            reload = true;
+            currentFoodModel = res.value;
+            _addEditController.sinkAddSafe(true);
+          } else
+            showErrorMessage(res);
+        }
+      } catch (ex) {}
       isLoading = false;
     }
   }
@@ -96,6 +126,7 @@ class FoodAddEditBloC extends BaseBloC
   @override
   void dispose() {
     _foodController.close();
+    _addEditController.close();
     disposeLoadingBloC();
     disposeErrorHandlerBloC();
   }

@@ -19,7 +19,7 @@ abstract class IDishRepository {
 
   Future<Result<bool>> createFoodCompoundModelList(CreateFoodCompoundModel model);
 
-  Future<Result<bool>> updateFoodCompoundModelList();
+  Future<Result<FoodModel>> updateFoodCompoundModelList(int id, CreateFoodCompoundModel model);
 
   Future<Result<bool>> deleteFoodCompoundModelList(int id);
 

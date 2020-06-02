@@ -132,12 +132,6 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                                           Container(
                                             child: Stack(
                                               children: <Widget>[
-                                                Container(
-                                                  width: double.infinity,
-                                                  height: double.infinity,
-                                                  color:
-                                                      R.color.dialog_background,
-                                                ),
                                                 TXNetworkImage(
                                                   width: double.infinity,
                                                   height: double.infinity,
@@ -145,6 +139,12 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                                                   placeholderImage:
                                                       R.image.logo_blue,
                                                   boxFitImage: BoxFit.cover,
+                                                ),
+                                                Container(
+                                                  width: double.infinity,
+                                                  height: double.infinity,
+                                                  color:
+                                                  R.color.dialog_background,
                                                 ),
                                               ],
                                             ),

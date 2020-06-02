@@ -83,14 +83,14 @@ class FileManager {
     return appDocDir;
   }
 
-  static Future<File> testCompressAndGetFile(File file, String targetPath) async {
+  static Future<File> compressAndGetFile(File file, String targetPath) async {
     final newFile = File(targetPath);
     if(await newFile.exists()){
       await newFile.delete();
     }
     var result = await FlutterImageCompress.compressAndGetFile(
       file.absolute.path, targetPath,
-      quality: 70,
+      quality: 80,
     );
     return result;
   }

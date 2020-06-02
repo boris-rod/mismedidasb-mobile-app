@@ -63,10 +63,10 @@ class ProfileEditBloC extends BaseBloC
         showErrorMessage(profileRes);
       userEdited = true;
     } else {
-      isLoading = false;
       showErrorMessage(res);
     }
-    await FileManager.deleteFile(file.path);
+    isLoading = false;
+//    await FileManager.deleteFile(file.path);
   }
 
   @override

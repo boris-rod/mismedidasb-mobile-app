@@ -103,10 +103,10 @@ class _FoodSearchState extends StateWithBloC<FoodSearchPage, FoodSearchBloC> {
                     stream: bloc.searchResult,
                     initialData: widget.allFoods,
                     builder: (ctx, searchResultSnapshot) {
-                      searchResultSnapshot.data.sort((a, b) => a.name
-                          .trim()
-                          .toLowerCase()
-                          .compareTo(b.name.trim().toLowerCase()));
+//                      searchResultSnapshot.data.sort((a, b) => a.name
+//                          .trim()
+//                          .toLowerCase()
+//                          .compareTo(b.name.trim().toLowerCase()));
                       return ListView.builder(
                           physics: BouncingScrollPhysics(),
                           padding: EdgeInsets.only(top: 5, bottom: 30),

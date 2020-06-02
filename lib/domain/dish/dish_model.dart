@@ -48,10 +48,10 @@ class DailyFoodModel {
   bool headerExpanded;
   bool showKCalPercentages;
   double currentCaloriesSum;
-  double currentSumProteins;
-  double currentSumCarbohydrates;
-  double currentSumFat;
-  double currentSumFiber;
+  double currentProteinsSum;
+  double currentCarbohydratesSum;
+  double currentFatSum;
+  double currentFiberSum;
 
   double get currentCaloriesSumTest => dailyActivityFoodModelList
       .map((d) => d.calories)
@@ -68,10 +68,10 @@ class DailyFoodModel {
       this.dailyActivityFoodModelList,
       this.dailyFoodPlanModel,
       this.currentCaloriesSum = 0,
-      this.currentSumCarbohydrates = 0,
-      this.currentSumFat = 0,
-      this.currentSumFiber = 0,
-      this.currentSumProteins = 0,
+      this.currentCarbohydratesSum = 0,
+      this.currentFatSum = 0,
+      this.currentFiberSum = 0,
+      this.currentProteinsSum = 0,
       this.headerExpanded = true,
       this.showKCalPercentages = false});
 }
@@ -80,14 +80,15 @@ class DailyActivityFoodModel {
   int id;
   String type;
   List<FoodModel> foods;
+  DailyFoodPlanModel plan;
+  DateTime dateTime;
+  bool isExpanded;
+
   double calories;
   double carbohydrates;
   double proteins;
   double fat;
   double fiber;
-  DailyFoodPlanModel plan;
-  DateTime dateTime;
-  bool isExpanded;
 
   int foodsProteinsPercentage;
   int foodsCarbohydratesPercentage;
@@ -173,27 +174,6 @@ class DailyActivityFoodModel {
   }
 }
 
-class FoodSelectedModel{
-  FoodBaseModel foodBaseModel;
-  double qty;
-}
-
-abstract class FoodBaseModel{
-  int id;
-  String name;
-  double calories;
-  double carbohydrates;
-  double proteins;
-  double fat;
-  double fiber;
-  String image;
-  String imageMimeType;
-}
-
-class FoodCompoundModel{
-
-}
-
 class FoodModel {
   int id;
   String name;
@@ -212,7 +192,7 @@ class FoodModel {
   List<TagModel> tags;
   double count;
 
-  TagModel get tag => tags.isNotEmpty ? tags[0] : TagModel();
+  TagModel get tag => tags?.isNotEmpty == true ? tags[0] : TagModel();
 
   double get caloriesFixed =>
       (carbohydrates * 4 + proteins * 4 + fat * 9) * count;
@@ -321,15 +301,26 @@ class CreateDailyPlanModel {
 class CreateDailyActivityModel {
   int id;
   List<CreateFoodModel> foods;
+  List<CreateFoodModel> foodsCompound;
 
-  CreateDailyActivityModel({this.id, this.foods = const []});
+  CreateDailyActivityModel(
+      {this.id, this.foods = const [], this.foodsCompound = const []});
 
   static CreateDailyActivityModel fromDailyActivityFoodModel(
       DailyActivityFoodModel model) {
     return CreateDailyActivityModel(
-        id: model.id,
-        foods:
-            model.foods.map((f) => CreateFoodModel.fromFoodModel(f)).toList());
+      id: model.id,
+      foods: model.foods
+          .where((f) => !f.isCompound)
+          .toList()
+          .map((f) => CreateFoodModel.fromFoodModel(f))
+          .toList(),
+      foodsCompound: model.foods
+          .where((f) => f.isCompound)
+          .toList()
+          .map((f) => CreateFoodModel.fromFoodModel(f))
+          .toList(),
+    );
   }
 }
 

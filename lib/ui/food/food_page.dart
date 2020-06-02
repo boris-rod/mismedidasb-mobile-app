@@ -104,7 +104,12 @@ class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
                       } else {
                         final res = await NavigationUtils.push(
                             context, FoodAddEditPage());
-                        bloc.syncFoods();
+                        if (res) {
+                          bloc.loadData(
+                              widget.selectedItems,
+                              widget.foodFilterMode,
+                              widget.foodFilterCategoryIndex);
+                        }
                       }
                     },
                     onFilterTap: () {
@@ -507,9 +512,16 @@ class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
                 ),
                 contentPadding:
                     EdgeInsets.symmetric(vertical: 0, horizontal: 5),
-                onTap: () {
-                  model.isSelected = !model.isSelected;
-                  bloc.setSelectedFood(model);
+                onTap: () async {
+                  final res = await NavigationUtils.push(
+                      context,
+                      FoodAddEditPage(
+                        foodModel: model,
+                      ));
+                  if (res) {
+                    bloc.loadData(widget.selectedItems, widget.foodFilterMode,
+                        widget.foodFilterCategoryIndex);
+                  }
                 },
                 title: TXTextWidget(
                   text: model.name,
@@ -535,11 +547,10 @@ class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
 
   Widget _showCategoryFilter(BuildContext context) {
     return Container(
-      height: math.min(
+      height: widget.foodFilterMode == FoodFilterMode.tags ? math.min(
           MediaQuery.of(context).size.height / 2,
-          ((bloc.tagsAll.length + 20) +
-                  (widget.foodFilterMode == FoodFilterMode.tags ? 1 : 0)) *
-              50.0),
+          ((bloc.tagsAll.length + 20) + 1) *
+              50.0) : 200,
       child: Column(
         children: <Widget>[
           Container(

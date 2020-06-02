@@ -26,6 +26,8 @@ import 'package:mismedidasb/ui/food_search/food_search_page.dart';
 import 'package:mismedidasb/utils/file_manager.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../../enums.dart';
+
 class FoodAddEditPage extends StatefulWidget {
   final FoodModel foodModel;
 
@@ -41,13 +43,21 @@ class _FoodAddEditState
   final _keyFormFood = new GlobalKey<FormState>();
 
   void _navBack() async {
-    NavigationUtils.pop(context);
+    if (!bloc.reload && widget.foodModel != null) {
+      bloc.currentFoodModel.children = bloc.currentChildren;
+      bloc.currentFoodModel.children.forEach((f) => f.isSelected = true);
+    }
+    NavigationUtils.pop(context, result: bloc.reload);
   }
 
   @override
   void initState() {
     super.initState();
+    _nameController.text = widget.foodModel?.name ?? "";
     bloc.init(widget.foodModel);
+    bloc.addEditResult.listen((onData) {
+      _navBack();
+    });
   }
 
   @override
@@ -67,6 +77,23 @@ class _FoodAddEditState
                 _navBack();
               },
             ),
+            actions: <Widget>[
+              widget.foodModel != null
+                  ? PopupMenuButton(
+                      icon: Icon(
+                        Icons.more_vert,
+                        color: Colors.white,
+                      ),
+                      itemBuilder: (ctx) {
+                        return [..._popupActions()];
+                      },
+                      onSelected: (key) async {
+                        if (key == PopupActionKey.remove_compound_food) {
+                          _showRemoveFood(context: context);
+                        }
+                      })
+                  : Container()
+            ],
             body: Container(
               width: double.infinity,
               padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
@@ -79,114 +106,116 @@ class _FoodAddEditState
                         return snapshot.data == null
                             ? Container()
                             : Form(
-                          key: _keyFormFood,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              Container(
-                                height: 100,
-                                width: 100,
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: R.color.gray, width: 1)),
-                                child: InkWell(
-                                  onTap: () {
-                                    _showMediaSelector(context);
-                                  },
-                                  child: Stack(
-                                    children: <Widget>[
-                                      Container(
-                                        color: R.color.gray_light,
-                                        child: widget.foodModel == null
-                                            ? Center(
-                                          child: snapshot
-                                              .data.image.isEmpty
-                                              ? Image.asset(
-                                              R.image.logo)
-                                              : Image.file(File(
-                                              snapshot
-                                                  .data.image)),
-                                        )
-                                            : TXNetworkImage(
-                                          width: double.infinity,
-                                          height: double.infinity,
-                                          placeholderImage:
-                                          R.image.logo,
-                                          imageUrl:
-                                          snapshot.data.image,
+                                key: _keyFormFood,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    Container(
+                                      height: 100,
+                                      width: 100,
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                              color: R.color.gray, width: 1)),
+                                      child: InkWell(
+                                        onTap: () {
+                                          _showMediaSelector(context);
+                                        },
+                                        child: Stack(
+                                          children: <Widget>[
+                                            Container(
+                                              color: R.color.gray_light,
+                                              child: widget.foodModel == null
+                                                  ? Center(
+                                                      child: snapshot.data.image
+                                                              .isEmpty
+                                                          ? Image.asset(
+                                                              R.image.logo)
+                                                          : Image.file(File(
+                                                              snapshot
+                                                                  .data.image)),
+                                                    )
+                                                  : TXNetworkImage(
+                                                      width: double.infinity,
+                                                      height: double.infinity,
+                                                      placeholderImage:
+                                                          R.image.logo,
+                                                      imageUrl:
+                                                          snapshot.data.image,
+                                                    ),
+                                            ),
+                                            Positioned(
+                                              right: 0,
+                                              bottom: 0,
+                                              child: Icon(
+                                                Icons.camera_enhance,
+                                                color: R.color.gray,
+                                                size: 30,
+                                              ),
+                                            )
+                                          ],
                                         ),
                                       ),
-                                      Positioned(
-                                        right: 0,
-                                        bottom: 0,
-                                        child: Icon(
-                                          Icons.camera_enhance,
-                                          color: R.color.gray,
-                                          size: 30,
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 15,
-                              ),
-                              TXTextFieldWidget(
-                                controller: _nameController,
-                                label: "Nombre",
-                                validator: bloc.required(),
-                                onChanged: (value) {},
-                                onSubmitted: (value) {},
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Row(
-                                children: <Widget>[
-                                  TXTextWidget(
-                                    text: "Alimentos",
-                                  ),
-                                  Expanded(
-                                    child: TXDividerWidget(),
-                                  ),
-                                  TXIconButtonWidget(
-                                    icon: Icon(
-                                      Icons.add,
-                                      color: R.color.primary_color,
                                     ),
-                                    onPressed: () async {
-                                      final res =
-                                      await NavigationUtils.push(
-                                          context,
-                                          FoodSearchPage(
-                                            allFoods: bloc.allFoods,
-                                          ));
-                                      bloc.syncAddedFoods(res);
-                                    },
-                                  )
-                                ],
-                              ),
-                              Column(
-                                children:
-                                _getChildren(snapshot.data.children),
-                              ),
-                              SizedBox(
-                                height: 40,
-                              ),
-                              TXButtonWidget(
-                                title: "Crear",
-                                onPressed: () {
-                                  if (_keyFormFood.currentState
-                                      .validate()) {
-                                    bloc.currentFoodModel.name = _nameController.text;
-                                    bloc.addFood();
-                                  }
-                                },
-                              )
-                            ],
-                          ),
-                        );
+                                    SizedBox(
+                                      height: 15,
+                                    ),
+                                    TXTextFieldWidget(
+                                      controller: _nameController,
+                                      label: "Nombre",
+                                      validator: bloc.required(),
+                                      onChanged: (value) {},
+                                      onSubmitted: (value) {},
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Row(
+                                      children: <Widget>[
+                                        TXTextWidget(
+                                          text: "Alimentos",
+                                        ),
+                                        Expanded(
+                                          child: TXDividerWidget(),
+                                        ),
+                                        TXIconButtonWidget(
+                                          icon: Icon(
+                                            Icons.add,
+                                            color: R.color.primary_color,
+                                          ),
+                                          onPressed: () async {
+                                            final res =
+                                                await NavigationUtils.push(
+                                                    context,
+                                                    FoodSearchPage(
+                                                      allFoods: bloc.allFoods,
+                                                    ));
+                                            bloc.syncAddedFoods(res);
+                                          },
+                                        )
+                                      ],
+                                    ),
+                                    Column(
+                                      children:
+                                          _getChildren(snapshot.data.children),
+                                    ),
+                                    SizedBox(
+                                      height: 40,
+                                    ),
+                                    TXButtonWidget(
+                                      title: R.string.save,
+                                      onPressed: () {
+                                        if (_keyFormFood.currentState
+                                            .validate()) {
+                                          bloc.currentFoodModel.name =
+                                              _nameController.text;
+                                          bloc.addFood(
+                                              widget.foodModel == null);
+                                        }
+                                      },
+                                    )
+                                  ],
+                                ),
+                              );
                       }),
                 ),
               ),
@@ -218,7 +247,9 @@ class _FoodAddEditState
                 text: f.name,
               ),
             ),
-            SizedBox(width: 5,),
+            SizedBox(
+              width: 5,
+            ),
             InkWell(
               onTap: () {
                 final selectorList = f.availableCounts;
@@ -350,18 +381,64 @@ class _FoodAddEditState
   void _showDialogPermissions({BuildContext context, Function onOkAction}) {
     showCupertinoDialog<String>(
       context: context,
-      builder: (BuildContext context) =>
-          TXCupertinoDialogWidget(
-            title: R.string.deniedPermissionTitle,
-            content: R.string.deniedPermissionContent,
-            onOK: () {
-              Navigator.pop(context, R.string.ok);
-              onOkAction();
-            },
-            onCancel: () {
-              Navigator.pop(context, R.string.cancel);
-            },
-          ),
+      builder: (BuildContext context) => TXCupertinoDialogWidget(
+        title: R.string.deniedPermissionTitle,
+        content: R.string.deniedPermissionContent,
+        onOK: () {
+          Navigator.pop(context, R.string.ok);
+          onOkAction();
+        },
+        onCancel: () {
+          Navigator.pop(context, R.string.cancel);
+        },
+      ),
     );
+  }
+
+  void _showRemoveFood({BuildContext context}) {
+    showCupertinoDialog<String>(
+      context: context,
+      builder: (BuildContext context) => TXCupertinoDialogWidget(
+        title: "Eliminar alimento",
+        content: "Está seguro que desea eliminar este alimento?",
+        onOK: () {
+          bloc.removeCompoundFood();
+          Navigator.pop(context, R.string.logout);
+        },
+        onCancel: () {
+          Navigator.pop(context, R.string.cancel);
+        },
+      ),
+    );
+  }
+
+  List<PopupMenuItem> _popupActions() {
+    List<PopupMenuItem> list = [];
+
+    final remove = PopupMenuItem(
+      value: PopupActionKey.remove_compound_food,
+      child: Container(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Icon(
+              Icons.remove_circle_outline,
+              size: 20,
+              color: Colors.redAccent,
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            TXTextWidget(
+              text: "Eliminar alimento",
+              color: Colors.black,
+            )
+          ],
+        ),
+      ),
+    );
+    list.add(remove);
+    return list;
   }
 }

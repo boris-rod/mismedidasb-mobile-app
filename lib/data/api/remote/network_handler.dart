@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:http_parser/src/media_type.dart' as mt;
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
@@ -9,6 +10,7 @@ import 'package:mismedidasb/data/_shared_prefs.dart';
 import 'package:mismedidasb/data/api/remote/endpoints.dart';
 import 'package:mismedidasb/data/api/remote/remote_constanst.dart';
 import 'package:mismedidasb/domain/dish/dish_model.dart';
+import 'package:mismedidasb/utils/file_manager.dart';
 import 'package:mismedidasb/utils/logger.dart';
 
 export 'package:http/http.dart';
@@ -212,45 +214,38 @@ class NetworkHandler {
 
   Future<Response> postFile({
     @required String path,
-    String baseUrl,
-    Map<String, String> body = const {},
-    Map<String, String> headers = const {},
     @required File file,
   }) async {
-    final _url = (baseUrl ?? Endpoint.apiBaseUrl) + path;
+    final _url = Endpoint.apiBaseUrl + path;
     final _headers = {'Authorization': '${await _sharedP.getAccessToken()}'};
-//    _headers.addAll(headers);
     _headers.addAll({"Content-Type": "multipart/form-data"});
-//    _headers.addAll({"type": "image/jpeg"});
+    _logger.log("-> POST: $_url");
+    _logger.log("-> HEADERS: $_headers");
 
     try {
-      _logger.log("-> POST: $_url");
-      _logger.log("-> HEADERS: $_headers");
-      _logger.log("-> BODY: $body");
+      final fileName = file.path.split("/").last;
 
-//      if (file != null) {
-//        var pathParts = file.path.split('/');
-//        String name = pathParts[pathParts.length - 1];
-//        print('NAME -> $name');
+      File postFile;
+      if (file.lengthSync() > 2090000) {
+        final root = await FileManager.getRootFilesDir();
+        postFile =
+            await FileManager.compressAndGetFile(file, "$root/$fileName");
+      } else {
+        postFile = File(file.path);
+      }
 
-      final ext = file.path.split(".").last;
       FormData formData = FormData.fromMap({
-        "file": MultipartFile.fromFileSync(file.path,)
+        "file": MultipartFile.fromFileSync(postFile.path,
+            filename: fileName, contentType: mt.MediaType("image", "jpeg"))
       });
-
-//        formData.add(
-//            'file',
-//            new UploadFileInfo(files, name,
-//                contentType: ContentType('image', 'jpeg')));
-//      }
+      BaseOptions options = new BaseOptions(
+          connectTimeout: 10000, receiveTimeout: 4000, headers: _headers);
       Dio dio = new Dio();
-      final res = await dio.post(_url,
-          data: formData,
-          options: Options(
-//            method: 'POST',
-            responseType: ResponseType.json,
-            headers: _headers,
-          ));
+      dio.options = options;
+      final res = await dio.post(
+        _url,
+        data: formData,
+      );
 
       _logger.log("<- RESPONSE CODE: ${res.statusCode}");
       _logger.log("<- RESPONSE BODY: ${res.toString()}");
@@ -265,40 +260,42 @@ class NetworkHandler {
       {@required String path,
       String name,
       String dishes,
-      @required String filePath}) async {
+      @required File file}) async {
     try {
       final _url = Endpoint.apiBaseUrl + path;
       final _headers = {'Authorization': '${await _sharedP.getAccessToken()}'};
       _headers.addAll({"Content-Type": "multipart/form-data"});
 
-      _logger.log(dishes);
+      _logger.log("-> POST: $_url");
+      _logger.log("-> HEADERS: $_headers");
+
+      final fileName = file.path.split("/").last;
+
+      File postFile;
+      if (file.lengthSync() > 2090000) {
+        final root = await FileManager.getRootFilesDir();
+        postFile =
+        await FileManager.compressAndGetFile(file, "$root/$fileName");
+      } else {
+        postFile = File(file.path);
+      }
+
       final FormData formData = FormData.fromMap({
         "name": name,
         "dishes": dishes,
-//        "file": await MultipartFile.fromFile(filePath,
-//            filename: filePath.split("/").last),
+        "image": await MultipartFile.fromFile(postFile.path,
+            filename: fileName, contentType: mt.MediaType("image", "jpeg")),
       });
+      _logger.log(formData.fields.toString());
 
+      BaseOptions options = new BaseOptions(
+          connectTimeout: 10000, receiveTimeout: 4000, headers: _headers);
       Dio dio = new Dio();
-      final res = await dio.post(_url,
-          data: formData,
-          options: Options(
-//            method: 'POST',
-            responseType: ResponseType.json,
-            headers: _headers,
-          ));
-
-//      var request = http.MultipartRequest('POST', Uri.parse(_url));
-//
-//      _headers.forEach((k, v) {
-//        request.headers[k] = v;
-//      });
-//
-//      request.files.add(await http.MultipartFile.fromPath(fileName, filePath));
-//
-//      _logger.log("-> POST: $_url");
-//      _logger.log("-> HEADERS: $_headers");
-//      final res = await request.send();
+      dio.options = options;
+      final res = await dio.post(
+        _url,
+        data: formData,
+      );
       return res.statusCode;
     } catch (ex) {
       _logger.log("<- EXEPTION: $ex");

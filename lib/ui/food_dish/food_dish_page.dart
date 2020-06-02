@@ -23,6 +23,7 @@ import 'package:mismedidasb/ui/food_dish/food_dish_bloc.dart';
 import 'package:mismedidasb/ui/food_dish/tx_bottom_resume_food_plan_widget.dart';
 import 'package:mismedidasb/ui/food_dish/tx_daily_nutritional_info_widget.dart';
 import 'package:mismedidasb/ui/food_dish/tx_dish_nutritional_info_widget.dart';
+import 'package:mismedidasb/ui/food_dish/tx_food_healthy_filter_widget.dart';
 import 'package:mismedidasb/ui/food_dish/tx_ideal_pie_chart_food_widget.dart';
 import 'package:mismedidasb/ui/food_dish/tx_instrucctions_widget.dart';
 import 'package:mismedidasb/ui/home/home_page.dart';
@@ -460,17 +461,35 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                             ? Container(
                                 padding: EdgeInsets.only(
                                     left: 10, top: 5, right: 10),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: TXDishNutritionalInfoWidget(
-                                          model: model),
-                                    ),
-                                    TXIdealPieChartFoodWidget(model: model)
-                                  ],
-                                ),
-                              )
+                                child: TXFoodHealthyFilterWidget(
+                                  onFilterTapped: (index) async{
+                                    final resultList = await NavigationUtils.push(
+                                        context,
+                                        FoodPage(
+                                          dailyActivityFoodModel: model,
+                                          selectedItems: model.foods,
+                                          imc: bloc.imc,
+                                          foodFilterMode: FoodFilterMode.dish_healthy,
+                                          foodFilterCategoryIndex: index,
+                                        ));
+                                    if (resultList is List<FoodModel>) {
+                                      model.foods = resultList;
+                                      bloc.setFoodList(model);
+                                    }
+                                  },
+                                )
+
+//                                Row(
+//                                  crossAxisAlignment: CrossAxisAlignment.start,
+//                                  children: <Widget>[
+//                                    Expanded(
+//                                      child: TXDishNutritionalInfoWidget(
+//                                          model: model),
+//                                    ),
+//                                    TXIdealPieChartFoodWidget(model: model)
+//                                  ],
+//                                ),
+                                )
                             : Container(),
                         SizedBox(
                           height: 10,

@@ -12,7 +12,7 @@ class AppColor {
   final gray = Color(0xFF97A0AE);
   final gray_light = Color(0xFFF6F7FB);
 
-  Color get dialog_background => isDarkTheme ? Color(0xc855d4d4) : Color(0xc8b4b4b4);
+  Color get dialog_background => isDarkTheme ? Color(0xc8808080) : Color(0xc8F6F7FB);
 
   AppColor({this.isDarkTheme = false});
 }

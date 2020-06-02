@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:mismedidasb/data/api/_base_api.dart';
 import 'package:mismedidasb/data/api/remote/endpoints.dart';
@@ -73,20 +74,25 @@ class DishApi extends BaseApi implements IDishApi {
         path: Endpoint.dish_compound,
         name: model.name,
         dishes: foodsMap,
-        filePath: model.image);
+        file: File(model.image));
     if (res == RemoteConstants.code_success) return true;
     throw serverException(Response("", res));
   }
 
   @override
   Future<bool> deleteFoodCompoundModelList(int id) async {
-    return null;
+    final res = await _networkHandler.post(
+      path: "${Endpoint.dish_compound}/delete/$id",
+    );
+    if (res.statusCode == RemoteConstants.code_success) return true;
+    throw serverException(res);
   }
 
   @override
   Future<List<FoodModel>> getFoodCompoundModelList() async {
     final res = await _networkHandler.get(
-        path: Endpoint.dish_compound,);
+      path: Endpoint.dish_compound,
+    );
     if (res.statusCode == RemoteConstants.code_success) {
       Iterable l = jsonDecode(res.body)[RemoteConstants.result];
       return l
@@ -97,7 +103,13 @@ class DishApi extends BaseApi implements IDishApi {
   }
 
   @override
-  Future<bool> updateFoodCompoundModelList() async {
-    return null;
+  Future<FoodModel> updateFoodCompoundModelList(
+      int id, CreateFoodCompoundModel model) async {
+    final res = await _networkHandler.put(
+      path: "${Endpoint.dish_compound}/$id/update",
+    );
+    if (res.statusCode == RemoteConstants.code_success)
+      return _foodConverter.fromJsonCompoundFoodModel(jsonDecode(res.body));
+    throw serverException(res);
   }
 }

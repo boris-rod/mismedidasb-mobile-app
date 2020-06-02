@@ -97,7 +97,7 @@ class TXDailyNutritionalInfoWidget extends StatelessWidget {
                           TXProgressBarCheckedWidget(
                             title: R.string.proteins,
                             showPercentage: dailyModel.showKCalPercentages,
-                            percentage: dailyModel.currentSumProteins *
+                            percentage: dailyModel.currentProteinsSum *
                                 100 /
                                 (dailyModel.dailyFoodPlanModel.kCalMax *
                                     25 /
@@ -111,7 +111,7 @@ class TXDailyNutritionalInfoWidget extends StatelessWidget {
                           TXProgressBarCheckedWidget(
                             title: R.string.carbohydrates,
                             showPercentage: dailyModel.showKCalPercentages,
-                            percentage: dailyModel.currentSumCarbohydrates *
+                            percentage: dailyModel.currentCarbohydratesSum *
                                 100 /
                                 (dailyModel.dailyFoodPlanModel.kCalMax *
                                     55 /
@@ -125,7 +125,7 @@ class TXDailyNutritionalInfoWidget extends StatelessWidget {
                           TXProgressBarCheckedWidget(
                             title: R.string.fat,
                             showPercentage: dailyModel.showKCalPercentages,
-                            percentage: dailyModel.currentSumFat *
+                            percentage: dailyModel.currentFatSum *
                                 100 /
                                 (dailyModel.dailyFoodPlanModel.kCalMax *
                                     35 /
@@ -139,7 +139,7 @@ class TXDailyNutritionalInfoWidget extends StatelessWidget {
                           TXProgressBarCheckedWidget(
                             title: R.string.fiber,
                             showPercentage: dailyModel.showKCalPercentages,
-                            percentage: dailyModel.currentSumFiber * 100 / 50,
+                            percentage: dailyModel.currentFiberSum * 100 / 50,
                             color: Colors.grey[350],
                             minMark: 30 * 100 / 50,
                           ),

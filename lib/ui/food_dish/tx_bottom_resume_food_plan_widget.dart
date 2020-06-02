@@ -4,6 +4,7 @@ import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/navigation_utils.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_checkbox_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_divider_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_textlink_widget.dart';
 
@@ -76,11 +77,35 @@ class TXBottomResumeFoodPlanWidget extends StatelessWidget {
                                   itemBuilder: (ctx, indexFoods) {
                                     final foodModel =
                                         activityModel.foods[indexFoods];
-                                    return Container(
-                                      padding: EdgeInsets.only(bottom: 5),
-                                      child: TXTextWidget(
-                                        text: "${indexFoods + 1}- ${foodModel.name}",
-                                      ),
+                                    return Column(
+                                      children: <Widget>[
+                                        indexFoods > 0 ?
+                                        TXDividerWidget(height: .2,): Container(),
+                                        Container(
+                                          padding: EdgeInsets.only(bottom: 5, top: 5),
+                                          child: Row(
+                                            children: <Widget>[
+                                              Expanded(
+                                                child: TXTextWidget(
+                                                  text: "${indexFoods + 1}- ${foodModel.name}",
+                                                ),
+                                              ),
+                                              foodModel.count != 1
+                                                  ? CircleAvatar(
+                                                backgroundColor: R.color.accent_color,
+                                                child: TXTextWidget(
+                                                  text: "${foodModel.displayCount}",
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                  size: 7,
+                                                ),
+                                                radius: 8,
+                                              )
+                                                  : Container()
+                                            ],
+                                          ),
+                                        )
+                                      ],
                                     );
                                   },
                                   padding: EdgeInsets.only(left: 20),
