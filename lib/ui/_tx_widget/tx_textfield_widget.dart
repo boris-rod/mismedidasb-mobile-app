@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mismedidasb/res/R.dart';
@@ -27,7 +28,8 @@ class TXTextFieldWidget extends StatefulWidget {
       this.iconData,
       this.onChanged,
       this.maxLine,
-      this.onSubmitted, this.autoFocus = false})
+      this.onSubmitted,
+      this.autoFocus = false})
       : super(key: key);
 
   @override
@@ -58,18 +60,16 @@ class _TXTextFieldWidgetState extends State<TXTextFieldWidget> {
       onFieldSubmitted: widget.onSubmitted,
       decoration: InputDecoration(
           labelText: widget.label,
-          suffixIcon: TXIconButtonWidget(
-            icon: Icon(
-              widget.obscureText
-                  ? passwordIcon
-                  : widget.iconData,
+          suffixIcon: InkWell(
+            onTap: widget.obscureText
+                ? () {
+              _setPasswordVisible(!passwordVisible);
+            }
+                : null,
+            child: Icon(
+              widget.obscureText ? passwordIcon : widget.iconData,
               color: R.color.primary_color,
             ),
-            onPressed: widget.obscureText
-                ? () {
-                    _setPasswordVisible(!passwordVisible);
-                  }
-                : null,
           ),
           border: OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(45)))),

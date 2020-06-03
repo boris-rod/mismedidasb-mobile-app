@@ -51,19 +51,20 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
                 child: Column(
                   children: <Widget>[
                     Container(
-                      padding: EdgeInsetsDirectional.only(end: 10),
+                      padding: EdgeInsetsDirectional.only(end: 10, top: 10),
                       alignment: Alignment.centerRight,
                       child: InkWell(
                         child: Image.asset(R.image.settings),
                         onTap: () async {
-                          final res =
-                              await NavigationUtils.push(context, ProfilePage());
+                          final res = await NavigationUtils.push(
+                              context, ProfilePage());
                           if (res is SettingAction) {
                             if (res == SettingAction.logout ||
                                 res == SettingAction.removeAccount) {
                               NavigationUtils.pushReplacement(
                                   context, LoginPage());
-                            } else if (res == SettingAction.languageCodeChanged) {
+                            } else if (res ==
+                                SettingAction.languageCodeChanged) {
                               bloc.loadHomeData();
                             }
                           }
@@ -74,8 +75,6 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
                     Container(
                       child: Image.asset(
                         R.image.logo_planifive,
-                        height: 100,
-                        width: 200,
                       ),
                     ),
                     Expanded(
@@ -86,7 +85,6 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
                           builder: (ctx, snapshot) {
                             return GridView.count(
                               physics: BouncingScrollPhysics(),
-                              padding: EdgeInsets.only(top: 20),
                               crossAxisCount: totalRowCount,
                               children: _getHomeWidgets(
                                   snapshot.data, screenW, totalRowCount),
@@ -167,22 +165,13 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
     Function onTap,
   ) {
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: EdgeInsets.only(top: 10),
       child: InkWell(
         borderRadius: BorderRadius.all(Radius.circular(10)),
         onTap: onTap,
         child: Column(
           children: <Widget>[
-            Expanded(
-              child: Container(
-                  alignment: Alignment.center,
-                  child: TXNetworkImage(
-                    width: double.infinity,
-                    height: double.infinity,
-                    imageUrl: '',
-                    placeholderImage: bloc.getImage(model.codeName),
-                  )),
-            ),
+            Image.asset(bloc.getImage(model.codeName), width: 100, height: 100,),
             Container(
               padding: EdgeInsets.all(10),
               child: Image.asset(bloc.getImageTitle(

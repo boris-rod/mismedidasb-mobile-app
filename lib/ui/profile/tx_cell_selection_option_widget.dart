@@ -20,6 +20,7 @@ class TXCellSelectionOptionWidget extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 10),
         height: 50,
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             leading != null
                 ? Icon(
@@ -33,11 +34,11 @@ class TXCellSelectionOptionWidget extends StatelessWidget {
             ),
             Expanded(
                 child: TXTextWidget(
-              text: optionName,
-              maxLines: 1,
-              textOverflow: TextOverflow.ellipsis,
-              color: Colors.black,
-            )),
+                  text: optionName,
+                  maxLines: 1,
+                  textOverflow: TextOverflow.ellipsis,
+                  color: Colors.black,
+                )),
             Icon(
               trailing ?? Icons.keyboard_arrow_right,
               color: R.color.primary_dark_color,
