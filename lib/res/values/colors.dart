@@ -6,6 +6,8 @@ class AppColor {
   final primary_color = Color(0xFF3F51B5);
   final primary_dark_color = Color(0xFF303F9F);
   final accent_color = Color(0xFF448AFF);
+  final home_color = Color(0xFFa3bbff);
+  final values_color = Color(0xFF8e2900);
 
   final gray_darkest = Color(0xFF808080);
   final gray_dark = Color(0x5097A0AE);

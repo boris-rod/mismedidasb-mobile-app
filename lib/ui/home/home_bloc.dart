@@ -52,6 +52,38 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     return kCal > 1 && imc > 1;
   }
 
+  String getImageTitle(String codeName){
+    String image = R.image.autocontrol;
+    if(codeName == 'health-measures'){
+      image = R.image.medidas_salud;
+    }else if(codeName == 'value-measures'){
+      image = R.image.medidas_valores;
+    }else if(codeName == 'welness-measures'){
+      image = R.image.medidas_bienestar;
+    }else if(codeName == 'habits'){
+      image = R.image.habitos_saludables;
+    }else if(codeName == 'dishes'){
+      image = R.image.plan_comidas;
+    }
+    return image;
+  }
+
+  String getImage(String codeName){
+    String image = R.image.food_craving_home;
+    if(codeName == 'health-measures'){
+      image = R.image.health_home;
+    }else if(codeName == 'value-measures'){
+      image = R.image.values_home;
+    }else if(codeName == 'welness-measures'){
+      image = R.image.wellness_home;
+    }else if(codeName == 'habits'){
+      image = R.image.habits_home;
+    }else if(codeName == 'dishes'){
+      image = R.image.dishes_home;
+    }
+    return image;
+  }
+
   int getHomeCountPerRow(double screenW) {
     int count = 0;
     double partialW = 0;

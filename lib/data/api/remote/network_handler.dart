@@ -93,7 +93,7 @@ class NetworkHandler {
         if (refreshResult.statusCode == RemoteConstants.code_success) {
           final _newHeaders = await _commonHeaders();
           _logger.log("-> POST: $_url");
-          _logger.log("-> HEADERS: $_headers");
+          _logger.log("-> HEADERS: $_newHeaders");
           _logger.log("-> BODY: $body");
           final resAfterRefresh =
               await http.post(_url, headers: _newHeaders, body: body);
@@ -182,10 +182,53 @@ class NetworkHandler {
     }
   }
 
+  Future<http.Response> validateToken() async {
+    final url = "${Endpoint.apiBaseUrl}${Endpoint.validate_token}";
+    try {
+      String accessToken = await _sharedP.getStringValue(SharedKey.accessToken);
+      accessToken = accessToken.startsWith("Bearer ")
+          ? accessToken.split("Bearer ")[1]
+          : accessToken;
+      final _headers = await _commonHeaders();
+      final body = jsonEncode({"token": accessToken});
+      _logger.log("-> POST: $url");
+      _logger.log("-> HEADERS: $_headers");
+      _logger.log("-> BODY: $body");
+      final res = await http.post(url, headers: _headers, body: body);
+      _logger.log("<- RESPONSE CODE: ${res.statusCode}");
+      _logger.log("<- RESPONSE BODY: ${res.body}");
+      if (res.statusCode == RemoteConstants.code_un_authorized) {
+        final refreshResult = await _refreshToken();
+        if (refreshResult.statusCode == RemoteConstants.code_success) {
+          final _newHeaders = await _commonHeaders();
+          accessToken = await _sharedP.getStringValue(SharedKey.accessToken);
+          accessToken = accessToken.startsWith("Bearer ")
+              ? accessToken.split("Bearer ")[1]
+              : accessToken;
+          final newBody = jsonEncode({"token": accessToken});
+
+          _logger.log("-> POST: $url");
+          _logger.log("-> HEADERS: $_newHeaders");
+          _logger.log("-> BODY: $newBody");
+          final resAfterRefresh =
+              await http.post(url, headers: _newHeaders, body: newBody);
+          _logger.log("<- RESPONSE CODE: ${res.statusCode}");
+          _logger.log("<- RESPONSE BODY: ${res.body}");
+          return resAfterRefresh;
+        } else
+          return refreshResult;
+      }
+      return res;
+    } catch (ex) {
+      _logger.log("<- EXEPTION: $ex");
+      throw ex;
+    }
+  }
+
   Future<http.Response> _refreshToken() async {
     final url = "${Endpoint.apiBaseUrl}${Endpoint.refresh_token}";
-    final refreshToken = await _sharedP.getRefreshToken();
-    final accessToken = await _sharedP.getAccessToken();
+    final refreshToken = await _sharedP.getStringValue(SharedKey.refreshToken);
+    final accessToken = await _sharedP.getStringValue(SharedKey.accessToken);
     final body = json.encode({
       "token": accessToken.startsWith("Bearer ")
           ? accessToken.split("Bearer ")[1]
@@ -203,8 +246,8 @@ class NetworkHandler {
 
       final String accessToken = res.headers["authorization"] ?? "";
       final String refreshToken = res.headers["refreshtoken"] ?? "";
-      await _sharedP.setAccessToken(accessToken);
-      await _sharedP.setRefreshToken(refreshToken);
+      await _sharedP.setStringValue(SharedKey.accessToken, accessToken);
+      await _sharedP.setStringValue(SharedKey.refreshToken, refreshToken);
 
       return res;
     } catch (ex) {
@@ -275,7 +318,7 @@ class NetworkHandler {
       if (file.lengthSync() > 2090000) {
         final root = await FileManager.getRootFilesDir();
         postFile =
-        await FileManager.compressAndGetFile(file, "$root/$fileName");
+            await FileManager.compressAndGetFile(file, "$root/$fileName");
       } else {
         postFile = File(file.path);
       }

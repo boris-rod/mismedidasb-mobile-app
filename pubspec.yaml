@@ -44,7 +44,7 @@ dependencies:
   firebase_messaging: ^6.0.15
   flutter_local_notifications: ^1.4.3
 #  flutter_apns: ^1.1.0
-  webview_flutter: ^0.3.21
+  webview_flutter: ^0.3.22+1
   flutter_html: ^0.11.1
   table_calendar: ^2.2.3
 #  local_auth: ^0.6.1+3

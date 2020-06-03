@@ -6,5 +6,11 @@ class HealthConceptModel {
   String image;
   String instructions;
 
-  HealthConceptModel({this.id, this.title, this.description, this.codeName, this.image, this.instructions});
+  HealthConceptModel(
+      {this.id,
+      this.title,
+      this.description,
+      this.codeName,
+      this.image,
+      this.instructions});
 }

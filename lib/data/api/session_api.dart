@@ -48,12 +48,7 @@ class SessionApi extends BaseApi implements ISessionApi {
 
   @override
   Future<bool> validateToken() async {
-    String token = await _sharedPreferencesManager.getAccessToken();
-    token = token.startsWith("Bearer ") ? token.split("Bearer ")[1] : token;
-    final jsonValidateToken = _iSessionConverter
-        .toJsonValidateTokenModel(ValidateTokenModel(token: token));
-    final res = await _networkHandler.post(
-        path: Endpoint.validate_token, body: jsonEncode(jsonValidateToken));
+    final res = await _networkHandler.validateToken();
     if (res.statusCode == RemoteConstants.code_success)
       return true;
     else

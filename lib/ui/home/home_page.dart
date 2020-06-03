@@ -44,37 +44,60 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
     return FCMAwareBody(
       child: Stack(
         children: <Widget>[
-          TXMainAppBarWidget(
-            title: R.string.appName,
-            actions: <Widget>[
-              TXIconButtonWidget(
-                icon: Icon(Icons.settings),
-                onPressed: () async {
-                  final res =
-                      await NavigationUtils.push(context, ProfilePage());
-                  if (res is SettingAction) {
-                    if (res == SettingAction.logout ||
-                        res == SettingAction.removeAccount) {
-                      NavigationUtils.pushReplacement(context, LoginPage());
-                    } else if (res == SettingAction.languageCodeChanged) {
-                      bloc.loadHomeData();
-                    }
-                  }
-                },
-              )
-            ],
-            body: StreamBuilder<List<HealthConceptModel>>(
-              stream: bloc.conceptResult,
-              initialData: [],
-              builder: (ctx, snapshot) {
-                return GridView.count(
-                  physics: BouncingScrollPhysics(),
-                  padding: EdgeInsets.only(top: 20),
-                  crossAxisCount: totalRowCount,
-                  children:
-                      _getHomeWidgets(snapshot.data, screenW, totalRowCount),
-                );
-              },
+          SafeArea(
+            child: Scaffold(
+              body: Container(
+                color: R.color.home_color,
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      padding: EdgeInsetsDirectional.only(end: 10),
+                      alignment: Alignment.centerRight,
+                      child: InkWell(
+                        child: Image.asset(R.image.settings),
+                        onTap: () async {
+                          final res =
+                              await NavigationUtils.push(context, ProfilePage());
+                          if (res is SettingAction) {
+                            if (res == SettingAction.logout ||
+                                res == SettingAction.removeAccount) {
+                              NavigationUtils.pushReplacement(
+                                  context, LoginPage());
+                            } else if (res == SettingAction.languageCodeChanged) {
+                              bloc.loadHomeData();
+                            }
+                          }
+                        },
+                      ),
+                      width: double.infinity,
+                    ),
+                    Container(
+                      child: Image.asset(
+                        R.image.logo_planifive,
+                        height: 100,
+                        width: 200,
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        child: StreamBuilder<List<HealthConceptModel>>(
+                          stream: bloc.conceptResult,
+                          initialData: [],
+                          builder: (ctx, snapshot) {
+                            return GridView.count(
+                              physics: BouncingScrollPhysics(),
+                              padding: EdgeInsets.only(top: 20),
+                              crossAxisCount: totalRowCount,
+                              children: _getHomeWidgets(
+                                  snapshot.data, screenW, totalRowCount),
+                            );
+                          },
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
             ),
           ),
           TXLoadingWidget(
@@ -148,37 +171,25 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
       child: InkWell(
         borderRadius: BorderRadius.all(Radius.circular(10)),
         onTap: onTap,
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-          decoration: BoxDecoration(
-              color: R.color.gray_light,
-              border: Border.all(color: R.color.primary_color, width: .5),
-              borderRadius: BorderRadius.all(Radius.circular(10))),
-          child: Column(
-            children: <Widget>[
-              Container(
-                height: 30,
-                width: double.infinity,
-                child: TXTextWidget(
-                  text: model.title,
-                  textAlign: TextAlign.center,
-                  maxLines: 2,
-                  size: 12,
-                  textOverflow: TextOverflow.ellipsis,
-                ),
-              ),
-              Expanded(
-                child: Container(
-                    alignment: Alignment.center,
-                    child: TXNetworkImage(
-                      width: double.infinity,
-                      height: double.infinity,
-                      imageUrl: model.image ?? '',
-                      placeholderImage: R.image.logo_blue,
-                    )),
-              ),
-            ],
-          ),
+        child: Column(
+          children: <Widget>[
+            Expanded(
+              child: Container(
+                  alignment: Alignment.center,
+                  child: TXNetworkImage(
+                    width: double.infinity,
+                    height: double.infinity,
+                    imageUrl: '',
+                    placeholderImage: bloc.getImage(model.codeName),
+                  )),
+            ),
+            Container(
+              padding: EdgeInsets.all(10),
+              child: Image.asset(bloc.getImageTitle(
+                model.codeName,
+              )),
+            ),
+          ],
         ),
       ),
     );
