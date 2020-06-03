@@ -33,24 +33,31 @@ class FoodAddEditBloC extends BaseBloC
 
   void init(FoodModel foodModel) async {
     final res = await _iDishRepository.getFoodModelList();
-    if (res is ResultSuccess<List<FoodModel>>) allFoods.addAll(res.value);
+    if (res is ResultSuccess<List<FoodModel>>) {
+      allFoods.addAll(res.value);
+    }
     if (foodModel == null) {
-      currentFoodModel = FoodModel(
-        children: [],
-      );
+      currentFoodModel = FoodModel(children: [], image: "");
     } else {
       currentFoodModel = foodModel;
       currentChildren.addAll(foodModel.children);
+      foodModel.children.forEach((f) => f.isSelected = true);
+      allFoods.forEach((f) {
+        final sF = foodModel.children.firstWhere((food) => food.id == f.id,
+            orElse: () {
+              return null;
+            });
+        if (sF != null) {
+          f.isSelected = sF.isSelected;
+          f.count = sF.count;
+        }
+      });
     }
     _foodController.sinkAddSafe(currentFoodModel);
   }
 
   void updateImage(File file) async {
-//    final root = await FileManager.getRootFilesDir();
-//    final ext = file.path.split(".").last;
-//    final File newFile = await file.copy("$root/food_photo.$ext");
     currentFoodModel.image = file.path;
-
     _foodController.sinkAddSafe(currentFoodModel);
   }
 
@@ -86,11 +93,12 @@ class FoodAddEditBloC extends BaseBloC
   String validateFoodsRules() {
     String rule = "";
     if (currentFoodModel.children.isEmpty) {
-      Fluttertoast.showToast(msg: "Debe adicionar al menos un alimento");
+      rule = "Debe adicionar al menos un alimento";
+      Fluttertoast.showToast(msg: rule);
     } else if (currentFoodModel.children.length == 1 &&
         currentFoodModel.children[0].count == 1) {
-      Fluttertoast.showToast(
-          msg: "El número de porciones debe ser mayor que 1.");
+      rule = "El número de porciones debe ser mayor que 1.";
+      Fluttertoast.showToast(msg: rule);
     }
     return rule;
   }
@@ -108,12 +116,14 @@ class FoodAddEditBloC extends BaseBloC
           } else
             showErrorMessage(res);
         } else {
+          if (currentFoodModel.image.contains("http"))
+            currentFoodModel.image = "";
+
           final res = await _iDishRepository.updateFoodCompoundModelList(
               currentFoodModel.id,
               CreateFoodCompoundModel.fromFoodModel(currentFoodModel));
-          if (res is ResultSuccess<FoodModel>) {
+          if (res is ResultSuccess<bool>) {
             reload = true;
-            currentFoodModel = res.value;
             _addEditController.sinkAddSafe(true);
           } else
             showErrorMessage(res);

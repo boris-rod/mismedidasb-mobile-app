@@ -32,6 +32,8 @@ class FoodSearchBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     } else {
       allFoods.addAll(foods);
     }
+    allFoods.sort((a, b) =>
+        a.name.trim().toLowerCase().compareTo(b.name.trim().toLowerCase()));
     _searchController.sinkAddSafe(allFoods);
   }
 

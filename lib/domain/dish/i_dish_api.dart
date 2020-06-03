@@ -7,7 +7,7 @@ abstract class IDishApi {
 
   Future<bool> createFoodCompoundModelList(CreateFoodCompoundModel model);
 
-  Future<FoodModel> updateFoodCompoundModelList(int id, CreateFoodCompoundModel model);
+  Future<bool> updateFoodCompoundModelList(int id, CreateFoodCompoundModel model);
 
   Future<bool> deleteFoodCompoundModelList(int id);
 

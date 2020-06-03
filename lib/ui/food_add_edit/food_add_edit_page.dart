@@ -137,8 +137,12 @@ class _FoodAddEditState
                                                   : TXNetworkImage(
                                                       width: double.infinity,
                                                       height: double.infinity,
-                                                      placeholderImage:
-                                                          R.image.logo,
+                                                      placeholderImage: snapshot
+                                                              .data
+                                                              .image
+                                                              .isNotEmpty
+                                                          ? snapshot.data.image
+                                                          : R.image.logo,
                                                       imageUrl:
                                                           snapshot.data.image,
                                                     ),

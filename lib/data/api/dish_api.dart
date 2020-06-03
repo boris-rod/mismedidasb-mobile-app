@@ -66,16 +66,15 @@ class DishApi extends BaseApi implements IDishApi {
   @override
   Future<bool> createFoodCompoundModelList(
       CreateFoodCompoundModel model) async {
-    final foodsMap = jsonEncode(model.foods
+    final foodsMap = model.foods
         .map((f) => _foodConverter.toJsonCreateFoodModel(f))
-        .toList());
-    final map = _foodConverter.toJsonCreateCompoundFoodModel(model);
+        .toList();
     final res = await _networkHandler.uploadMultipartForm(
         path: Endpoint.dish_compound,
         name: model.name,
         dishes: foodsMap,
-        file: File(model.image));
-    if (res == RemoteConstants.code_success) return true;
+        file: model.image.isNotEmpty ? File(model.image) : null);
+    if (res == RemoteConstants.code_success_created) return true;
     throw serverException(Response("", res));
   }
 
@@ -103,13 +102,18 @@ class DishApi extends BaseApi implements IDishApi {
   }
 
   @override
-  Future<FoodModel> updateFoodCompoundModelList(
+  Future<bool> updateFoodCompoundModelList(
       int id, CreateFoodCompoundModel model) async {
-    final res = await _networkHandler.put(
-      path: "${Endpoint.dish_compound}/$id/update",
-    );
-    if (res.statusCode == RemoteConstants.code_success)
-      return _foodConverter.fromJsonCompoundFoodModel(jsonDecode(res.body));
-    throw serverException(res);
+    final foodsMap = model.foods
+        .map((f) => _foodConverter.toJsonCreateFoodModel(f))
+        .toList();
+    final res = await _networkHandler.uploadMultipartForm(
+        path: "${Endpoint.dish_compound}/$id/update",
+        name: model.name,
+        dishes: foodsMap,
+        method: 'put',
+        file: model.image.isNotEmpty ? File(model.image) : null);
+    if (res == RemoteConstants.code_success) return true;
+    throw serverException(Response("", res));
   }
 }

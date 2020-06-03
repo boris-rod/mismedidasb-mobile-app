@@ -302,8 +302,9 @@ class NetworkHandler {
   Future<int> uploadMultipartForm(
       {@required String path,
       String name,
-      String dishes,
-      @required File file}) async {
+      String method = 'post',
+      List<Map<String, dynamic>> dishes,
+      File file}) async {
     try {
       final _url = Endpoint.apiBaseUrl + path;
       final _headers = {'Authorization': '${await _sharedP.getAccessToken()}'};
@@ -312,34 +313,46 @@ class NetworkHandler {
       _logger.log("-> POST: $_url");
       _logger.log("-> HEADERS: $_headers");
 
-      final fileName = file.path.split("/").last;
+      final fileName = file != null ? file.path.split("/").last : "";
 
       File postFile;
-      if (file.lengthSync() > 2090000) {
-        final root = await FileManager.getRootFilesDir();
-        postFile =
-            await FileManager.compressAndGetFile(file, "$root/$fileName");
-      } else {
-        postFile = File(file.path);
+      MultipartFile multipartFile;
+      if (file != null) {
+        if (file.lengthSync() > 2090000) {
+          final root = await FileManager.getRootFilesDir();
+          postFile =
+              await FileManager.compressAndGetFile(file, "$root/$fileName");
+        } else {
+          postFile = File(file.path);
+        }
+        multipartFile = await MultipartFile.fromFile(postFile.path,
+            filename: fileName,
+            contentType: mt.MediaType("image", "jpeg"));
       }
 
       final FormData formData = FormData.fromMap({
         "name": name,
         "dishes": dishes,
-        "image": await MultipartFile.fromFile(postFile.path,
-            filename: fileName, contentType: mt.MediaType("image", "jpeg")),
+        "image": multipartFile,
       });
-      _logger.log(formData.fields.toString());
 
       BaseOptions options = new BaseOptions(
           connectTimeout: 10000, receiveTimeout: 4000, headers: _headers);
       Dio dio = new Dio();
       dio.options = options;
-      final res = await dio.post(
-        _url,
-        data: formData,
-      );
-      return res.statusCode;
+      if (method == 'put') {
+        final res = await dio.put(
+          _url,
+          data: formData,
+        );
+        return res.statusCode;
+      } else {
+        final res = await dio.post(
+          _url,
+          data: formData,
+        );
+        return res.statusCode;
+      }
     } catch (ex) {
       _logger.log("<- EXEPTION: $ex");
       return 0;

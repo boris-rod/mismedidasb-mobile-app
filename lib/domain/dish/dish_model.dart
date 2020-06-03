@@ -197,7 +197,7 @@ class FoodModel {
   double get caloriesFixed =>
       (carbohydrates * 4 + proteins * 4 + fat * 9) * count;
 
-  bool get isCompound => children.length > 1;
+  bool get isCompound => children.isNotEmpty && (children.length > 1 || children[0].count > 1 ) ;
 
   String get displayCount => count == 0.25
       ? "1/4"

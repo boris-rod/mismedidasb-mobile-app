@@ -86,6 +86,7 @@ class FoodBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
     final foodsRes = await _iDishRepository.getFoodModelList();
     if (foodsRes is ResultSuccess<List<FoodModel>>) {
+      foodsAll.clear();
       foodsAll.addAll(foodsRes.value);
     }
 
@@ -94,13 +95,13 @@ class FoodBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
       foodsAll.addAll(foodsCompoundRes.value);
     }
 
-    selectedItems.forEach((f)=> f.isSelected = true);
+    selectedItems.forEach((f) => f.isSelected = true);
     foodsAll.forEach((f) {
       final sF =
           selectedItems.firstWhere((food) => food.id == f.id, orElse: () {
         return null;
       });
-      if (sF != null){
+      if (sF != null) {
         f.isSelected = sF.isSelected;
         f.count = sF.count;
       }
@@ -118,6 +119,7 @@ class FoodBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
   void getCompoundFoods() {
     final list = foodsAll.where((f) => f.isCompound).toList();
+    list.sort((a, b) => a.name.trim().toLowerCase().compareTo(b.name.trim().toLowerCase()));
     _foodsCompoundController.sinkAddSafe(list);
   }
 
@@ -136,15 +138,19 @@ class FoodBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     if (foodFilterMode == FoodFilterMode.dish_healthy) {
       if (foodFilterCategoryId == FoodHealthy.proteic.index) {
         final List<FoodModel> proteics =
-            foodsAll.where((f) => (f?.isProteic == true) ?? false)?.toList() ?? [];
+            foodsAll.where((f) => (f?.isProteic == true) ?? false)?.toList() ??
+                [];
         foodsFiltered.addAll(proteics);
       } else if (foodFilterCategoryId == FoodHealthy.caloric.index) {
         final List<FoodModel> calorics =
-            foodsAll.where((f) => (f?.isCaloric == true) ?? false)?.toList() ?? [];
+            foodsAll.where((f) => (f?.isCaloric == true) ?? false)?.toList() ??
+                [];
         foodsFiltered.addAll(calorics);
       } else {
-        final List<FoodModel> fv =
-            foodsAll.where((f) => (f?.isFruitAndVegetables == true) ?? false)?.toList() ?? [];
+        final List<FoodModel> fv = foodsAll
+                .where((f) => (f?.isFruitAndVegetables == true) ?? false)
+                ?.toList() ??
+            [];
         foodsFiltered.addAll(fv);
       }
     } else {
