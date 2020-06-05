@@ -95,7 +95,7 @@ class DishApi extends BaseApi implements IDishApi {
     if (res.statusCode == RemoteConstants.code_success) {
       Iterable l = jsonDecode(res.body)[RemoteConstants.result];
       return l
-          .map((model) => _foodConverter.fromJsonCompoundFoodModel(model))
+          .map((model) => _foodConverter.fromJsonFoodModel(model))
           .toList();
     } else
       throw serverException(res);

@@ -47,11 +47,37 @@ class DishConverter extends IDishConverter {
         plan: DailyFoodPlanModel(
             dailyKCal: json[fromAPI ? "kCal" : "dailyKCal"] ?? 1,
             imc: json["imc"] ?? 1),
-        foods: (json[fromAPI ? "eatDishResponse" : "foods"] as List<dynamic>)
-            .map((model) => fromAPI
-                ? fromJsonFoodModelWithQTY(model)
-                : fromJsonFoodModel(model))
-            .toList());
+        foods: fromAPI
+            ? _getFoodsFromApi(json["eatDishResponse"] as List<dynamic>,
+                json["eatCompoundDishResponse"] as List<dynamic>)
+            : (json["foods"] as List<dynamic>)
+                .map((model) => fromJsonFoodModel(model, fromAPI: fromAPI))
+                .toList()
+//        foods: (json[fromAPI ? "eatDishResponse" : "foods"] as List<dynamic>)
+//            .map((model) => fromAPI
+//                ? fromJsonFoodModelWithQTY(model)
+//                : fromJsonFoodModel(model))
+//            .toList()
+
+        );
+  }
+
+  List<FoodModel> _getFoodsFromApi(
+      List<dynamic> jsonFoods, List<dynamic> jsonFoodsCompound) {
+    List<FoodModel> list = [
+      ...jsonFoods.map((f) => fromJsonFoodModelWithQTY(f)).toList(),
+      ...jsonFoodsCompound.map((f) => fromJsonFoodModelWithQTY(f)).toList(),
+    ];
+
+    return list;
+  }
+
+  @override
+  FoodModel fromJsonFoodModelWithQTY(Map<String, dynamic> json) {
+    final food = fromJsonFoodModel(
+        json.containsKey("dish") ? json["dish"] : json["compoundDish"]);
+    food.count = json["qty"] * 1.0;
+    return food;
   }
 
   @override
@@ -70,20 +96,16 @@ class DishConverter extends IDishConverter {
   }
 
   @override
-  FoodModel fromJsonFoodModelWithQTY(Map<String, dynamic> json) {
-    final food = fromJsonFoodModel(json["dish"]);
-    food.count = json["qty"] * 1.0;
-    return food;
-  }
-
-  @override
-  FoodModel fromJsonFoodModel(Map<String, dynamic> json) {
+  FoodModel fromJsonFoodModel(Map<String, dynamic> json,
+      {bool fromAPI = true}) {
     return FoodModel(
         id: json["id"],
         name: json["name"],
-        isProteic: json["isProteic"],
-        isCaloric: json["isCaloric"],
-        isFruitAndVegetables: json["isFruitAndVegetables"],
+        isProteic: json.containsKey("isProteic") ? json["isProteic"] : false,
+        isCaloric: json.containsKey("isCaloric") ? json["isCaloric"] : false,
+        isFruitAndVegetables: json.containsKey("isFruitAndVegetables")
+            ? json["isFruitAndVegetables"]
+            : false,
         calories: json["calories"],
         carbohydrates: json["carbohydrates"],
         proteins: json["proteins"],
@@ -91,10 +113,21 @@ class DishConverter extends IDishConverter {
         fiber: json["fiber"],
         image: json["image"],
         count: json.containsKey("count") ? json["count"] : 1,
-        imageMimeType: json["imageMimeType"],
-        tags: (json['tags'] as List<dynamic>)
-            .map((model) => fromJsonFoodTagModel(model))
-            .toList());
+        children: (fromAPI
+                ? (json.containsKey("dishCompoundDishResponse")
+                    ? (json["dishCompoundDishResponse"] as List<dynamic>)
+                    : [])
+                : (json["children"] as List<dynamic>))
+            .map((f) =>
+                fromAPI ? fromJsonFoodModelWithQTY(f) : fromJsonFoodModel(f))
+            .toList(),
+        imageMimeType:
+            json.containsKey("imageMimeType") ? json["imageMimeType"] : "",
+        tags: json.containsKey("tags")
+            ? (json['tags'] as List<dynamic>)
+                .map((model) => fromJsonFoodTagModel(model))
+                .toList()
+            : []);
   }
 
   @override
@@ -102,18 +135,20 @@ class DishConverter extends IDishConverter {
     return {
       "id": model.id,
       "name": model.name,
-      "isProteic": model.isProteic,
-      "isCaloric": model.isCaloric,
-      "isFruitAndVegetables": model.isFruitAndVegetables,
+      "isProteic": model.isProteic ?? false,
+      "isCaloric": model.isCaloric ?? false,
+      "isFruitAndVegetables": model.isFruitAndVegetables ?? false,
       "calories": model.calories,
       "carbohydrates": model.carbohydrates,
       "proteins": model.proteins,
       "image": model.image,
-      "imageMimeType": model.imageMimeType,
+      "imageMimeType": model.imageMimeType ?? "",
       "fat": model.fat,
       "fiber": model.fiber,
       "count": model.count,
-      "tags": model.tags.map((model) => toJsonFoodModelTag(model)).toList()
+      "children": model?.children?.map((f) => toJsonFoodModel(f))?.toList() ?? [],
+      "tags":
+          model?.tags?.map((model) => toJsonFoodModelTag(model))?.toList() ?? []
     };
   }
 
@@ -153,26 +188,26 @@ class DishConverter extends IDishConverter {
     return {"dishId": model.id, "qty": model.quantity};
   }
 
-  @override
-  FoodModel fromJsonCompoundFoodModel(Map<String, dynamic> json) {
-    return FoodModel(
-        id: json["id"],
-        name: json["name"],
-        isProteic: json["isProteic"],
-        isCaloric: json["isCaloric"],
-        isFruitAndVegetables: json["isFruitAndVegetables"],
-        calories: json["calories"],
-        carbohydrates: json["carbohydrates"],
-        proteins: json["proteins"],
-        fat: json["fat"],
-        fiber: json["fiber"],
-        image: json["image"],
-        count: json.containsKey("count") ? json["count"] : 1,
-        imageMimeType: json["imageMimeType"],
-        children: (json["dishCompoundDishResponse"] as List<dynamic>)
-            .map((model) => fromJsonFoodModelWithQTY(model))
-            .toList());
-  }
+//  @override
+//  FoodModel fromJsonCompoundFoodModel(Map<String, dynamic> json) {
+//    return FoodModel(
+//        id: json["id"],
+//        name: json["name"],
+//        isProteic: json["isProteic"],
+//        isCaloric: json["isCaloric"],
+//        isFruitAndVegetables: json["isFruitAndVegetables"],
+//        calories: json["calories"],
+//        carbohydrates: json["carbohydrates"],
+//        proteins: json["proteins"],
+//        fat: json["fat"],
+//        fiber: json["fiber"],
+//        image: json["image"],
+//        count: json.containsKey("count") ? json["count"] : 1,
+//        imageMimeType: json["imageMimeType"],
+//        children: (json["dishCompoundDishResponse"] as List<dynamic>)
+//            .map((model) => fromJsonFoodModelWithQTY(model))
+//            .toList());
+//  }
 
   @override
   Map<String, dynamic> toJsonCreateCompoundFoodModel(

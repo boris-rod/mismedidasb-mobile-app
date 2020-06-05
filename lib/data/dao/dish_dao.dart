@@ -98,7 +98,7 @@ class DishDao extends IDishDao {
       data.forEach((map) {
         final value = map[DBConstants.data_key];
         final FoodModel obj =
-            _foodConverter.fromJsonFoodModel(jsonDecode(value));
+            _foodConverter.fromJsonFoodModel(jsonDecode(value), fromAPI: false);
         list.add(obj);
       });
     } catch (ex) {}

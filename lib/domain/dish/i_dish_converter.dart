@@ -15,7 +15,7 @@ abstract class IDishConverter {
   DailyActivityFoodModel fromJsonDailyActivityFoodModel(
       Map<String, dynamic> json, {bool fromAPI = true});
 
-  FoodModel fromJsonFoodModel(Map<String, dynamic> json);
+  FoodModel fromJsonFoodModel(Map<String, dynamic> json, {bool fromAPI = true});
 
   FoodModel fromJsonFoodModelWithQTY(Map<String, dynamic> json);
 
@@ -30,6 +30,6 @@ abstract class IDishConverter {
 
   Map<String, dynamic> toJsonCreateCompoundFoodModel(CreateFoodCompoundModel model);
 
-  FoodModel fromJsonCompoundFoodModel(Map<String, dynamic> json);
+//  FoodModel fromJsonCompoundFoodModel(Map<String, dynamic> json);
 
 }

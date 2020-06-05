@@ -75,6 +75,7 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
                     Container(
                       child: Image.asset(
                         R.image.logo_planifive,
+                        height: 100,
                       ),
                     ),
                     Expanded(
