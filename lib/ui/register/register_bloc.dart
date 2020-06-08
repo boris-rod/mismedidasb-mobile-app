@@ -48,6 +48,7 @@ class RegisterBloC extends BaseBloC
 
     if (res is ResultSuccess<int>) {
       await _sharedPreferencesManager.setUserEmail(email);
+      await _sharedPreferencesManager.setUserEmail(email);
       await _sharedPreferencesManager.setPassword(password);
       await _sharedPreferencesManager.setSaveCredentials(true);
 

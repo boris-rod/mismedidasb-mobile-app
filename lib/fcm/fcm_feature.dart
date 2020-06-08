@@ -2,11 +2,14 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mismedidasb/data/api/remote/network_handler.dart';
+import 'package:mismedidasb/fcm/fcm_functions.dart';
 import 'package:mismedidasb/fcm/fcm_message_model.dart';
 import 'package:mismedidasb/fcm/fcm_parser.dart';
 import 'package:mismedidasb/fcm/i_fcm_feature.dart';
+import 'package:mismedidasb/lnm/i_lnm.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/utils/logger.dart';
 import 'package:rxdart/subjects.dart';
@@ -15,8 +18,10 @@ class FCMFeature extends IFCMFeature {
   final FirebaseMessaging _fireBaseMessaging = FirebaseMessaging();
   final NetworkHandler networkHandler;
   final Logger logger;
+  final ILNM _ilnm;
 
-  FCMFeature(this.networkHandler, this.logger);
+  FCMFeature(
+      this.networkHandler, this.logger, this._ilnm);
 
   BehaviorSubject<
       // ignore: close_sinks
@@ -78,7 +83,7 @@ class FCMFeature extends IFCMFeature {
       await networkHandler.post(
           path: '/api/device',
           body: jsonEncode({'token': token, 'deviceType': deviceType}),
-          doRefreshToken: false);
+          doRefreshToken: true);
     } catch (ex) {
       logger.log('refresh Token Exception');
       logger.log(ex);
@@ -87,21 +92,21 @@ class FCMFeature extends IFCMFeature {
 
   @override
   void setUp() {
-//    final connector = createPushConnector();
-//    connector.configure(onBackgroundMessage: (map) async {
-//      print(map.toString());
-//    });
     _fireBaseMessaging.requestNotificationPermissions();
     _fireBaseMessaging.configure(
-      onLaunch: _processMessageFromNotification,
-      onResume: _processMessageFromNotification,
-      onMessage: _processMessageForeground,
-    );
+        onLaunch: _processMessageFromNotification,
+        onResume: _processMessageFromNotification,
+        onMessage: _processMessageForeground,
+        /*onBackgroundMessage: myBackgroundMessageHandler*/);
   }
 
   Future<dynamic> _processMessageFromNotification(
       Map<String, dynamic> message) async {
-    print('FCM Message Background');
+    showRemoteNotification(message);
+//    Fluttertoast.showToast(
+//        msg: message.toString(), toastLength: Toast.LENGTH_SHORT);
+
+//    print('FCM Message Background');
 //    Title = "Recordatorio",
 //    Body = "Recuerde planificar lo que va a comer mañana."
 //    print(message);
@@ -115,11 +120,24 @@ class FCMFeature extends IFCMFeature {
 
   Future<dynamic> _processMessageForeground(
       Map<String, dynamic> message) async {
-    print(message);
+    showRemoteNotification(message);
+//    Fluttertoast.showToast(
+//        msg: message.toString(), toastLength: Toast.LENGTH_SHORT);
 
 //    final fcmMessage = FCMJsonParser.parseJson(message);
 //    if (fcmMessage.todoId != null) {
 //      onMessageArrivesForegroundSubject.sink.add(fcmMessage);
 //    }
+  }
+
+  void showRemoteNotification(Map<String, dynamic> message){
+    final Map notification = message["notification"];
+    if(notification != null){
+      String title = notification["title"];
+      String content = notification["body"];
+      if(title?.isNotEmpty == true && content?.isNotEmpty == true){
+        _ilnm.showCommonNotification(title, content);
+      }
+    }
   }
 }

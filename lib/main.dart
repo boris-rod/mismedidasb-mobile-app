@@ -15,6 +15,7 @@ void main() {
     MyMeasuresBApp(
       initPage: SplashPage(),
       fcmFeature: Injector.instance.getDependency(),
+      lnm: Injector.instance.getDependency(),
     ),
   );
 }

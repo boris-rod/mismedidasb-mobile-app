@@ -25,7 +25,12 @@ class UserConverter implements IUserConverter {
                 ? DateTime.parse(json[RemoteConstants.first_date_health_result])
                     .toLocal()
                 : DateTime.now(),
-        imc: json[RemoteConstants.imc]);
+        imc: json[RemoteConstants.imc],
+        subscriptions: json.containsKey("subscriptions")
+            ? (json["subscriptions"] as List<dynamic>)
+                .map((e) => fromJsonSubscription(e))
+                .toList()
+            : []);
   }
 
   @override
@@ -35,5 +40,19 @@ class UserConverter implements IUserConverter {
       RemoteConstants.user_name: userModel.username,
       RemoteConstants.phone: userModel.phone,
     };
+  }
+
+  @override
+  Subscription fromJsonSubscription(Map<String, dynamic> json) {
+    final Subscription model = Subscription(
+        id: json["id"],
+        userId: json["userId"],
+        userSubscriptionId: json["userSubscriptionId"],
+        productId: json["productId"],
+        product: json["product"],
+        name: json["name"],
+        isActive: json["isActive"],
+        validAt: DateTime.parse(json["validAt"]).toLocal());
+    return model;
   }
 }

@@ -6,6 +6,7 @@ void showTXModalBottomSheet({
   @required WidgetBuilder builder,
 }) {
   showCupertinoModalPopup(
+    semanticsDismissible: false,
     context: context,
     builder: (b) => Container(
       color: Colors.white,

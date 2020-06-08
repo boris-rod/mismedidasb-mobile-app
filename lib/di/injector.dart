@@ -1,3 +1,4 @@
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:mismedidasb/app_bloc.dart';
 import 'package:mismedidasb/data/_shared_prefs.dart';
@@ -79,6 +80,8 @@ import 'package:mismedidasb/domain/user/i_user_converter.dart';
 import 'package:mismedidasb/domain/user/i_user_repository.dart';
 import 'package:mismedidasb/fcm/fcm_feature.dart';
 import 'package:mismedidasb/fcm/i_fcm_feature.dart';
+import 'package:mismedidasb/lnm/i_lnm.dart';
+import 'package:mismedidasb/lnm/lnm.dart';
 import 'package:mismedidasb/ui/_base/bloc_base.dart';
 import 'package:mismedidasb/ui/change_password/change_password_bloc.dart';
 import 'package:mismedidasb/ui/contact_us/contact_us_bloc.dart';
@@ -137,13 +140,7 @@ class Injector {
     }
   }
 
-  Injector._startDemo() {
-    _registerDemo();
-    _initialize();
-  }
-
   Injector._startProd() {
-    _registerProd();
     _initialize();
   }
 
@@ -155,10 +152,6 @@ class Injector {
     _registerBloCs();
     _registerMappers();
   }
-
-  _registerDemo() {}
-
-  _registerProd() {}
 
   _registerMappers() {
     container.registerSingleton<IAccountConverter, AccountConverter>(
@@ -255,7 +248,7 @@ class Injector {
 
     container.registerSingleton<ISessionRepository, SessionRepository>((c) =>
         SessionRepository(
-            container.resolve(), container.resolve(), container.resolve()));
+            container.resolve(), container.resolve(), container.resolve(), container.resolve()));
 
     container.registerSingleton<IUserRepository, UserRepository>(
         (c) => UserRepository(container.resolve()));
@@ -299,7 +292,7 @@ class Injector {
     container.registerFactory(
         (c) => RegisterBloC(container.resolve(), container.resolve(), container.resolve()));
     container.registerFactory((c) => HomeBloC(
-        container.resolve(), container.resolve(), container.resolve()));
+        container.resolve(), container.resolve(), container.resolve(), container.resolve()));
     container.registerFactory((c) => HabitBloC(container.resolve()));
     container.registerFactory((c) => FoodCravingBloC(container.resolve()));
     container.registerFactory((c) => MeasureHealthBloC(
@@ -330,7 +323,12 @@ class Injector {
       (c) => FCMFeature(
         c.resolve(),
         c.resolve(),
+        c.resolve(),
       ),
     );
+
+    container.registerSingleton((c) => FlutterLocalNotificationsPlugin());
+    container.registerSingleton<ILNM, LNM>((c) => LNM(container.resolve(), container.resolve()));
+
   }
 }

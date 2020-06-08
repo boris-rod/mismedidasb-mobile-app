@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:mismedidasb/data/api/remote/remote_constanst.dart';
 import 'package:mismedidasb/domain/health_concept/health_concept.dart';
 import 'package:mismedidasb/fcm/fcm_background_notification_aware_widget.dart';
+import 'package:mismedidasb/lnm/i_lnm.dart';
+import 'package:mismedidasb/lnm/lnm.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/bloc_state.dart';
 import 'package:mismedidasb/ui/_base/navigation_utils.dart';
@@ -38,6 +41,13 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
   }
 
   @override
+  void dispose() {
+    didReceiveLocalNotificationSubject.close();
+    selectNotificationSubject.close();
+    super.dispose();
+  }
+
+  @override
   Widget buildWidget(BuildContext context) {
     final screenW = MediaQuery.of(context).size.width;
     final totalRowCount = bloc.getHomeCountPerRow(screenW);
@@ -56,18 +66,23 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
                       child: InkWell(
                         child: Image.asset(R.image.settings),
                         onTap: () async {
-                          final res = await NavigationUtils.push(
-                              context, ProfilePage());
-                          if (res is SettingAction) {
-                            if (res == SettingAction.logout ||
-                                res == SettingAction.removeAccount) {
-                              NavigationUtils.pushReplacement(
-                                  context, LoginPage());
-                            } else if (res ==
-                                SettingAction.languageCodeChanged) {
-                              bloc.loadHomeData();
-                            }
-                          }
+                          showTXModalBottomSheet(
+                              context: context,
+                              builder: (context) {
+                                return _showPollNotification(context);
+                              });
+//                          final res = await NavigationUtils.push(
+//                              context, ProfilePage());
+//                          if (res is SettingAction) {
+//                            if (res == SettingAction.logout ||
+//                                res == SettingAction.removeAccount) {
+//                              NavigationUtils.pushReplacement(
+//                                  context, LoginPage());
+//                            } else if (res ==
+//                                SettingAction.languageCodeChanged) {
+//                              bloc.loadHomeData();
+//                            }
+//                          }
                         },
                       ),
                       width: double.infinity,
@@ -172,7 +187,11 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
         onTap: onTap,
         child: Column(
           children: <Widget>[
-            Image.asset(bloc.getImage(model.codeName), width: 100, height: 100,),
+            Image.asset(
+              bloc.getImage(model.codeName),
+              width: 100,
+              height: 100,
+            ),
             Container(
               padding: EdgeInsets.all(10),
               child: Image.asset(bloc.getImageTitle(
@@ -180,6 +199,17 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
               )),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _showPollNotification(BuildContext context) {
+    return Container(
+      height: 300,
+      child: Center(
+        child: TXTextWidget(
+          text: "Test",
         ),
       ),
     );

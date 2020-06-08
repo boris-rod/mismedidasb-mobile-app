@@ -4,18 +4,25 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:mismedidasb/app_bloc.dart';
 import 'package:mismedidasb/domain/setting/setting_model.dart';
 import 'package:mismedidasb/fcm/i_fcm_feature.dart';
+import 'package:mismedidasb/lnm/i_lnm.dart';
+import 'package:mismedidasb/lnm/lnm.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/res/values/text/custom_localizations_delegate.dart';
 import 'package:mismedidasb/ui/_base/bloc_global.dart';
 import 'package:mismedidasb/ui/_base/bloc_state.dart';
+import 'package:mismedidasb/ui/_base/navigation_utils.dart';
 import 'dart:ui' as ui;
+
+import 'package:mismedidasb/ui/_tx_widget/tx_button_widget.dart';
+import 'package:mismedidasb/ui/profile/profile_page.dart';
 
 class MyMeasuresBApp extends StatefulWidget {
   final Widget initPage;
   final IFCMFeature fcmFeature;
+  final ILNM lnm;
 
   const MyMeasuresBApp(
-      {Key key, @required this.initPage, @required this.fcmFeature})
+      {Key key, @required this.initPage, @required this.fcmFeature, this.lnm})
       : super(key: key);
 
   @override
@@ -26,13 +33,13 @@ class _MyMeasuresBState extends StateWithBloC<MyMeasuresBApp, AppBloC> {
   @override
   void initState() {
     super.initState();
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarColor: R.color.primary_dark_color
-    ));
+    SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(statusBarColor: R.color.primary_dark_color));
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
     widget.fcmFeature.setUp();
+    widget.lnm.setup();
   }
 
   @override
