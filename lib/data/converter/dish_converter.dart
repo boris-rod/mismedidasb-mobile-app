@@ -177,6 +177,8 @@ class DishConverter extends IDishConverter {
   Map<String, dynamic> toJsonCreateDailyPlanModel(CreateDailyPlanModel model) {
     return {
       "dateInUtc": model.dateTime.toUtc().toIso8601String(),
+      "dateTimeInUserLocalTime": model.dateTime.toIso8601String(),
+      "isBalanced": model.isBalanced,
       "eats": model.activities
           .map((m) => toJsonCreateDailyActivityModel(m))
           .toList()

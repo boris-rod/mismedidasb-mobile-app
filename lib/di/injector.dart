@@ -82,6 +82,8 @@ import 'package:mismedidasb/fcm/fcm_feature.dart';
 import 'package:mismedidasb/fcm/i_fcm_feature.dart';
 import 'package:mismedidasb/lnm/i_lnm.dart';
 import 'package:mismedidasb/lnm/lnm.dart';
+import 'package:mismedidasb/rt/i_real_time_container.dart';
+import 'package:mismedidasb/rt/real_time_container.dart';
 import 'package:mismedidasb/ui/_base/bloc_base.dart';
 import 'package:mismedidasb/ui/change_password/change_password_bloc.dart';
 import 'package:mismedidasb/ui/contact_us/contact_us_bloc.dart';
@@ -247,8 +249,8 @@ class Injector {
         (c) => CommonRepository(container.resolve()));
 
     container.registerSingleton<ISessionRepository, SessionRepository>((c) =>
-        SessionRepository(
-            container.resolve(), container.resolve(), container.resolve(), container.resolve()));
+        SessionRepository(container.resolve(), container.resolve(),
+            container.resolve(), container.resolve()));
 
     container.registerSingleton<IUserRepository, UserRepository>(
         (c) => UserRepository(container.resolve()));
@@ -289,10 +291,11 @@ class Injector {
     container.registerFactory((c) => LoginBloC(container.resolve(),
         container.resolve(), container.resolve(), container.resolve()));
     container.registerFactory((c) => RecoverPasswordBloC(container.resolve()));
-    container.registerFactory(
-        (c) => RegisterBloC(container.resolve(), container.resolve(), container.resolve()));
-    container.registerFactory((c) => HomeBloC(
-        container.resolve(), container.resolve(), container.resolve(), container.resolve()));
+    container.registerFactory((c) => RegisterBloC(
+        container.resolve(), container.resolve(), container.resolve()));
+    container.registerFactory((c) => HomeBloC(container.resolve(),
+        container.resolve(), container.resolve(), container.resolve(),
+        container.resolve()));
     container.registerFactory((c) => HabitBloC(container.resolve()));
     container.registerFactory((c) => FoodCravingBloC(container.resolve()));
     container.registerFactory((c) => MeasureHealthBloC(
@@ -305,9 +308,10 @@ class Injector {
     container.registerFactory((c) => FoodAddEditBloC(c.resolve()));
     container.registerFactory(
         (c) => ChangePasswordBloC(container.resolve(), container.resolve()));
-    container.registerFactory((c) => ProfileBloC(container.resolve(),
-        container.resolve()));
-    container.registerFactory((c) => SettingsBloC(c.resolve(), c.resolve(), c.resolve()));
+    container.registerFactory(
+        (c) => ProfileBloC(container.resolve(), container.resolve()));
+    container.registerFactory(
+        (c) => SettingsBloC(c.resolve(), c.resolve(), c.resolve()));
     container.registerFactory((c) => LegacyBloC(c.resolve()));
     container.registerFactory((c) => ContactUsBloC(c.resolve()));
     container.registerFactory((c) => ProfileEditBloC(c.resolve(), c.resolve()));
@@ -328,7 +332,9 @@ class Injector {
     );
 
     container.registerSingleton((c) => FlutterLocalNotificationsPlugin());
-    container.registerSingleton<ILNM, LNM>((c) => LNM(container.resolve(), container.resolve()));
-
+    container.registerSingleton<ILNM, LNM>(
+        (c) => LNM(container.resolve(), container.resolve()));
+    container.registerSingleton<IRealTimeContainer, RealTimeContainer>(
+        (c) => RealTimeContainer(container.resolve()));
   }
 }

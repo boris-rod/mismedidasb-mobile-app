@@ -8,6 +8,8 @@ import 'package:mismedidasb/fcm/fcm_background_notification_aware_widget.dart';
 import 'package:mismedidasb/lnm/i_lnm.dart';
 import 'package:mismedidasb/lnm/lnm.dart';
 import 'package:mismedidasb/res/R.dart';
+import 'package:mismedidasb/rt/real_time_container.dart';
+import 'package:mismedidasb/rt/reward_model.dart';
 import 'package:mismedidasb/ui/_base/bloc_state.dart';
 import 'package:mismedidasb/ui/_base/navigation_utils.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_bottom_result_info.dart';
@@ -34,10 +36,15 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
+  final _keyHome = new GlobalKey<ScaffoldState>();
+
   @override
   void initState() {
     super.initState();
     bloc.loadHomeData();
+    bloc.rewardResult.listen((model) {
+      _keyHome.currentState.showSnackBar(getSnackBarWidget(model));
+    });
   }
 
   @override
@@ -56,6 +63,7 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
         children: <Widget>[
           SafeArea(
             child: Scaffold(
+              key: _keyHome,
               body: Container(
                 color: R.color.home_color,
                 child: Column(
@@ -66,11 +74,11 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
                       child: InkWell(
                         child: Image.asset(R.image.settings),
                         onTap: () async {
-                          showTXModalBottomSheet(
-                              context: context,
-                              builder: (context) {
-                                return _showPollNotification(context);
-                              });
+//                          showTXModalBottomSheet(
+//                              context: context,
+//                              builder: (context) {
+//                                return _showPollNotification(context);
+//                              });
 //                          final res = await NavigationUtils.push(
 //                              context, ProfilePage());
 //                          if (res is SettingAction) {
@@ -120,6 +128,35 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
         ],
       ),
     );
+  }
+
+  SnackBar getSnackBarWidget(RewardModel model) {
+    final snackBar = SnackBar(
+      backgroundColor: Colors.white,
+      content: Row(
+        children: <Widget>[
+          Container(
+            child: Image.asset(
+              R.image.logo,
+              width: 60,
+              height: 60,
+            ),
+          ),
+          Expanded(
+              child: TXTextWidget(
+            text: model.message,
+          ))
+        ],
+      ),
+      action: SnackBarAction(
+        label: 'Ver',
+        textColor: R.color.primary_dark_color,
+        onPressed: () {
+          // Some code to undo the change.
+        },
+      ),
+    );
+    return snackBar;
   }
 
   List<Widget> _getHomeWidgets(

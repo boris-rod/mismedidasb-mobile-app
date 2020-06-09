@@ -74,9 +74,9 @@ class SharedPreferencesManager {
     await setDateTimeValue(
         SharedKey.lunchTime, DateTime(now.year, now.month, now.day, 12, 30, 0));
     await setDateTimeValue(
-        SharedKey.snack2Time, DateTime(now.year, now.month, now.day, 4, 30, 0));
+        SharedKey.snack2Time, DateTime(now.year, now.month, now.day, 16, 30, 0));
     await setDateTimeValue(
-        SharedKey.dinnerTime, DateTime(now.year, now.month, now.day, 10, 0, 0));
+        SharedKey.dinnerTime, DateTime(now.year, now.month, now.day, 22, 0, 0));
     await setDateTimeValue(SharedKey.physicalExerciseTime,
         DateTime(now.year, now.month, now.day, 7, 0, 0));
 

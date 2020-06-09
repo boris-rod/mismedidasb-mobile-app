@@ -14,6 +14,9 @@ import 'package:mismedidasb/lnm/i_lnm.dart';
 import 'package:mismedidasb/lnm/lnm.dart';
 import 'package:mismedidasb/lnm/local_notification_model.dart';
 import 'package:mismedidasb/res/R.dart';
+import 'package:mismedidasb/rt/i_real_time_container.dart';
+import 'package:mismedidasb/rt/real_time_container.dart';
+import 'package:mismedidasb/rt/reward_model.dart';
 import 'package:mismedidasb/ui/_base/bloc_base.dart';
 import 'package:mismedidasb/ui/_base/bloc_error_handler.dart';
 import 'package:mismedidasb/ui/_base/bloc_loading.dart';
@@ -27,15 +30,20 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   final IUserRepository _iUserRepository;
   final SharedPreferencesManager _sharedPreferencesManager;
   final ILNM lnm;
+  final IRealTimeContainer _iRealTimeContainer;
 
   HomeBloC(this._iHealthConceptRepository, this._iUserRepository,
-      this._sharedPreferencesManager, this.lnm);
+      this._sharedPreferencesManager, this.lnm, this._iRealTimeContainer);
 
   BehaviorSubject<List<HealthConceptModel>> _conceptController =
       new BehaviorSubject();
 
   Stream<List<HealthConceptModel>> get conceptResult =>
       _conceptController.stream;
+
+  BehaviorSubject<RewardModel> _rewardController = new BehaviorSubject();
+
+  Stream<RewardModel> get rewardResult => _rewardController.stream;
 
   void loadHomeData() async {
     isLoading = true;
@@ -57,6 +65,8 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
       } else {
         lnm.cancelAll();
       }
+
+      initRT();
 
       await _sharedPreferencesManager.setStringValue(
           SharedKey.userName, profileRes.value.username);
@@ -140,6 +150,20 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     return resDir;
   }
 
+  void initRT() {
+    _iRealTimeContainer.setup();
+    onRewardSubject.listen((value) async {
+      if (value.userId ==
+          await _sharedPreferencesManager.getIntValue(SharedKey.userId)) {
+        final username =
+            await _sharedPreferencesManager.getStringValue(SharedKey.userName);
+        value.message =
+            "Hola $username, usted acaba de recibir ${value.points} puntos.";
+        _rewardController.sinkAddSafe(value);
+      }
+    });
+  }
+
   void initLNM() async {
     _configureDidReceiveLocalNotificationSubject();
     _configureSelectNotificationSubject();
@@ -162,6 +186,7 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   @override
   void dispose() {
     _conceptController.close();
+    _rewardController.close();
     disposeLoadingBloC();
     disposeErrorHandlerBloC();
 //    _loadingController.close();

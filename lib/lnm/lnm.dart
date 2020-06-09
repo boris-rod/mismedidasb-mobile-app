@@ -262,7 +262,7 @@ class LNM implements ILNM {
       await flutterLocalNotificationsPlugin.showDailyAtTime(
           planFoodsId,
           'Hola $userName',
-          'Recuerde planificar sus comidas de mañana.',
+          'Recuerde planificar sus comidas para mañana.',
           Time(22, 30, 0),
           platformChannelSpecifics,
           payload: '$planFoodsId');
