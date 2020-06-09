@@ -74,7 +74,8 @@ class TXCupertinoPickerWidget extends StatelessWidget {
                     mode: CupertinoDatePickerMode.date,
                     initialDateTime:
                         DateTime(now.year - 18, now.month, now.day),
-                    minimumDate: DateTime(now.year - list.length, now.month, now.day),
+                    minimumDate:
+                        DateTime(now.year - list.length, now.month, now.day),
                     maximumDate: DateTime(now.year - 18, now.month, now.day),
                     onDateTimeChanged: (DateTime newDateTime) {
                       int age = now.year - newDateTime.year;

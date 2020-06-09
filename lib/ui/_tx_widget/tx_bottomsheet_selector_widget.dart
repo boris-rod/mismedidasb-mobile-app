@@ -11,6 +11,7 @@ import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
 class TXBottomSheetSelectorWidget extends StatelessWidget {
   final List<SingleSelectionModel> list;
   final String title;
+  final FontWeight titleFont;
   final int initialId;
   final ValueChanged<SingleSelectionModel> onItemSelected;
   final double bottomSheetHeight;
@@ -25,7 +26,7 @@ class TXBottomSheetSelectorWidget extends StatelessWidget {
       this.onItemSelected,
       this.bottomSheetHeight = 300,
       this.boxAnswerWidth,
-      this.useDatePicker = false})
+      this.useDatePicker = false, this.titleFont})
       : super(key: key);
 
   @override
@@ -47,7 +48,7 @@ class TXBottomSheetSelectorWidget extends StatelessWidget {
           child: TXTextWidget(
             text: title,
             color: Colors.white,
-            fontWeight: FontWeight.bold,
+            fontWeight: titleFont ?? FontWeight.bold,
             textAlign: TextAlign.left,
           ),
         ),

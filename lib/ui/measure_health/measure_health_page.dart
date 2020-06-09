@@ -102,13 +102,6 @@ class _MeasureHealthState
                           R.image.health_title,
                           width: 300,
                         ),
-//                        TXBoxCellDataWidget(
-//                          width: 110,
-//                          value: "56",
-//                          onTap: (){
-//                            Fluttertoast.showToast(msg: "test");
-//                          },
-//                        ),
                         SizedBox(
                           height: 30,
                         ),

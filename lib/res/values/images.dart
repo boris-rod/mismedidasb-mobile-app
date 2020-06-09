@@ -24,4 +24,7 @@ class AppImage {
   final forward = 'lib/res/assets/img/forward.png';
   final backward = 'lib/res/assets/img/backward.png';
   final health_title = 'lib/res/assets/img/health_title.png';
+  final values_title = 'lib/res/assets/img/values_title.png';
+  final wellness_title = 'lib/res/assets/img/wellness_title.png';
+  final craving_title = 'lib/res/assets/img/craving_title.png';
 }

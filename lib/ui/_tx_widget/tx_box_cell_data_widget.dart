@@ -17,9 +17,9 @@ class TXBoxCellDataWidget extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.only(left: 5),
         width: width ?? double.infinity,
-        height: 37,
+        height: 38,
         decoration: BoxDecoration(
-            border: Border.all(width: 3, color: Colors.black),
+            border: Border.all(width: 4, color: Colors.black),
             color: Colors.white),
         child: Row(
           children: <Widget>[
@@ -37,6 +37,7 @@ class TXBoxCellDataWidget extends StatelessWidget {
               child: Icon(
                 Icons.play_arrow,
                 color: Colors.black,
+                size: 30,
               ),
             )
           ],
