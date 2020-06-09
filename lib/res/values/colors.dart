@@ -8,6 +8,8 @@ class AppColor {
   final accent_color = Color(0xFF448AFF);
   final home_color = Color(0xFFa3bbff);
   final values_color = Color(0xFF8e2900);
+  final wellness_color = Color(0xFF31a501);
+  final health_color = Color(0xFFff3b3d);
 
   final gray_darkest = Color(0xFF808080);
   final gray_dark = Color(0x5097A0AE);

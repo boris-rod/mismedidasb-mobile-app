@@ -93,16 +93,26 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: Gotham
+    - family: Raleway
       fonts:
-        - asset: lib/res/assets/fonts/GothamBold.ttf
-        - asset: lib/res/assets/fonts/GothamBoldItalic.ttf
-        - asset: lib/res/assets/fonts/GothamBook.ttf
-        - asset: lib/res/assets/fonts/GothamBookItalic.ttf
-        - asset: lib/res/assets/fonts/GothamLight.ttf
-        - asset: lib/res/assets/fonts/GothamLightItalic.ttf
-        - asset: lib/res/assets/fonts/GothamMedium.ttf
-        - asset: lib/res/assets/fonts/GothamMediumItalic.ttf
+        - asset: lib/res/assets/fonts/RalewayBlack.ttf
+        - asset: lib/res/assets/fonts/RalewayBlackItalic.ttf
+        - asset: lib/res/assets/fonts/RalewayBold.ttf
+        - asset: lib/res/assets/fonts/RalewayBoldItalic.ttf
+        - asset: lib/res/assets/fonts/RalewayExtraBold.ttf
+        - asset: lib/res/assets/fonts/RalewayExtraBoldItalic.ttf
+        - asset: lib/res/assets/fonts/RalewayExtraLight.ttf
+        - asset: lib/res/assets/fonts/RalewayExtraLightItalic.ttf
+        - asset: lib/res/assets/fonts/RalewayItalic.ttf
+        - asset: lib/res/assets/fonts/RalewayLight.ttf
+        - asset: lib/res/assets/fonts/RalewayLightItalic.ttf
+        - asset: lib/res/assets/fonts/RalewayMedium.ttf
+        - asset: lib/res/assets/fonts/RalewayMediumItalic.ttf
+        - asset: lib/res/assets/fonts/RalewayRegular.ttf
+        - asset: lib/res/assets/fonts/RalewaySemiBold.ttf
+        - asset: lib/res/assets/fonts/RalewaySemiBoldItalic.ttf
+        - asset: lib/res/assets/fonts/RalewayThin.ttf
+        - asset: lib/res/assets/fonts/RalewayThinItalic.ttf
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf

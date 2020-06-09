@@ -14,6 +14,7 @@ class TXCupertinoPickerWidget extends StatelessWidget {
   final ValueChanged<SingleSelectionModel> onItemSelected;
   final String title;
   final int initialId;
+  final bool useDatePicker;
 
   const TXCupertinoPickerWidget(
       {Key key,
@@ -21,11 +22,14 @@ class TXCupertinoPickerWidget extends StatelessWidget {
       this.list,
       this.onItemSelected,
       this.title,
-      this.initialId})
+      this.initialId,
+      this.useDatePicker = false})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final DateTime now = DateTime.now();
+
     int index = list.firstWhere((ele) {
           return ele.id == initialId;
         }, orElse: () {
@@ -65,23 +69,38 @@ class TXCupertinoPickerWidget extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: CupertinoPicker(
-              scrollController:
-              FixedExtentScrollController(initialItem: index ?? 0),
-              itemExtent: 30,
-              backgroundColor: Colors.white,
-              onSelectedItemChanged: (int index) {
-                current = list[index];
-              },
-              children: List<Widget>.generate(list.length, (int index) {
-                return Center(
-                  child: TXTextWidget(
-                    text: list[index].displayName,
-                    color: Colors.black,
+            child: useDatePicker
+                ? CupertinoDatePicker(
+                    mode: CupertinoDatePickerMode.date,
+                    initialDateTime:
+                        DateTime(now.year - 18, now.month, now.day),
+                    minimumDate: DateTime(now.year - list.length, now.month, now.day),
+                    maximumDate: DateTime(now.year - 18, now.month, now.day),
+                    onDateTimeChanged: (DateTime newDateTime) {
+                      int age = now.year - newDateTime.year;
+                      current = list[age - 1];
+                      var newTod = TimeOfDay.fromDateTime(newDateTime);
+//                  _updateTimeFunction(newTod);
+                    },
+                    use24hFormat: false,
+                  )
+                : CupertinoPicker(
+                    scrollController:
+                        FixedExtentScrollController(initialItem: index ?? 0),
+                    itemExtent: 30,
+                    backgroundColor: Colors.white,
+                    onSelectedItemChanged: (int index) {
+                      current = list[index];
+                    },
+                    children: List<Widget>.generate(list.length, (int index) {
+                      return Center(
+                        child: TXTextWidget(
+                          text: list[index].displayName,
+                          color: Colors.black,
+                        ),
+                      );
+                    }),
                   ),
-                );
-              }),
-            ),
           ),
         ],
       ),

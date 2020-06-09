@@ -18,8 +18,10 @@ class AppImage {
   final habitos_saludables = 'lib/res/assets/img/habitos_saludables.png';
   final settings = 'lib/res/assets/img/settings.png';
   final values_home_blur = 'lib/res/assets/img/values_home_blur.png';
+  final food_craving_home_blur = 'lib/res/assets/img/food_craving_home_blur.png';
   final wellness_home_blur = 'lib/res/assets/img/wellness_home_blur.png';
   final health_home_blur = 'lib/res/assets/img/health_home_blur.png';
   final forward = 'lib/res/assets/img/forward.png';
   final backward = 'lib/res/assets/img/backward.png';
+  final health_title = 'lib/res/assets/img/health_title.png';
 }

@@ -21,10 +21,10 @@ class StringsEs implements StringsBase {
   String get myMeasureWellness => "Mis medidas de bienestar";
 
   @override
-  String get next => "Siguiente";
+  String get next => "siguiente";
 
   @override
-  String get previous => "Anterior";
+  String get previous => "anterior";
 
   @override
   String get update => "Analizar";

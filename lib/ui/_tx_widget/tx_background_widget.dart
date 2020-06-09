@@ -27,16 +27,25 @@ class TXBackgroundWidget extends StatelessWidget {
                           ? ExactAssetImage(iconRes)
                           : NetworkImage(imageUrl),
                       colorFilter: new ColorFilter.mode(
-                          Colors.black.withOpacity(0.1), BlendMode.dstATop)))),
-//          Container(
-//            child: Center(
-//              child: Icon(
-//                widget.icon ?? Icons.local_florist,
-//                color: Colors.blueGrey[50],
-//                size: MediaQuery.of(context).size.width,
-//              ),
-//            ),
-//          ),
+                          Colors.white.withOpacity(0.1), BlendMode.dstATop)))),
+          Center(
+            child: Container(
+              height: 200,
+              width: 200,
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                child: Container(
+                  alignment: Alignment.center,
+                  color: Colors.white.withOpacity(0.1),
+                  child: Text(
+                    "Blur Background Image in Flutter",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+            ),
+          ),
           child
         ],
       ),

@@ -1,5 +1,8 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mismedidasb/domain/answer/answer_model.dart';
 import 'package:mismedidasb/domain/health_concept/health_concept.dart';
@@ -10,14 +13,18 @@ import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/bloc_state.dart';
 import 'package:mismedidasb/ui/_base/navigation_utils.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_background_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_blur_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_bottom_result_info.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_bottom_sheet.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_bottomsheet_selector_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_box_cell_data_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_buttons_paginate_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_cupertino_dialog_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_cupertino_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_custom_action_bar.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_icon_button_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_icon_navigator_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_main_app_bar_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
@@ -62,84 +69,119 @@ class _MeasureHealthState
 
   @override
   Widget buildWidget(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return Stack(
       children: <Widget>[
-        TXMainAppBarWidget(
-          leading: TXIconButtonWidget(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              NavigationUtils.pop(context);
-            },
-          ),
-          title: widget.conceptModel.title ?? R.string.myMeasureHealth,
-          body: StreamBuilder<List<PollModel>>(
-            stream: bloc.pollsResult,
-            initialData: [],
-            builder: (ctx, snapshot) {
-              return TXBackgroundWidget(
-                iconRes: R.image.health_home,
-                imageUrl: widget.conceptModel.image,
-                child: Column(
+        SafeArea(
+          child: Scaffold(
+            backgroundColor: R.color.health_color,
+            body: StreamBuilder<List<PollModel>>(
+              stream: bloc.pollsResult,
+              initialData: [],
+              builder: (ctx, snapshot) {
+                return Stack(
                   children: <Widget>[
-                    SizedBox(
-                      height: 30,
-                    ),
-                    Expanded(
-                      child: Column(
-                        children: <Widget>[
-                          Expanded(
-                            child: PageView.builder(
-                              physics: NeverScrollableScrollPhysics(),
-                              controller: pageController,
-                              itemBuilder: (ctx, index) {
-                                final model = snapshot.data[index];
-                                return _getPageView(context, model, index);
-                              },
-                              itemCount: snapshot.data.length,
-                            ),
-                          ),
-                          TXTextWidget(
-                            textAlign: TextAlign.center,
-                            text: snapshot.data.isNotEmpty
-                                ? snapshot.data[bloc.currentPage - 1]
-                                    .bottomTip()
-                                : "",
-                            size: 12,
-                            color: R.color.accent_color,
-                          )
-                        ],
-                      ),
-                    ),
                     Container(
-                      child: StreamBuilder<int>(
-                        stream: bloc.pageResult,
-                        initialData: bloc.currentPage,
-                        builder: (ctx, snapshotPage) {
-                          return TXButtonPaginateWidget(
-                            page: bloc.currentPage,
-                            total: snapshot.data.length,
-                            onNext: () {
-                              snapshot.data.length > bloc.currentPage
-                                  ? bloc.changePage(1)
-                                  : bloc.saveMeasures();
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                      fit: BoxFit.contain,
+                      image: ExactAssetImage(R.image.health_home_blur),
+                    ))),
+                    Column(
+                      children: <Widget>[
+                        TXCustomActionBar(
+                          leading: TXIconNavigatorWidget(
+                            onTap: () {
+                              NavigationUtils.pop(context);
                             },
-                            onPrevious: bloc.currentPage > 1
-                                ? () {
-                                    bloc.changePage(-1);
-                                  }
-                                : null,
-                            nextTitle: snapshot.data.length > bloc.currentPage
-                                ? R.string.next
-                                : R.string.update,
-                            previousTitle: R.string.previous,
-                          );
-                        },
-                      ),
+                            text: "volver",
+                          ),
+                          actionBarColor: R.color.health_color,
+                        ),
+                        Image.asset(
+                          R.image.health_title,
+                          width: 300,
+                        ),
+//                        TXBoxCellDataWidget(
+//                          width: 110,
+//                          value: "56",
+//                          onTap: (){
+//                            Fluttertoast.showToast(msg: "test");
+//                          },
+//                        ),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        Expanded(
+                          child: Column(
+                            children: <Widget>[
+                              Expanded(
+                                child: Container(
+                                  child: PageView.builder(
+                                    physics: NeverScrollableScrollPhysics(),
+                                    controller: pageController,
+                                    itemBuilder: (ctx, index) {
+                                      final model = snapshot.data[index];
+                                      return _getPageView(
+                                          context, model, index);
+                                    },
+                                    itemCount: snapshot.data.length,
+                                  ),
+                                  constraints: BoxConstraints(
+                                      maxWidth: math.min(
+                                          300, screenWidth * 90 / 100)),
+                                ),
+                              ),
+                              SizedBox(height: 15,),
+                              Container(
+                                constraints: BoxConstraints(
+                                    maxWidth:
+                                        math.min(300, screenWidth * 90 / 100)),
+                                child: TXTextWidget(
+                                  textAlign: TextAlign.center,
+                                  text: snapshot.data.isNotEmpty
+                                      ? snapshot.data[bloc.currentPage - 1]
+                                          .bottomTip()
+                                      : "",
+                                  color: Colors.white,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        Container(
+                          child: StreamBuilder<int>(
+                            stream: bloc.pageResult,
+                            initialData: bloc.currentPage,
+                            builder: (ctx, snapshotPage) {
+                              return TXButtonPaginateWidget(
+                                page: bloc.currentPage,
+                                total: snapshot.data.length,
+                                onNext: () {
+                                  snapshot.data.length > bloc.currentPage
+                                      ? bloc.changePage(1)
+                                      : bloc.saveMeasures();
+                                },
+                                onPrevious: bloc.currentPage > 1
+                                    ? () {
+                                        bloc.changePage(-1);
+                                      }
+                                    : null,
+                                nextTitle:
+                                    snapshot.data.length > bloc.currentPage
+                                        ? R.string.next
+                                        : R.string.update,
+                                previousTitle: R.string.previous,
+                              );
+                            },
+                          ),
+                        )
+                      ],
                     )
                   ],
-                ),
-              );
-            },
+                );
+              },
+            ),
           ),
         ),
         TXLoadingWidget(
@@ -150,23 +192,13 @@ class _MeasureHealthState
   }
 
   Widget _getPageView(BuildContext context, PollModel model, int pageIndex) {
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Container(
-            alignment: Alignment.center,
-            padding: EdgeInsets.all(20),
-            child: TXTextWidget(
-              text: model.name,
-              textAlign: TextAlign.justify,
-              size: 16,
-            ),
-          ),
-          Column(
-            children: _getQuestions(context, pageIndex, model),
-          )
-        ],
+    return TXBlurWidget(
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 15),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: _getQuestions(context, pageIndex, model),
+        ),
       ),
     );
   }
@@ -177,23 +209,27 @@ class _MeasureHealthState
     final bool isPersonalDataPoll = pollModel.order == 1;
     for (int i = 0; i < pollModel.questions.length; i++) {
       final question = pollModel.questions[i];
-        question.selectedAnswerId = question.lastAnswer != 0 ? question.lastAnswer : question.selectedAnswerId;
+      question.selectedAnswerId = question.lastAnswer != 0
+          ? question.lastAnswer
+          : question.selectedAnswerId;
       final bool isHeightQuestion = question.order == 3;
       if (isPersonalDataPoll &&
           isHeightQuestion &&
           question.selectedAnswerId <= 0) {
         final AnswerModel defH =
             question.answers.firstWhere((a) => a.title == "150", orElse: () {
-                  return null;
-                });
+          return null;
+        });
         question.selectedAnswerId = defH?.id ?? question.selectedAnswerId;
       }
       final w = TXBottomSheetSelectorWidget(
+//        useDatePicker: pollIndex == 0 && i == 0,
+        boxAnswerWidth: pollIndex == 0 ? 130 : 270,
         list: question.convertAnswersToSelectionModel(),
         onItemSelected: (value) {
           bloc.setAnswerValue(pollIndex, i, value.id);
         },
-        title: question.title,
+        title: "${question.title}:",
         initialId: question.selectedAnswerId,
       );
       list.add(w);

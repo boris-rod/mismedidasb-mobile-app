@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_button_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_icon_navigator_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
 
 class TXButtonPaginateWidget extends StatelessWidget {
@@ -24,34 +25,46 @@ class TXButtonPaginateWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20),
+      padding: EdgeInsets.symmetric(horizontal: 20).copyWith(bottom: 10),
       width: double.infinity,
-      height: 80,
-      color: R.color.gray_light,
+      height: 60,
       alignment: Alignment.center,
-      child: Row(
+      child: Stack(
         children: <Widget>[
-          Container(
-            child: TXButtonWidget(
-              title: previousTitle ?? R.string.previous,
-              onPressed: onPrevious,
+          Positioned(
+            left: 0,
+            top: 0,
+            child: Container(
+              child: TXIconNavigatorWidget(
+                text: previousTitle ?? R.string.previous,
+                onTap: onPrevious,
+              ),
             ),
           ),
-          Expanded(
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
             child: Container(
               margin: EdgeInsets.symmetric(horizontal: 10),
               child: Align(
                 alignment: Alignment.center,
                 child: TXTextWidget(
                   text: "$page / $total",
+                  color: Colors.white,
                 ),
               ),
             ),
           ),
-          Container(
-            child: TXButtonWidget(
-              title: nextTitle ?? R.string.next,
-              onPressed: onNext,
+          Positioned(
+            right: 0,
+            top: 0,
+            child: Container(
+              child: TXIconNavigatorWidget(
+                isLeading: false,
+                text: nextTitle ?? R.string.next,
+                onTap: onNext,
+              ),
             ),
           )
         ],

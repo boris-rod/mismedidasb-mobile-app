@@ -25,7 +25,7 @@ class TXIconNavigatorWidget extends StatelessWidget {
               size: 16,
             ),
             margin: EdgeInsets.only(
-                left: isLeading ? 10 : 0, right: isLeading ? 0 : 10),
+                left: isLeading ? 5 : 0, right: isLeading ? 0 : 5),
           ),
           !isLeading ? _getIcon() : Container(),
         ],
