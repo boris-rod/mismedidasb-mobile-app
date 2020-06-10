@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mismedidasb/domain/health_concept/health_concept.dart';
 import 'package:mismedidasb/domain/poll_model/poll_model.dart';
 import 'package:mismedidasb/domain/question/question_model.dart';
@@ -39,6 +40,8 @@ class _MeasureValueState
   @override
   void initState() {
     super.initState();
+    SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(statusBarColor: R.color.values_color));
     bloc.pageResult.listen((onData) {
       pageController.animateToPage(onData,
           duration: Duration(milliseconds: 300), curve: Curves.linear);

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -45,6 +46,7 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
     bloc.rewardResult.listen((model) {
       _keyHome.currentState.showSnackBar(getSnackBarWidget(model));
     });
+
   }
 
   @override
@@ -203,8 +205,11 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
                       title: R.string.foodInstructionsTitle,
                     );
                   });
-            } else
-              NavigationUtils.push(context, page);
+            } else{
+              final res = await NavigationUtils.push(context, page);
+              SystemChrome.setSystemUIOverlayStyle(
+                  SystemUiOverlayStyle(statusBarColor: R.color.primary_dark_color));
+            }
           }
         }),
       );

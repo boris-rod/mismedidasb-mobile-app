@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'dart:math' as math;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mismedidasb/domain/answer/answer_model.dart';
@@ -49,6 +50,8 @@ class _MeasureHealthState
   @override
   void initState() {
     super.initState();
+    SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(statusBarColor: R.color.health_color));
     bloc.pageResult.listen((onData) {
       pageController.animateToPage(onData,
           duration: Duration(milliseconds: 300), curve: Curves.linear);
