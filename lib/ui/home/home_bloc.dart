@@ -152,7 +152,7 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
   void initRT() {
     _iRealTimeContainer.setup();
-    onRewardSubject.listen((value) async {
+    onRewardSoloPollAnsweredSubject.listen((value) async {
       if (value.userId ==
           await _sharedPreferencesManager.getIntValue(SharedKey.userId)) {
         final username =

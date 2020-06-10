@@ -9,7 +9,10 @@ import 'package:rxdart/subjects.dart';
 import 'package:signalr_client/signalr_client.dart';
 import 'package:mismedidasb/utils/extensions.dart';
 
-BehaviorSubject<RewardModel> onRewardSubject = BehaviorSubject<RewardModel>();
+BehaviorSubject<RewardModel> onRewardSoloPollAnsweredSubject =
+    BehaviorSubject<RewardModel>();
+BehaviorSubject<RewardModel> onRewardPollAnsweredSubject =
+    BehaviorSubject<RewardModel>();
 
 class RealTimeContainer implements IRealTimeContainer {
   final SharedPreferencesManager _prefs;
@@ -19,6 +22,8 @@ class RealTimeContainer implements IRealTimeContainer {
   @override
   void setup() async {
     String accessToken = await _prefs.getStringValue(SharedKey.accessToken);
+    int userId = await _prefs.getIntValue(SharedKey.userId);
+
     accessToken = accessToken.startsWith("Bearer ")
         ? accessToken.split("Bearer ").last
         : accessToken;
@@ -34,6 +39,7 @@ class RealTimeContainer implements IRealTimeContainer {
 
       hubConnection.on("OnRewardCreated", (List<dynamic> list) {
         Map json = list[0];
+        print(json);
         RewardModel model = RewardModel(
           id: json["id"],
           userId: json["userId"],
@@ -42,7 +48,14 @@ class RealTimeContainer implements IRealTimeContainer {
           categoryId: json["categoryId"],
           rewardCategoryId: json["rewardCategoryId"],
         );
-        onRewardSubject.sinkAddSafe(model);
+
+        if (userId == model.userId) {
+          if (model.category == "POLL_ANSWERED") {
+            onRewardPollAnsweredSubject.sinkAddSafe(model);
+          } else if (model.category == "SOLO_QUESTION_ANSWERED") {
+            onRewardSoloPollAnsweredSubject.sinkAddSafe(model);
+          }
+        }
       });
 
       await hubConnection.start().catchError((err) {
@@ -53,6 +66,6 @@ class RealTimeContainer implements IRealTimeContainer {
 
   @override
   void dispose() {
-    onRewardSubject.close();
+    onRewardSoloPollAnsweredSubject.close();
   }
 }

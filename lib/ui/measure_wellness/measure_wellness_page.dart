@@ -64,108 +64,97 @@ class _MeasureWellnessState
   Widget buildWidget(BuildContext context) {
     return Stack(
       children: <Widget>[
-        SafeArea(
-          child: Scaffold(
-            backgroundColor: R.color.wellness_color,
-            body: StreamBuilder<PollModel>(
-              stream: bloc.pollsResult,
-              initialData: null,
-              builder: (ctx, snapshot) {
-                return (snapshot == null || snapshot.data == null)
-                    ? Container()
-                    : (snapshot.data.id == -1)
-                        ? Container(
-                            height: double.infinity,
-                            width: double.infinity,
-                            alignment: Alignment.center,
-                            child: TXTextWidget(
-                              text: R.string.noPollData,
-                              color: Colors.white,
-                            ),
-                          )
-                        : Stack(
-                            children: <Widget>[
-                              Container(
-                                  decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                fit: BoxFit.contain,
-                                image:
-                                    ExactAssetImage(R.image.wellness_home_blur),
-                              ))),
-                              Column(
-                                children: <Widget>[
-                                  TXCustomActionBar(
-                                    leading: TXIconNavigatorWidget(
-                                      onTap: () {
-                                        NavigationUtils.pop(context);
-                                      },
-                                      text: "volver",
-                                    ),
-                                    actionBarColor: R.color.wellness_color,
-                                  ),
-                                  Image.asset(
-                                    R.image.wellness_title,
-                                    width: 300,
-                                  ),
-                                  SizedBox(
-                                    height: 30,
-                                  ),
-                                  Expanded(
-                                    child: PageView.builder(
-                                      physics: NeverScrollableScrollPhysics(),
-                                      itemBuilder: (ctx, index) {
-                                        final model =
-                                            snapshot.data.questions[index];
-                                        return _getPageView(ctx, model, index);
-                                      },
-                                      controller: pageController,
-                                      itemCount: snapshot.data.questions.length,
-                                    ),
-                                  ),
-                                  Container(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 20),
-                                    child: TXTextWidget(
-                                        color: Colors.white,
-                                        textAlign: TextAlign.center,
-                                        text: snapshot.data.bottomTip()),
-                                  ),
-                                  SizedBox(
-                                    height: 15,
-                                  ),
-                                  StreamBuilder<int>(
-                                    stream: bloc.pageResult,
-                                    initialData: bloc.currentPage,
-                                    builder: (ctx, snapshotPage) {
-                                      return TXButtonPaginateWidget(
-                                        page: bloc.currentPage,
-                                        total: snapshot.data.questions.length,
-                                        onNext: () {
-                                          snapshot.data.questions.length >
-                                                  bloc.currentPage
-                                              ? bloc.changePage(1)
-                                              : bloc.saveMeasures();
-                                        },
-                                        onPrevious: bloc.currentPage > 1
-                                            ? () {
-                                                bloc.changePage(-1);
-                                              }
-                                            : null,
-                                        nextTitle:
-                                            snapshot.data.questions.length >
-                                                    bloc.currentPage
-                                                ? R.string.next
-                                                : R.string.save.toLowerCase(),
-                                        previousTitle: R.string.previous,
-                                      );
-                                    },
-                                  )
-                                ],
-                              )
-                            ],
+        TXCustomActionBar(
+          actionBarColor: R.color.wellness_color,
+          body: StreamBuilder<PollModel>(
+            stream: bloc.pollsResult,
+            initialData: null,
+            builder: (ctx, snapshot) {
+              return (snapshot == null || snapshot.data == null)
+                  ? Container()
+                  : (snapshot.data.id == -1)
+                  ? Container(
+                height: double.infinity,
+                width: double.infinity,
+                alignment: Alignment.center,
+                child: TXTextWidget(
+                  text: R.string.noPollData,
+                  color: Colors.white,
+                ),
+              )
+                  : Stack(
+                children: <Widget>[
+                  Container(
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                            fit: BoxFit.contain,
+                            image:
+                            ExactAssetImage(R.image.wellness_home_blur),
+                          ))),
+                  Column(
+                    children: <Widget>[
+                      Image.asset(
+                        R.image.wellness_title,
+                        width: 300,
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Expanded(
+                        child: PageView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          itemBuilder: (ctx, index) {
+                            final model =
+                            snapshot.data.questions[index];
+                            return _getPageView(ctx, model, index);
+                          },
+                          controller: pageController,
+                          itemCount: snapshot.data.questions.length,
+                        ),
+                      ),
+                      Container(
+                        padding:
+                        EdgeInsets.symmetric(horizontal: 20),
+                        child: TXTextWidget(
+                            color: Colors.white,
+                            textAlign: TextAlign.center,
+                            text: snapshot.data.bottomTip()),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      StreamBuilder<int>(
+                        stream: bloc.pageResult,
+                        initialData: bloc.currentPage,
+                        builder: (ctx, snapshotPage) {
+                          return TXButtonPaginateWidget(
+                            page: bloc.currentPage,
+                            total: snapshot.data.questions.length,
+                            onNext: () {
+                              snapshot.data.questions.length >
+                                  bloc.currentPage
+                                  ? bloc.changePage(1)
+                                  : bloc.saveMeasures();
+                            },
+                            onPrevious: bloc.currentPage > 1
+                                ? () {
+                              bloc.changePage(-1);
+                            }
+                                : null,
+                            nextTitle:
+                            snapshot.data.questions.length >
+                                bloc.currentPage
+                                ? R.string.next
+                                : R.string.save.toLowerCase(),
+                            previousTitle: R.string.previous,
                           );
-              },
-            ),
+                        },
+                      )
+                    ],
+                  )
+                ],
+              );
+            },
           ),
         ),
         TXLoadingWidget(

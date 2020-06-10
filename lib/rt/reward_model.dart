@@ -5,7 +5,7 @@ class RewardModel {
   int points;
   int rewardCategoryId;
   int categoryId;
-  int category;
+  String category;
 
   RewardModel(
       {this.id,

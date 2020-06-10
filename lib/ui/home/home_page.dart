@@ -13,8 +13,10 @@ import 'package:mismedidasb/rt/real_time_container.dart';
 import 'package:mismedidasb/rt/reward_model.dart';
 import 'package:mismedidasb/ui/_base/bloc_state.dart';
 import 'package:mismedidasb/ui/_base/navigation_utils.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_action_bar_menu_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_bottom_result_info.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_bottom_sheet.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_custom_action_bar.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_icon_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_main_app_bar_widget.dart';
@@ -46,7 +48,6 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
     bloc.rewardResult.listen((model) {
       _keyHome.currentState.showSnackBar(getSnackBarWidget(model));
     });
-
   }
 
   @override
@@ -63,20 +64,19 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
     return FCMAwareBody(
       child: Stack(
         children: <Widget>[
-          SafeArea(
-            child: Scaffold(
-              key: _keyHome,
-              body: Container(
-                color: R.color.home_color,
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      padding: EdgeInsetsDirectional.only(end: 10, top: 10),
-                      alignment: Alignment.centerRight,
-                      child: InkWell(
-                        child: Image.asset(R.image.settings),
-                        onTap: () async {
-//                          showTXModalBottomSheet(
+          TXCustomActionBar(
+            key: _keyHome,
+            showLeading: false,
+            actionBarColor: R.color.home_color,
+            actions: [
+              TXActionBarMenuWidget(
+                icon: Image.asset(
+                  R.image.settings,
+                  height: 35,
+                  width: 35,
+                ),
+                onTap: () {
+                  //                          showTXModalBottomSheet(
 //                              context: context,
 //                              builder: (context) {
 //                                return _showPollNotification(context);
@@ -93,34 +93,36 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
 //                              bloc.loadHomeData();
 //                            }
 //                          }
+                },
+              )
+            ],
+            body: Container(
+              color: R.color.home_color,
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    child: Image.asset(
+                      R.image.logo_planifive,
+                      height: 120,
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      child: StreamBuilder<List<HealthConceptModel>>(
+                        stream: bloc.conceptResult,
+                        initialData: [],
+                        builder: (ctx, snapshot) {
+                          return GridView.count(
+                            physics: BouncingScrollPhysics(),
+                            crossAxisCount: totalRowCount,
+                            children: _getHomeWidgets(
+                                snapshot.data, screenW, totalRowCount),
+                          );
                         },
                       ),
-                      width: double.infinity,
                     ),
-                    Container(
-                      child: Image.asset(
-                        R.image.logo_planifive,
-                        height: 100,
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        child: StreamBuilder<List<HealthConceptModel>>(
-                          stream: bloc.conceptResult,
-                          initialData: [],
-                          builder: (ctx, snapshot) {
-                            return GridView.count(
-                              physics: BouncingScrollPhysics(),
-                              crossAxisCount: totalRowCount,
-                              children: _getHomeWidgets(
-                                  snapshot.data, screenW, totalRowCount),
-                            );
-                          },
-                        ),
-                      ),
-                    )
-                  ],
-                ),
+                  )
+                ],
               ),
             ),
           ),
@@ -205,10 +207,10 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
                       title: R.string.foodInstructionsTitle,
                     );
                   });
-            } else{
+            } else {
               final res = await NavigationUtils.push(context, page);
-              SystemChrome.setSystemUIOverlayStyle(
-                  SystemUiOverlayStyle(statusBarColor: R.color.primary_dark_color));
+              SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+                  statusBarColor: R.color.primary_dark_color));
             }
           }
         }),

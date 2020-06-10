@@ -11,6 +11,10 @@ class _PollNotificationState
     extends StateWithBloC<PollNotificationPage, PollNotificationBloC> {
   @override
   Widget buildWidget(BuildContext context) {
-    throw UnimplementedError();
+    return Stack(
+      children: <Widget>[
+
+      ],
+    );
   }
 }

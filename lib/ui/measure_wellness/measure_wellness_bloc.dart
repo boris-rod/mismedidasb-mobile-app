@@ -11,8 +11,7 @@ import 'package:rxdart/subjects.dart';
 import 'package:mismedidasb/utils/extensions.dart';
 
 class MeasureWellnessBloC
-    with LoadingBloC, ErrorHandlerBloC
-    implements BaseBloC {
+    extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   final IPollRepository _iPollRepository;
 
   MeasureWellnessBloC(this._iPollRepository);

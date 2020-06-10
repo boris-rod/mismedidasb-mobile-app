@@ -36,8 +36,8 @@ class TXIconNavigatorWidget extends StatelessWidget {
   Widget _getIcon() {
     return Image.asset(
       isLeading ? R.image.backward : R.image.forward,
-      width: 40,
-      height: 40,
+      width: 35,
+      height: 35,
     );
   }
 }

@@ -75,109 +75,98 @@ class _MeasureHealthState
     double screenWidth = MediaQuery.of(context).size.width;
     return Stack(
       children: <Widget>[
-        SafeArea(
-          child: Scaffold(
-            backgroundColor: R.color.health_color,
-            body: StreamBuilder<List<PollModel>>(
-              stream: bloc.pollsResult,
-              initialData: [],
-              builder: (ctx, snapshot) {
-                return Stack(
-                  children: <Widget>[
-                    Container(
-                        decoration: BoxDecoration(
-                            image: DecorationImage(
-                      fit: BoxFit.contain,
-                      image: ExactAssetImage(R.image.health_home_blur),
-                    ))),
-                    Column(
-                      children: <Widget>[
-                        TXCustomActionBar(
-                          leading: TXIconNavigatorWidget(
-                            onTap: () {
-                              NavigationUtils.pop(context);
-                            },
-                            text: "volver",
-                          ),
-                          actionBarColor: R.color.health_color,
-                        ),
-                        Image.asset(
-                          R.image.health_title,
-                          width: 300,
-                        ),
-                        SizedBox(
-                          height: 30,
-                        ),
-                        Expanded(
-                          child: Column(
-                            children: <Widget>[
-                              Expanded(
-                                child: Container(
-                                  child: PageView.builder(
-                                    physics: NeverScrollableScrollPhysics(),
-                                    controller: pageController,
-                                    itemBuilder: (ctx, index) {
-                                      final model = snapshot.data[index];
-                                      return _getPageView(
-                                          context, model, index);
-                                    },
-                                    itemCount: snapshot.data.length,
-                                  ),
-                                  constraints: BoxConstraints(
-                                      maxWidth: math.min(
-                                          300, screenWidth * 90 / 100)),
+        TXCustomActionBar(
+          actionBarColor: R.color.health_color,
+          body: StreamBuilder<List<PollModel>>(
+            stream: bloc.pollsResult,
+            initialData: [],
+            builder: (ctx, snapshot) {
+              return Stack(
+                children: <Widget>[
+                  Container(
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                    fit: BoxFit.contain,
+                    image: ExactAssetImage(R.image.health_home_blur),
+                  ))),
+                  Column(
+                    children: <Widget>[
+                      Image.asset(
+                        R.image.health_title,
+                        width: 300,
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Expanded(
+                        child: Column(
+                          children: <Widget>[
+                            Expanded(
+                              child: Container(
+                                child: PageView.builder(
+                                  physics: NeverScrollableScrollPhysics(),
+                                  controller: pageController,
+                                  itemBuilder: (ctx, index) {
+                                    final model = snapshot.data[index];
+                                    return _getPageView(context, model, index);
+                                  },
+                                  itemCount: snapshot.data.length,
                                 ),
-                              ),
-                              SizedBox(height: 15,),
-                              Container(
                                 constraints: BoxConstraints(
                                     maxWidth:
                                         math.min(300, screenWidth * 90 / 100)),
-                                child: TXTextWidget(
-                                  textAlign: TextAlign.center,
-                                  text: snapshot.data.isNotEmpty
-                                      ? snapshot.data[bloc.currentPage - 1]
-                                          .bottomTip()
-                                      : "",
-                                  color: Colors.white,
-                                ),
-                              )
-                            ],
-                          ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 15,
+                            ),
+                            Container(
+                              constraints: BoxConstraints(
+                                  maxWidth:
+                                      math.min(300, screenWidth * 90 / 100)),
+                              child: TXTextWidget(
+                                textAlign: TextAlign.center,
+                                text: snapshot.data.isNotEmpty
+                                    ? snapshot.data[bloc.currentPage - 1]
+                                        .bottomTip()
+                                    : "",
+                                color: Colors.white,
+                              ),
+                            )
+                          ],
                         ),
-                        Container(
-                          child: StreamBuilder<int>(
-                            stream: bloc.pageResult,
-                            initialData: bloc.currentPage,
-                            builder: (ctx, snapshotPage) {
-                              return TXButtonPaginateWidget(
-                                page: bloc.currentPage,
-                                total: snapshot.data.length,
-                                onNext: () {
-                                  snapshot.data.length > bloc.currentPage
-                                      ? bloc.changePage(1)
-                                      : bloc.saveMeasures();
-                                },
-                                onPrevious: bloc.currentPage > 1
-                                    ? () {
-                                        bloc.changePage(-1);
-                                      }
-                                    : null,
-                                nextTitle:
-                                    snapshot.data.length > bloc.currentPage
-                                        ? R.string.next
-                                        : R.string.update,
-                                previousTitle: R.string.previous,
-                              );
-                            },
-                          ),
-                        )
-                      ],
-                    )
-                  ],
-                );
-              },
-            ),
+                      ),
+                      Container(
+                        child: StreamBuilder<int>(
+                          stream: bloc.pageResult,
+                          initialData: bloc.currentPage,
+                          builder: (ctx, snapshotPage) {
+                            return TXButtonPaginateWidget(
+                              page: bloc.currentPage,
+                              total: snapshot.data.length,
+                              onNext: () {
+                                snapshot.data.length > bloc.currentPage
+                                    ? bloc.changePage(1)
+                                    : bloc.saveMeasures();
+                              },
+                              onPrevious: bloc.currentPage > 1
+                                  ? () {
+                                      bloc.changePage(-1);
+                                    }
+                                  : null,
+                              nextTitle: snapshot.data.length > bloc.currentPage
+                                  ? R.string.next
+                                  : R.string.update,
+                              previousTitle: R.string.previous,
+                            );
+                          },
+                        ),
+                      )
+                    ],
+                  )
+                ],
+              );
+            },
           ),
         ),
         TXLoadingWidget(
