@@ -190,6 +190,7 @@ class _MeasureValueState
                 child: TXBlurWidget(
                   child: Container(
                     alignment: Alignment.center,
+                    constraints: BoxConstraints(minHeight: 40),
                     padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5)
                         .copyWith(
                             left: pageIndex + 1 > 1
