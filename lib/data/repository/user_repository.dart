@@ -40,4 +40,14 @@ class UserRepository extends BaseRepository implements IUserRepository {
       return resultError(ex);
     }
   }
+
+  @override
+  Future<Result<bool>> invite(List<String> emails) async {
+    try {
+      final result = await _iUserApi.invite(emails);
+      return Result.success(value: result);
+    } catch (ex) {
+      return resultError(ex);
+    }
+  }
 }

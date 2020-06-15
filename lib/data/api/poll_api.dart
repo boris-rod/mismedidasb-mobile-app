@@ -43,4 +43,10 @@ class PollApi extends BaseApi implements IPollApi {
     }
     throw serverException(res);
   }
+
+  @override
+  Future<String> setSoloPollResult(List<PollResultModel> list) {
+    // TODO: implement setSoloPollResult
+    throw UnimplementedError();
+  }
 }

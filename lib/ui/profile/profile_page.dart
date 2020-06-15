@@ -22,8 +22,10 @@ import 'package:mismedidasb/ui/_tx_widget/tx_network_image.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
 import 'package:mismedidasb/ui/change_password/change_password_page.dart';
 import 'package:mismedidasb/ui/contact_us/contact_us_page.dart';
+import 'package:mismedidasb/ui/invite_page/invite_page.dart';
 import 'package:mismedidasb/ui/legacy/legacy_page.dart';
 import 'package:mismedidasb/ui/profile/profile_bloc.dart';
+import 'package:mismedidasb/ui/profile/tx_cell_selection_option_widget.dart';
 import 'package:mismedidasb/ui/profile/tx_stat_widget.dart';
 import 'package:mismedidasb/ui/profile_edit/profile_edit_page.dart';
 import 'package:mismedidasb/ui/settings/settings_bloc.dart';
@@ -31,6 +33,7 @@ import 'package:mismedidasb/ui/settings/settings_page.dart';
 import 'package:mismedidasb/utils/file_manager.dart';
 import 'package:mismedidasb/utils/mail_manager.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:share/share.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -38,8 +41,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
-  TextEditingController userNameTextController = TextEditingController();
-  final _keyFormProfile = new GlobalKey<FormState>();
+  final _keyInviteProfile = new GlobalKey<ScaffoldState>();
 
   _navBack() {
     NavigationUtils.pop(context, result: bloc.settingAction);
@@ -61,6 +63,7 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
       child: Stack(
         children: <Widget>[
           TXMainAppBarWidget(
+            scaffoldKey: _keyInviteProfile,
             leading: TXIconButtonWidget(
               icon: Icon(Icons.arrow_back),
               onPressed: () {
@@ -114,120 +117,140 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                 initialData: UserModel(),
                 builder: (context, snapshot) {
                   final user = snapshot.data;
-                  return Form(
-                    key: _keyFormProfile,
-                    child: Container(
-                      child: Column(
-                        children: <Widget>[
-                          Container(
-                            height: 220,
-                            color: R.color.gray_light,
-                            child: Stack(
-                              children: <Widget>[
-                                Column(
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: Stack(
-                                        children: <Widget>[
-                                          Container(
-                                            child: Stack(
-                                              children: <Widget>[
-                                                TXNetworkImage(
-                                                  width: double.infinity,
-                                                  height: double.infinity,
-                                                  imageUrl: user.avatar,
-                                                  placeholderImage:
-                                                      R.image.logo_blue,
-                                                  boxFitImage: BoxFit.cover,
-                                                ),
-                                                Container(
-                                                  width: double.infinity,
-                                                  height: double.infinity,
-                                                  color:
-                                                  R.color.dialog_background,
-                                                ),
-                                              ],
-                                            ),
+                  return Container(
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                          height: 220,
+                          color: R.color.gray_light,
+                          child: Stack(
+                            children: <Widget>[
+                              Column(
+                                children: <Widget>[
+                                  Expanded(
+                                    child: Stack(
+                                      children: <Widget>[
+                                        Container(
+                                          child: Stack(
+                                            children: <Widget>[
+                                              TXNetworkImage(
+                                                width: double.infinity,
+                                                height: double.infinity,
+                                                imageUrl: user.avatar,
+                                                placeholderImage:
+                                                    R.image.logo_blue,
+                                                boxFitImage: BoxFit.cover,
+                                              ),
+                                              Container(
+                                                width: double.infinity,
+                                                height: double.infinity,
+                                                color:
+                                                    R.color.dialog_background,
+                                              ),
+                                            ],
                                           ),
-                                          Container(
-                                            child: TXNetworkImage(
-                                              width: double.infinity,
-                                              height: double.infinity,
-                                              imageUrl: user.avatar,
-                                              placeholderImage:
-                                                  R.image.logo_blue,
-                                            ),
-                                          )
-                                        ],
-                                      ),
+                                        ),
+                                        Container(
+                                          child: TXNetworkImage(
+                                            width: double.infinity,
+                                            height: double.infinity,
+                                            imageUrl: user.avatar,
+                                            placeholderImage: R.image.logo_blue,
+                                          ),
+                                        )
+                                      ],
                                     ),
-                                    Container(
-                                      height: .5,
-                                      color: R.color.gray,
-                                      margin: EdgeInsets.only(bottom: 25),
-                                    )
-                                  ],
-                                ),
-                                Positioned(
-                                    bottom: 0,
-                                    right: 20,
-                                    child: InkWell(
-                                      onTap: () async {
-                                        final res = await NavigationUtils.push(
-                                            context,
-                                            ProfileEditPage(
-                                              userModel:
-                                                  await bloc.userResult.first,
-                                            ));
-                                        if (res != null) {
-                                          bloc.updateUser = res;
-                                        }
-                                      },
-                                      child: CircleAvatar(
-                                        radius: 25,
-                                        child: Icon(Icons.edit,
-                                            size: 25, color: Colors.white),
-                                        backgroundColor: R.color.primary_color,
-                                      ),
-                                    )),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            padding: EdgeInsets.only(bottom: 10),
-                            color: R.color.gray_light,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget>[
-                                Container(
-                                  child: TXNetworkImage(
-                                    width: 60,
-                                    height: 60,
-                                    imageUrl: R.image.logo_blue,
-                                    placeholderImage: R.image.logo_blue,
                                   ),
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    TXTextWidget(
-                                      text: user.fullName ?? "---",
+                                  Container(
+                                    height: .5,
+                                    color: R.color.gray,
+                                    margin: EdgeInsets.only(bottom: 25),
+                                  )
+                                ],
+                              ),
+                              Positioned(
+                                  bottom: 0,
+                                  right: 20,
+                                  child: InkWell(
+                                    onTap: () async {
+                                      final res = await NavigationUtils.push(
+                                          context,
+                                          ProfileEditPage(
+                                            userModel:
+                                                await bloc.userResult.first,
+                                          ));
+                                      if (res != null) {
+                                        bloc.updateUser = res;
+                                      }
+                                    },
+                                    child: CircleAvatar(
+                                      radius: 25,
+                                      child: Icon(Icons.edit,
+                                          size: 25, color: Colors.white),
+                                      backgroundColor: R.color.primary_color,
                                     ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    TXTextWidget(
-                                      text: user.email ?? "---",
-                                      fontWeight: FontWeight.bold,
-                                      size: 16,
-                                    ),
-                                  ],
-                                )
-                              ],
-                            ),
+                                  )),
+                            ],
                           ),
-                          TXDividerWidget(),
-                          SizedBox(height: 10,),
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(bottom: 10),
+                          color: R.color.gray_light,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Container(
+                                child: TXNetworkImage(
+                                  width: 60,
+                                  height: 60,
+                                  imageUrl: R.image.logo_blue,
+                                  placeholderImage: R.image.logo_blue,
+                                ),
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  TXTextWidget(
+                                    text: user.fullName ?? "---",
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  TXTextWidget(
+                                    text: user.email ?? "---",
+                                    fontWeight: FontWeight.bold,
+                                    size: 16,
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                        TXDividerWidget(),
+                        TXCellSelectionOptionWidget(
+                          leading: Icons.group_add,
+                          optionName: "Invita y gana una recompensa!",
+                          onOptionTap: () async {
+                            final res = await NavigationUtils.push(
+                                context, InvitePeoplePage());
+                            if (res) {
+                              _keyInviteProfile.currentState.showSnackBar(
+                                  getSnackBarWidget(
+                                      "Felicidades, será recompensado!"));
+                            }
+                          },
+                        ),
+                        TXDividerWidget(),
+                        TXCellSelectionOptionWidget(
+                          leading: Icons.contacts,
+                          optionName: "Hazle saber a tus contactos!",
+                          onOptionTap: () {
+                            Share.share(
+                                "http://ec2-34-244-181-197.eu-west-1.compute.amazonaws.com:8081/auth/login?redirect=%2Fpages%2Fdashboard");
+                          },
+                        ),
+                        TXDividerWidget(),
+
 //                          Container(
 //                            padding: EdgeInsets.symmetric(horizontal: 10),
 //                            child: Card(
@@ -377,8 +400,7 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
 //                              ],
 //                            ),
 //                          ),
-                        ],
-                      ),
+                      ],
                     ),
                   );
                 },
@@ -391,6 +413,28 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
         ],
       ),
     );
+  }
+
+  SnackBar getSnackBarWidget(String message) {
+    final snackBar = SnackBar(
+      backgroundColor: Colors.white,
+      content: Row(
+        children: <Widget>[
+          Container(
+            child: Image.asset(
+              R.image.logo,
+              width: 60,
+              height: 60,
+            ),
+          ),
+          Expanded(
+              child: TXTextWidget(
+            text: message,
+          ))
+        ],
+      ),
+    );
+    return snackBar;
   }
 
   List<PopupMenuItem> _popupActions() {

@@ -83,12 +83,18 @@ class _MeasureHealthState
             builder: (ctx, snapshot) {
               return Stack(
                 children: <Widget>[
-                  Container(
-                      decoration: BoxDecoration(
-                          image: DecorationImage(
-                    fit: BoxFit.contain,
-                    image: ExactAssetImage(R.image.health_home_blur),
-                  ))),
+                  Positioned(
+                    top : 0,
+                    left: -20,
+                    right: 0,
+                    bottom: 0,
+                    child: Container(
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                      fit: BoxFit.contain,
+                      image: ExactAssetImage(R.image.health_home_blur),
+                    ))),
+                  ),
                   Column(
                     children: <Widget>[
                       Image.asset(

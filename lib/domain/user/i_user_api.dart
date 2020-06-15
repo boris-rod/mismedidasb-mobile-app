@@ -8,4 +8,7 @@ abstract class IUserApi {
   Future<UserModel> updateProfile(UserModel userModel);
 
   Future<bool> uploadAvatar(File photo);
+
+  Future<bool> invite(List<String> emails);
+
 }

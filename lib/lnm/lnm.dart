@@ -1,7 +1,10 @@
+import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mismedidasb/data/_shared_prefs.dart';
+import 'package:mismedidasb/enums.dart';
 import 'package:mismedidasb/lnm/i_lnm.dart';
 import 'package:mismedidasb/lnm/local_notification_model.dart';
+import 'package:mismedidasb/res/R.dart';
 import 'package:rxdart/subjects.dart';
 
 final BehaviorSubject<ReceivedNotification> didReceiveLocalNotificationSubject =
@@ -63,13 +66,14 @@ class LNM implements ILNM {
   void initReminders() async {
     initBreakFastReminder();
     initSnack1Reminder();
+    initDrinkWater1Reminder();
     initLunchReminder();
     initSnack2Reminder();
     initDinnerReminder();
-    initDrinkWater1Reminder();
     initDrinkWater2Reminder();
     initPlanFoodsReminder();
     initMakeExerciseReminder();
+    initPollNotificationReminders();
   }
 
   @override
@@ -81,18 +85,19 @@ class LNM implements ILNM {
   void initPollNotificationReminders() async {
     final String userName =
         await _sharedPreferencesManager.getStringValue(SharedKey.userName);
-    var androidPlatformChannelSpecifics =
-        _getCommonAndroidNotificationDetail('$pollNotificationId');
+    String title = 'Hola $userName';
+    String content = 'Gana puntos y déjame saber que tal te va?';
+    var androidPlatformChannelSpecifics = _getCommonAndroidNotificationDetail(
+        channelId: '$pollNotificationId',
+        title: title,
+        content: content,
+        notificationType: NotificationType.POLL);
     var iOSPlatformChannelSpecifics = IOSNotificationDetails();
     var platformChannelSpecifics = NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
 
-    await flutterLocalNotificationsPlugin.showDailyAtTime(
-        pollNotificationId,
-        'Hola $userName',
-        'Dejanos saber que tal te ha ido tu día.',
-        Time(22, 00, 0),
-        platformChannelSpecifics,
+    await flutterLocalNotificationsPlugin.showDailyAtTime(pollNotificationId,
+        title, content, Time(22, 30, 0), platformChannelSpecifics,
         payload: '$pollNotificationId');
   }
 
@@ -106,16 +111,21 @@ class LNM implements ILNM {
           .subtract(Duration(minutes: 10));
       final String userName =
           await _sharedPreferencesManager.getStringValue(SharedKey.userName);
-      var androidPlatformChannelSpecifics =
-          _getCommonAndroidNotificationDetail('$breakFastIdReminderId');
+      String title = 'Hola $userName';
+      String content = 'Casi es tiempo de su desayuno.';
+      var androidPlatformChannelSpecifics = _getCommonAndroidNotificationDetail(
+          channelId: '$breakFastIdReminderId',
+          title: title,
+          content: content,
+          notificationType: NotificationType.REMINDER);
       var iOSPlatformChannelSpecifics = IOSNotificationDetails();
       var platformChannelSpecifics = NotificationDetails(
           androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
 
       await flutterLocalNotificationsPlugin.showDailyAtTime(
           breakFastIdReminderId,
-          'Hola $userName',
-          'Casi es tiempo de su desayuno.',
+          title,
+          content,
           Time(time.hour, time.minute, time.second),
           platformChannelSpecifics,
           payload: '$breakFastIdReminderId');
@@ -132,16 +142,21 @@ class LNM implements ILNM {
           .subtract(Duration(minutes: 10));
       final String userName =
           await _sharedPreferencesManager.getStringValue(SharedKey.userName);
-      var androidPlatformChannelSpecifics =
-          _getCommonAndroidNotificationDetail('$dinnerIdReminderId');
+      String title = 'Hola $userName';
+      String content = 'Casi es tiempo de su cena.';
+      var androidPlatformChannelSpecifics = _getCommonAndroidNotificationDetail(
+          channelId: '$dinnerIdReminderId',
+          title: title,
+          content: content,
+          notificationType: NotificationType.REMINDER);
       var iOSPlatformChannelSpecifics = IOSNotificationDetails();
       var platformChannelSpecifics = NotificationDetails(
           androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
 
       await flutterLocalNotificationsPlugin.showDailyAtTime(
           dinnerIdReminderId,
-          'Hola $userName',
-          'Casi es tiempo de su cena.',
+          title,
+          content,
           Time(time.hour, time.minute, time.second),
           platformChannelSpecifics,
           payload: '$dinnerIdReminderId');
@@ -155,18 +170,20 @@ class LNM implements ILNM {
     if (showDrinkWater) {
       final String userName =
           await _sharedPreferencesManager.getStringValue(SharedKey.userName);
-      var androidPlatformChannelSpecifics =
-          _getCommonAndroidNotificationDetail('$drinkWater1Id');
+      String title = 'Hola $userName';
+      String content =
+          'Recuerde beber agua, se recomienda al menos 2 litros diarios.';
+      var androidPlatformChannelSpecifics = _getCommonAndroidNotificationDetail(
+          channelId: '$drinkWater1Id',
+          title: title,
+          content: content,
+          notificationType: NotificationType.REMINDER);
       var iOSPlatformChannelSpecifics = IOSNotificationDetails();
       var platformChannelSpecifics = NotificationDetails(
           androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
 
-      await flutterLocalNotificationsPlugin.showDailyAtTime(
-          drinkWater1Id,
-          'Hola $userName',
-          'Recuerde beber agua, se recomienda al menos 2 litros diarios.',
-          Time(11, 0, 0),
-          platformChannelSpecifics,
+      await flutterLocalNotificationsPlugin.showDailyAtTime(drinkWater1Id,
+          title, content, Time(11, 0, 0), platformChannelSpecifics,
           payload: '$drinkWater1Id');
     }
   }
@@ -178,18 +195,20 @@ class LNM implements ILNM {
     if (showDrinkWater) {
       final String userName =
           await _sharedPreferencesManager.getStringValue(SharedKey.userName);
-      var androidPlatformChannelSpecifics =
-          _getCommonAndroidNotificationDetail('$drinkWater2Id');
+      String title = 'Hola $userName';
+      String content =
+          'Recuerde beber agua, se recomienda al menos 2 litros diarios.';
+      var androidPlatformChannelSpecifics = _getCommonAndroidNotificationDetail(
+          channelId: '$drinkWater2Id',
+          title: title,
+          content: content,
+          notificationType: NotificationType.REMINDER);
       var iOSPlatformChannelSpecifics = IOSNotificationDetails();
       var platformChannelSpecifics = NotificationDetails(
           androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
 
-      await flutterLocalNotificationsPlugin.showDailyAtTime(
-          drinkWater2Id,
-          'Hola $userName',
-          'Recuerde beber agua, se recomienda al menos 2 litros diarios.',
-          Time(16, 0, 0),
-          platformChannelSpecifics,
+      await flutterLocalNotificationsPlugin.showDailyAtTime(drinkWater2Id,
+          title, content, Time(16, 0, 0), platformChannelSpecifics,
           payload: '$drinkWater2Id');
     }
   }
@@ -204,16 +223,21 @@ class LNM implements ILNM {
           .subtract(Duration(minutes: 10));
       final String userName =
           await _sharedPreferencesManager.getStringValue(SharedKey.userName);
-      var androidPlatformChannelSpecifics =
-          _getCommonAndroidNotificationDetail('$lunchIdReminderId');
+      String title = 'Hola $userName';
+      String content = 'Casi es tiempo de su comida.';
+      var androidPlatformChannelSpecifics = _getCommonAndroidNotificationDetail(
+          channelId: '$lunchIdReminderId',
+          title: title,
+          content: content,
+          notificationType: NotificationType.REMINDER);
       var iOSPlatformChannelSpecifics = IOSNotificationDetails();
       var platformChannelSpecifics = NotificationDetails(
           androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
 
       await flutterLocalNotificationsPlugin.showDailyAtTime(
           lunchIdReminderId,
-          'Hola $userName',
-          'Casi es tiempo de su comida.',
+          title,
+          content,
           Time(time.hour, time.minute, time.second),
           platformChannelSpecifics,
           payload: '$lunchIdReminderId');
@@ -230,16 +254,21 @@ class LNM implements ILNM {
           .subtract(Duration(minutes: 10));
       final String userName =
           await _sharedPreferencesManager.getStringValue(SharedKey.userName);
-      var androidPlatformChannelSpecifics =
-          _getCommonAndroidNotificationDetail('$makeExerciseId');
+      String title = 'Hola $userName';
+      String content = 'Casi es tiempo de hacer sus ejercicios.';
+      var androidPlatformChannelSpecifics = _getCommonAndroidNotificationDetail(
+          channelId: '$makeExerciseId',
+          title: title,
+          content: content,
+          notificationType: NotificationType.REMINDER);
       var iOSPlatformChannelSpecifics = IOSNotificationDetails();
       var platformChannelSpecifics = NotificationDetails(
           androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
 
       await flutterLocalNotificationsPlugin.showDailyAtTime(
           makeExerciseId,
-          'Hola $userName',
-          'Casi es tiempo de hacer sus ejercicios.',
+          title,
+          content,
           Time(time.hour, time.minute, time.second),
           platformChannelSpecifics,
           payload: '$makeExerciseId');
@@ -253,18 +282,19 @@ class LNM implements ILNM {
     if (showPlanFood) {
       final String userName =
           await _sharedPreferencesManager.getStringValue(SharedKey.userName);
-      var androidPlatformChannelSpecifics =
-          _getCommonAndroidNotificationDetail('$planFoodsId');
+      String title = 'Hola $userName';
+      String content = 'Recuerde planificar sus comidas para mañana.';
+      var androidPlatformChannelSpecifics = _getCommonAndroidNotificationDetail(
+          channelId: '$planFoodsId',
+          title: title,
+          content: content,
+          notificationType: NotificationType.REMINDER);
       var iOSPlatformChannelSpecifics = IOSNotificationDetails();
       var platformChannelSpecifics = NotificationDetails(
           androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
 
-      await flutterLocalNotificationsPlugin.showDailyAtTime(
-          planFoodsId,
-          'Hola $userName',
-          'Recuerde planificar sus comidas para mañana.',
-          Time(22, 30, 0),
-          platformChannelSpecifics,
+      await flutterLocalNotificationsPlugin.showDailyAtTime(planFoodsId, title,
+          content, Time(22, 00, 0), platformChannelSpecifics,
           payload: '$planFoodsId');
     }
   }
@@ -279,16 +309,22 @@ class LNM implements ILNM {
           .subtract(Duration(minutes: 10));
       final String userName =
           await _sharedPreferencesManager.getStringValue(SharedKey.userName);
-      var androidPlatformChannelSpecifics =
-          _getCommonAndroidNotificationDetail('$snack1IdReminderId');
+      String title = 'Hola $userName';
+      String content = 'Casi es tiempo de su tentenpié.';
+
+      var androidPlatformChannelSpecifics = _getCommonAndroidNotificationDetail(
+          channelId: '$snack1IdReminderId',
+          title: title,
+          content: content,
+          notificationType: NotificationType.REMINDER);
       var iOSPlatformChannelSpecifics = IOSNotificationDetails();
       var platformChannelSpecifics = NotificationDetails(
           androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
 
       await flutterLocalNotificationsPlugin.showDailyAtTime(
           snack1IdReminderId,
-          'Hola $userName',
-          'Casi es tiempo de su tentenpié.',
+          title,
+          content,
           Time(time.hour, time.minute, time.second),
           platformChannelSpecifics,
           payload: '$snack1IdReminderId');
@@ -305,16 +341,21 @@ class LNM implements ILNM {
           .subtract(Duration(minutes: 10));
       final String userName =
           await _sharedPreferencesManager.getStringValue(SharedKey.userName);
-      var androidPlatformChannelSpecifics =
-          _getCommonAndroidNotificationDetail('$snack2IdReminderId');
+      String title = 'Hola $userName';
+      String content = 'Casi es tiempo de su merienda.';
+      var androidPlatformChannelSpecifics = _getCommonAndroidNotificationDetail(
+          channelId: '$snack2IdReminderId',
+          title: title,
+          content: content,
+          notificationType: NotificationType.REMINDER);
       var iOSPlatformChannelSpecifics = IOSNotificationDetails();
       var platformChannelSpecifics = NotificationDetails(
           androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
 
       await flutterLocalNotificationsPlugin.showDailyAtTime(
           snack2IdReminderId,
-          'Hola $userName',
-          'Casi es tiempo de su merienda.',
+          title,
+          content,
           Time(time.hour, time.minute, time.second),
           platformChannelSpecifics,
           payload: '$snack2IdReminderId');
@@ -322,16 +363,22 @@ class LNM implements ILNM {
   }
 
   @override
-  void showCommonNotification(String title, String content) async {
-    var androidPlatformChannelSpecifics =
-        _getCommonAndroidNotificationDetail('common_noti');
+  void showCommonNotification(
+      {String channelId = "0",
+      String title = "",
+      String content = "",
+      NotificationType notificationType = NotificationType.GENERAL}) async {
+    var androidPlatformChannelSpecifics = _getCommonAndroidNotificationDetail(
+        channelId: channelId,
+        title: title,
+        content: content,
+        notificationType: notificationType);
     var iOSPlatformChannelSpecifics = IOSNotificationDetails();
     var platformChannelSpecifics = NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
 
-    await flutterLocalNotificationsPlugin.show(
-        99, title, content, platformChannelSpecifics,
-        payload: 'common_noti');
+    await flutterLocalNotificationsPlugin
+        .show(99, title, content, platformChannelSpecifics, payload: channelId);
   }
 
   @override
@@ -340,12 +387,34 @@ class LNM implements ILNM {
   }
 
   AndroidNotificationDetails _getCommonAndroidNotificationDetail(
-      String channelId) {
+      {String channelId,
+      String title,
+      String content,
+      NotificationType notificationType}) {
+    String summary = '<b>Información</b>';
+    if (notificationType == NotificationType.REMINDER)
+      summary = '<b>Recordatorio</b>';
+    if (notificationType == NotificationType.POLL)
+      summary = '<b>Cuestionario</b>';
+    if (notificationType == NotificationType.REWARD)
+      summary = '<b>Recompensa</b>';
+
+    String answerBtn =
+        '<p><span style="color: #3F51B5;"><b>Responder cuestionario</b></span></p>';
+
+    var bigTextStyleInformation = BigTextStyleInformation(
+      "$content $answerBtn",
+      contentTitle: title,
+      summaryText: summary,
+      htmlFormatBigText: true,
+      htmlFormatContentTitle: true,
+      htmlFormatSummaryText: true,
+    );
     return AndroidNotificationDetails(
         channelId, 'your channel name', 'your channel description',
         importance: Importance.Max,
         priority: Priority.High,
-        ticker: 'ticker',
+        styleInformation: bigTextStyleInformation,
         largeIcon: DrawableResourceAndroidBitmap('logo'));
   }
 

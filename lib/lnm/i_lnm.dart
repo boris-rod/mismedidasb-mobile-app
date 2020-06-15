@@ -1,7 +1,13 @@
+import '../enums.dart';
+
 abstract class ILNM {
   void setup();
 
-  void showCommonNotification(String title, String content);
+  void showCommonNotification(
+      {String channelId,
+      String title,
+      String content,
+      NotificationType notificationType});
 
   void initReminders();
 

@@ -18,7 +18,9 @@ class UserApi extends BaseApi implements IUserApi {
 
   @override
   Future<UserModel> getProfile() async {
-    final res = await _networkHandler.get(path: Endpoint.profile,);
+    final res = await _networkHandler.get(
+      path: Endpoint.profile,
+    );
     if (res.statusCode == RemoteConstants.code_success)
       return _iUserConverter
           .fromJson(jsonDecode(res.body)[RemoteConstants.result]);
@@ -45,5 +47,18 @@ class UserApi extends BaseApi implements IUserApi {
       file: photo,
     );
     return res.statusCode == RemoteConstants.code_success;
+  }
+
+  @override
+  Future<bool> invite(List<String> emails) async {
+    List<Map<String, String>> mapList = [];
+    emails.forEach((element) {
+      mapList.add({"email": element});
+    });
+
+    final res = await _networkHandler.post(
+        path: Endpoint.invite, body: jsonEncode(mapList));
+    return res.statusCode == RemoteConstants.code_success_created;
+    throw UnimplementedError();
   }
 }

@@ -4,21 +4,20 @@ import 'package:mismedidasb/ui/_base/navigation_utils.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_icon_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_main_app_bar_widget.dart';
-import 'package:mismedidasb/ui/poll_notification/poll_notification_bloc.dart';
+import 'package:mismedidasb/ui/scores_page/score_bloc.dart';
 
-class PollNotificationPage extends StatefulWidget {
+class ScorePage extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _PollNotificationState();
+  State<StatefulWidget> createState() => _ScoreState();
 }
 
-class _PollNotificationState
-    extends StateWithBloC<PollNotificationPage, PollNotificationBloC> {
+class _ScoreState extends StateWithBloC<ScorePage, ScoreBloC> {
   @override
   Widget buildWidget(BuildContext context) {
     return Stack(
       children: <Widget>[
         TXMainAppBarWidget(
-          title: "Preguntas de Plani",
+          title: "Puntuaciones",
           leading: TXIconButtonWidget(
             icon: Icon(Icons.arrow_back),
             onPressed: () {

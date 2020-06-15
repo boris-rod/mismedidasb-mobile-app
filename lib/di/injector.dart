@@ -94,15 +94,18 @@ import 'package:mismedidasb/ui/food_dish/food_dish_bloc.dart';
 import 'package:mismedidasb/ui/food_search/food_search_bloc.dart';
 import 'package:mismedidasb/ui/habit/habit_bloc.dart';
 import 'package:mismedidasb/ui/home/home_bloc.dart';
+import 'package:mismedidasb/ui/invite_page/invite_bloc.dart';
 import 'package:mismedidasb/ui/legacy/legacy_bloc.dart';
 import 'package:mismedidasb/ui/login/login_bloc.dart';
 import 'package:mismedidasb/ui/measure_health/measure_health_bloc.dart';
 import 'package:mismedidasb/ui/measure_value/measure_value_bloc.dart';
 import 'package:mismedidasb/ui/measure_wellness/measure_wellness_bloc.dart';
+import 'package:mismedidasb/ui/poll_notification/poll_notification_bloc.dart';
 import 'package:mismedidasb/ui/profile/profile_bloc.dart';
 import 'package:mismedidasb/ui/profile_edit/profile_edit_bloc.dart';
 import 'package:mismedidasb/ui/recover_password/recover_password_bloc.dart';
 import 'package:mismedidasb/ui/register/register_bloc.dart';
+import 'package:mismedidasb/ui/scores_page/score_bloc.dart';
 import 'package:mismedidasb/ui/settings/settings_bloc.dart';
 import 'package:mismedidasb/ui/splash/splash_bloc.dart';
 import 'package:mismedidasb/utils/logger.dart';
@@ -293,8 +296,11 @@ class Injector {
     container.registerFactory((c) => RecoverPasswordBloC(container.resolve()));
     container.registerFactory((c) => RegisterBloC(
         container.resolve(), container.resolve(), container.resolve()));
-    container.registerFactory((c) => HomeBloC(container.resolve(),
-        container.resolve(), container.resolve(), container.resolve(),
+    container.registerFactory((c) => HomeBloC(
+        container.resolve(),
+        container.resolve(),
+        container.resolve(),
+        container.resolve(),
         container.resolve()));
     container.registerFactory((c) => HabitBloC(container.resolve()));
     container.registerFactory((c) => FoodCravingBloC(container.resolve()));
@@ -315,6 +321,10 @@ class Injector {
     container.registerFactory((c) => LegacyBloC(c.resolve()));
     container.registerFactory((c) => ContactUsBloC(c.resolve()));
     container.registerFactory((c) => ProfileEditBloC(c.resolve(), c.resolve()));
+    container.registerFactory((c) => InvitePeopleBloC(c.resolve()));
+    container
+        .registerFactory((c) => PollNotificationBloC(c.resolve(), c.resolve()));
+    container.registerFactory((c) => ScoreBloC(c.resolve()));
   }
 
   _registerCommon() {

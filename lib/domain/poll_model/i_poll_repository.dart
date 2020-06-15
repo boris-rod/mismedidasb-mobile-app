@@ -6,4 +6,7 @@ abstract class IPollRepository {
 
   Future<Result<String>> setPollResult(List<PollModel> polls);
 
+  Future<Result<String>> setSoloPollResult(List<PollResultModel> list);
+
+
 }

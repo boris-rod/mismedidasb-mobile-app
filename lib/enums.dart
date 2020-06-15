@@ -19,11 +19,10 @@ enum FoodHealthy {
   caloric,
 }
 enum PROFILE_OPTION { CHANGE_PASSWORD, LOGOUT, HELP }
-enum ReminderPoll {
-  NONE,
-  FOOD_PLAN_REACHED,
-  EXERCISE_PLAN_TOMORROW,
-  EXERCISE_PLANNED_DONE,
-  HOW_FEEL_TODAY
+enum NotificationType {
+  GENERAL,
+  REMINDER,
+  POLL,
+  REWARD
 }
 enum Reminder { NONE, DRINK_WATER, PLAN_FOOD, MAKE_EXERCISE }

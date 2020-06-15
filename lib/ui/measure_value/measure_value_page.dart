@@ -66,95 +66,107 @@ class _MeasureValueState
       children: <Widget>[
         TXCustomActionBar(
           actionBarColor: R.color.values_color,
-          body: StreamBuilder<PollModel>(
-            stream: bloc.pollsResult,
-            initialData: null,
-            builder: (ctx, snapshot) {
-              return (snapshot == null || snapshot.data == null)
-                  ? Container()
-                  : (snapshot.data.id == -1)
-                  ? Container(
-                height: double.infinity,
-                width: double.infinity,
-                alignment: Alignment.center,
-                child: TXTextWidget(
-                  text: R.string.noPollData,
-                  color: Colors.white,
-                ),
-              )
-                  : Stack(
+          body: Stack(
+            children: <Widget>[
+              Positioned(
+                top: 0,
+                left: -50,
+                right: 0,
+                bottom: 0,
+                child: Container(
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image:
+                          ExactAssetImage(R.image.values_home_blur),
+                        ))),
+              ),
+              Column(
                 children: <Widget>[
-                  Container(
-                      decoration: BoxDecoration(
-                          image: DecorationImage(
-                            fit: BoxFit.contain,
-                            image:
-                            ExactAssetImage(R.image.values_home_blur),
-                          ))),
-                  Column(
-                    children: <Widget>[
-                      Image.asset(
-                        R.image.values_title,
-                        width: 300,
-                      ),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      Container(
-                        padding:
-                        EdgeInsets.symmetric(horizontal: 20),
-                        child: TXTextWidget(
+                  Image.asset(
+                    R.image.values_title,
+                    width: 300,
+                  ),
+                  Expanded(
+                    child: StreamBuilder<PollModel>(
+                      stream: bloc.pollsResult,
+                      initialData: null,
+                      builder: (ctx, snapshot) {
+                        return (snapshot == null || snapshot.data == null)
+                            ? Container()
+                            : (snapshot.data.id == -1)
+                            ? Container(
+                          height: double.infinity,
+                          width: double.infinity,
+                          alignment: Alignment.center,
+                          child: TXTextWidget(
+                            text: R.string.noPollData,
                             color: Colors.white,
-                            textAlign: TextAlign.justify,
-                            text: snapshot.data.topTip()),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Expanded(
-                        child: PageView.builder(
-                          physics: NeverScrollableScrollPhysics(),
-                          itemBuilder: (ctx, index) {
-                            final model =
-                            snapshot.data.questions[index];
-                            return _getPageView(ctx, model, index);
-                          },
-                          controller: pageController,
-                          itemCount: snapshot.data.questions.length,
-                        ),
-                      ),
-                      StreamBuilder<int>(
-                        stream: bloc.pageResult,
-                        initialData: bloc.currentPage,
-                        builder: (ctx, snapshotPage) {
-                          return TXButtonPaginateWidget(
-                            page: bloc.currentPage,
-                            total: snapshot.data.questions.length,
-                            onNext: () {
-                              snapshot.data.questions.length >
-                                  bloc.currentPage
-                                  ? bloc.changePage(1)
-                                  : bloc.saveMeasures();
-                            },
-                            onPrevious: bloc.currentPage > 1
-                                ? () {
-                              bloc.changePage(-1);
-                            }
-                                : null,
-                            nextTitle:
-                            snapshot.data.questions.length >
-                                bloc.currentPage
-                                ? R.string.next
-                                : R.string.save.toLowerCase(),
-                            previousTitle: R.string.previous,
-                          );
-                        },
-                      )
-                    ],
+                          ),
+                        )
+                            : Column(
+                          children: <Widget>[
+                            SizedBox(
+                              height: 30,
+                            ),
+                            Container(
+                              padding:
+                              EdgeInsets.symmetric(horizontal: 20),
+                              child: TXTextWidget(
+                                  color: Colors.white,
+                                  textAlign: TextAlign.justify,
+                                  text: snapshot.data.topTip()),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Expanded(
+                              child: PageView.builder(
+                                physics: NeverScrollableScrollPhysics(),
+                                itemBuilder: (ctx, index) {
+                                  final model =
+                                  snapshot.data.questions[index];
+                                  return _getPageView(ctx, model, index);
+                                },
+                                controller: pageController,
+                                itemCount: snapshot.data.questions.length,
+                              ),
+                            ),
+                            StreamBuilder<int>(
+                              stream: bloc.pageResult,
+                              initialData: bloc.currentPage,
+                              builder: (ctx, snapshotPage) {
+                                return TXButtonPaginateWidget(
+                                  page: bloc.currentPage,
+                                  total: snapshot.data.questions.length,
+                                  onNext: () {
+                                    snapshot.data.questions.length >
+                                        bloc.currentPage
+                                        ? bloc.changePage(1)
+                                        : bloc.saveMeasures();
+                                  },
+                                  onPrevious: bloc.currentPage > 1
+                                      ? () {
+                                    bloc.changePage(-1);
+                                  }
+                                      : null,
+                                  nextTitle:
+                                  snapshot.data.questions.length >
+                                      bloc.currentPage
+                                      ? R.string.next
+                                      : R.string.save.toLowerCase(),
+                                  previousTitle: R.string.previous,
+                                );
+                              },
+                            )
+                          ],
+                        );
+                      },
+                    ),
                   )
                 ],
-              );
-            },
+              )
+            ],
           ),
         ),
         TXLoadingWidget(

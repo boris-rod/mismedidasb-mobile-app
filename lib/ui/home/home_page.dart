@@ -5,12 +5,12 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:mismedidasb/data/api/remote/remote_constanst.dart';
 import 'package:mismedidasb/domain/health_concept/health_concept.dart';
+import 'package:mismedidasb/enums.dart';
 import 'package:mismedidasb/fcm/fcm_background_notification_aware_widget.dart';
 import 'package:mismedidasb/lnm/i_lnm.dart';
 import 'package:mismedidasb/lnm/lnm.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/rt/real_time_container.dart';
-import 'package:mismedidasb/rt/reward_model.dart';
 import 'package:mismedidasb/ui/_base/bloc_state.dart';
 import 'package:mismedidasb/ui/_base/navigation_utils.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_action_bar_menu_widget.dart';
@@ -30,6 +30,7 @@ import 'package:mismedidasb/ui/login/login_page.dart';
 import 'package:mismedidasb/ui/measure_health/measure_health_page.dart';
 import 'package:mismedidasb/ui/measure_value/measure_value_page.dart';
 import 'package:mismedidasb/ui/measure_wellness/measure_wellness_page.dart';
+import 'package:mismedidasb/ui/poll_notification/poll_notification_page.dart';
 import 'package:mismedidasb/ui/profile/profile_page.dart';
 import 'package:mismedidasb/ui/settings/settings_page.dart';
 
@@ -45,9 +46,6 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
   void initState() {
     super.initState();
     bloc.loadHomeData();
-    bloc.rewardResult.listen((model) {
-      _keyHome.currentState.showSnackBar(getSnackBarWidget(model));
-    });
   }
 
   @override
@@ -75,24 +73,18 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
                   height: 35,
                   width: 35,
                 ),
-                onTap: () {
-                  //                          showTXModalBottomSheet(
-//                              context: context,
-//                              builder: (context) {
-//                                return _showPollNotification(context);
-//                              });
-//                          final res = await NavigationUtils.push(
-//                              context, ProfilePage());
-//                          if (res is SettingAction) {
-//                            if (res == SettingAction.logout ||
-//                                res == SettingAction.removeAccount) {
-//                              NavigationUtils.pushReplacement(
-//                                  context, LoginPage());
-//                            } else if (res ==
-//                                SettingAction.languageCodeChanged) {
-//                              bloc.loadHomeData();
-//                            }
-//                          }
+                onTap: () async {
+                  NavigationUtils.push(context, PollNotificationPage());
+//                  final res =
+//                      await NavigationUtils.push(context, ProfilePage());
+//                  if (res is SettingAction) {
+//                    if (res == SettingAction.logout ||
+//                        res == SettingAction.removeAccount) {
+//                      NavigationUtils.pushReplacement(context, LoginPage());
+//                    } else if (res == SettingAction.languageCodeChanged) {
+//                      bloc.loadHomeData();
+//                    }
+//                  }
                 },
               )
             ],
@@ -132,35 +124,6 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
         ],
       ),
     );
-  }
-
-  SnackBar getSnackBarWidget(RewardModel model) {
-    final snackBar = SnackBar(
-      backgroundColor: Colors.white,
-      content: Row(
-        children: <Widget>[
-          Container(
-            child: Image.asset(
-              R.image.logo,
-              width: 60,
-              height: 60,
-            ),
-          ),
-          Expanded(
-              child: TXTextWidget(
-            text: model.message,
-          ))
-        ],
-      ),
-      action: SnackBarAction(
-        label: 'Ver',
-        textColor: R.color.primary_dark_color,
-        onPressed: () {
-          // Some code to undo the change.
-        },
-      ),
-    );
-    return snackBar;
   }
 
   List<Widget> _getHomeWidgets(

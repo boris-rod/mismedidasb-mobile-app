@@ -58,33 +58,6 @@ class Subscription {
       this.validAt});
 }
 
-class ValidDay {
-  int ticks;
-  int days;
-  int hours;
-  int minutes;
-  int seconds;
-  int milliseconds;
-  int totalDays;
-  int totalHours;
-  int totalMinutes;
-  int totalSeconds;
-  int totalMilliseconds;
-
-  ValidDay(
-      {this.ticks,
-      this.days,
-      this.hours,
-      this.minutes,
-      this.seconds,
-      this.milliseconds,
-      this.totalDays,
-      this.totalHours,
-      this.totalMinutes,
-      this.totalSeconds,
-      this.totalMilliseconds});
-}
-
 class UserCredentialsModel {
   String email;
   String password;

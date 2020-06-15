@@ -10,19 +10,21 @@ import 'package:mismedidasb/ui/measure_wellness/measure_wellness_model.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:mismedidasb/utils/extensions.dart';
 
-class MeasureWellnessBloC
-    extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
+class MeasureWellnessBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   final IPollRepository _iPollRepository;
 
   MeasureWellnessBloC(this._iPollRepository);
 
   BehaviorSubject<int> _pageController = new BehaviorSubject();
+
   Stream<int> get pageResult => _pageController.stream;
 
   BehaviorSubject<PollModel> _pollsController = new BehaviorSubject();
+
   Stream<PollModel> get pollsResult => _pollsController.stream;
 
   BehaviorSubject<String> _pollSaveController = new BehaviorSubject();
+
   Stream<String> get pollSaveResult => _pollSaveController.stream;
 
   int currentPage = 1;
@@ -47,7 +49,7 @@ class MeasureWellnessBloC
         _pollsController.sinkAddSafe(res.value[0]);
       else
         _pollsController.sinkAddSafe(PollModel(id: -1));
-    }else {
+    } else {
       showErrorMessage(res);
     }
     isLoading = false;
@@ -59,7 +61,7 @@ class MeasureWellnessBloC
     final res = await _iPollRepository.setPollResult([poll]);
     if (res is ResultSuccess<String>) {
       _pollSaveController.sinkAddSafe(res.value);
-    }else {
+    } else {
       showErrorMessage(res);
     }
     isLoading = false;

@@ -136,7 +136,7 @@ class FCMFeature extends IFCMFeature {
       String title = notification["title"];
       String content = notification["body"];
       if(title?.isNotEmpty == true && content?.isNotEmpty == true){
-        _ilnm.showCommonNotification(title, content);
+        _ilnm.showCommonNotification(channelId: 'fcm_noti', title: title, content: content);
       }
     }
   }

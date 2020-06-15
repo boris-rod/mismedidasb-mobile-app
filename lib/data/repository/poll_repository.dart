@@ -42,4 +42,10 @@ class PollRepository extends BaseRepository implements IPollRepository {
       return resultError(ex);
     }
   }
+
+  @override
+  Future<Result<String>> setSoloPollResult(List<PollResultModel> list) {
+    // TODO: implement setSoloPollResult
+    throw UnimplementedError();
+  }
 }

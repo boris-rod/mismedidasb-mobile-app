@@ -23,6 +23,7 @@ class Endpoint {
   static const String health_concept = "/api/concept"; //id
 
   static const String set_polls_result = "/api/poll/set-poll-result";
+  static const String set_solo_polls_result = "/api/solo-question/user-answer";
   static const String get_poll = "/api/poll";
 
   static const String question = "/api/question"; //pollId
@@ -35,6 +36,7 @@ class Endpoint {
 
   static const String update_profile = "/api/account/update-profile";
   static const String upload_avatar = "/api/account/upload-avatar";
+  static const String invite = "/api/user-referral";
 
 
   static const String dish = "/api/dish";

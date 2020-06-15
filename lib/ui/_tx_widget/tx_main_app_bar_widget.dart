@@ -9,6 +9,7 @@ class TXMainAppBarWidget extends StatelessWidget {
   final bool centeredTitle;
   final TXIconButtonWidget leading;
   final List<Widget> actions;
+  final GlobalKey<ScaffoldState> scaffoldKey;
 
   const TXMainAppBarWidget(
       {Key key,
@@ -16,12 +17,13 @@ class TXMainAppBarWidget extends StatelessWidget {
       this.title = "",
       this.centeredTitle = false,
       this.leading,
-      this.actions = const []})
+      this.actions = const [], this.scaffoldKey})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
       appBar: AppBar(
         centerTitle: true,
         leading: leading ??

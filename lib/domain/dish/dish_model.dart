@@ -287,7 +287,7 @@ class CreateDailyPlanModel {
   DateTime dateTime;
   List<CreateDailyActivityModel> activities;
 
-  bool get isBalanced => true;
+  bool get isBalanced => false;
 
   CreateDailyPlanModel({this.dateTime, this.activities = const []});
 
