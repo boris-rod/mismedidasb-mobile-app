@@ -1,17 +1,23 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mismedidasb/data/_shared_prefs.dart';
 import 'package:mismedidasb/enums.dart';
 import 'package:mismedidasb/lnm/i_lnm.dart';
 import 'package:mismedidasb/lnm/local_notification_model.dart';
 import 'package:mismedidasb/res/R.dart';
+import 'package:mismedidasb/ui/_base/navigation_utils.dart';
 import 'package:rxdart/subjects.dart';
+import 'package:mismedidasb/utils/extensions.dart';
 
-final BehaviorSubject<ReceivedNotification> didReceiveLocalNotificationSubject =
-    BehaviorSubject<ReceivedNotification>();
+//final BehaviorSubject<ReceivedNotification> didReceiveLocalNotificationSubject =
+//    BehaviorSubject<ReceivedNotification>();
+//
+//final BehaviorSubject<String> selectNotificationSubject =
+//    BehaviorSubject<String>();
 
-final BehaviorSubject<String> selectNotificationSubject =
-    BehaviorSubject<String>();
+final BehaviorSubject<bool> onPollNotificationLaunch = BehaviorSubject<bool>();
 
 class LNM implements ILNM {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
@@ -40,8 +46,8 @@ class LNM implements ILNM {
         requestSoundPermission: false,
         onDidReceiveLocalNotification:
             (int id, String title, String body, String payload) async {
-          didReceiveLocalNotificationSubject.add(ReceivedNotification(
-              id: id, title: title, body: body, payload: payload));
+//          didReceiveLocalNotificationSubject.add(ReceivedNotification(
+//              id: id, title: title, body: body, payload: payload));
         });
 
     var initializationSettings = InitializationSettings(
@@ -49,7 +55,14 @@ class LNM implements ILNM {
     await flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onSelectNotification: (String payload) async {
       if (payload?.isNotEmpty == true) {
-        selectNotificationSubject.add(payload);
+        if (payload == pollNotificationId.toString()) {
+          await _sharedPreferencesManager.setBoolValue(
+              SharedKey.launchNotiPoll, true);
+          onPollNotificationLaunch.sinkAddSafe(true);
+        }
+//        onNotiTap(payload);
+//        Fluttertoast.showToast(msg: payload);
+//        selectNotificationSubject.add(payload);
       }
     });
 
@@ -63,26 +76,26 @@ class LNM implements ILNM {
         );
   }
 
-  void initReminders() async {
-    initBreakFastReminder();
-    initSnack1Reminder();
-    initDrinkWater1Reminder();
-    initLunchReminder();
-    initSnack2Reminder();
-    initDinnerReminder();
-    initDrinkWater2Reminder();
-    initPlanFoodsReminder();
-    initMakeExerciseReminder();
-    initPollNotificationReminders();
+  Future<void> initReminders() async {
+    await initBreakFastReminder();
+    await initSnack1Reminder();
+    await initDrinkWater1Reminder();
+    await initLunchReminder();
+    await initSnack2Reminder();
+    await initDinnerReminder();
+    await initDrinkWater2Reminder();
+    await initPlanFoodsReminder();
+    await initMakeExerciseReminder();
+    await initPollNotificationReminders();
   }
 
   @override
-  void cancel(int id) async {
+  Future<void> cancel(int id) async {
     await flutterLocalNotificationsPlugin.cancel(id);
   }
 
   @override
-  void initPollNotificationReminders() async {
+  Future<void> initPollNotificationReminders() async {
     final String userName =
         await _sharedPreferencesManager.getStringValue(SharedKey.userName);
     String title = 'Hola $userName';
@@ -97,12 +110,12 @@ class LNM implements ILNM {
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
 
     await flutterLocalNotificationsPlugin.showDailyAtTime(pollNotificationId,
-        title, content, Time(22, 30, 0), platformChannelSpecifics,
+        title, content, Time(19, 43, 0), platformChannelSpecifics,
         payload: '$pollNotificationId');
   }
 
   @override
-  void initBreakFastReminder() async {
+  Future<void> initBreakFastReminder() async {
     final bool showBreakFastTime = await _sharedPreferencesManager
         .getBoolValue(SharedKey.showBreakFastTime);
     if (showBreakFastTime) {
@@ -133,7 +146,7 @@ class LNM implements ILNM {
   }
 
   @override
-  void initDinnerReminder() async {
+  Future<void> initDinnerReminder() async {
     final bool showDinnerTime =
         await _sharedPreferencesManager.getBoolValue(SharedKey.showDinnerTime);
     if (showDinnerTime) {
@@ -164,7 +177,7 @@ class LNM implements ILNM {
   }
 
   @override
-  void initDrinkWater1Reminder() async {
+  Future<void> initDrinkWater1Reminder() async {
     final bool showDrinkWater =
         await _sharedPreferencesManager.getBoolValue(SharedKey.showDrinkWater);
     if (showDrinkWater) {
@@ -189,7 +202,7 @@ class LNM implements ILNM {
   }
 
   @override
-  void initDrinkWater2Reminder() async {
+  Future<void> initDrinkWater2Reminder() async {
     final bool showDrinkWater =
         await _sharedPreferencesManager.getBoolValue(SharedKey.showDrinkWater);
     if (showDrinkWater) {
@@ -214,7 +227,7 @@ class LNM implements ILNM {
   }
 
   @override
-  void initLunchReminder() async {
+  Future<void> initLunchReminder() async {
     final bool showLunchTime =
         await _sharedPreferencesManager.getBoolValue(SharedKey.showLunchTime);
     if (showLunchTime) {
@@ -245,7 +258,7 @@ class LNM implements ILNM {
   }
 
   @override
-  void initMakeExerciseReminder() async {
+  Future<void> initMakeExerciseReminder() async {
     final bool showPhysicalExerciseTime = await _sharedPreferencesManager
         .getBoolValue(SharedKey.showPhysicalExerciseTime);
     if (showPhysicalExerciseTime) {
@@ -276,7 +289,7 @@ class LNM implements ILNM {
   }
 
   @override
-  void initPlanFoodsReminder() async {
+  Future<void> initPlanFoodsReminder() async {
     final bool showPlanFood =
         await _sharedPreferencesManager.getBoolValue(SharedKey.showPlanFood);
     if (showPlanFood) {
@@ -300,7 +313,7 @@ class LNM implements ILNM {
   }
 
   @override
-  void initSnack1Reminder() async {
+  Future<void> initSnack1Reminder() async {
     final bool showSnack1Time =
         await _sharedPreferencesManager.getBoolValue(SharedKey.showSnack1Time);
     if (showSnack1Time) {
@@ -332,7 +345,7 @@ class LNM implements ILNM {
   }
 
   @override
-  void initSnack2Reminder() async {
+  Future<void> initSnack2Reminder() async {
     final bool showSnack2Time =
         await _sharedPreferencesManager.getBoolValue(SharedKey.showSnack2Time);
     if (showSnack2Time) {
@@ -363,7 +376,7 @@ class LNM implements ILNM {
   }
 
   @override
-  void showCommonNotification(
+  Future<void> showCommonNotification(
       {String channelId = "0",
       String title = "",
       String content = "",
@@ -382,7 +395,7 @@ class LNM implements ILNM {
   }
 
   @override
-  void cancelAll() {
+  Future<void> cancelAll() {
     flutterLocalNotificationsPlugin.cancelAll();
   }
 
@@ -403,7 +416,9 @@ class LNM implements ILNM {
         '<p><span style="color: #3F51B5;"><b>Responder cuestionario</b></span></p>';
 
     var bigTextStyleInformation = BigTextStyleInformation(
-      "$content $answerBtn",
+      notificationType == NotificationType.POLL
+          ? "$content $answerBtn"
+          : content,
       contentTitle: title,
       summaryText: summary,
       htmlFormatBigText: true,

@@ -11,6 +11,7 @@ class TXButtonPaginateWidget extends StatelessWidget {
   final String previousTitle;
   final int total;
   final int page;
+  final bool showBackNavigation;
 
   const TXButtonPaginateWidget({
     Key key,
@@ -20,6 +21,7 @@ class TXButtonPaginateWidget extends StatelessWidget {
     this.previousTitle,
     this.total = 1,
     this.page = 1,
+    this.showBackNavigation = true,
   }) : super(key: key);
 
   @override
@@ -31,6 +33,7 @@ class TXButtonPaginateWidget extends StatelessWidget {
       alignment: Alignment.center,
       child: Stack(
         children: <Widget>[
+          (showBackNavigation ?? true) ?
           Positioned(
             left: 0,
             top: 0,
@@ -40,7 +43,7 @@ class TXButtonPaginateWidget extends StatelessWidget {
                 onTap: onPrevious,
               ),
             ),
-          ),
+          ): Container(),
           Positioned(
             left: 0,
             right: 0,

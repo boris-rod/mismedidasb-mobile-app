@@ -27,6 +27,7 @@ class Endpoint {
   static const String get_poll = "/api/poll";
 
   static const String question = "/api/question"; //pollId
+  static const String get_question = "/api/solo-question";
 
   static const String answer = "/api/answer"; //questionId
 

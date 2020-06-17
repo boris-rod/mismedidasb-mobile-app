@@ -25,10 +25,11 @@ class PollModel {
 
   String bottomTip() {
     PollTipModel tip = tips.firstWhere(
-            (t) => (t.tipPositionString == RemoteConstants.bottom_tip && t.isActive),
+        (t) =>
+            (t.tipPositionString == RemoteConstants.bottom_tip && t.isActive),
         orElse: () {
-          return null;
-        });
+      return null;
+    });
     return tip != null ? tip.content ?? "" : "";
   }
 
@@ -43,35 +44,6 @@ class PollModel {
       this.conceptModel,
       this.tips,
       this.questions});
-
-  static PollModel getPollPhysicalExercise() {
-    return PollModel(
-        id: 1,
-        name: "Ejercicio Físico",
-        description: "Descripción",
-        conceptId: 1);
-  }
-
-  static PollModel getPollDiet() {
-    return PollModel(
-        id: 2, name: "Dieta", description: "Descripción", conceptId: 1);
-  }
-
-  static PollModel getPollWellness() {
-    return PollModel(
-        id: 3,
-        name: "Medidas de bienestar",
-        description: "Descripción",
-        conceptId: 2);
-  }
-
-  static PollModel getPollValues() {
-    return PollModel(
-        id: 4,
-        name: "Medidas de valor",
-        description: "Descripción",
-        conceptId: 3);
-  }
 }
 
 class PollResultModel {
@@ -101,7 +73,6 @@ class PollTipModel {
 class RewardModel {
   int id;
   int userId;
-  String message;
   int points;
   int rewardCategoryId;
   int categoryId;
@@ -109,10 +80,16 @@ class RewardModel {
 
   RewardModel(
       {this.id,
-        this.userId,
-        this.message = "",
-        this.points = 0,
-        this.rewardCategoryId,
-        this.categoryId,
-        this.category});
+      this.userId,
+      this.points = 0,
+      this.rewardCategoryId,
+      this.categoryId,
+      this.category});
+}
+
+class PollResponseModel {
+  String result;
+  RewardModel reward;
+
+  PollResponseModel({this.result, this.reward});
 }

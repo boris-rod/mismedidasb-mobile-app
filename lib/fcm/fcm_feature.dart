@@ -130,7 +130,7 @@ class FCMFeature extends IFCMFeature {
 //    }
   }
 
-  void showRemoteNotification(Map<String, dynamic> message){
+  void showRemoteNotification(Map<String, dynamic> message) async{
     final Map notification = message["notification"];
     if(notification != null){
       String title = notification["title"];

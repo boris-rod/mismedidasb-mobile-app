@@ -1,37 +1,39 @@
+import 'package:flutter/material.dart';
+
 import '../enums.dart';
 
 abstract class ILNM {
   void setup();
 
-  void showCommonNotification(
+  Future<void> showCommonNotification(
       {String channelId,
       String title,
       String content,
       NotificationType notificationType});
 
-  void initReminders();
+  Future<void> initReminders();
 
-  void initPollNotificationReminders();
+  Future<void> initPollNotificationReminders();
 
-  void initBreakFastReminder();
+  Future<void> initBreakFastReminder();
 
-  void initSnack1Reminder();
+  Future<void> initSnack1Reminder();
 
-  void initLunchReminder();
+  Future<void> initLunchReminder();
 
-  void initSnack2Reminder();
+  Future<void> initSnack2Reminder();
 
-  void initDinnerReminder();
+  Future<void> initDinnerReminder();
 
-  void initDrinkWater1Reminder();
+  Future<void> initDrinkWater1Reminder();
 
-  void initDrinkWater2Reminder();
+  Future<void> initDrinkWater2Reminder();
 
-  void initPlanFoodsReminder();
+  Future<void> initPlanFoodsReminder();
 
-  void initMakeExerciseReminder();
+  Future<void> initMakeExerciseReminder();
 
-  void cancel(int id);
+  Future<void> cancel(int id);
 
-  void cancelAll();
+  Future<void> cancelAll();
 }

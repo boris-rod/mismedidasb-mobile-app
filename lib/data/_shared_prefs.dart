@@ -2,7 +2,7 @@ import 'package:mismedidasb/domain/session/session_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedKey {
-  static String firstUse = "firstUse";
+  static String firstUse = "firstUse1";
   static String accessToken = "accessToken";
   static String refreshToken = "refreshToken";
   static String userEmail = "userEmail";
@@ -38,6 +38,7 @@ class SharedKey {
   static String showDrinkWater = "drinkWater";
   static String hasPlaniVirtualAssesor = "hasPlaniVirtualAssesor";
   static String showDailyPollNotification = "showDailyPollNotification";
+  static String launchNotiPoll = "launchNotiPoll";
 }
 
 class SharedPreferencesManager {
@@ -53,6 +54,7 @@ class SharedPreferencesManager {
     await setBoolValue(SharedKey.kCalPercentageHide, false);
     await setBoolValue(SharedKey.nutriInfoExpanded, false);
     await setBoolValue(SharedKey.showIntro, true);
+    await setBoolValue(SharedKey.launchNotiPoll, false);
 
     await setBoolValue(SharedKey.showBreakFastTime, true);
     await setBoolValue(SharedKey.showSnack1Time, true);

@@ -46,12 +46,21 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
   void initState() {
     super.initState();
     bloc.loadHomeData();
+    bloc.launchNotiPollResult.listen((onData) {
+      if (onData) {
+        NavigationUtils.push(context, PollNotificationPage());
+      }
+    });
+
+    onPollNotificationLaunch.listen((value) {
+      NavigationUtils.push(context, PollNotificationPage());
+    });
   }
 
   @override
   void dispose() {
-    didReceiveLocalNotificationSubject.close();
-    selectNotificationSubject.close();
+//    didReceiveLocalNotificationSubject.close();
+//    selectNotificationSubject.close();
     super.dispose();
   }
 

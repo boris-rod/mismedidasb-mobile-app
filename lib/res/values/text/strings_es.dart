@@ -27,7 +27,7 @@ class StringsEs implements StringsBase {
   String get previous => "anterior";
 
   @override
-  String get update => "Analizar";
+  String get update => "analizar";
 
   @override
   String get valuesConcept =>
@@ -318,7 +318,8 @@ class StringsEs implements StringsBase {
   String get emptyList => "Lista vacía";
 
   @override
-  String get contactUsResult => "Su mensaje ha sido enviado satisfactoriamente. Le estaremos respondiendo vía correo en caso de ser necesario.";
+  String get contactUsResult =>
+      "Su mensaje ha sido enviado satisfactoriamente. Le estaremos respondiendo vía correo en caso de ser necesario.";
 
   @override
   String get editProfile => "Editar perfil";
@@ -330,10 +331,12 @@ class StringsEs implements StringsBase {
   String get faq => "Preguntas frecuentes";
 
   @override
-  String get cameraPermissionContent => "Se requiere permiso para acceder a la cámara";
+  String get cameraPermissionContent =>
+      "Se requiere permiso para acceder a la cámara";
 
   @override
-  String get galleryPermissionContent => "Se requiere permiso para acceder a sus fotos";
+  String get galleryPermissionContent =>
+      "Se requiere permiso para acceder a sus fotos";
 
   @override
   String get showBarPercentages => "Mostrar percentiles";

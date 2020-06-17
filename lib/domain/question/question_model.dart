@@ -163,3 +163,71 @@ class QuestionResultModel {
 
   QuestionResultModel({this.questionId, this.answerId});
 }
+
+class SoloQuestionModel {
+  int index;
+  int id;
+  String code;
+  String title;
+  String titleEN;
+  String titleIT;
+  bool allowCustomAnswer;
+  List<SoloAnswerModel> soloAnswers;
+  SoloAnswerModel soloAnswerModelSelected;
+
+  SoloQuestionModel(
+      {this.id,
+      this.index,
+      this.code,
+      this.title,
+      this.soloAnswerModelSelected,
+      this.titleIT,
+      this.titleEN,
+      this.allowCustomAnswer,
+      this.soloAnswers});
+
+  List<SingleSelectionModel> convertAnswersToSelectionModel() {
+    List<SingleSelectionModel> list = [];
+    for (int i = 0; i < soloAnswers.length; i++) {
+      list.add(SingleSelectionModel(
+          index: i,
+          id: soloAnswers[i].id,
+          displayName: soloAnswers[i].title,
+          isSelected: false));
+    }
+    return list;
+  }
+}
+
+class SoloAnswerModel {
+  int id;
+  int soloQuestionId;
+  String code;
+  String title;
+  String titleEN;
+  String titleIT;
+  int points;
+
+  SoloAnswerModel(
+      {this.id,
+      this.soloQuestionId,
+      this.code,
+      this.title,
+      this.titleEN,
+      this.titleIT,
+      this.points});
+}
+
+class SoloAnswerCreateModel {
+  int index;
+  String questionCode;
+  String answerCode;
+  String answerValue;
+
+  SoloAnswerCreateModel(
+      {this.answerCode, this.answerValue, this.questionCode, this.index});
+}
+
+class SingleSelectionSoloModel {
+  String questionTitle;
+}

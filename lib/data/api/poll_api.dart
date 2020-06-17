@@ -8,6 +8,7 @@ import 'package:mismedidasb/data/api/remote/remote_constanst.dart';
 import 'package:mismedidasb/domain/poll_model/i_poll_api.dart';
 import 'package:mismedidasb/domain/poll_model/i_poll_converter.dart';
 import 'package:mismedidasb/domain/poll_model/poll_model.dart';
+import 'package:mismedidasb/domain/question/question_model.dart';
 import 'package:mismedidasb/res/R.dart';
 
 class PollApi extends BaseApi implements IPollApi {
@@ -34,7 +35,7 @@ class PollApi extends BaseApi implements IPollApi {
     final body = jsonEncode({"pollDatas": map});
     final res =
         await _networkHandler.post(path: Endpoint.set_polls_result, body: body);
-    if (res.statusCode == RemoteConstants.code_success){
+    if (res.statusCode == RemoteConstants.code_success) {
       String result = "";
       var tagsJson = jsonDecode(res.body)[RemoteConstants.result];
       List<String> tags = tagsJson != null ? List.from(tagsJson) : null;
@@ -45,8 +46,29 @@ class PollApi extends BaseApi implements IPollApi {
   }
 
   @override
-  Future<String> setSoloPollResult(List<PollResultModel> list) {
-    // TODO: implement setSoloPollResult
-    throw UnimplementedError();
+  Future<List<SoloQuestionModel>> getSoloQuestions() async {
+    final res = await _networkHandler.get(path: "${Endpoint.get_question}");
+    if (res.statusCode == RemoteConstants.code_success) {
+      Iterable l = jsonDecode(res.body)[RemoteConstants.result];
+      return l
+          .map((model) => _iPollConverter.fromJsonSoloQuestionModel(model))
+          .toList();
+    }
+    throw serverException(res);
+  }
+
+  @override
+  Future<PollResponseModel> postSoloQuestion(
+      SoloAnswerCreateModel model) async {
+    final map = _iPollConverter.toJsonSoloAnswerCreateModel(model);
+    final body = jsonEncode(map);
+    final res = await _networkHandler.post(
+        path: Endpoint.set_solo_polls_result, body: body);
+    if (res.statusCode == RemoteConstants.code_success) {
+      PollResponseModel model =
+          _iPollConverter.fromJsonPollResponse(jsonDecode(res.body));
+      return model;
+    }
+    throw serverException(res);
   }
 }

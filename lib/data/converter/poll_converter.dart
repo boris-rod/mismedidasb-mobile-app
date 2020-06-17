@@ -3,6 +3,7 @@ import 'package:mismedidasb/domain/health_concept/i_health_concept_converter.dar
 import 'package:mismedidasb/domain/poll_model/i_poll_converter.dart';
 import 'package:mismedidasb/domain/poll_model/poll_model.dart';
 import 'package:mismedidasb/domain/question/i_question_converter.dart';
+import 'package:mismedidasb/domain/question/question_model.dart';
 
 class PollConverter implements IPollConverter {
   final IHealthConceptConverter _iHealthConceptConverter;
@@ -49,5 +50,64 @@ class PollConverter implements IPollConverter {
         isActive: json[RemoteConstants.is_active],
         tipPositionString: json[RemoteConstants.tip_position_str],
         tipPosition: json[RemoteConstants.tip_position]);
+  }
+
+  @override
+  SoloAnswerModel fromJsonSoloAnswerModel(Map<String, dynamic> json) {
+    final SoloAnswerModel model = SoloAnswerModel(
+      id: json["id"],
+      soloQuestionId: json["soloQuestionId"],
+      code: json["code"],
+      title: json["title"],
+      titleIT: json["titleIT"],
+      titleEN: json["titleEN"],
+      points: json["points"],
+    );
+    return model;
+  }
+
+  @override
+  SoloQuestionModel fromJsonSoloQuestionModel(Map<String, dynamic> json) {
+    final SoloQuestionModel model = SoloQuestionModel(
+        id: json["id"],
+        code: json["code"],
+        title: json["title"],
+        titleIT: json["titleIT"],
+        titleEN: json["titleEN"],
+        allowCustomAnswer: json["allowCustomAnswer"],
+        soloAnswers: (json["soloAnswers"] as List<dynamic>)
+            .map((e) => fromJsonSoloAnswerModel(e))
+            .toList());
+    return model;
+  }
+
+  @override
+  Map<String, dynamic> toJsonSoloAnswerCreateModel(
+      SoloAnswerCreateModel model) {
+    final map = {
+      "questionCode": model.questionCode,
+      "answerCode": model.answerCode,
+      "answerValue": model.answerValue
+    };
+    return map;
+  }
+
+  @override
+  PollResponseModel fromJsonPollResponse(Map<String, dynamic> json) {
+    final PollResponseModel model = PollResponseModel(
+        result: json["result"], reward: fromJsonReward(json["reward"]));
+    return model;
+  }
+
+  @override
+  RewardModel fromJsonReward(Map<String, dynamic> json) {
+    final RewardModel model = RewardModel(
+        id: json["id"],
+        userId: json["userId"],
+        rewardCategoryId: json["rewardCategoryId"],
+        categoryId: json["categoryId"],
+        category: json["category"],
+        points: json["points"]);
+    return model;
   }
 }

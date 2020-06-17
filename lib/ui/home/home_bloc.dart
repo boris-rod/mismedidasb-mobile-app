@@ -40,6 +40,10 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   Stream<List<HealthConceptModel>> get conceptResult =>
       _conceptController.stream;
 
+  BehaviorSubject<bool> _launchNotiPollController = new BehaviorSubject();
+
+  Stream<bool> get launchNotiPollResult => _launchNotiPollController.stream;
+
   void loadHomeData() async {
     isLoading = true;
     final profileRes = await _iUserRepository.getProfile();
@@ -74,6 +78,14 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
         showErrorMessage(res);
     } else
       showErrorMessage(profileRes);
+
+    final show =
+        await _sharedPreferencesManager.getBoolValue(SharedKey.launchNotiPoll);
+    if (show) {
+      await _sharedPreferencesManager.setBoolValue(
+          SharedKey.launchNotiPoll, false);
+      _launchNotiPollController.sinkAddSafe(true);
+    }
     isLoading = false;
   }
 
@@ -146,25 +158,26 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   void initLNM() async {
     _configureDidReceiveLocalNotificationSubject();
     _configureSelectNotificationSubject();
-    lnm.initReminders();
+    await lnm.initReminders();
   }
 
   void _configureDidReceiveLocalNotificationSubject() {
-    didReceiveLocalNotificationSubject.stream
-        .listen((ReceivedNotification receivedNotification) async {
-      Fluttertoast.showToast(msg: jsonEncode(receivedNotification).toString());
-    });
+//    didReceiveLocalNotificationSubject.stream
+//        .listen((ReceivedNotification receivedNotification) async {
+//      Fluttertoast.showToast(msg: jsonEncode(receivedNotification).toString());
+//    });
   }
 
   void _configureSelectNotificationSubject() {
-    selectNotificationSubject.stream.listen((String payload) async {
-      Fluttertoast.showToast(msg: payload);
-    });
+//    selectNotificationSubject.stream.listen((String payload) async {
+//      Fluttertoast.showToast(msg: payload);
+//    });
   }
 
   @override
   void dispose() {
     _conceptController.close();
+    _launchNotiPollController.close();
     disposeLoadingBloC();
     disposeErrorHandlerBloC();
 //    _loadingController.close();

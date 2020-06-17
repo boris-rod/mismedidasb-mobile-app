@@ -323,7 +323,7 @@ class Injector {
     container.registerFactory((c) => ProfileEditBloC(c.resolve(), c.resolve()));
     container.registerFactory((c) => InvitePeopleBloC(c.resolve()));
     container
-        .registerFactory((c) => PollNotificationBloC(c.resolve(), c.resolve()));
+        .registerFactory((c) => PollNotificationBloC(c.resolve(), c.resolve(), c.resolve()));
     container.registerFactory((c) => ScoreBloC(c.resolve()));
   }
 

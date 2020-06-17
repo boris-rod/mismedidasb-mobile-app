@@ -44,8 +44,22 @@ class PollRepository extends BaseRepository implements IPollRepository {
   }
 
   @override
-  Future<Result<String>> setSoloPollResult(List<PollResultModel> list) {
-    // TODO: implement setSoloPollResult
-    throw UnimplementedError();
+  Future<Result<List<SoloQuestionModel>>> getSoloQuestions() async {
+    try {
+      final result = await _iPollApi.getSoloQuestions();
+      return Result.success(value: result);
+    } catch (ex) {
+      return resultError(ex);
+    }
+  }
+
+  @override
+  Future<Result<PollResponseModel>> postSoloQuestion(SoloAnswerCreateModel model) async {
+    try {
+      final result = await _iPollApi.postSoloQuestion(model);
+      return Result.success(value: result);
+    } catch (ex) {
+      return resultError(ex);
+    }
   }
 }
