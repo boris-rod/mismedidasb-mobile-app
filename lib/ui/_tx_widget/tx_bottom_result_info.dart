@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/navigation_utils.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
@@ -46,9 +47,10 @@ class TXBottomResultInfo extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.only(left: 10, right: 20),
                 child: Center(
-                  child: TXTextWidget(
-                      textAlign: TextAlign.justify,
-                      text: content ?? ""),
+                  child: Html(
+                    shrinkWrap: true,
+                    data: content,
+                  ),
                 ),
               ),
             )

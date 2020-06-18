@@ -44,6 +44,7 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
   Stream<bool> get launchNotiPollResult => _launchNotiPollController.stream;
 
+  String userName = "";
   void loadHomeData() async {
     isLoading = true;
     final profileRes = await _iUserRepository.getProfile();
@@ -67,6 +68,8 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
       await _sharedPreferencesManager.setStringValue(
           SharedKey.userName, profileRes.value.username);
+
+      userName = profileRes.value.username;
       await _sharedPreferencesManager.setDailyKCal(profileRes.value.dailyKCal);
       await _sharedPreferencesManager.setIMC(profileRes.value.imc);
       await _sharedPreferencesManager

@@ -5,7 +5,7 @@ import 'package:mismedidasb/domain/question/question_model.dart';
 abstract class IPollRepository {
   Future<Result<List<PollModel>>> getPollsByConcept(int conceptId);
 
-  Future<Result<String>> setPollResult(List<PollModel> polls);
+  Future<Result<PollResponseModel>> setPollResult(List<PollModel> polls);
 
   Future<Result<List<SoloQuestionModel>>> getSoloQuestions();
 

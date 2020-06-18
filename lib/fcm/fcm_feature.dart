@@ -10,6 +10,7 @@ import 'package:mismedidasb/fcm/fcm_message_model.dart';
 import 'package:mismedidasb/fcm/fcm_parser.dart';
 import 'package:mismedidasb/fcm/i_fcm_feature.dart';
 import 'package:mismedidasb/lnm/i_lnm.dart';
+import 'package:mismedidasb/lnm/lnm.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/utils/logger.dart';
 import 'package:rxdart/subjects.dart';
@@ -136,7 +137,7 @@ class FCMFeature extends IFCMFeature {
       String title = notification["title"];
       String content = notification["body"];
       if(title?.isNotEmpty == true && content?.isNotEmpty == true){
-        _ilnm.showCommonNotification(channelId: 'fcm_noti', title: title, content: content);
+        _ilnm.showCommonNotification(channelId: LNM.fcmNoti, title: title, content: content);
       }
     }
   }

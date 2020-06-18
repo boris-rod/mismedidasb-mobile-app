@@ -1,3 +1,4 @@
+import 'package:mismedidasb/data/_shared_prefs.dart';
 import 'package:mismedidasb/data/api/remote/result.dart';
 import 'package:mismedidasb/domain/answer/answer_model.dart';
 import 'package:mismedidasb/domain/poll_model/i_poll_repository.dart';
@@ -12,8 +13,9 @@ import 'package:mismedidasb/utils/extensions.dart';
 
 class MeasureValueBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   final IPollRepository _iPollRepository;
+  final SharedPreferencesManager _sharedPreferencesManager;
 
-  MeasureValueBloC(this._iPollRepository);
+  MeasureValueBloC(this._iPollRepository, this._sharedPreferencesManager);
 
   BehaviorSubject<int> _pageController = new BehaviorSubject();
   Stream<int> get pageResult => _pageController.stream;
@@ -21,11 +23,11 @@ class MeasureValueBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   BehaviorSubject<PollModel> _pollsController = new BehaviorSubject();
   Stream<PollModel> get pollsResult => _pollsController.stream;
 
-  BehaviorSubject<String> _pollSaveController = new BehaviorSubject();
-  Stream<String> get pollSaveResult => _pollSaveController.stream;
+  BehaviorSubject<PollResponseModel> _pollSaveController = new BehaviorSubject();
+  Stream<PollResponseModel> get pollSaveResult => _pollSaveController.stream;
 
   int currentPage = 1;
-
+  String userName = "";
   void setAnswerValue(int questionIndex, int answerId) async {
     final poll = await pollsResult.first;
     poll.questions[questionIndex].selectedAnswerId = answerId;
@@ -40,6 +42,7 @@ class MeasureValueBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
   void loadPolls(int conceptId) async {
     isLoading = true;
+    userName = await _sharedPreferencesManager.getStringValue(SharedKey.userName);
     final res = await _iPollRepository.getPollsByConcept(conceptId);
     if (res is ResultSuccess<List<PollModel>>) {
       if (res.value.isNotEmpty)
@@ -56,7 +59,7 @@ class MeasureValueBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     isLoading = true;
     final poll = await pollsResult.first;
     final res = await _iPollRepository.setPollResult([poll]);
-    if (res is ResultSuccess<String>) {
+    if (res is ResultSuccess<PollResponseModel>) {
       _pollSaveController.sinkAddSafe(res.value);
     }else {
       showErrorMessage(res);

@@ -27,7 +27,7 @@ class StringsEn implements StringsBase {
   String get previous => "Previous";
 
   @override
-  String get update => "Analize";
+  String get answerPoll => "Analize";
 
   @override
   String get valuesConcept =>
@@ -341,4 +341,16 @@ class StringsEn implements StringsBase {
 
   @override
   String get filterAll => "Todos";
+
+  @override
+  String get congratulations => "Enhorabuena";
+
+  @override
+  String get rewardGain => "Has obtenido una recompensa de";
+
+  @override
+  String get rewardGainPoints => "puntos.";
+
+  @override
+  String get polls => "Cuestionarios";
 }

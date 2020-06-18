@@ -79,12 +79,12 @@ class RewardModel {
   String category;
 
   RewardModel(
-      {this.id,
-      this.userId,
+      {this.id = 0,
+      this.userId = 0,
       this.points = 0,
-      this.rewardCategoryId,
-      this.categoryId,
-      this.category});
+      this.rewardCategoryId = 0,
+      this.categoryId = 0,
+      this.category = ""});
 }
 
 class PollResponseModel {

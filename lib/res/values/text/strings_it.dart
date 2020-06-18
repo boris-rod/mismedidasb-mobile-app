@@ -27,7 +27,7 @@ class StringsIt implements StringsBase {
   String get previous => "Anteriore";
 
   @override
-  String get update => "Analizzare";
+  String get answerPoll => "Analizzare";
 
   @override
   String get valuesConcept =>
@@ -342,4 +342,16 @@ class StringsIt implements StringsBase {
 
   @override
   String get filterAll => "Todos";
+
+  @override
+  String get congratulations => "Enhorabuena";
+
+  @override
+  String get rewardGain => "Has obtenido una recompensa de";
+
+  @override
+  String get rewardGainPoints => "puntos.";
+
+  @override
+  String get polls => "Cuestionarios";
 }

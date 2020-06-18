@@ -18,7 +18,7 @@ abstract class StringsBase implements WidgetsLocalizations {
 
   String get previous;
 
-  String get update;
+  String get answerPoll;
 
 //  String get valuesConcept;
 
@@ -223,4 +223,12 @@ abstract class StringsBase implements WidgetsLocalizations {
   String get createFood;
 
   String get filterAll;
+
+  String get congratulations;
+
+  String get rewardGain;
+
+  String get rewardGainPoints;
+
+  String get polls;
 }

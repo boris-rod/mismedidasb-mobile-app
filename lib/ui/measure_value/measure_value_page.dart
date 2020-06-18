@@ -19,6 +19,7 @@ import 'package:mismedidasb/ui/_tx_widget/tx_icon_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_icon_navigator_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_main_app_bar_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_show_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_textlink_widget.dart';
 import 'package:mismedidasb/ui/measure_value/measure_value_bloc.dart';
@@ -47,14 +48,23 @@ class _MeasureValueState
           duration: Duration(milliseconds: 300), curve: Curves.linear);
     });
     bloc.pollSaveResult.listen((onData) {
-      if (onData is String && onData.isNotEmpty) {
-        showTXModalBottomSheet(
+      if (onData is PollResponseModel) {
+        showAlertDialogForPollsAnswerResult(
             context: context,
-            builder: (ctx) {
-              return TXBottomResultInfo(
-                content: onData,
-              );
+            content: onData.result,
+            title: "${R.string.thanks} ${bloc.userName}",
+            onOk: () {
+              NavigationUtils.pop(context);
+              NavigationUtils.pop(context, result: onData);
             });
+//
+//        showTXModalBottomSheet(
+//            context: context,
+//            builder: (ctx) {
+//              return TXBottomResultInfo(
+//                content: onData,
+//              );
+//            });
       }
     });
     bloc.loadPolls(widget.conceptModel.id);
@@ -154,7 +164,7 @@ class _MeasureValueState
                                   snapshot.data.questions.length >
                                       bloc.currentPage
                                       ? R.string.next
-                                      : R.string.save.toLowerCase(),
+                                      : R.string.answerPoll,
                                   previousTitle: R.string.previous,
                                 );
                               },

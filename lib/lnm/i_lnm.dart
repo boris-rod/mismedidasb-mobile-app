@@ -6,7 +6,7 @@ abstract class ILNM {
   void setup();
 
   Future<void> showCommonNotification(
-      {String channelId,
+      {int channelId,
       String title,
       String content,
       NotificationType notificationType});

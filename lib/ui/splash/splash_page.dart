@@ -9,6 +9,8 @@ import 'package:mismedidasb/ui/login/login_page.dart';
 import 'package:mismedidasb/ui/splash/splash_bloc.dart';
 import 'dart:ui' as ui;
 
+import 'package:mismedidasb/utils/utils.dart';
+
 class SplashPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _SplashState();
@@ -17,7 +19,9 @@ class SplashPage extends StatefulWidget {
 class _SplashState extends StateWithBloC<SplashPage, SplashBloC> {
   void initState() {
     super.initState();
-  Future.delayed(Duration(milliseconds: 100), (){
+    Utils.setStatusBarColor(R.color.primary_dark_color);
+
+    Future.delayed(Duration(milliseconds: 100), (){
     String sysLanCode = ui.window.locale.languageCode;
     bloc.resolveInitialSettings(
         SettingModel(languageCode: sysLanCode, isDarkMode: false));

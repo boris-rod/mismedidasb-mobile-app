@@ -35,8 +35,6 @@ class _MyMeasuresBState extends StateWithBloC<MyMeasuresBApp, AppBloC> {
   @override
   void initState() {
     super.initState();
-    SystemChrome.setSystemUIOverlayStyle(
-        SystemUiOverlayStyle(statusBarColor: R.color.primary_dark_color));
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);

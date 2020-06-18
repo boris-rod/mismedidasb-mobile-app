@@ -29,18 +29,21 @@ class PollApi extends BaseApi implements IPollApi {
   }
 
   @override
-  Future<String> setPollResult(List<PollResultModel> list) async {
+  Future<PollResponseModel> setPollResult(List<PollResultModel> list) async {
     final map =
         list.map((model) => _iPollConverter.toPollResultMap(model)).toList();
     final body = jsonEncode({"pollDatas": map});
     final res =
         await _networkHandler.post(path: Endpoint.set_polls_result, body: body);
     if (res.statusCode == RemoteConstants.code_success) {
-      String result = "";
-      var tagsJson = jsonDecode(res.body)[RemoteConstants.result];
-      List<String> tags = tagsJson != null ? List.from(tagsJson) : null;
-      result = tags.isNotEmpty ? tags[0] : result;
-      return result;
+      PollResponseModel model =
+      _iPollConverter.fromJsonPollResponse(jsonDecode(res.body));
+      return model;
+//      String result = "";
+//      var tagsJson = jsonDecode(res.body)[RemoteConstants.result];
+//      List<String> tags = tagsJson != null ? List.from(tagsJson) : null;
+//      result = tags.isNotEmpty ? tags[0] : result;
+//      return result;
     }
     throw serverException(res);
   }

@@ -37,15 +37,20 @@ class MeasureHealthBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
   Stream<List<PollModel>> get pollsResult => _pollsController.stream;
 
-  BehaviorSubject<String> _pollSaveController = new BehaviorSubject();
+  BehaviorSubject<PollResponseModel> _pollSaveController = new BehaviorSubject();
 
-  Stream<String> get pollSaveResult => _pollSaveController.stream;
+  Stream<PollResponseModel> get pollSaveResult => _pollSaveController.stream;
+
+  BehaviorSubject<PollResponseModel> _rewardController = new BehaviorSubject();
+
+  Stream<PollResponseModel> get rewardResult => _rewardController.stream;
 
   int currentPage = 1;
   HealthMeasureResultModel healthMeasureResultModel;
-
+  String userName = "";
   void loadPolls(int conceptId) async {
     isLoading = true;
+    userName = await _sharedPreferencesManager.getStringValue(SharedKey.userName);
     final res = await _iPollRepository.getPollsByConcept(conceptId);
     if (res is ResultSuccess<List<PollModel>>) {
       _pollsController.sinkAddSafe(res.value);
@@ -72,7 +77,7 @@ class MeasureHealthBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     isLoading = true;
     final polls = await pollsResult.first;
     final res = await _iPollRepository.setPollResult(polls);
-    if (res is ResultSuccess<String>) {
+    if (res is ResultSuccess<PollResponseModel>) {
       final profileRes = await _iUserRepository.getProfile();
       if (profileRes is ResultSuccess<UserModel>) {
         await _sharedPreferencesManager
@@ -91,6 +96,7 @@ class MeasureHealthBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   @override
   void dispose() {
     _measureController.close();
+    _rewardController.close();
     _pageController.close();
     disposeLoadingBloC();
     disposeErrorHandlerBloC();

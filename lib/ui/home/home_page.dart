@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:mismedidasb/data/api/remote/remote_constanst.dart';
 import 'package:mismedidasb/domain/health_concept/health_concept.dart';
+import 'package:mismedidasb/domain/poll_model/poll_model.dart';
 import 'package:mismedidasb/enums.dart';
 import 'package:mismedidasb/fcm/fcm_background_notification_aware_widget.dart';
 import 'package:mismedidasb/lnm/i_lnm.dart';
@@ -21,6 +22,7 @@ import 'package:mismedidasb/ui/_tx_widget/tx_icon_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_main_app_bar_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_network_image.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_show_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
 import 'package:mismedidasb/ui/food_craving/food_craving_page.dart';
 import 'package:mismedidasb/ui/food_dish/food_dish_page.dart';
@@ -33,6 +35,7 @@ import 'package:mismedidasb/ui/measure_wellness/measure_wellness_page.dart';
 import 'package:mismedidasb/ui/poll_notification/poll_notification_page.dart';
 import 'package:mismedidasb/ui/profile/profile_page.dart';
 import 'package:mismedidasb/ui/settings/settings_page.dart';
+import 'package:mismedidasb/utils/utils.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -45,6 +48,8 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
   @override
   void initState() {
     super.initState();
+    Utils.setStatusBarColor(R.color.primary_dark_color);
+
     bloc.loadHomeData();
     bloc.launchNotiPollResult.listen((onData) {
       if (onData) {
@@ -72,7 +77,7 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
       child: Stack(
         children: <Widget>[
           TXCustomActionBar(
-            key: _keyHome,
+            scaffoldKey: _keyHome,
             showLeading: false,
             actionBarColor: R.color.home_color,
             actions: [
@@ -83,17 +88,17 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
                   width: 35,
                 ),
                 onTap: () async {
-                  NavigationUtils.push(context, PollNotificationPage());
-//                  final res =
-//                      await NavigationUtils.push(context, ProfilePage());
-//                  if (res is SettingAction) {
-//                    if (res == SettingAction.logout ||
-//                        res == SettingAction.removeAccount) {
-//                      NavigationUtils.pushReplacement(context, LoginPage());
-//                    } else if (res == SettingAction.languageCodeChanged) {
-//                      bloc.loadHomeData();
-//                    }
-//                  }
+//                  NavigationUtils.push(context, PollNotificationPage());
+                  final res =
+                      await NavigationUtils.push(context, ProfilePage());
+                  if (res is SettingAction) {
+                    if (res == SettingAction.logout ||
+                        res == SettingAction.removeAccount) {
+                      NavigationUtils.pushReplacement(context, LoginPage());
+                    } else if (res == SettingAction.languageCodeChanged) {
+                      bloc.loadHomeData();
+                    }
+                  }
                 },
               )
             ],
@@ -181,8 +186,25 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
                   });
             } else {
               final res = await NavigationUtils.push(context, page);
-              SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-                  statusBarColor: R.color.primary_dark_color));
+              if (res is PollResponseModel && res.reward.points > 0) {
+                if (page is MeasureHealthPage) {
+                  _keyHome.currentState.showSnackBar(showSnackBar(
+                      title: "${R.string.congratulations} ${bloc.userName}",
+                      content:
+                          "${R.string.rewardGain} ${res.reward.points} ${R.string.rewardGainPoints}"));
+                } else if (page is MeasureValuePage) {
+                  _keyHome.currentState.showSnackBar(showSnackBar(
+                      title: "${R.string.congratulations} ${bloc.userName}",
+                      content:
+                          "${R.string.rewardGain} ${res.reward.points} ${R.string.rewardGainPoints}"));
+                } else if (page is MeasureWellnessPage) {
+                  _keyHome.currentState.showSnackBar(showSnackBar(
+                      title: "${R.string.congratulations} ${bloc.userName}",
+                      content:
+                          "${R.string.rewardGain} ${res.reward.points} ${R.string.rewardGainPoints}"));
+                }
+              }
+              Utils.setStatusBarColor(R.color.primary_dark_color);
             }
           }
         }),
@@ -220,14 +242,45 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
     );
   }
 
-  Widget _showPollNotification(BuildContext context) {
-    return Container(
-      height: 300,
-      child: Center(
-        child: TXTextWidget(
-          text: "Test",
-        ),
+  showAlertDialog(BuildContext context) {
+    // set up the button
+    Widget okButton = FlatButton(
+      child: Text("OK"),
+      onPressed: () {
+        NavigationUtils.pop(context);
+        NavigationUtils.pop(context);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      titlePadding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+      title: Row(
+        children: <Widget>[
+          Container(
+            child: Image.asset(
+              R.image.logo,
+              width: 80,
+              height: 80,
+            ),
+          ),
+          Expanded(
+            child: TXTextWidget(
+              text: R.string.thanks,
+            ),
+          )
+        ],
       ),
+      content: Text("This is my message."),
+      actions: [okButton],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 }

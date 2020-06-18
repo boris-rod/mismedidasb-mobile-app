@@ -27,7 +27,7 @@ class StringsEs implements StringsBase {
   String get previous => "anterior";
 
   @override
-  String get update => "analizar";
+  String get answerPoll => "responder";
 
   @override
   String get valuesConcept =>
@@ -355,4 +355,16 @@ class StringsEs implements StringsBase {
 
   @override
   String get filterAll => "Todos";
+
+  @override
+  String get congratulations => "Enhorabuena";
+
+  @override
+  String get rewardGain => "Has obtenido una recompensa de";
+
+  @override
+  String get rewardGainPoints => "puntos.";
+
+  @override
+  String get polls => "Cuestionarios";
 }

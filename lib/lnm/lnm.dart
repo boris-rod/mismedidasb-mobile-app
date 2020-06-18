@@ -33,6 +33,8 @@ class LNM implements ILNM {
   static int planFoodsId = 333;
   static int makeExerciseId = 444;
   static int pollNotificationId = 555;
+  static int localCommonNoti = 11;
+  static int fcmNoti = 22;
 
   LNM(this.flutterLocalNotificationsPlugin, this._sharedPreferencesManager);
 
@@ -110,7 +112,7 @@ class LNM implements ILNM {
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
 
     await flutterLocalNotificationsPlugin.showDailyAtTime(pollNotificationId,
-        title, content, Time(19, 43, 0), platformChannelSpecifics,
+        title, content, Time(10, 30, 0), platformChannelSpecifics,
         payload: '$pollNotificationId');
   }
 
@@ -377,12 +379,12 @@ class LNM implements ILNM {
 
   @override
   Future<void> showCommonNotification(
-      {String channelId = "0",
+      {int channelId = 0,
       String title = "",
       String content = "",
       NotificationType notificationType = NotificationType.GENERAL}) async {
     var androidPlatformChannelSpecifics = _getCommonAndroidNotificationDetail(
-        channelId: channelId,
+        channelId: channelId.toString(),
         title: title,
         content: content,
         notificationType: notificationType);
@@ -390,8 +392,9 @@ class LNM implements ILNM {
     var platformChannelSpecifics = NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
 
-    await flutterLocalNotificationsPlugin
-        .show(99, title, content, platformChannelSpecifics, payload: channelId);
+    await flutterLocalNotificationsPlugin.show(
+        channelId, title, content, platformChannelSpecifics,
+        payload: channelId.toString());
   }
 
   @override

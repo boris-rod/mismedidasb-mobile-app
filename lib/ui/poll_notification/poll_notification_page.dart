@@ -17,6 +17,7 @@ import 'package:mismedidasb/ui/_tx_widget/tx_custom_action_bar.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_icon_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_main_app_bar_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_show_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_textlink_widget.dart';
 import 'package:mismedidasb/ui/poll_notification/poll_notification_bloc.dart';
@@ -45,8 +46,12 @@ class _PollNotificationState
     });
 
     bloc.rewardResult.listen((onData) {
-      _keyPollNotifications.currentState.showSnackBar(getSnackBarWidget(
-          "Felicidades ha obtenido una recompensa de ${onData.reward.points} puntos."));
+      _keyPollNotifications.currentState.showSnackBar(
+        showSnackBar(
+            title: "${R.string.congratulations} ${bloc.userName}",
+            content:
+                "${R.string.rewardGain} ${onData.reward.points} ${R.string.rewardGainPoints}"),
+      );
     });
     bloc.loadData();
   }
@@ -101,7 +106,7 @@ class _PollNotificationState
                             Container(
                               child: Container(
                                 child: TXTextWidget(
-                                  text: "Cuestionarios",
+                                  text: R.string.polls,
                                   fontWeight: FontWeight.w900,
                                   size: 18,
                                   maxLines: 1,
@@ -155,7 +160,7 @@ class _PollNotificationState
 ////                                      bloc.changePage(-1);
 //                                    }
 //                                  : null,
-                              nextTitle: "responder",
+                              nextTitle: R.string.answerPoll,
 //                              previousTitle: R.string.previous,
                             );
                           },

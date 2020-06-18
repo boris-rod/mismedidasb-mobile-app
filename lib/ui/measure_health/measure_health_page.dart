@@ -28,10 +28,12 @@ import 'package:mismedidasb/ui/_tx_widget/tx_icon_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_icon_navigator_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_main_app_bar_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_show_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_textlink_widget.dart';
 import 'package:mismedidasb/ui/measure_health/health_measure_result_model.dart';
 import 'package:mismedidasb/ui/measure_health/measure_health_bloc.dart';
+import 'package:mismedidasb/utils/utils.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class MeasureHealthPage extends StatefulWidget {
@@ -46,27 +48,42 @@ class MeasureHealthPage extends StatefulWidget {
 class _MeasureHealthState
     extends StateWithBloC<MeasureHealthPage, MeasureHealthBloC> {
   final PageController pageController = PageController();
+  final _keyPollHealthy = new GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    SystemChrome.setSystemUIOverlayStyle(
-        SystemUiOverlayStyle(statusBarColor: R.color.health_color));
+    Utils.setStatusBarColor(R.color.health_color);
+
     bloc.pageResult.listen((onData) {
       pageController.animateToPage(onData,
           duration: Duration(milliseconds: 300), curve: Curves.linear);
     });
     bloc.pollSaveResult.listen((onData) {
-      if (onData is String && onData.isNotEmpty) {
-        showTXModalBottomSheet(
+      if (onData is PollResponseModel) {
+        showAlertDialogForPollsAnswerResult(
             context: context,
-            builder: (ctx) {
-              return TXBottomResultInfo(
-                content: onData,
-              );
+            content: onData.result,
+            title: "${R.string.thanks} ${bloc.userName}",
+            onOk: () {
+              NavigationUtils.pop(context);
+              NavigationUtils.pop(context, result: onData);
             });
+//        showTXModalBottomSheet(
+//            context: context,
+//            builder: (ctx) {
+//              return TXBottomResultInfo(
+//                content: onData,
+//              );
+//            });
       }
     });
+    bloc.rewardResult.listen((onData) {
+      _keyPollHealthy.currentState.showSnackBar(showSnackBar(
+          title:
+              "Felicidades ha obtenido una recompensa de ${onData.reward.points} puntos."));
+    });
+
     bloc.loadPolls(widget.conceptModel.id);
   }
 
@@ -76,6 +93,7 @@ class _MeasureHealthState
     return Stack(
       children: <Widget>[
         TXCustomActionBar(
+          scaffoldKey: _keyPollHealthy,
           actionBarColor: R.color.health_color,
           body: StreamBuilder<List<PollModel>>(
             stream: bloc.pollsResult,
@@ -84,7 +102,7 @@ class _MeasureHealthState
               return Stack(
                 children: <Widget>[
                   Positioned(
-                    top : 0,
+                    top: 0,
                     left: -20,
                     right: 0,
                     bottom: 0,
@@ -162,7 +180,7 @@ class _MeasureHealthState
                                   : null,
                               nextTitle: snapshot.data.length > bloc.currentPage
                                   ? R.string.next
-                                  : R.string.update,
+                                  : R.string.answerPoll,
                               previousTitle: R.string.previous,
                             );
                           },

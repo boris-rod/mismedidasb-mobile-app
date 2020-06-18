@@ -61,9 +61,13 @@ class PollNotificationBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
       _exercisePlanReachedController.stream;
 
   int currentPageIndex = 0;
+  String userName = "";
 
   void loadData() async {
     isLoading = true;
+    userName =
+        await _sharedPreferencesManager.getStringValue(SharedKey.userName);
+
     final DateTime dateTime = await _sharedPreferencesManager
         .getDateTimeValue(SharedKey.physicalExerciseTime);
     exerciseTime = TimeOfDay(hour: dateTime.hour, minute: dateTime.minute);
@@ -134,13 +138,11 @@ class PollNotificationBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
       _pageController.sinkAddSafe(currentPageIndex);
 
       if (currentPageIndex >= (await soloQuestionsResult.first).length) {
-        final userName =
-            await _sharedPreferencesManager.getStringValue(SharedKey.userName);
         _ilnm.showCommonNotification(
-            channelId: LNM.pollNotificationId.toString(),
+            channelId: LNM.localCommonNoti,
             title: "Enhorabuena $userName",
             content:
-                "Ha obtenido una recompensa de ${res.value.reward.points} puntos.",
+                "Has obtenido una recompensa de ${res.value.reward.points} puntos.",
             notificationType: NotificationType.REWARD);
       } else {
         _rewardController.sinkAddSafe(res.value);

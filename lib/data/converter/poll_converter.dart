@@ -95,7 +95,10 @@ class PollConverter implements IPollConverter {
   @override
   PollResponseModel fromJsonPollResponse(Map<String, dynamic> json) {
     final PollResponseModel model = PollResponseModel(
-        result: json["result"], reward: fromJsonReward(json["reward"]));
+        result: (json["result"] is List<dynamic>)
+            ? List.from(json["result"])[0]
+            : "",
+        reward: json["reward"] != null ? fromJsonReward(json["reward"]) : RewardModel());
     return model;
   }
 

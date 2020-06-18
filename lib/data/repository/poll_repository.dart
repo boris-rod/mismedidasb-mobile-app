@@ -21,7 +21,7 @@ class PollRepository extends BaseRepository implements IPollRepository {
   }
 
   @override
-  Future<Result<String>> setPollResult(List<PollModel> polls) async {
+  Future<Result<PollResponseModel>> setPollResult(List<PollModel> polls) async {
     try {
       List<PollResultModel> list = [];
       polls.forEach((poll) {
