@@ -9,7 +9,7 @@ class StringsEs implements StringsBase {
   String get appName => "PlaniFive";
 
   @override
-  String get foodDishes => "Mis platos";
+  String get foodDishes => "Mi Plan de Comidas";
 
   @override
   String get myMeasureHealth => "Mis medidas de salud";

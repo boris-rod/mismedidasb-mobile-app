@@ -15,21 +15,27 @@ class TXFoodHealthyFilterWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
         Expanded(
-          flex: 2,
+          flex: 1,
           child: Column(
             children: <Widget>[
               TXIconButtonWidget(
-                icon: Icon(Icons.filter_list, color: R.color.gray_darkest,),
+                icon: Image.asset(
+                  R.image.down_arrow_icon,
+                  height: 30,
+                  width: 30,
+                ),
                 onPressed: () {
                   onFilterTapped(FoodHealthy.fruitVeg.index);
                 },
               ),
+              SizedBox(height: 3,),
               TXTextWidget(
-                text: "Frutas y/o Vegetales",
-                color: Colors.black,
-                size: 12,
+                text: "Frutas/Vegetales",
+                color: Colors.white,
+                size: 11,
               )
             ],
           ),
@@ -39,15 +45,20 @@ class TXFoodHealthyFilterWidget extends StatelessWidget {
           child: Column(
             children: <Widget>[
               TXIconButtonWidget(
-                icon: Icon(Icons.filter_list, color: R.color.gray_darkest),
+                icon: Image.asset(
+                  R.image.down_arrow_icon,
+                  height: 30,
+                  width: 30,
+                ),
                 onPressed: () {
                   onFilterTapped(FoodHealthy.proteic.index);
                 },
               ),
+              SizedBox(height: 3,),
               TXTextWidget(
                 text: "Protéico",
-                color: Colors.black,
-                size: 12,
+                color: Colors.white,
+                size: 11,
               )
             ],
           ),
@@ -57,15 +68,20 @@ class TXFoodHealthyFilterWidget extends StatelessWidget {
           child: Column(
             children: <Widget>[
               TXIconButtonWidget(
-                icon: Icon(Icons.filter_list, color: R.color.gray_darkest),
+                icon: Image.asset(
+                  R.image.down_arrow_icon,
+                  height: 30,
+                  width: 30,
+                ),
                 onPressed: () {
                   onFilterTapped(FoodHealthy.caloric.index);
                 },
               ),
+              SizedBox(height: 3,),
               TXTextWidget(
                 text: "Calórico",
-                color: Colors.black,
-                size: 12,
+                color: Colors.white,
+                size: 11,
               )
             ],
           ),

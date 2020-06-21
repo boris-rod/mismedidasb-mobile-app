@@ -29,42 +29,79 @@ class TXDailyNutritionalInfoWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: InkWell(
-                  child: Container(
-                    child: Row(
-                      children: <Widget>[
-                        Icon(
-                          dailyModel.headerExpanded
-                              ? Icons.keyboard_arrow_up
-                              : Icons.keyboard_arrow_down,
-                          size: 28,
-                        ),
-                        TXTextWidget(
+          Container(
+            height: 40,
+            alignment: Alignment.center,
+            padding: EdgeInsets.symmetric(horizontal: 15),
+            child: Stack(
+              alignment: Alignment.centerLeft,
+              children: <Widget>[
+                Container(
+                  alignment: Alignment.center,
+                  height: 16,
+                  margin: EdgeInsets.only(left: 15),
+                  padding: EdgeInsets.only(left: 20, right: 5),
+                  color: R.color.food_nutri_info,
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: TXTextWidget(
                           text: R.string.nutritionalInfo,
-                          size: 12,
+                          size: 11,
                           textAlign: TextAlign.start,
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
                         ),
-                      ],
-                    ),
-                    margin: EdgeInsets.only(left: 5),
+                      ),
+                      TXTextWidget(
+                        text: CalendarUtils.showInFormat(
+                            "d/M/yyyy", dailyModel.dateTime),
+                        size: 11,
+                        color: Colors.black,
+                        textAlign: TextAlign.start,
+                        fontWeight: FontWeight.bold,
+                      )
+                    ],
                   ),
-                  onTap: onHeaderTap,
                 ),
-              ),
-              TXTextWidget(
-                text: CalendarUtils.showInFormat("dd/MMM", dailyModel.dateTime),
-                size: 14,
-                color: R.color.primary_dark_color,
-                textAlign: TextAlign.start,
-                fontWeight: FontWeight.bold,
-              )
-            ],
+                Image.asset(
+                  R.image.down_arrow_icon,
+                  height: 35,
+                  width: 35,
+                ),
+              ],
+            ),
           ),
+//          Row(
+//            children: <Widget>[
+//              Expanded(
+//                child: InkWell(
+//                  child: Container(
+//                    child: Row(
+//                      children: <Widget>[
+//                        TXTextWidget(
+//                          text: R.string.nutritionalInfo,
+//                          size: 12,
+//                          textAlign: TextAlign.start,
+//                          color: Colors.black,
+//                          fontWeight: FontWeight.bold,
+//                        ),
+//                      ],
+//                    ),
+//                    margin: EdgeInsets.only(left: 5),
+//                  ),
+//                  onTap: onHeaderTap,
+//                ),
+//              ),
+//              TXTextWidget(
+//                text: CalendarUtils.showInFormat("dd/MMM", dailyModel.dateTime),
+//                size: 14,
+//                color: R.color.primary_dark_color,
+//                textAlign: TextAlign.start,
+//                fontWeight: FontWeight.bold,
+//              )
+//            ],
+//          ),
           SizedBox(
             height: 5,
           ),
@@ -77,6 +114,7 @@ class TXDailyNutritionalInfoWidget extends StatelessWidget {
                         imc: imc,
                         title: R.string.calories,
                         titleSize: 10,
+                        backgroundProgress: R.color.food_blue_medium,
                         showPercentageInfo: dailyModel.showKCalPercentages,
                         percentage: currentCaloriesPercentage,
                         mark1: dailyModel.dailyFoodPlanModel.kCalMin,
@@ -90,7 +128,7 @@ class TXDailyNutritionalInfoWidget extends StatelessWidget {
                     Container(
                       padding: EdgeInsets.symmetric(
                         horizontal: 20,
-                      ),
+                      ).copyWith(left: 30),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[

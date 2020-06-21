@@ -12,7 +12,12 @@ class TXIconButtonWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 30,
+      width: 30,
       child: IconButton(
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+        padding: EdgeInsets.all(0),
+        constraints: BoxConstraints(maxHeight: 30, maxWidth: 30),
         icon: icon,
         onPressed: onPressed,
         iconSize: iconSize ?? 20,

@@ -29,4 +29,12 @@ class AppImage {
   final wellness_title = 'lib/res/assets/img/wellness_title.png';
   final craving_title = 'lib/res/assets/img/craving_title.png';
   final icon_title = 'lib/res/assets/img/icon_title.png';
+  final up_arrow_icon = 'lib/res/assets/img/up_arrow_icon.png';
+  final down_arrow_icon = 'lib/res/assets/img/down_arrow_icon.png';
+  final more_vertical_icon = 'lib/res/assets/img/more_vertical_icon.png';
+  final divider_icon = 'lib/res/assets/img/divider_icon.png';
+  final close_icon = 'lib/res/assets/img/close_icon.png';
+  final calendar_icon = 'lib/res/assets/img/calendar_icon.png';
+  final add_icon = 'lib/res/assets/img/add_icon.png';
+  final under_limit_icon = 'lib/res/assets/img/under_limit_icon.png';
 }

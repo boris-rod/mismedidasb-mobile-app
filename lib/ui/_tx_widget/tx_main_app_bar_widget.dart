@@ -7,9 +7,11 @@ class TXMainAppBarWidget extends StatelessWidget {
   final Widget body;
   final String title;
   final bool centeredTitle;
-  final TXIconButtonWidget leading;
+  final Widget leading;
   final List<Widget> actions;
   final GlobalKey<ScaffoldState> scaffoldKey;
+  final Color backgroundColorAppBar;
+  final FontWeight titleFont;
 
   const TXMainAppBarWidget(
       {Key key,
@@ -17,7 +19,9 @@ class TXMainAppBarWidget extends StatelessWidget {
       this.title = "",
       this.centeredTitle = false,
       this.leading,
-      this.actions = const [], this.scaffoldKey})
+      this.actions = const [],
+      this.scaffoldKey,
+      this.backgroundColorAppBar, this.titleFont})
       : super(key: key);
 
   @override
@@ -25,6 +29,7 @@ class TXMainAppBarWidget extends StatelessWidget {
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
+        backgroundColor: backgroundColorAppBar,
         centerTitle: true,
         leading: leading ??
             TXIconButtonWidget(
@@ -36,6 +41,7 @@ class TXMainAppBarWidget extends StatelessWidget {
           maxLines: 1,
           textOverflow: TextOverflow.ellipsis,
           size: 18,
+          fontWeight: titleFont,
         ),
         actions: actions,
       ),

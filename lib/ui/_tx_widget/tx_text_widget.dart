@@ -9,6 +9,7 @@ class TXTextWidget extends StatelessWidget {
   final int maxLines;
   final TextOverflow textOverflow;
   final TextAlign textAlign;
+  final FontStyle fontStyle;
 
   TXTextWidget(
       {@required this.text,
@@ -17,7 +18,8 @@ class TXTextWidget extends StatelessWidget {
       this.fontWeight,
       this.maxLines,
       this.textOverflow,
-      this.textAlign});
+      this.textAlign,
+      this.fontStyle});
 
   @override
   Widget build(BuildContext context) {
@@ -27,10 +29,11 @@ class TXTextWidget extends StatelessWidget {
       style: TextStyle(
         color: color ?? Colors.black,
         fontSize: size ?? 15,
+        fontStyle: fontStyle ?? FontStyle.normal,
         fontWeight: fontWeight ?? FontWeight.w500,
       ),
       maxLines: maxLines,
-      overflow: textOverflow ?? TextOverflow.visible,
+      overflow: textOverflow,
     );
   }
 }

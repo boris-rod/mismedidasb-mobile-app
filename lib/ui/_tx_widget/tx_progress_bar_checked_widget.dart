@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rounded_progress_bar/flutter_rounded_progress_bar.dart';
 import 'package:flutter_rounded_progress_bar/rounded_progress_bar_style.dart';
+import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
 
 class TXProgressBarCheckedWidget extends StatelessWidget {
@@ -38,23 +39,24 @@ class TXProgressBarCheckedWidget extends StatelessWidget {
             percent: percentage,
             childLeft: TXTextWidget(
               text: showTitle ? title : "",
-              color: Colors.black,
-              size: titleSize ?? 10,
+              color: Colors.white,
+              size: titleSize ?? 12,
+              fontWeight: FontWeight.bold,
             ),
             childRight: Container(
               margin: EdgeInsets.only(right: 10),
               child: TXTextWidget(
                 fontWeight: FontWeight.bold,
                 text: showPercentage ? "${percentage.toInt()}%" : "",
-                size: titleSize ?? 10,
-                color: Colors.black,
+                size: titleSize ?? 12,
+                color: Colors.white,
               ),
             ),
             margin: EdgeInsets.all(0),
             style: RoundedProgressBarStyle(
                 widthShadow: 0,
-                backgroundProgress: Colors.grey[200],
-                colorProgress: color ?? Colors.redAccent,
+                backgroundProgress: R.color.food_blue_medium,
+                colorProgress: R.color.food_blue_dark,
                 borderWidth: 0),
           ),
         ),

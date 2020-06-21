@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rounded_progress_bar/flutter_rounded_progress_bar.dart';
 import 'package:flutter_rounded_progress_bar/rounded_progress_bar_style.dart';
+import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
 
 class TXComboProgressBarWidget extends StatelessWidget {
@@ -14,6 +15,7 @@ class TXComboProgressBarWidget extends StatelessWidget {
   final bool showValueInBar;
   final bool showPercentageInfo;
   final double imc;
+  final Color backgroundProgress;
 
   const TXComboProgressBarWidget(
       {Key key,
@@ -26,7 +28,7 @@ class TXComboProgressBarWidget extends StatelessWidget {
       this.value,
       this.height,
       this.titleSize,
-      this.imc = 1})
+      this.imc = 1, this.backgroundProgress})
       : super(key: key);
 
   @override
@@ -41,7 +43,7 @@ class TXComboProgressBarWidget extends StatelessWidget {
                 percent: percentage,
                 childLeft: TXTextWidget(
                   text: title,
-                  color: Colors.black,
+                  color: percentage < 1 ? Colors.white : Colors.black,
                   size: titleSize ?? 12,
                 ),
                 childRight: Container(
@@ -52,15 +54,15 @@ class TXComboProgressBarWidget extends StatelessWidget {
                         ? "${percentage.toInt()}% ${showValueInBar ? "${value.toStringAsFixed(2)}kCal" : ""}"
                         : "",
                     size: titleSize ?? 10,
-                    color: Colors.black,
+                    color: Colors.white,
                   ),
                 ),
                 margin: EdgeInsets.all(0),
                 style: RoundedProgressBarStyle(
                     widthShadow: 0,
-                    backgroundProgress: Colors.grey[200],
+                    backgroundProgress: backgroundProgress ?? R.color.food_blue_medium,
                     colorProgress:
-                        imc < 18.5 ? Colors.redAccent : Colors.yellowAccent,
+                        imc < 18.5 ? R.color.food_red : R.color.food_yellow,
                     borderWidth: 0),
               )
             : Container(),
@@ -86,8 +88,8 @@ class TXComboProgressBarWidget extends StatelessWidget {
                 margin: EdgeInsets.all(0),
                 style: RoundedProgressBarStyle(
                     widthShadow: 0,
-                    backgroundProgress: Colors.grey[200],
-                    colorProgress: Colors.greenAccent,
+                    backgroundProgress: backgroundProgress ?? R.color.food_blue_medium,
+                    colorProgress: R.color.food_green,
                     borderWidth: 0),
               )
             : Container(),
@@ -113,9 +115,9 @@ class TXComboProgressBarWidget extends StatelessWidget {
                 margin: EdgeInsets.all(0),
                 style: RoundedProgressBarStyle(
                     widthShadow: 0,
-                    backgroundProgress: Colors.grey[200],
+                    backgroundProgress: backgroundProgress ?? R.color.food_blue_medium,
                     colorProgress:
-                        imc < 18.5 ? Colors.greenAccent : Colors.redAccent,
+                        imc < 18.5 ? R.color.food_green : R.color.food_red,
                     borderWidth: 0),
               )
             : Container()
