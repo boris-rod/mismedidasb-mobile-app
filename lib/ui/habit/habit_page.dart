@@ -89,6 +89,7 @@ class _HabitState extends StateWithBloC<HabitPage, HabitBloC> {
                                       physics: BouncingScrollPhysics(),
                                       child: Container(
                                         width: double.infinity,
+                                        padding: EdgeInsets.only(right: 10),
                                         child: Column(
                                           children: <Widget>[
                                             ..._getHabitsView(snapshot.data)

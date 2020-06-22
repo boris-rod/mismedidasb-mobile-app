@@ -127,7 +127,7 @@ class TitleSubTitlesModel {
     this.subTitles,
   });
 
-  static getHabitsLiterals() {
+  static List<TitleSubTitlesModel> getHabitsLiterals() {
     List<TitleSubTitlesModel> habits = [];
     habits.add(TitleSubTitlesModel(
         number: 1,
@@ -189,5 +189,37 @@ class TitleSubTitlesModel {
         title: "Fomente un ocio saludable:",
         subTitles: ["Pasee al aire libre con su familia o amigos."]));
     return habits;
+  }
+
+  static List<TitleSubTitlesModel> getCravingLiterals() {
+    List<TitleSubTitlesModel> cravings = [];
+
+    cravings.add(TitleSubTitlesModel(
+        number: 1,
+        title: "Dar un paseo caminando durante 15 o 20 minutos.",
+        subTitles: []));
+    cravings.add(TitleSubTitlesModel(
+        number: 2,
+        title:
+            "FBeber un vaso de agua a sorbos peque&ntilde;os durante 20 minutos.",
+        subTitles: []));
+    cravings.add(TitleSubTitlesModel(
+        number: 3,
+        title:
+            "Describa sus metas, proyectos y aspiraciones en una extensión no mayor a un folio.",
+        subTitles: []));
+    cravings.add(TitleSubTitlesModel(
+        number: 4, title: "Jugar al Tetris de 3-5 minutos.", subTitles: []));
+    cravings.add(TitleSubTitlesModel(
+        number: 5,
+        title:
+            "Imagine lo más vívidamente posible una de las siguientes opciones durante 5 minutos:",
+        subTitles: [
+          "que está realizando su actividad favorita.",
+          "el olor a eucalipto, pomada china o menta.",
+          "que come el alimento deseado 33 veces, a razón de 1 porción cada vez."
+        ]));
+
+    return cravings;
   }
 }
