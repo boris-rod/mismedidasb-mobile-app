@@ -5,10 +5,12 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:mismedidasb/domain/habit/habit_model.dart';
 import 'package:mismedidasb/domain/health_concept/health_concept.dart';
 import 'package:mismedidasb/domain/poll_model/poll_model.dart';
+import 'package:mismedidasb/domain/single_selection_model.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/bloc_state.dart';
 import 'package:mismedidasb/ui/_base/navigation_utils.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_background_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_blur_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_custom_action_bar.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_icon_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';
@@ -40,44 +42,70 @@ class _HabitState extends StateWithBloC<HabitPage, HabitBloC> {
     return Stack(
       children: <Widget>[
         TXCustomActionBar(
+          actionBarColor: R.color.habits_color,
           body: Stack(
             children: <Widget>[
-              Container(
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                        fit: BoxFit.contain,
-                        image:
-                        ExactAssetImage(R.image.food_craving_home_blur),
-                      ))),
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                child: StreamBuilder<List<PollModel>>(
-                    stream: bloc.pollsResult,
-                    initialData: [],
-                    builder: (context, snapshot) {
-                      final poll =
-                      snapshot.data.isNotEmpty ? snapshot.data[0] : null;
-                      return poll == null
-                          ? Container()
-                          : Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Image.asset(
-                            R.image.craving_title,
-                            width: 300,
-                          ),
-                          Expanded(
-                            child: SingleChildScrollView(
-                              physics: BouncingScrollPhysics(),
-                              child: Html(
-                                data: poll.htmlContent,
-                              ),
+              Positioned(
+                top: 0,
+                left: -40,
+                right: 0,
+                bottom: 0,
+                child: Container(
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                  fit: BoxFit.contain,
+                  image: ExactAssetImage(R.image.habits_home_blur),
+                ))),
+              ),
+              Column(crossAxisAlignment: CrossAxisAlignment.center, children: <
+                  Widget>[
+                Image.asset(
+                  R.image.habits_title,
+                  width: 300,
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                Expanded(
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Stack(
+                          children: <Widget>[
+                            Container(
+                              margin:
+                                  EdgeInsets.only(left: 40, bottom: 30, top: 0),
+                              width: double.infinity,
+                              child: TXBlurWidget(),
                             ),
-                          ),
-                        ],
-                      );
-                    }),
-              )
+                            Container(
+                              margin:
+                                  EdgeInsets.only(left: 30, bottom: 30, top: 0),
+                              child: StreamBuilder<List<TitleSubTitlesModel>>(
+                                  stream: bloc.pollsResult,
+                                  initialData: [],
+                                  builder: (context, snapshot) {
+                                    return SingleChildScrollView(
+                                      physics: BouncingScrollPhysics(),
+                                      child: Container(
+                                        width: double.infinity,
+                                        child: Column(
+                                          children: <Widget>[
+                                            ..._getHabitsView(snapshot.data)
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  }),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Image.asset(R.image.bar_scroll_icon)
+                    ],
+                  ),
+                )
+              ])
             ],
           ),
         ),
@@ -88,9 +116,72 @@ class _HabitState extends StateWithBloC<HabitPage, HabitBloC> {
     );
   }
 
-  _loadHtmlInWebView(String htmlContent) {
-    _webViewController.loadUrl(Uri.dataFromString('<html><body>$htmlContent</body></html>',
-            mimeType: 'text/html', encoding: Encoding.getByName('utf-8'))
-        .toString());
+  List<Widget> _getHabitsView(List<TitleSubTitlesModel> habits) {
+    List<Widget> list = [];
+
+    habits.forEach((h) {
+      final w = Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Container(
+            child: TXTextWidget(
+              text: h.number.toString(),
+              color: R.color.habits_number_color,
+              fontWeight: FontWeight.w800,
+              fontStyle: FontStyle.italic,
+              size: 50,
+            ),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                SizedBox(
+                  height: 30,
+                ),
+                TXTextWidget(
+                  text: h.title,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                  size: 14,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    SizedBox(
+                      height: 15,
+                    ),
+                    ..._getHabitsSubtitles(h.subTitles)
+                  ],
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+              ],
+            ),
+          )
+        ],
+      );
+      list.add(w);
+    });
+
+    return list;
+  }
+
+  List<Widget> _getHabitsSubtitles(List<String> subtitles) {
+    List<Widget> list = [];
+    subtitles.forEach((s) {
+      final w = TXTextWidget(
+        text: s,
+        color: Colors.white,
+        fontWeight: FontWeight.w500,
+        size: 14,
+      );
+      list.add(w);
+    });
+    return list;
   }
 }

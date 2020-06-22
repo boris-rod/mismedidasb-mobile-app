@@ -8,7 +8,11 @@ class SingleSelectionModel {
   double partialValue;
 
   SingleSelectionModel(
-      {this.index, this.id, this.displayName, this.isSelected, this.partialValue});
+      {this.index,
+      this.id,
+      this.displayName,
+      this.isSelected,
+      this.partialValue});
 
 //  static List<SingleSelectionModel> getAgeRange() {
 //    List<SingleSelectionModel> list = [];
@@ -110,4 +114,80 @@ class SingleSelectionModel {
 //    });
 //    return list;
 //  }
+}
+
+class TitleSubTitlesModel {
+  int number;
+  String title;
+  List<String> subTitles;
+
+  TitleSubTitlesModel({
+    this.number,
+    this.title,
+    this.subTitles,
+  });
+
+  static getHabitsLiterals() {
+    List<TitleSubTitlesModel> habits = [];
+    habits.add(TitleSubTitlesModel(
+        number: 1,
+        title: "Planifique 5 comidas por día:",
+        subTitles: ["Desayuno / Tentempié / Comida / Merienda / Cena."]));
+
+    habits.add(TitleSubTitlesModel(
+        number: 2,
+        title: "Distribuya su consumo calórico diario:",
+        subTitles: [
+          "50-60% Hidratos de Carbono.",
+          "30-35% Grasas.",
+          "10-15% Proteínas."
+        ]));
+
+    habits.add(TitleSubTitlesModel(
+        number: 3,
+        title: "Ingiera frutas y vegetales a diario:",
+        subTitles: ["Ej. naranja, fresas, lechuga o tomate."]));
+
+    habits.add(TitleSubTitlesModel(
+        number: 4,
+        title: "Coma despacio y mastique bien los alimentos:",
+        subTitles: ["Evite ver TV o revisar el móvil mientras come."]));
+
+    habits.add(TitleSubTitlesModel(
+        number: 5,
+        title: "Beba alrededor de 2 litros de agua durante el día:",
+        subTitles: ["Evitar bebidas azucaradas y bebidas energéticas."]));
+
+    habits.add(TitleSubTitlesModel(
+        number: 6,
+        title: "Fomente la actividad física diaria:",
+        subTitles: ["Ej. caminar, subir escaleras o pasear en bici."]));
+
+    habits.add(TitleSubTitlesModel(
+        number: 7,
+        title: "Realice ejercicio físico regularmente:",
+        subTitles: ["Ej. 3 veces por semana (30-45 minutos por sesión)."]));
+
+    habits.add(TitleSubTitlesModel(
+        number: 8,
+        title: "Reduzca el consumo de alcohol:",
+        subTitles: [
+          "No beba a diario, debe haber días de abstinencia.",
+          "Máximo una o dos copas de vino o botellines de cerveza."
+        ]));
+
+    habits.add(TitleSubTitlesModel(
+        number: 9,
+        title: "Establezca límites para el uso del teléfono móvil:",
+        subTitles: [
+          "Puede perder alrededor de 4 horas de su día.",
+          "Pase más tiempo conectado con la familia o amigos."
+        ]));
+
+    habits.add(TitleSubTitlesModel(
+        number: 10,
+        title: "Fomente un ocio saludable:",
+        subTitles: ["Pasee al aire libre con su familia o amigos."]));
+    return habits;
+  }
 }

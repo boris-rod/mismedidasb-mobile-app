@@ -2,6 +2,7 @@ import 'package:mismedidasb/data/api/remote/result.dart';
 import 'package:mismedidasb/domain/habit/habit_model.dart';
 import 'package:mismedidasb/domain/poll_model/i_poll_repository.dart';
 import 'package:mismedidasb/domain/poll_model/poll_model.dart';
+import 'package:mismedidasb/domain/single_selection_model.dart';
 import 'package:mismedidasb/ui/_base/bloc_base.dart';
 import 'package:mismedidasb/ui/_base/bloc_error_handler.dart';
 import 'package:mismedidasb/ui/_base/bloc_loading.dart';
@@ -11,19 +12,17 @@ import 'package:mismedidasb/utils/extensions.dart';
 
 class HabitBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   final IPollRepository _iPollRepository;
+
   HabitBloC(this._iPollRepository);
 
-  BehaviorSubject<List<PollModel>> _pollsController = new BehaviorSubject();
+  BehaviorSubject<List<TitleSubTitlesModel>> _pollsController =
+      new BehaviorSubject();
 
-  Stream<List<PollModel>> get pollsResult => _pollsController.stream;
+  Stream<List<TitleSubTitlesModel>> get pollsResult => _pollsController.stream;
 
   void loadData(int conceptId) async {
-    isLoading = true;
-    final res = await _iPollRepository.getPollsByConcept(conceptId);
-    if(res is ResultSuccess<List<PollModel>>){
-      _pollsController.sinkAddSafe(res.value);
-    }
-    isLoading = false;
+    List<TitleSubTitlesModel> list = TitleSubTitlesModel.getHabitsLiterals();
+    _pollsController.sinkAddSafe(list);
   }
 
   @override

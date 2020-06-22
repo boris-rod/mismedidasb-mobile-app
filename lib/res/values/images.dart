@@ -22,11 +22,14 @@ class AppImage {
   final food_craving_home_blur = 'lib/res/assets/img/food_craving_home_blur.png';
   final wellness_home_blur = 'lib/res/assets/img/wellness_home_blur.png';
   final health_home_blur = 'lib/res/assets/img/health_home_blur.png';
+  final habits_home_blur = 'lib/res/assets/img/habits_home_blur.png';
   final forward = 'lib/res/assets/img/forward.png';
   final backward = 'lib/res/assets/img/backward.png';
   final health_title = 'lib/res/assets/img/health_title.png';
   final values_title = 'lib/res/assets/img/values_title.png';
   final wellness_title = 'lib/res/assets/img/wellness_title.png';
   final craving_title = 'lib/res/assets/img/craving_title.png';
+  final habits_title = 'lib/res/assets/img/habits_title.png';
   final icon_title = 'lib/res/assets/img/icon_title.png';
+  final bar_scroll_icon = 'lib/res/assets/img/bar_scroll_icon.png';
 }

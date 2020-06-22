@@ -11,6 +11,9 @@ class AppColor {
   final wellness_color = Color(0xFF31a501);
   final health_color = Color(0xFFff3b3d);
   final craving_color = Color(0xFF8f004b);
+  final craving_number_color = Color(0xFFed799c);
+  final habits_color = Color(0xFF2046d6);
+  final habits_number_color = Color(0xFFf8a41f);
 
   final gray_darkest = Color(0xFF808080);
   final gray_dark = Color(0x5097A0AE);
