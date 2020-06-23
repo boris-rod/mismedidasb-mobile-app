@@ -14,6 +14,8 @@ import 'package:mismedidasb/ui/settings/settings_page.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:mismedidasb/utils/extensions.dart';
 
+import '../../enums.dart';
+
 class ProfileBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   final IUserRepository _iUserRepository;
   final SharedPreferencesManager _sharedPreferencesManager;

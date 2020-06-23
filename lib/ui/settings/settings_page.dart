@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:mismedidasb/data/_shared_prefs.dart';
 import 'package:mismedidasb/domain/setting/setting_model.dart';
 import 'package:mismedidasb/enums.dart';
+import 'package:mismedidasb/lnm/lnm.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/bloc_state.dart';
 import 'package:mismedidasb/ui/_base/navigation_utils.dart';
@@ -19,8 +22,7 @@ import 'package:mismedidasb/ui/_tx_widget/tx_textlink_widget.dart';
 import 'package:mismedidasb/ui/legacy/legacy_page.dart';
 import 'package:mismedidasb/ui/profile/profile_page.dart';
 import 'package:mismedidasb/ui/settings/settings_bloc.dart';
-
-enum SettingAction { logout, languageCodeChanged, removeAccount }
+import 'package:mismedidasb/ui/settings/tx_reminder_setting_cell_widget.dart';
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -53,11 +55,7 @@ class _SettingsState extends StateWithBloC<SettingsPage, SettingsBloC> {
         children: <Widget>[
           StreamBuilder<SettingModel>(
               stream: bloc.settingsResult,
-              initialData: SettingModel(
-                  showResumeBeforeSave: false,
-                  languageCodeId: 1,
-                  languageCode: "",
-                  isDarkMode: false),
+              initialData: null,
               builder: (ctx, snapshot) {
                 return snapshot.data == null
                     ? Container()
@@ -92,9 +90,10 @@ class _SettingsState extends StateWithBloC<SettingsPage, SettingsBloC> {
                                       LegacyPage(
                                         contentType: 0,
                                       ));
-                                }else if(key == PopupActionKey.logout){
+                                } else if (key == PopupActionKey.logout) {
                                   _showDemoDialogLogout(context: context);
-                                }else if(key == PopupActionKey.remove_account){
+                                } else if (key ==
+                                    PopupActionKey.remove_account) {
                                   showTXModalBottomSheet(
                                       context: context,
                                       builder: (context) {
@@ -167,18 +166,170 @@ class _SettingsState extends StateWithBloC<SettingsPage, SettingsBloC> {
 //                                      ),
 //                                    ),
 //                                    TXDividerWidget(),
-                              Container(
-                                child: TXCheckBoxWidget(
-                                  padding: EdgeInsets.only(left: 10),
+                              ListTile(
+                                title: TXTextWidget(
                                   text: R.string.showResumePlanBeforeSave,
-                                  leading: false,
-                                  value:
-                                  snapshot.data.showResumeBeforeSave,
-                                  onChange: (value) {
+                                ),
+                                trailing: Checkbox(
+                                  onChanged: (value) {
                                     bloc.setShowResumeBeforeSave(value);
                                   },
-                                  textColor: Colors.black,
+                                  value: snapshot.data.showResumeBeforeSave,
                                 ),
+                                contentPadding:
+                                    EdgeInsets.only(right: 0, left: 10),
+                                onTap: () {},
+                              ),
+//                              Container(
+//                                child: TXCheckBoxWidget(
+//                                  padding: EdgeInsets.only(left: 10),
+//                                  text: R.string.showResumePlanBeforeSave,
+//                                  leading: false,
+//                                  value: snapshot.data.showResumeBeforeSave,
+//                                  onChange: (value) {
+//                                    bloc.setShowResumeBeforeSave(value);
+//                                  },
+//                                  textColor: Colors.black,
+//                                ),
+//                              ),
+                              TXDividerWidget(),
+                              TXReminderSettingCellWidget(
+                                title: "Mostrar recordatorio para el Desayuno",
+                                time: snapshot.data.breakfastTime,
+                                onActiveTap: () {
+                                  bloc.activeReminder(
+                                      SharedKey.showBreakFastTime,
+                                      !snapshot.data.showBreakFastNoti);
+                                },
+                                minimumDate: snapshot.data.breakfastTime
+                                    .subtract(Duration(hours: 1)),
+                                maximumDate: snapshot.data.breakfastTime
+                                    .add(Duration(hours: 1)),
+                                isActive: snapshot.data.showBreakFastNoti,
+                                onDateSelected: (newDateTime) {
+                                  if (newDateTime.hour !=
+                                          snapshot.data.breakfastTime.hour ||
+                                      newDateTime.minute !=
+                                          snapshot.data.breakfastTime.minute) {
+                                    bloc.scheduleReminder(
+                                        SharedKey.breakFastTime, newDateTime);
+                                  }
+                                },
+                              ),
+                              TXDividerWidget(),
+                              TXReminderSettingCellWidget(
+                                title: "Mostrar recordatorio para el Tentempié",
+                                time: snapshot.data.snack1Time,
+                                onActiveTap: () {
+                                  bloc.activeReminder(SharedKey.showSnack1Time,
+                                      !snapshot.data.showSnack1Noti);
+                                },
+                                isActive: snapshot.data.showSnack1Noti,
+                                minimumDate: snapshot.data.snack1Time
+                                    .subtract(Duration(hours: 1)),
+                                maximumDate: snapshot.data.snack1Time
+                                    .add(Duration(hours: 1)),
+                                onDateSelected: (newDateTime) {
+                                  if (newDateTime.hour !=
+                                          snapshot.data.snack1Time.hour ||
+                                      newDateTime.minute !=
+                                          snapshot.data.snack1Time.minute) {
+                                    bloc.scheduleReminder(
+                                        SharedKey.snack1Time, newDateTime);
+                                  }
+                                },
+                              ),
+                              TXDividerWidget(),
+                              TXReminderSettingCellWidget(
+                                title: "Mostrar recordatorio para la Comida",
+                                time: snapshot.data.lunchTime,
+                                onActiveTap: () {
+                                  bloc.activeReminder(SharedKey.showLunchTime,
+                                      !snapshot.data.showLunchNoti);
+                                },
+                                isActive: snapshot.data.showLunchNoti,
+                                minimumDate: snapshot.data.lunchTime
+                                    .subtract(Duration(hours: 1)),
+                                maximumDate: snapshot.data.lunchTime
+                                    .add(Duration(hours: 1)),
+                                onDateSelected: (newDateTime) {
+                                  if (newDateTime.hour !=
+                                          snapshot.data.lunchTime.hour ||
+                                      newDateTime.minute !=
+                                          snapshot.data.lunchTime.minute) {
+                                    bloc.scheduleReminder(
+                                        SharedKey.lunchTime, newDateTime);
+                                  }
+                                },
+                              ),
+                              TXDividerWidget(),
+                              TXReminderSettingCellWidget(
+                                title: "Mostrar recordatorio para la Merienda",
+                                time: snapshot.data.snack2Time,
+                                onActiveTap: () {
+                                  bloc.activeReminder(SharedKey.showSnack2Time,
+                                      !snapshot.data.showSnack2Noti);
+                                },
+                                isActive: snapshot.data.showSnack2Noti,
+                                minimumDate: snapshot.data.snack2Time
+                                    .subtract(Duration(hours: 1)),
+                                maximumDate: snapshot.data.snack2Time
+                                    .add(Duration(hours: 1)),
+                                onDateSelected: (newDateTime) {
+                                  if (newDateTime.hour !=
+                                          snapshot.data.snack2Time.hour ||
+                                      newDateTime.minute !=
+                                          snapshot.data.snack2Time.minute) {
+                                    bloc.scheduleReminder(
+                                        SharedKey.snack2Time, newDateTime);
+                                  }
+                                },
+                              ),
+                              TXDividerWidget(),
+                              TXReminderSettingCellWidget(
+                                title: "Mostrar recordatorio para la Cena",
+                                time: snapshot.data.dinnerTime,
+                                onActiveTap: () {
+                                  bloc.activeReminder(SharedKey.showDinnerTime,
+                                      !snapshot.data.showDinnerNoti);
+                                },
+                                isActive: snapshot.data.showDinnerNoti,
+                                minimumDate: snapshot.data.dinnerTime
+                                    .subtract(Duration(hours: 1)),
+                                maximumDate: snapshot.data.dinnerTime
+                                    .add(Duration(minutes: 30)),
+                                onDateSelected: (newDateTime) {
+                                  if (newDateTime.hour !=
+                                          snapshot.data.dinnerTime.hour ||
+                                      newDateTime.minute !=
+                                          snapshot.data.dinnerTime.minute) {
+                                    bloc.scheduleReminder(
+                                        SharedKey.dinnerTime, newDateTime);
+                                  }
+                                },
+                              ),
+                              TXDividerWidget(),
+                              TXReminderSettingCellWidget(
+                                title: "Mostrar recordatorio para beber agua",
+                                time: snapshot.data.drinkWaterTime,
+                                onActiveTap: () {
+                                  bloc.activeReminder(SharedKey.drinkWater1Time,
+                                      !snapshot.data.showDrinkWaterNoti);
+                                },
+                                isActive: snapshot.data.showDrinkWaterNoti,
+                                minimumDate: snapshot.data.drinkWaterTime
+                                    .subtract(Duration(hours: 1)),
+                                maximumDate: snapshot.data.drinkWaterTime
+                                    .add(Duration(minutes: 30)),
+                                onDateSelected: (newDateTime) {
+                                  if (newDateTime.hour !=
+                                          snapshot.data.drinkWaterTime.hour ||
+                                      newDateTime.minute !=
+                                          snapshot.data.drinkWaterTime.minute) {
+                                    bloc.scheduleReminder(
+                                        SharedKey.drinkWater1Time, newDateTime);
+                                  }
+                                },
                               ),
                               TXDividerWidget(),
                             ],

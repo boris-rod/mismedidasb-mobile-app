@@ -127,7 +127,7 @@ class LNM implements ILNM {
       final String userName =
           await _sharedPreferencesManager.getStringValue(SharedKey.userName);
       String title = 'Hola $userName';
-      String content = 'Casi es tiempo de su desayuno.';
+      String content = 'Casi es tiempo de tu desayuno.';
       var androidPlatformChannelSpecifics = _getCommonAndroidNotificationDetail(
           channelId: '$breakFastIdReminderId',
           title: title,
@@ -158,7 +158,7 @@ class LNM implements ILNM {
       final String userName =
           await _sharedPreferencesManager.getStringValue(SharedKey.userName);
       String title = 'Hola $userName';
-      String content = 'Casi es tiempo de su cena.';
+      String content = 'Casi es tiempo de tu cena.';
       var androidPlatformChannelSpecifics = _getCommonAndroidNotificationDetail(
           channelId: '$dinnerIdReminderId',
           title: title,
@@ -183,11 +183,13 @@ class LNM implements ILNM {
     final bool showDrinkWater =
         await _sharedPreferencesManager.getBoolValue(SharedKey.showDrinkWater);
     if (showDrinkWater) {
+      final DateTime time = (await _sharedPreferencesManager
+          .getDateTimeValue(SharedKey.drinkWater1Time));
       final String userName =
           await _sharedPreferencesManager.getStringValue(SharedKey.userName);
       String title = 'Hola $userName';
       String content =
-          'Recuerde beber agua, se recomienda al menos 2 litros diarios.';
+          'Recuerda beber agua, se recomienda al menos 2 litros diarios.';
       var androidPlatformChannelSpecifics = _getCommonAndroidNotificationDetail(
           channelId: '$drinkWater1Id',
           title: title,
@@ -197,8 +199,12 @@ class LNM implements ILNM {
       var platformChannelSpecifics = NotificationDetails(
           androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
 
-      await flutterLocalNotificationsPlugin.showDailyAtTime(drinkWater1Id,
-          title, content, Time(11, 0, 0), platformChannelSpecifics,
+      await flutterLocalNotificationsPlugin.showDailyAtTime(
+          drinkWater1Id,
+          title,
+          content,
+          Time(time.hour, time.minute, time.second),
+          platformChannelSpecifics,
           payload: '$drinkWater1Id');
     }
   }
@@ -208,11 +214,13 @@ class LNM implements ILNM {
     final bool showDrinkWater =
         await _sharedPreferencesManager.getBoolValue(SharedKey.showDrinkWater);
     if (showDrinkWater) {
+      final DateTime time = (await _sharedPreferencesManager
+          .getDateTimeValue(SharedKey.drinkWater2Time));
       final String userName =
           await _sharedPreferencesManager.getStringValue(SharedKey.userName);
       String title = 'Hola $userName';
       String content =
-          'Recuerde beber agua, se recomienda al menos 2 litros diarios.';
+          'Recuerda beber agua, se recomienda al menos 2 litros diarios.';
       var androidPlatformChannelSpecifics = _getCommonAndroidNotificationDetail(
           channelId: '$drinkWater2Id',
           title: title,
@@ -222,8 +230,12 @@ class LNM implements ILNM {
       var platformChannelSpecifics = NotificationDetails(
           androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
 
-      await flutterLocalNotificationsPlugin.showDailyAtTime(drinkWater2Id,
-          title, content, Time(16, 0, 0), platformChannelSpecifics,
+      await flutterLocalNotificationsPlugin.showDailyAtTime(
+          drinkWater2Id,
+          title,
+          content,
+          Time(time.hour, time.minute, time.second),
+          platformChannelSpecifics,
           payload: '$drinkWater2Id');
     }
   }
@@ -239,7 +251,7 @@ class LNM implements ILNM {
       final String userName =
           await _sharedPreferencesManager.getStringValue(SharedKey.userName);
       String title = 'Hola $userName';
-      String content = 'Casi es tiempo de su comida.';
+      String content = 'Casi es tiempo de tu comida.';
       var androidPlatformChannelSpecifics = _getCommonAndroidNotificationDetail(
           channelId: '$lunchIdReminderId',
           title: title,
@@ -270,7 +282,7 @@ class LNM implements ILNM {
       final String userName =
           await _sharedPreferencesManager.getStringValue(SharedKey.userName);
       String title = 'Hola $userName';
-      String content = 'Casi es tiempo de hacer sus ejercicios.';
+      String content = 'Casi es tiempo de hacer tus ejercicios.';
       var androidPlatformChannelSpecifics = _getCommonAndroidNotificationDetail(
           channelId: '$makeExerciseId',
           title: title,
@@ -298,7 +310,7 @@ class LNM implements ILNM {
       final String userName =
           await _sharedPreferencesManager.getStringValue(SharedKey.userName);
       String title = 'Hola $userName';
-      String content = 'Recuerde planificar sus comidas para mañana.';
+      String content = 'Recuerda planificar tus comidas para mañana.';
       var androidPlatformChannelSpecifics = _getCommonAndroidNotificationDetail(
           channelId: '$planFoodsId',
           title: title,
@@ -325,7 +337,7 @@ class LNM implements ILNM {
       final String userName =
           await _sharedPreferencesManager.getStringValue(SharedKey.userName);
       String title = 'Hola $userName';
-      String content = 'Casi es tiempo de su tentenpié.';
+      String content = 'Casi es tiempo de tu tentempié.';
 
       var androidPlatformChannelSpecifics = _getCommonAndroidNotificationDetail(
           channelId: '$snack1IdReminderId',
@@ -357,7 +369,7 @@ class LNM implements ILNM {
       final String userName =
           await _sharedPreferencesManager.getStringValue(SharedKey.userName);
       String title = 'Hola $userName';
-      String content = 'Casi es tiempo de su merienda.';
+      String content = 'Casi es tiempo de tu merienda.';
       var androidPlatformChannelSpecifics = _getCommonAndroidNotificationDetail(
           channelId: '$snack2IdReminderId',
           title: title,
@@ -536,28 +548,28 @@ class LNM implements ILNM {
 //    await _flutterLocalNotificationsPlugin.showDailyAtTime(
 //        100,
 //        'Hola $userName',
-//        'Recuerde beber suficiente agua, se recomienda 2L diarios.',
+//        'Recuerda beber suficiente agua, se recomienda 2L diarios.',
 //        Time(16, 57, 0),
 //        platformChannelSpecifics);
 //
 ////    await _flutterLocalNotificationsPlugin.showDailyAtTime(
 ////        101,
 ////        'Hola $userName',
-////        'Recuerde beber suficiente agua, se recomienda 2L diarios.',
+////        'Recuerda beber suficiente agua, se recomienda 2L diarios.',
 ////        Time(16, 33, 0),
 ////        platformChannelSpecifics);
 ////
 ////    await _flutterLocalNotificationsPlugin.showDailyAtTime(
 ////        102,
 ////        'Hola $userName',
-////        'Recuerde beber suficiente agua, se recomienda 2L diarios.',
+////        'Recuerda beber suficiente agua, se recomienda 2L diarios.',
 ////        Time(16, 34, 0),
 ////        platformChannelSpecifics);
 ////
 ////    await _flutterLocalNotificationsPlugin.showDailyAtTime(
 ////        103,
 ////        'Hola $userName',
-////        'Recuerde planificar su comida de mañana',
+////        'Recuerda planificar su comida de mañana',
 ////        Time(20, 30, 0),
 ////        platformChannelSpecifics);
 //  }
@@ -574,14 +586,14 @@ class LNM implements ILNM {
 //    await _flutterLocalNotificationsPlugin.showDailyAtTime(
 //        0,
 //        'Recordatorio',
-//        'Recuerde planificar su comida',
+//        'Recuerda planificar su comida',
 //        Time(11, 50, 00),
 //        platformChannelSpecifics);
 //
 //    await _flutterLocalNotificationsPlugin.showDailyAtTime(
 //        0,
 //        'Recordatorio',
-//        'Recuerde planificar su comida',
+//        'Recuerda planificar su comida',
 //        Time(11, 51, 00),
 //        platformChannelSpecifics);
 //  }

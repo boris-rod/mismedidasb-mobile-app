@@ -32,11 +32,17 @@ class SharedKey {
   static String showSnack2Time = "showSnack2Time";
   static String dinnerTime = "dinnerTime";
   static String showDinnerTime = "showDinnerTime";
+
   static String physicalExerciseTime = "physicalExerciseTime";
   static String showPhysicalExerciseTime = "showPhysicalExerciseTime";
   static String showPlanFood = "showPlanFood";
+
   static String showDrinkWater = "drinkWater";
+  static String drinkWater1Time = "drinkWater1Time";
+  static String drinkWater2Time = "drinkWater2Time";
+
   static String hasPlaniVirtualAssesor = "hasPlaniVirtualAssesor";
+
   static String showDailyPollNotification = "showDailyPollNotification";
   static String launchNotiPoll = "launchNotiPoll";
 }
@@ -71,16 +77,27 @@ class SharedPreferencesManager {
     final now = DateTime.now();
     await setDateTimeValue(SharedKey.breakFastTime,
         DateTime(now.year, now.month, now.day, 8, 0, 0));
+
     await setDateTimeValue(SharedKey.snack1Time,
         DateTime(now.year, now.month, now.day, 10, 00, 0));
+
     await setDateTimeValue(
-        SharedKey.lunchTime, DateTime(now.year, now.month, now.day, 12, 30, 0));
+        SharedKey.lunchTime, DateTime(now.year, now.month, now.day, 12, 00, 0));
+
     await setDateTimeValue(
-        SharedKey.snack2Time, DateTime(now.year, now.month, now.day, 16, 30, 0));
+        SharedKey.snack2Time, DateTime(now.year, now.month, now.day, 16, 00, 0));
+
     await setDateTimeValue(
         SharedKey.dinnerTime, DateTime(now.year, now.month, now.day, 22, 0, 0));
+
     await setDateTimeValue(SharedKey.physicalExerciseTime,
         DateTime(now.year, now.month, now.day, 7, 0, 0));
+
+    await setDateTimeValue(SharedKey.drinkWater1Time,
+        DateTime(now.year, now.month, now.day, 11, 0, 0));
+
+    await setDateTimeValue(SharedKey.drinkWater2Time,
+        DateTime(now.year, now.month, now.day, 16, 30, 0));
 
     await setIntValue(SharedKey.activeAccount, ACCOUNT_STATUS.PENDING.index);
     return true;

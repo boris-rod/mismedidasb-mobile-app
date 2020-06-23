@@ -28,6 +28,7 @@ import 'package:mismedidasb/ui/profile/profile_bloc.dart';
 import 'package:mismedidasb/ui/profile/tx_cell_selection_option_widget.dart';
 import 'package:mismedidasb/ui/profile/tx_stat_widget.dart';
 import 'package:mismedidasb/ui/profile_edit/profile_edit_page.dart';
+import 'package:mismedidasb/ui/scores_page/score_page.dart';
 import 'package:mismedidasb/ui/settings/settings_bloc.dart';
 import 'package:mismedidasb/ui/settings/settings_page.dart';
 import 'package:mismedidasb/utils/file_manager.dart';
@@ -244,9 +245,14 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                         TXCellSelectionOptionWidget(
                           leading: Icons.contacts,
                           optionName: "Hazle saber a tus contactos!",
+                          onOptionTap: () {},
+                        ),
+                        TXDividerWidget(),
+                        TXCellSelectionOptionWidget(
+                          leading: Icons.school,
+                          optionName: "Ver score",
                           onOptionTap: () {
-                            Share.share(
-                                "http://ec2-34-244-181-197.eu-west-1.compute.amazonaws.com:8081/auth/login?redirect=%2Fpages%2Fdashboard");
+                            NavigationUtils.push(context, ScorePage());
                           },
                         ),
                         TXDividerWidget(),

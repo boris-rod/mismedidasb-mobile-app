@@ -317,7 +317,7 @@ class Injector {
     container.registerFactory(
         (c) => ProfileBloC(container.resolve(), container.resolve()));
     container.registerFactory(
-        (c) => SettingsBloC(c.resolve(), c.resolve(), c.resolve()));
+        (c) => SettingsBloC(c.resolve(), c.resolve(), c.resolve(), c.resolve()));
     container.registerFactory((c) => LegacyBloC(c.resolve()));
     container.registerFactory((c) => ContactUsBloC(c.resolve()));
     container.registerFactory((c) => ProfileEditBloC(c.resolve(), c.resolve()));
