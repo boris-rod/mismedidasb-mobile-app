@@ -196,29 +196,35 @@ class TitleSubTitlesModel {
 
     cravings.add(TitleSubTitlesModel(
         number: 1,
-        title: "Dar un paseo caminando durante 15 o 20 minutos.",
+        title: "Espera 20 minutos antes de repetir plato.",
         subTitles: []));
     cravings.add(TitleSubTitlesModel(
-        number: 2,
-        title:
-            "FBeber un vaso de agua a sorbos peque&ntilde;os durante 20 minutos.",
-        subTitles: []));
+        number: 2, title: "Camina durante 15 o 20 minutos.", subTitles: []));
     cravings.add(TitleSubTitlesModel(
         number: 3,
-        title:
-            "Describa sus metas, proyectos y aspiraciones en una extensión no mayor a un folio.",
+        title: "Bebe un vaso de agua a sorbos pequeños (20 minutos).",
         subTitles: []));
     cravings.add(TitleSubTitlesModel(
-        number: 4, title: "Jugar al Tetris de 3-5 minutos.", subTitles: []));
+        number: 4,
+        title: "Escribe tus metas, proyectos y aspiraciones (1 folio).",
+        subTitles: []));
     cravings.add(TitleSubTitlesModel(
         number: 5,
+        title: "Juega un rato al Tetris (3-5 minutos).",
+        subTitles: []));
+    cravings.add(TitleSubTitlesModel(
+        number: 6,
         title:
-            "Imagine lo más vívidamente posible una de las siguientes opciones durante 5 minutos:",
-        subTitles: [
-          "que está realizando su actividad favorita.",
-          "el olor a eucalipto, pomada china o menta.",
-          "que come el alimento deseado 33 veces, a razón de 1 porción cada vez."
-        ]));
+            "Imagina que estás realizando su actividad favorita (5 minutos).",
+        subTitles: []));
+    cravings.add(TitleSubTitlesModel(
+        number: 7,
+        title: "Imagina el olor a eucalipto, pomada china o menta (5 minutos).",
+        subTitles: []));
+    cravings.add(TitleSubTitlesModel(
+        number: 8,
+        title: "Imagina que comes 1 porción del alimento deseado 33 veces.",
+        subTitles: []));
 
     return cravings;
   }

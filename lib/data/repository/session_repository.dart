@@ -30,7 +30,7 @@ class SessionRepository extends BaseRepository implements ISessionRepository {
       _sharedPreferencesManager
           .setFirstDateHealthResult(result.firstDateHealthResult);
       if (saveCredentials) {
-        _sharedPreferencesManager.setUserId(result.id);
+        _sharedPreferencesManager.setIntValue(SharedKey.userId, result.id);
         _sharedPreferencesManager.setPassword(loginModel.password);
       }
       await _fcmFeature.refreshToken();

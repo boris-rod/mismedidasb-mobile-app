@@ -250,7 +250,7 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                         TXDividerWidget(),
                         TXCellSelectionOptionWidget(
                           leading: Icons.school,
-                          optionName: "Ver score",
+                          optionName: "Ver puntuaciones",
                           onOptionTap: () {
                             NavigationUtils.push(context, ScorePage());
                           },

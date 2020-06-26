@@ -204,7 +204,7 @@ class Injector {
         container.resolve()));
 
     container.registerSingleton<IUserApi, UserApi>(
-        (c) => UserApi(container.resolve(), container.resolve()));
+        (c) => UserApi(container.resolve(), container.resolve(), container.resolve()));
 
     container.registerSingleton<IAnswerApi, AnswerApi>(
         (c) => AnswerApi(container.resolve(), container.resolve()));

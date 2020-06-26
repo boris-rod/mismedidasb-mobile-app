@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:mismedidasb/data/_shared_prefs.dart';
 import 'package:mismedidasb/data/api/_base_api.dart';
 import 'package:mismedidasb/data/api/remote/endpoints.dart';
 import 'package:mismedidasb/data/api/remote/exceptions.dart';
@@ -13,8 +14,9 @@ import 'package:mismedidasb/domain/user/user_model.dart';
 class UserApi extends BaseApi implements IUserApi {
   final IUserConverter _iUserConverter;
   final NetworkHandler _networkHandler;
+  final SharedPreferencesManager _sharedPreferencesManager;
 
-  UserApi(this._iUserConverter, this._networkHandler);
+  UserApi(this._iUserConverter, this._networkHandler, this._sharedPreferencesManager);
 
   @override
   Future<UserModel> getProfile() async {
@@ -60,5 +62,19 @@ class UserApi extends BaseApi implements IUserApi {
         path: Endpoint.invite, body: jsonEncode(mapList));
     return res.statusCode == RemoteConstants.code_success_created;
     throw UnimplementedError();
+  }
+
+  @override
+  Future<ScoreModel> getScores() async{
+    final userId = await _sharedPreferencesManager.getIntValue(SharedKey.userId);
+    final res = await _networkHandler.get(
+      path: Endpoint.scores,
+      params: "?userId=$userId"
+    );
+    if (res.statusCode == RemoteConstants.code_success)
+      return _iUserConverter
+          .fromJsonScore(jsonDecode(res.body)[RemoteConstants.result]);
+    else
+      throw serverException(res);
   }
 }

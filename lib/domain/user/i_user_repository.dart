@@ -12,4 +12,6 @@ abstract class IUserRepository {
 
   Future<Result<bool>> invite(List<String> emails);
 
+  Future<Result<ScoreModel>> getScores();
+
 }

@@ -196,8 +196,8 @@ class _SettingsState extends StateWithBloC<SettingsPage, SettingsBloC> {
                               TXReminderSettingCellWidget(
                                 title: "Mostrar recordatorio para el Desayuno",
                                 time: snapshot.data.breakfastTime,
-                                onActiveTap: () {
-                                  bloc.activeReminder(
+                                onActiveTap: () async {
+                                  await bloc.activeReminder(
                                       SharedKey.showBreakFastTime,
                                       !snapshot.data.showBreakFastNoti);
                                 },
@@ -220,8 +220,9 @@ class _SettingsState extends StateWithBloC<SettingsPage, SettingsBloC> {
                               TXReminderSettingCellWidget(
                                 title: "Mostrar recordatorio para el Tentempié",
                                 time: snapshot.data.snack1Time,
-                                onActiveTap: () {
-                                  bloc.activeReminder(SharedKey.showSnack1Time,
+                                onActiveTap: () async {
+                                  await bloc.activeReminder(
+                                      SharedKey.showSnack1Time,
                                       !snapshot.data.showSnack1Noti);
                                 },
                                 isActive: snapshot.data.showSnack1Noti,
@@ -243,8 +244,9 @@ class _SettingsState extends StateWithBloC<SettingsPage, SettingsBloC> {
                               TXReminderSettingCellWidget(
                                 title: "Mostrar recordatorio para la Comida",
                                 time: snapshot.data.lunchTime,
-                                onActiveTap: () {
-                                  bloc.activeReminder(SharedKey.showLunchTime,
+                                onActiveTap: () async {
+                                  await bloc.activeReminder(
+                                      SharedKey.showLunchTime,
                                       !snapshot.data.showLunchNoti);
                                 },
                                 isActive: snapshot.data.showLunchNoti,
@@ -266,8 +268,9 @@ class _SettingsState extends StateWithBloC<SettingsPage, SettingsBloC> {
                               TXReminderSettingCellWidget(
                                 title: "Mostrar recordatorio para la Merienda",
                                 time: snapshot.data.snack2Time,
-                                onActiveTap: () {
-                                  bloc.activeReminder(SharedKey.showSnack2Time,
+                                onActiveTap: () async {
+                                  await bloc.activeReminder(
+                                      SharedKey.showSnack2Time,
                                       !snapshot.data.showSnack2Noti);
                                 },
                                 isActive: snapshot.data.showSnack2Noti,
@@ -289,8 +292,9 @@ class _SettingsState extends StateWithBloC<SettingsPage, SettingsBloC> {
                               TXReminderSettingCellWidget(
                                 title: "Mostrar recordatorio para la Cena",
                                 time: snapshot.data.dinnerTime,
-                                onActiveTap: () {
-                                  bloc.activeReminder(SharedKey.showDinnerTime,
+                                onActiveTap: () async {
+                                  await bloc.activeReminder(
+                                      SharedKey.showDinnerTime,
                                       !snapshot.data.showDinnerNoti);
                                 },
                                 isActive: snapshot.data.showDinnerNoti,
@@ -312,8 +316,9 @@ class _SettingsState extends StateWithBloC<SettingsPage, SettingsBloC> {
                               TXReminderSettingCellWidget(
                                 title: "Mostrar recordatorio para beber agua",
                                 time: snapshot.data.drinkWaterTime,
-                                onActiveTap: () {
-                                  bloc.activeReminder(SharedKey.drinkWater1Time,
+                                onActiveTap: () async {
+                                  await bloc.activeReminder(
+                                      SharedKey.showDrinkWater,
                                       !snapshot.data.showDrinkWaterNoti);
                                 },
                                 isActive: snapshot.data.showDrinkWaterNoti,
@@ -328,6 +333,30 @@ class _SettingsState extends StateWithBloC<SettingsPage, SettingsBloC> {
                                           snapshot.data.drinkWaterTime.minute) {
                                     bloc.scheduleReminder(
                                         SharedKey.drinkWater1Time, newDateTime);
+                                  }
+                                },
+                              ),
+                              TXDividerWidget(),
+                              TXReminderSettingCellWidget(
+                                title: "Mostrar recordatorio para planificar comidas de mañana",
+                                time: snapshot.data.planFoodsTime,
+                                onActiveTap: () async {
+                                  await bloc.activeReminder(
+                                      SharedKey.showPlanFoods,
+                                      !snapshot.data.showPlanFoodsNoti);
+                                },
+                                minimumDate: snapshot.data.planFoodsTime
+                                    .subtract(Duration(hours: 1)),
+                                maximumDate: snapshot.data.planFoodsTime
+                                    .add(Duration(hours: 1)),
+                                isActive: snapshot.data.showPlanFoodsNoti,
+                                onDateSelected: (newDateTime) {
+                                  if (newDateTime.hour !=
+                                      snapshot.data.planFoodsTime.hour ||
+                                      newDateTime.minute !=
+                                          snapshot.data.planFoodsTime.minute) {
+                                    bloc.scheduleReminder(
+                                        SharedKey.planFoodsTime, newDateTime);
                                   }
                                 },
                               ),

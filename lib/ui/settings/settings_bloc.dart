@@ -16,6 +16,7 @@ import 'package:mismedidasb/ui/_base/bloc_global.dart';
 import 'package:mismedidasb/ui/_base/bloc_loading.dart';
 import 'package:mismedidasb/ui/profile/profile_page.dart';
 import 'package:mismedidasb/ui/settings/settings_page.dart';
+import 'package:mismedidasb/utils/calendar_utils.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:mismedidasb/utils/extensions.dart';
 
@@ -93,12 +94,19 @@ class SettingsBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     settingModel.dinnerTime = dinnerTime;
     settingModel.showDinnerNoti = showDinnerTime;
 
-    final DateTime drinkWaterTime =
-    await _sharedPreferencesManager.getDateTimeValue(SharedKey.drinkWater1Time);
+    final DateTime drinkWaterTime = await _sharedPreferencesManager
+        .getDateTimeValue(SharedKey.drinkWater1Time);
     final bool showDrinkWaterTime =
-    await _sharedPreferencesManager.getBoolValue(SharedKey.showDrinkWater);
+        await _sharedPreferencesManager.getBoolValue(SharedKey.showDrinkWater);
     settingModel.drinkWaterTime = drinkWaterTime;
     settingModel.showDrinkWaterNoti = showDrinkWaterTime;
+
+    final DateTime planFoodsTime = await _sharedPreferencesManager
+        .getDateTimeValue(SharedKey.planFoodsTime);
+    final bool showPlanFoods =
+        await _sharedPreferencesManager.getBoolValue(SharedKey.showPlanFoods);
+    settingModel.planFoodsTime = planFoodsTime;
+    settingModel.showPlanFoodsNoti = showPlanFoods;
 
 //    final settingRes = await _iAccountRepository.getSettings();
 //    if (settingRes is ResultSuccess<SettingModel>) {
@@ -150,10 +158,12 @@ class SettingsBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     _settingsController.sinkAddSafe(currentSetting);
   }
 
-  void activeReminder(String sharedKey, bool active) async {
+  Future<void> activeReminder(String sharedKey, bool active) async {
     final currentSetting = await settingsResult.first;
+    await _sharedPreferencesManager.setBoolValue(sharedKey, active);
     if (sharedKey == SharedKey.showBreakFastTime) {
       currentSetting.showBreakFastNoti = active;
+
       if (active) {
         await _ilnm.initBreakFastReminder();
       } else {
@@ -164,7 +174,7 @@ class SettingsBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
       if (active) {
         await _ilnm.initSnack1Reminder();
       } else {
-        await _ilnm.cancel(LNM.snack2IdReminderId);
+        await _ilnm.cancel(LNM.snack1IdReminderId);
       }
     } else if (sharedKey == SharedKey.showLunchTime) {
       currentSetting.showLunchNoti = active;
@@ -187,6 +197,13 @@ class SettingsBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
       } else {
         await _ilnm.cancel(LNM.dinnerIdReminderId);
       }
+    } else if (sharedKey == SharedKey.showPlanFoods) {
+      currentSetting.showPlanFoodsNoti = active;
+      if (active) {
+        await _ilnm.initPlanFoodsReminder();
+      } else {
+        await _ilnm.cancel(LNM.planFoodsId);
+      }
     } else if (sharedKey == SharedKey.showDrinkWater) {
       currentSetting.showDrinkWaterNoti = active;
       if (active) {
@@ -202,18 +219,38 @@ class SettingsBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   }
 
   void scheduleReminder(String sharedKey, DateTime time) async {
+    final DateTime now = DateTime.now();
+    if (now.compareTo(time) > 0) {
+      final DateTime newDateTime = now.add(Duration(days: 1));
+      time = DateTime(newDateTime.year, newDateTime.month, newDateTime.day,
+          time.hour, time.minute, time.second);
+    }
     final currentSetting = await settingsResult.first;
     await _sharedPreferencesManager.setDateTimeValue(sharedKey, time);
     if (sharedKey == SharedKey.breakFastTime) {
       currentSetting.breakfastTime = time;
+      await activeReminder(SharedKey.showBreakFastTime, false);
+      await activeReminder(SharedKey.showBreakFastTime, true);
     } else if (sharedKey == SharedKey.snack1Time) {
       currentSetting.snack1Time = time;
+      await activeReminder(SharedKey.showSnack1Time, false);
+      await activeReminder(SharedKey.showSnack1Time, true);
     } else if (sharedKey == SharedKey.lunchTime) {
       currentSetting.lunchTime = time;
+      await activeReminder(SharedKey.showLunchTime, false);
+      await activeReminder(SharedKey.showLunchTime, true);
     } else if (sharedKey == SharedKey.snack2Time) {
       currentSetting.snack2Time = time;
+      await activeReminder(SharedKey.showSnack2Time, false);
+      await activeReminder(SharedKey.showSnack2Time, true);
     } else if (sharedKey == SharedKey.dinnerTime) {
       currentSetting.dinnerTime = time;
+      await activeReminder(SharedKey.showDinnerTime, false);
+      await activeReminder(SharedKey.showDinnerTime, true);
+    } else if (sharedKey == SharedKey.planFoodsTime) {
+      currentSetting.planFoodsTime = time;
+      await activeReminder(SharedKey.showPlanFoods, false);
+      await activeReminder(SharedKey.showPlanFoods, true);
     } else if (sharedKey == SharedKey.drinkWater1Time) {
       currentSetting.drinkWaterTime = time;
       await _sharedPreferencesManager.setDateTimeValue(
@@ -221,8 +258,9 @@ class SettingsBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
           time.hour > 14
               ? time.subtract(Duration(hours: 5))
               : time.add(Duration(hours: 4)));
+      await activeReminder(SharedKey.showDrinkWater, false);
+      await activeReminder(SharedKey.showDrinkWater, true);
     }
-    _settingsController.sinkAddSafe(currentSetting);
   }
 
 //

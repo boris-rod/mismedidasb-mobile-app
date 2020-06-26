@@ -9,12 +9,14 @@ class SettingModel {
   bool showSnack2Noti;
   bool showDinnerNoti;
   bool showDrinkWaterNoti;
+  bool showPlanFoodsNoti;
   DateTime breakfastTime;
   DateTime snack1Time;
   DateTime lunchTime;
   DateTime snack2Time;
   DateTime dinnerTime;
   DateTime drinkWaterTime;
+  DateTime planFoodsTime;
 
   SettingModel(
       {this.showResumeBeforeSave,
@@ -28,8 +30,10 @@ class SettingModel {
       this.showLunchNoti,
       this.showSnack2Noti,
       this.showDinnerNoti,
+      this.showPlanFoodsNoti,
       this.breakfastTime,
       this.snack1Time,
+      this.planFoodsTime,
       this.lunchTime,
       this.snack2Time,
       this.dinnerTime});

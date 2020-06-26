@@ -93,11 +93,18 @@ class LNM implements ILNM {
 
   @override
   Future<void> cancel(int id) async {
+//    List<PendingNotificationRequest> list =
+//        await flutterLocalNotificationsPlugin.pendingNotificationRequests();
     await flutterLocalNotificationsPlugin.cancel(id);
+//    List<PendingNotificationRequest> list1 =
+//        await flutterLocalNotificationsPlugin.pendingNotificationRequests();
+//    print(list1.length.toString());
   }
 
   @override
   Future<void> initPollNotificationReminders() async {
+    final exist = await checkIfPendingNotificationExist(pollNotificationId);
+    if (exist) return;
     final String userName =
         await _sharedPreferencesManager.getStringValue(SharedKey.userName);
     String title = 'Hola $userName';
@@ -112,18 +119,19 @@ class LNM implements ILNM {
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
 
     await flutterLocalNotificationsPlugin.showDailyAtTime(pollNotificationId,
-        title, content, Time(10, 30, 0), platformChannelSpecifics,
+        title, content, Time(22, 30, 0), platformChannelSpecifics,
         payload: '$pollNotificationId');
   }
 
   @override
   Future<void> initBreakFastReminder() async {
+    final exist = await checkIfPendingNotificationExist(breakFastIdReminderId);
+    if (exist) return;
     final bool showBreakFastTime = await _sharedPreferencesManager
         .getBoolValue(SharedKey.showBreakFastTime);
     if (showBreakFastTime) {
       final DateTime time = (await _sharedPreferencesManager
-              .getDateTimeValue(SharedKey.breakFastTime))
-          .subtract(Duration(minutes: 10));
+          .getDateTimeValue(SharedKey.breakFastTime));
       final String userName =
           await _sharedPreferencesManager.getStringValue(SharedKey.userName);
       String title = 'Hola $userName';
@@ -149,12 +157,13 @@ class LNM implements ILNM {
 
   @override
   Future<void> initDinnerReminder() async {
+    final exist = await checkIfPendingNotificationExist(dinnerIdReminderId);
+    if (exist) return;
     final bool showDinnerTime =
         await _sharedPreferencesManager.getBoolValue(SharedKey.showDinnerTime);
     if (showDinnerTime) {
       final DateTime time = (await _sharedPreferencesManager
-              .getDateTimeValue(SharedKey.dinnerTime))
-          .subtract(Duration(minutes: 10));
+          .getDateTimeValue(SharedKey.dinnerTime));
       final String userName =
           await _sharedPreferencesManager.getStringValue(SharedKey.userName);
       String title = 'Hola $userName';
@@ -180,6 +189,8 @@ class LNM implements ILNM {
 
   @override
   Future<void> initDrinkWater1Reminder() async {
+    final exist = await checkIfPendingNotificationExist(drinkWater1Id);
+    if (exist) return;
     final bool showDrinkWater =
         await _sharedPreferencesManager.getBoolValue(SharedKey.showDrinkWater);
     if (showDrinkWater) {
@@ -211,6 +222,8 @@ class LNM implements ILNM {
 
   @override
   Future<void> initDrinkWater2Reminder() async {
+    final exist = await checkIfPendingNotificationExist(drinkWater2Id);
+    if (exist) return;
     final bool showDrinkWater =
         await _sharedPreferencesManager.getBoolValue(SharedKey.showDrinkWater);
     if (showDrinkWater) {
@@ -242,12 +255,13 @@ class LNM implements ILNM {
 
   @override
   Future<void> initLunchReminder() async {
+    final exist = await checkIfPendingNotificationExist(lunchIdReminderId);
+    if (exist) return;
     final bool showLunchTime =
         await _sharedPreferencesManager.getBoolValue(SharedKey.showLunchTime);
     if (showLunchTime) {
       final DateTime time = (await _sharedPreferencesManager
-              .getDateTimeValue(SharedKey.lunchTime))
-          .subtract(Duration(minutes: 10));
+          .getDateTimeValue(SharedKey.lunchTime));
       final String userName =
           await _sharedPreferencesManager.getStringValue(SharedKey.userName);
       String title = 'Hola $userName';
@@ -273,12 +287,13 @@ class LNM implements ILNM {
 
   @override
   Future<void> initMakeExerciseReminder() async {
+    final exist = await checkIfPendingNotificationExist(makeExerciseId);
+    if (exist) return;
     final bool showPhysicalExerciseTime = await _sharedPreferencesManager
         .getBoolValue(SharedKey.showPhysicalExerciseTime);
     if (showPhysicalExerciseTime) {
       final DateTime time = (await _sharedPreferencesManager
-              .getDateTimeValue(SharedKey.physicalExerciseTime))
-          .subtract(Duration(minutes: 10));
+          .getDateTimeValue(SharedKey.physicalExerciseTime));
       final String userName =
           await _sharedPreferencesManager.getStringValue(SharedKey.userName);
       String title = 'Hola $userName';
@@ -304,9 +319,13 @@ class LNM implements ILNM {
 
   @override
   Future<void> initPlanFoodsReminder() async {
+    final exist = await checkIfPendingNotificationExist(planFoodsId);
+    if (exist) return;
     final bool showPlanFood =
-        await _sharedPreferencesManager.getBoolValue(SharedKey.showPlanFood);
+        await _sharedPreferencesManager.getBoolValue(SharedKey.showPlanFoods);
     if (showPlanFood) {
+      final DateTime time = (await _sharedPreferencesManager
+          .getDateTimeValue(SharedKey.planFoodsTime));
       final String userName =
           await _sharedPreferencesManager.getStringValue(SharedKey.userName);
       String title = 'Hola $userName';
@@ -321,19 +340,20 @@ class LNM implements ILNM {
           androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
 
       await flutterLocalNotificationsPlugin.showDailyAtTime(planFoodsId, title,
-          content, Time(22, 00, 0), platformChannelSpecifics,
+          content, Time(time.hour, time.minute, time.second), platformChannelSpecifics,
           payload: '$planFoodsId');
     }
   }
 
   @override
   Future<void> initSnack1Reminder() async {
+    final exist = await checkIfPendingNotificationExist(snack1IdReminderId);
+    if (exist) return;
     final bool showSnack1Time =
         await _sharedPreferencesManager.getBoolValue(SharedKey.showSnack1Time);
     if (showSnack1Time) {
       final DateTime time = (await _sharedPreferencesManager
-              .getDateTimeValue(SharedKey.snack1Time))
-          .subtract(Duration(minutes: 10));
+          .getDateTimeValue(SharedKey.snack1Time));
       final String userName =
           await _sharedPreferencesManager.getStringValue(SharedKey.userName);
       String title = 'Hola $userName';
@@ -360,12 +380,13 @@ class LNM implements ILNM {
 
   @override
   Future<void> initSnack2Reminder() async {
+    final exist = await checkIfPendingNotificationExist(snack2IdReminderId);
+    if (exist) return;
     final bool showSnack2Time =
         await _sharedPreferencesManager.getBoolValue(SharedKey.showSnack2Time);
     if (showSnack2Time) {
       final DateTime time = (await _sharedPreferencesManager
-              .getDateTimeValue(SharedKey.snack2Time))
-          .subtract(Duration(minutes: 10));
+          .getDateTimeValue(SharedKey.snack2Time));
       final String userName =
           await _sharedPreferencesManager.getStringValue(SharedKey.userName);
       String title = 'Hola $userName';
@@ -410,8 +431,19 @@ class LNM implements ILNM {
   }
 
   @override
-  Future<void> cancelAll() {
-    flutterLocalNotificationsPlugin.cancelAll();
+  Future<void> cancelAll() async {
+    await flutterLocalNotificationsPlugin.cancelAll();
+  }
+
+  Future<bool> checkIfPendingNotificationExist(int notiId) async {
+    List<PendingNotificationRequest> list =
+        await flutterLocalNotificationsPlugin.pendingNotificationRequests();
+    final noti = list.firstWhere((element) => element.id == notiId, orElse: () {
+      return null;
+    });
+
+
+    return noti != null;
   }
 
   AndroidNotificationDetails _getCommonAndroidNotificationDetail(

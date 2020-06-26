@@ -71,24 +71,7 @@ class _FoodCravingState
                     children: <Widget>[
                       TXTextWidget(
                         text:
-                            "Si notas \"hambre\" o un deseo intenso de comer tras realizar tus comidas planificadas, con las cantidades y distribución adecuadas (barra verde), es probable que sean ansias de comer y no hambre real. Para ello te brindamos a continuación un grupo de sugerencias para que puedas gestionar estos momentos.",
-                        color: Colors.white,
-                        size: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      TXTextWidget(
-                        text:
-                            "Estas sugerencias no tienen un orden específico, ni frecuencia determinada. Escoja la que mejor le parezca y utilícela en dependencia de la situación:",
-                        color: Colors.white,
-                        size: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      TXTextWidget(
-                        text:
-                            "Una vez que ha terminado de comer los alimentos planificados, espere 20 minutos si siente deseos de repetir.",
+                            "Si notas que te quedas con \"hambre\" tras realizar tus comidas, elige una de estas sugerencias:",
                         color: Colors.white,
                         size: 12,
                         fontWeight: FontWeight.w500,
@@ -136,6 +119,33 @@ class _FoodCravingState
                         ),
                       ),
                       Image.asset(R.image.bar_scroll_icon)
+                    ],
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    children: <Widget>[
+                      TXTextWidget(
+                        text:
+                            "Estas sugerencias no tienen un orden específico, ni frecuencia determinada. Debes escoger la que mejor te parezca y utilizarla en dependencia de la situación. Si funciona, perfecto y si no, prueba con otra.",
+                        color: Colors.white,
+                        size: 12,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      TXTextWidget(
+                        text:
+                            "Nota: Hacemos referencia a sentir \"hambre\" después de realizar las comidas planificadas, con las cantidades y distribución adecuadas (barra verde). Si ello ocurre, es probable que lo que sientas sean ansias de comer y no hambre real o fisiológica.",
+                        color: Colors.white,
+                        size: 12,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
                     ],
                   ),
                 )

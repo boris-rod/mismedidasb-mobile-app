@@ -50,4 +50,14 @@ class UserRepository extends BaseRepository implements IUserRepository {
       return resultError(ex);
     }
   }
+
+  @override
+  Future<Result<ScoreModel>> getScores() async {
+    try {
+      final result = await _iUserApi.getScores();
+      return Result.success(value: result);
+    } catch (ex) {
+      return resultError(ex);
+    }
+  }
 }

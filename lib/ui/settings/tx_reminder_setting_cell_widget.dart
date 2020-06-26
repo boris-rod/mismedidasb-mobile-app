@@ -65,8 +65,8 @@ class TXReminderSettingCellWidget extends StatelessWidget {
                             child: CupertinoDatePicker(
                               mode: CupertinoDatePickerMode.time,
                               initialDateTime: time,
-                              minimumDate: minimumDate,
-                              maximumDate: maximumDate,
+//                              minimumDate: minimumDate,
+//                              maximumDate: maximumDate,
                               onDateTimeChanged: (datetime) {
                                 currentDateTime = datetime;
                               },

@@ -11,4 +11,6 @@ abstract class IUserApi {
 
   Future<bool> invite(List<String> emails);
 
+  Future<ScoreModel> getScores();
+
 }
