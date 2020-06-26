@@ -255,6 +255,24 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                             NavigationUtils.push(context, ScorePage());
                           },
                         ),
+//                        TXDividerWidget(),
+//                        InkWell(
+//                          child: Container(
+//                            padding: EdgeInsets.symmetric(horizontal: 10),
+//                            height: 50,
+//                            child: Row(
+//                              children: <Widget>[
+//                                Image.asset(R.image.plani),
+//                                Expanded(child: TXTextWidget(text: "Escoge tu Plani",)),
+//                                Icon(
+//                                  Icons.keyboard_arrow_right,
+//                                  color: R.color.primary_dark_color,
+//                                  size: 25,
+//                                )
+//                              ],
+//                            ),
+//                          ),
+//                        ),
                         TXDividerWidget(),
 
 //                          Container(

@@ -1,5 +1,6 @@
 import 'package:mismedidasb/data/_shared_prefs.dart';
 import 'package:mismedidasb/data/api/remote/result.dart';
+import 'package:mismedidasb/di/injector.dart';
 import 'package:mismedidasb/domain/session/i_session_repository.dart';
 import 'package:mismedidasb/domain/setting/setting_model.dart';
 import 'package:mismedidasb/ui/_base/bloc_base.dart';
@@ -18,6 +19,10 @@ class SplashBloC extends BaseBloC {
   Stream<bool> get navigateResult => _navigateController.stream;
 
   void shouldNavigateToLogin() async {
+
+    final planiId = await _sharedPreferencesManager.getIntValue(SharedKey.planiId);
+    Injector.instance.planiId = planiId;
+
     final firstUse = await _sharedPreferencesManager
         .getBoolValue(SharedKey.firstUse, defValue: true);
     if (firstUse) {

@@ -9,6 +9,7 @@ class SharedKey {
   static String userName = "userName";
   static String password = "password";
   static String userId = "userId";
+  static String planiId = "planiId";
   static String saveCredentials = "saveCredentials";
   static String activeAccount = "activeAccount";
   static String dailyKCal = "dailyKCal";
@@ -50,6 +51,8 @@ class SharedKey {
 
 class SharedPreferencesManager {
   Future<bool> init() async {
+    await setIntValue(SharedKey.planiId, 1);
+
     await setStringValue(SharedKey.accessToken, '');
     await setStringValue(SharedKey.refreshToken, '');
     await setStringValue(SharedKey.password, '');

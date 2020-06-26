@@ -101,10 +101,10 @@ class _TXCustomPaint extends CustomPainter {
     lineYou1 = Offset(markOffset2.dx, markOffset2.dy - 3);
     lineYou2 = Offset(0, markOffset2.dy - 3);
 
-    canvas.drawRect(
-        Rect.fromPoints(Offset(0, 0), Offset(size.width, size.height)),
-        Paint()..style = PaintingStyle.stroke);
-    canvas.drawRect(pyramidRect, Paint()..style = PaintingStyle.stroke);
+//    canvas.drawRect(
+//        Rect.fromPoints(Offset(0, 0), Offset(size.width, size.height)),
+//        Paint()..style = PaintingStyle.stroke);
+//    canvas.drawRect(pyramidRect, Paint()..style = PaintingStyle.stroke);
 //
 //    canvas.drawLine(
 //        Offset(pyramid1Offset.dx, pyramid1Offset.dy),

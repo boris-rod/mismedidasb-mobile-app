@@ -117,6 +117,7 @@ class Injector {
   ///Singleton instance
   static Injector instance;
   bool darkTheme = false;
+  int planiId = 1;
 
   Container container = Container();
 
