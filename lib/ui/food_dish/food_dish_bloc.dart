@@ -185,6 +185,10 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
       daily.currentFatSum += dA.fat;
       daily.currentFiberSum += dA.fiber;
     });
+
+//    CreateDailyPlanModel createPlan = CreateDailyPlanModel.fromDailyFoodModel(daily);
+//    print(createPlan.toString());
+
     _dailyFoodController.sinkAddSafe(daily);
   }
 
@@ -248,6 +252,9 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     rootModel.currentFiberSum += model.fiber;
 
     await _iDishRepository.savePlanLocal(rootModel);
+
+//    CreateDailyPlanModel createPlan = CreateDailyPlanModel.fromDailyFoodModel(rootModel);
+//    print(createPlan.toString());
 
     _dailyFoodController.sink.add(rootModel);
   }

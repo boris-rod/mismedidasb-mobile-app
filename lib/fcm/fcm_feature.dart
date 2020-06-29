@@ -5,6 +5,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mismedidasb/data/api/remote/network_handler.dart';
+import 'package:mismedidasb/enums.dart';
 import 'package:mismedidasb/fcm/fcm_functions.dart';
 import 'package:mismedidasb/fcm/fcm_message_model.dart';
 import 'package:mismedidasb/fcm/fcm_parser.dart';
@@ -21,8 +22,7 @@ class FCMFeature extends IFCMFeature {
   final Logger logger;
   final ILNM _ilnm;
 
-  FCMFeature(
-      this.networkHandler, this.logger, this._ilnm);
+  FCMFeature(this.networkHandler, this.logger, this._ilnm);
 
   BehaviorSubject<
       // ignore: close_sinks
@@ -95,10 +95,11 @@ class FCMFeature extends IFCMFeature {
   void setUp() {
     _fireBaseMessaging.requestNotificationPermissions();
     _fireBaseMessaging.configure(
-        onLaunch: _processMessageFromNotification,
-        onResume: _processMessageFromNotification,
-        onMessage: _processMessageForeground,
-        /*onBackgroundMessage: myBackgroundMessageHandler*/);
+      onLaunch: _processMessageFromNotification,
+      onResume: _processMessageFromNotification,
+      onMessage: _processMessageForeground,
+      /*onBackgroundMessage: myBackgroundMessageHandler*/
+    );
   }
 
   Future<dynamic> _processMessageFromNotification(
@@ -131,13 +132,21 @@ class FCMFeature extends IFCMFeature {
 //    }
   }
 
-  void showRemoteNotification(Map<String, dynamic> message) async{
+  void showRemoteNotification(Map<String, dynamic> message) async {
     final Map notification = message["notification"];
-    if(notification != null){
+    if (notification != null) {
       String title = notification["title"];
       String content = notification["body"];
-      if(title?.isNotEmpty == true && content?.isNotEmpty == true){
-        _ilnm.showCommonNotification(channelId: LNM.fcmNoti, title: title, content: content);
+      final notiType =
+          title?.trim()?.toLowerCase()?.contains("recompensa") == true
+              ? NotificationType.REWARD
+              : NotificationType.GENERAL;
+      if (title?.isNotEmpty == true && content?.isNotEmpty == true) {
+        _ilnm.showCommonNotification(
+            channelId: LNM.fcmNoti,
+            title: title,
+            content: content,
+            notificationType: notiType);
       }
     }
   }

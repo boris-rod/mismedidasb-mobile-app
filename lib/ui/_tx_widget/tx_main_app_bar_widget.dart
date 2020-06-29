@@ -23,6 +23,7 @@ class TXMainAppBarWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       key: scaffoldKey,
       appBar: AppBar(
         centerTitle: true,

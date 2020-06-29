@@ -65,21 +65,30 @@ class _ScoreState extends StateWithBloC<ScorePage, ScoreBloC> {
                                 Positioned(
                                   bottom: 0,
                                   left: 0,
-                                  child: Html(
-                                    data: "Estas por encima del <b>${model
-                                        .personalRanking.percentageBehind}%</b>",
+                                  child: Container(
+                                    margin: EdgeInsets.only(left: 10, right: 10, bottom: 5),
+                                    width: 200,
+                                    child: Row(
+                                      children: <Widget>[
+                                        TXNetworkImage(
+                                          shape: BoxShape.circle,
+                                          width: 30,
+                                          height: 30,
+                                          imageUrl: model.user.avatar,
+                                          boxFitImage: BoxFit.cover,
+                                          placeholderImage: R.image.plani,
+                                          boxFitPlaceholderImage: BoxFit.cover,
+                                        ),
+                                        Expanded(
+                                          child: Html(
+                                            data: "Estas por encima del <b>${model
+                                                .personalRanking.percentageBehind}%</b> de los usuarios.",
+                                          ),
+                                        )
+                                      ],
+                                    ),
                                   ),
                                 ),
-                                Positioned(bottom: 30, left: 10,
-                                child: TXNetworkImage(
-                                  shape: BoxShape.circle,
-                                  width: 30,
-                                  height: 30,
-                                  imageUrl: model.user.avatar,
-                                  boxFitImage: BoxFit.cover,
-                                  placeholderImage: R.image.plani,
-                                  boxFitPlaceholderImage: BoxFit.cover,
-                                ),)
                               ],
                             ),
                           ),

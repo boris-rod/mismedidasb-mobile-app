@@ -197,7 +197,8 @@ class FoodModel {
   double get caloriesFixed =>
       (carbohydrates * 4 + proteins * 4 + fat * 9) * count;
 
-  bool get isCompound => children.isNotEmpty && (children.length > 1 || children[0].count > 1 ) ;
+  bool get isCompound =>
+      children.isNotEmpty && (children.length > 1 || children[0].count > 1);
 
   String get displayCount => count == 0.25
       ? "1/4"
@@ -286,14 +287,83 @@ class TagModel {
 class CreateDailyPlanModel {
   DateTime dateTime;
   List<CreateDailyActivityModel> activities;
+  bool isBalanced;
 
-  bool get isBalanced => false;
-
-  CreateDailyPlanModel({this.dateTime, this.activities = const []});
+  CreateDailyPlanModel(
+      {this.dateTime, this.activities = const [], this.isBalanced});
 
   static CreateDailyPlanModel fromDailyFoodModel(DailyFoodModel model) {
+    bool isBalancedPlan = false;
+    bool kCalAll =
+        model.currentCaloriesSum > model.dailyFoodPlanModel.kCalMin &&
+            model.currentCaloriesSum <= model.dailyFoodPlanModel.kCalMax;
+
+    double proteinPer = model.currentProteinsSum *
+        100 /
+        (model.dailyFoodPlanModel.kCalMax * 25 / 100);
+    bool proteins = proteinPer <= 100 && proteinPer > (12 * 100 / 25);
+
+    double carbohydratesPer = model.currentCarbohydratesSum *
+        100 /
+        (model.dailyFoodPlanModel.kCalMax * 55 / 100);
+    bool carbohydrates =
+        carbohydratesPer <= 100 && carbohydratesPer > 35 * 100 / 55;
+
+    double fatPer = model.currentFatSum *
+        100 /
+        (model.dailyFoodPlanModel.kCalMax * 35 / 100);
+    bool fat = fatPer <= 100 && fatPer > 20 * 100 / 35;
+
+    double fibPer = model.currentFiberSum * 100 / 50;
+    bool fiber = fibPer <= 100 && fibPer > 30 * 100 / 50;
+
+    double breakfastKcalPer = model.dailyActivityFoodModelList[0].calories *
+        100 /
+        (model.dailyFoodPlanModel.breakFastCalVal +
+            model.dailyFoodPlanModel.breakFastCalValExtra);
+    bool breakfastKcal = model.dailyActivityFoodModelList[0].calories >=
+            (model.dailyFoodPlanModel.breakFastCalVal -
+                model.dailyFoodPlanModel.breakFastCalValExtra) &&
+        breakfastKcalPer < 101;
+
+    double snack1KcalPer = model.dailyActivityFoodModelList[1].calories * 100 / (model.dailyFoodPlanModel.snack1CalVal +
+        model.dailyFoodPlanModel.snack1CalValExtra);
+    bool snack1Kcal = model.dailyActivityFoodModelList[1].calories >=
+            (model.dailyFoodPlanModel.snack1CalVal -
+                model.dailyFoodPlanModel.snack1CalValExtra) && snack1KcalPer < 101;
+
+    double lunchKcalPer = model.dailyActivityFoodModelList[2].calories * 100 / (model.dailyFoodPlanModel.lunchCalVal +
+        model.dailyFoodPlanModel.lunchCalValExtra);
+    bool lunchKcal = model.dailyActivityFoodModelList[2].calories >=
+            (model.dailyFoodPlanModel.lunchCalVal -
+                model.dailyFoodPlanModel.lunchCalValExtra) && lunchKcalPer < 101;
+
+    double snack2KcalPer = model.dailyActivityFoodModelList[3].calories * 100 / (model.dailyFoodPlanModel.snack2CalVal +
+        model.dailyFoodPlanModel.snack2CalValExtra);
+    bool snack2Kcal = model.dailyActivityFoodModelList[3].calories >=
+            (model.dailyFoodPlanModel.snack2CalVal -
+                model.dailyFoodPlanModel.snack2CalValExtra) && snack2KcalPer < 101;
+
+    double dinnerKcalPer = model.dailyActivityFoodModelList[4].calories * 100 / (model.dailyFoodPlanModel.dinnerCalVal +
+        model.dailyFoodPlanModel.dinnerCalValExtra);
+    bool dinnerKcal = model.dailyActivityFoodModelList[4].calories >=
+            (model.dailyFoodPlanModel.dinnerCalVal -
+                model.dailyFoodPlanModel.dinnerCalValExtra) && dinnerKcalPer < 101;
+
+    isBalancedPlan = kCalAll &&
+        proteins &&
+        carbohydrates &&
+        fat &&
+        fiber &&
+        breakfastKcal &&
+        snack1Kcal &&
+        lunchKcal &&
+        snack2Kcal &&
+        dinnerKcal;
+
     return CreateDailyPlanModel(
         dateTime: model.dateTime,
+        isBalanced: isBalancedPlan,
         activities: model.dailyActivityFoodModelList
             .map((a) => CreateDailyActivityModel.fromDailyActivityFoodModel(a))
             .toList());
