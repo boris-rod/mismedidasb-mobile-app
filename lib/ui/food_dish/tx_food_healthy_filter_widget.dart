@@ -17,7 +17,7 @@ class TXFoodHealthyFilterWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Expanded(
-          flex: 2,
+          flex: 1,
           child: Column(
             children: <Widget>[
               TXIconButtonWidget(
@@ -27,7 +27,7 @@ class TXFoodHealthyFilterWidget extends StatelessWidget {
                 },
               ),
               TXTextWidget(
-                text: "Frutas y/o Vegetales",
+                text: "Frutas/Vegetales",
                 color: Colors.black,
                 size: 12,
               )
