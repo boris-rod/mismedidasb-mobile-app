@@ -53,7 +53,7 @@ showAlertDialogForPollsAnswerResult(
     {BuildContext context, Function onOk, String title, String content}) {
   // set up the button
   Widget okButton = FlatButton(
-    child: Text(R.string.ok),
+    child: TXTextWidget(text: R.string.ok,),
     onPressed: onOk,
   );
 

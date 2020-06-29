@@ -65,6 +65,7 @@ class _MyMeasuresBState extends StateWithBloC<MyMeasuresBApp, AppBloC> {
             accentColor: R.color.accent_color,
           ),
           darkTheme: ThemeData(
+            dialogBackgroundColor: Colors.white,
               appBarTheme:
                   AppBarTheme(iconTheme: IconThemeData(color: Colors.white)),
               brightness: Brightness.dark,
