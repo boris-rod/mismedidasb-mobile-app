@@ -10,5 +10,5 @@ class R {
   static final AppImage image = AppImage();
   static final AppDimens dim = AppDimens();
   static final AppColor color =
-      AppColor(isDarkTheme: Injector.instance.darkTheme);
+      AppColor();
 }

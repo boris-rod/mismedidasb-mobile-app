@@ -1,8 +1,9 @@
 import 'dart:ui';
 
 class AppColor {
-  final bool isDarkTheme ;
+  static bool isDarkTheme = false;
 
+  Color get black_color => isDarkTheme  ? Color(0xFF000000) : Color(0xFFFFFFFF);
   final primary_color = Color(0xFF3F51B5);
   final primary_dark_color = Color(0xFF303F9F);
   final accent_color = Color(0xFF448AFF);
@@ -23,5 +24,5 @@ class AppColor {
   Color get dialog_background => isDarkTheme ? Color(0xc8808080) : Color(0xc8F6F7FB);
   Color get blue_transparent => Color(0xc8448AFF);
 
-  AppColor({this.isDarkTheme = false});
+  AppColor();
 }

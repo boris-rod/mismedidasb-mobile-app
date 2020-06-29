@@ -13,6 +13,10 @@ import 'package:mismedidasb/ui/_tx_widget/tx_textlink_widget.dart';
 import 'package:mismedidasb/ui/recover_password/recover_password_bloc.dart';
 
 class RecoverPasswordPage extends StatefulWidget {
+  final String email;
+
+  const RecoverPasswordPage({Key key, this.email}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => _RecoverPasswordState();
 }
@@ -25,6 +29,7 @@ class _RecoverPasswordState
   @override
   void initState() {
     super.initState();
+    emailTextController.text = widget.email ?? '';
     bloc.recoverResult.listen((res) {
       NavigationUtils.pop(context, result: true);
     });

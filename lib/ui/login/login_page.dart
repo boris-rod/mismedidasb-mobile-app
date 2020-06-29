@@ -152,7 +152,10 @@ class _LoginState extends StateWithBloC<LoginPage, LoginBloC> {
                                   title: R.string.forgotPassword,
                                   onTap: () async {
                                     final res = await NavigationUtils.push(
-                                        context, RecoverPasswordPage());
+                                        context,
+                                        RecoverPasswordPage(
+                                          email: emailTextController.text,
+                                        ));
                                     if (res is bool && res)
                                       Fluttertoast.showToast(
                                           msg: R.string.checkEmail,

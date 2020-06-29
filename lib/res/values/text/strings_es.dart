@@ -240,13 +240,13 @@ class StringsEs implements StringsBase {
   String get gallery => "Galería";
 
   @override
-  String get help => "Help";
+  String get help => "Ayuda";
 
   @override
-  String get copyPlan => "Copy";
+  String get copyPlan => "Copiar";
 
   @override
-  String get editPlan => "Edit";
+  String get editPlan => "Modificar";
 
   @override
   String get resumePlan => "Resumen";
