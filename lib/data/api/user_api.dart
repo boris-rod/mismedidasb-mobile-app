@@ -77,4 +77,18 @@ class UserApi extends BaseApi implements IUserApi {
     else
       throw serverException(res);
   }
+
+  @override
+  Future<UsernameSuggestionModel> usernameValidation(
+      int userId, String email, String username, String fullName) async {
+    final res = await _networkHandler.get(
+      path: Endpoint.username_validation,
+      params: "?userId=$userId&username=$username&fullName=$fullName&email=$email"
+    );
+    if (res.statusCode == RemoteConstants.code_success) {
+      return _iUserConverter
+          .fromJsonUsernameSuggestionModel(jsonDecode(res.body)["result"]);
+    }
+    throw serverException(res);
+  }
 }

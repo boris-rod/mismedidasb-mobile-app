@@ -19,6 +19,7 @@ class Endpoint {
   static const String profile = "/api/account/profile";
   static const String save_settings = "/api/account/settings";
   static const String remove_account = "/api/account/remove-account";
+  static const String username_validation = "/api/account/username-validation";
 
   static const String health_concept = "/api/concept"; //id
 

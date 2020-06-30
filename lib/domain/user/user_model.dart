@@ -100,3 +100,9 @@ class UserCredentialsModel {
   UserCredentialsModel(
       {this.email = "", this.password = "", this.saveCredentials = false});
 }
+
+class UsernameSuggestionModel {
+  bool isValid;
+  List<String> suggestions;
+  UsernameSuggestionModel({this.isValid, this.suggestions});
+}

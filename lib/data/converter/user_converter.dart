@@ -80,4 +80,13 @@ class UserConverter implements IUserConverter {
         user: fromJson(json["user"]));
     return model;
   }
+
+  @override
+  UsernameSuggestionModel fromJsonUsernameSuggestionModel(Map<String, dynamic> json) {
+    UsernameSuggestionModel model = UsernameSuggestionModel(
+        isValid: json["isValid"],
+        suggestions: List.from(json["suggestions"])
+    );
+    return model;
+  }
 }

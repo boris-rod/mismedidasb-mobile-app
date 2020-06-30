@@ -212,15 +212,21 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   TXTextWidget(
-                                    text: user.fullName ?? "---",
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  TXTextWidget(
-                                    text: user.email ?? "---",
+                                    text: "@${user.username}" ?? "---",
                                     fontWeight: FontWeight.bold,
                                     size: 16,
+                                  ),
+                                  TXTextWidget(
+                                    text: user.fullName ?? "---",
+                                    color: R.color.gray,
+                                    maxLines: 1,
+                                    textOverflow: TextOverflow.ellipsis,
+                                    size: 12,
+                                  ),
+                                  SizedBox(height: 5,),
+                                  TXTextWidget(
+                                    text: user.email ?? "---",
+                                    size: 12,
                                   ),
                                 ],
                               )

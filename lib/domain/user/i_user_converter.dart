@@ -11,4 +11,6 @@ abstract class IUserConverter {
 
   PersonalRankingModel fromJsonPersonalRanking(Map<String, dynamic> json);
 
+  UsernameSuggestionModel fromJsonUsernameSuggestionModel(
+      Map<String, dynamic> json);
 }
