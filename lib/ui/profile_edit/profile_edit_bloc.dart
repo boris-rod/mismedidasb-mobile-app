@@ -52,6 +52,7 @@ class ProfileEditBloC extends BaseBloC
     isLoading = true;
     final res = await _iUserRepository.updateProfile(user);
     if (res is ResultSuccess<UserModel>) {
+      userEdited = true;
       _userController.sinkAddSafe(res.value);
     } else {
       showErrorMessage(res);

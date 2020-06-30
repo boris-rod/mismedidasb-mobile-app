@@ -198,7 +198,7 @@ class _InvitePeopleState
         children: <Widget>[
           Container(
             child: Image.asset(
-              R.image.logo,
+              R.image.plani,
               width: 60,
               height: 60,
             ),

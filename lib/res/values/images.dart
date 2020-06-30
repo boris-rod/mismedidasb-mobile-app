@@ -1,17 +1,19 @@
 import 'package:mismedidasb/di/injector.dart';
 
 class AppImage {
-  final logo = 'lib/res/assets/img/logo.png';
-  String get plani => Injector.instance.planiId == 6 ? habits_home : (
-      Injector.instance.planiId == 5 ? dishes_home : (
-          Injector.instance.planiId == 4 ? wellness_home :(
-              Injector.instance.planiId == 3 ? values_home : (
-                  Injector.instance.planiId == 2 ? health_home : logo
+  String get plani => Injector.instance.planiId == 7 ? food_craving_home : (
+      Injector.instance.planiId == 6 ? habits_home : (
+          Injector.instance.planiId == 5 ? dishes_home : (
+              Injector.instance.planiId == 4 ? wellness_home :(
+                  Injector.instance.planiId == 3 ? values_home : (
+                      Injector.instance.planiId == 2 ? health_home : logo
+                  )
               )
           )
       )
   );
-  final logo_blue = 'lib/res/assets/img/logo_blue.png';
+//  final logo_blue = 'lib/res/assets/img/logo_blue.png';
+  final logo = 'lib/res/assets/img/logo.png';
   final logo_planifive = 'lib/res/assets/img/logo_planifive.png';
   final car = 'lib/res/assets/img/car_placeholder.png';
   final user = 'lib/res/assets/img/user_placeholder.png';

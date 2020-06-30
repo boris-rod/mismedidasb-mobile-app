@@ -88,7 +88,7 @@ class _ProfileEditState
                                 width: double.infinity,
                                 height: double.infinity,
                                 imageUrl: user.avatar,
-                                placeholderImage: R.image.logo_blue,
+                                placeholderImage: R.image.plani,
                                 boxFitImage: BoxFit.cover,
                               ),
                               Center(

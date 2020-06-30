@@ -147,7 +147,7 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   }
 
   String getDefaultHomeImage(HealthConceptModel model) {
-    String resDir = R.image.logo;
+    String resDir = R.image.plani;
     if (model.codeName == RemoteConstants.concept_health_measure)
       resDir = R.image.health_home;
     else if (model.codeName == RemoteConstants.concept_values_measure)

@@ -124,7 +124,7 @@ class _FoodSearchState extends StateWithBloC<FoodSearchPage, FoodSearchBloC> {
                               ),
                               leading: TXNetworkImage(
                                 imageUrl: model.image,
-                                placeholderImage: R.image.logo_blue,
+                                placeholderImage: R.image.plani,
                                 height: 40,
                                 width: 40,
                               ),

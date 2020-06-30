@@ -32,12 +32,15 @@ class UserApi extends BaseApi implements IUserApi {
 
   @override
   Future<UserModel> updateProfile(UserModel userModel) async {
-    final body = _iUserConverter.toJson(userModel);
+    final body = {
+      "fullName": userModel.fullName,
+      "username": userModel.username,
+      "phone": ""
+    };
     final res = await _networkHandler.post(
-        path: Endpoint.update_profile, body: jsonEncode(body));
+        path: Endpoint.profile, body: jsonEncode(body));
     if (res.statusCode == RemoteConstants.code_success)
-      return _iUserConverter
-          .fromJson(jsonDecode(res.body)[RemoteConstants.result]);
+      return userModel;
     else
       throw serverException(res);
   }

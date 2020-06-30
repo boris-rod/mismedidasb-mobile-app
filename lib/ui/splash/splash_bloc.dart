@@ -21,7 +21,7 @@ class SplashBloC extends BaseBloC {
   void shouldNavigateToLogin() async {
 
     final planiId = await _sharedPreferencesManager.getIntValue(SharedKey.planiId);
-    Injector.instance.planiId = planiId;
+    Injector.instance.planiId = 1;
 
     final firstUse = await _sharedPreferencesManager
         .getBoolValue(SharedKey.firstUse, defValue: true);

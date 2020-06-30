@@ -129,7 +129,7 @@ class _FoodAddEditState
                                                       child: snapshot.data.image
                                                               .isEmpty
                                                           ? Image.asset(
-                                                              R.image.logo)
+                                                              R.image.plani)
                                                           : Image.file(File(
                                                               snapshot
                                                                   .data.image)),
@@ -142,7 +142,7 @@ class _FoodAddEditState
                                                               .image
                                                               .isNotEmpty
                                                           ? snapshot.data.image
-                                                          : R.image.logo,
+                                                          : R.image.plani,
                                                       imageUrl:
                                                           snapshot.data.image,
                                                     ),
@@ -242,7 +242,7 @@ class _FoodAddEditState
           width: 40,
           height: 40,
           imageUrl: f.image,
-          placeholderImage: R.image.logo_blue,
+          placeholderImage: R.image.plani,
         ),
         title: Row(
           children: <Widget>[

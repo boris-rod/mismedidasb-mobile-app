@@ -314,8 +314,8 @@ class CreateDailyPlanModel {
         (model.dailyFoodPlanModel.kCalMax * 35 / 100);
     bool fat = fatPer <= 100 && fatPer > 20 * 100 / 35;
 
-    double fibPer = model.currentFiberSum * 100 / 50;
-    bool fiber = fibPer <= 100 && fibPer > 30 * 100 / 50;
+    double fiberPer = model.currentFiberSum * 100 / 50;
+    bool fiber = fiberPer <= 100 && fiberPer > 30 * 100 / 50;
 
     double breakfastKcalPer = model.dailyActivityFoodModelList[0].calories *
         100 /

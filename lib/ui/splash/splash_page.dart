@@ -43,9 +43,9 @@ class _SplashState extends StateWithBloC<SplashPage, SplashBloC> {
         color: R.color.primary_color,
         child: Center(
           child: Image.asset(
-            R.image.logo,
-            width: 400,
-            height: 400,
+            R.image.logo_planifive,
+            height: 300,
+            width: 300,
           ),
         ),
       ),

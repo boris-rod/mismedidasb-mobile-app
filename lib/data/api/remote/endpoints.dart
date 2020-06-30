@@ -36,7 +36,6 @@ class Endpoint {
   static const String personal_data_current_data =
       "/api/personal-data/current-datas";
 
-  static const String update_profile = "/api/account/update-profile";
   static const String upload_avatar = "/api/account/upload-avatar";
   static const String invite = "/api/user-referral";
   static const String scores = "/api/user-statistics/by-user-id";

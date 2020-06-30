@@ -101,8 +101,17 @@ class UserCredentialsModel {
       {this.email = "", this.password = "", this.saveCredentials = false});
 }
 
+class UserUpdateModel {
+  String username;
+  String fullName;
+  String phone;
+
+  UserUpdateModel({this.username, this.fullName, this.phone});
+}
+
 class UsernameSuggestionModel {
   bool isValid;
   List<String> suggestions;
+
   UsernameSuggestionModel({this.isValid, this.suggestions});
 }

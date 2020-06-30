@@ -104,6 +104,7 @@ class LNM implements ILNM {
   @override
   Future<void> initPollNotificationReminders() async {
     final exist = await checkIfPendingNotificationExist(pollNotificationId);
+    final planiId = await _sharedPreferencesManager.getIntValue(SharedKey.planiId);
     if (exist) return;
     final String userName =
         await _sharedPreferencesManager.getStringValue(SharedKey.userName);

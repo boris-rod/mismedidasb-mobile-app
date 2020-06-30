@@ -271,7 +271,7 @@ class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
                                                           height: 40,
                                                           imageUrl: food.image,
                                                           placeholderImage:
-                                                              R.image.logo_blue,
+                                                              R.image.plani,
                                                         ),
                                                         title: Row(
                                                           children: <Widget>[
@@ -452,7 +452,7 @@ class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
                 ),
                 leading: TXNetworkImage(
                   imageUrl: model.image,
-                  placeholderImage: R.image.logo_blue,
+                  placeholderImage: R.image.plani,
                   height: 40,
                   width: 40,
                 ),
@@ -506,7 +506,7 @@ class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
                 ),
                 leading: TXNetworkImage(
                   imageUrl: model.image,
-                  placeholderImage: R.image.logo_blue,
+                  placeholderImage: R.image.plani,
                   height: 40,
                   width: 40,
                 ),

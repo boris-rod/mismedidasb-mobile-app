@@ -14,6 +14,7 @@ import 'package:mismedidasb/ui/_base/navigation_utils.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_bottom_sheet.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_cupertino_dialog_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_cupertino_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_divider_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_icon_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';
@@ -139,7 +140,7 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                                                 height: double.infinity,
                                                 imageUrl: user.avatar,
                                                 placeholderImage:
-                                                    R.image.logo_blue,
+                                                    R.image.plani,
                                                 boxFitImage: BoxFit.cover,
                                               ),
                                               Container(
@@ -156,7 +157,7 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                                             width: double.infinity,
                                             height: double.infinity,
                                             imageUrl: user.avatar,
-                                            placeholderImage: R.image.logo_blue,
+                                            placeholderImage: R.image.plani,
                                           ),
                                         )
                                       ],
@@ -204,28 +205,30 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                                 child: TXNetworkImage(
                                   width: 60,
                                   height: 60,
-                                  imageUrl: R.image.logo_blue,
-                                  placeholderImage: R.image.logo_blue,
+                                  imageUrl: R.image.plani,
+                                  placeholderImage: R.image.plani,
                                 ),
                               ),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   TXTextWidget(
-                                    text: "@${user.username}" ?? "---",
+                                    text: "@${user?.username ?? ""}",
                                     fontWeight: FontWeight.bold,
                                     size: 16,
                                   ),
                                   TXTextWidget(
-                                    text: user.fullName ?? "---",
+                                    text: user?.fullName ?? "",
                                     color: R.color.gray,
                                     maxLines: 1,
                                     textOverflow: TextOverflow.ellipsis,
                                     size: 12,
                                   ),
-                                  SizedBox(height: 5,),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
                                   TXTextWidget(
-                                    text: user.email ?? "---",
+                                    text: user?.email ?? "---",
                                     size: 12,
                                   ),
                                 ],
@@ -250,7 +253,7 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                         TXDividerWidget(),
                         TXCellSelectionOptionWidget(
                           leading: Icons.contacts,
-                          optionName: "Hazle saber a tus contactos!",
+                          optionName: "Invita a tus contactos!",
                           onOptionTap: () {},
                         ),
                         TXDividerWidget(),
@@ -261,6 +264,64 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                             NavigationUtils.push(context, ScorePage());
                           },
                         ),
+                        TXDividerWidget(),
+//                        InkWell(
+//                          onTap: (){
+//
+//                            showTXModalBottomSheet(
+//                                context: context,
+//                                builder: (ctx) {
+//                                  return Container(
+//                                    height: 400,
+//                                    child: Column(
+//                                      crossAxisAlignment: CrossAxisAlignment.center,
+//                                      children: <Widget>[
+//
+//                                        Row(
+//                                          children: <Widget>[
+//                                            Expanded(
+//                                              child: Column(
+//                                                children: <Widget>[
+//
+//                                                ],
+//                                              ),
+//                                            ),
+//                                            Expanded(
+//                                              child: Column(
+//                                                children: <Widget>[
+//
+//                                                ],
+//                                              ),
+//                                            ),
+//                                          ],
+//                                        )
+//                                      ],
+//                                    ),
+//                                  );
+//                                });
+//                          },
+//                          child: Container(
+//                              padding: EdgeInsets.only(right: 10),
+//                              height: 50,
+//                              child: Row(
+//                                children: <Widget>[
+//                                  Image.asset(R.image.plani, width: 35, height: 35,),
+//                                  Expanded(
+//                                    child: TXTextWidget(
+//                                      text: "Elige tu Plani favorito",
+//                                      maxLines: 1,
+//                                      textOverflow: TextOverflow.ellipsis,
+//                                      color: Colors.black,
+//                                    ),
+//                                  ),
+//                                  Icon(
+//                                    Icons.keyboard_arrow_right,
+//                                    color: R.color.primary_dark_color,
+//                                    size: 25,
+//                                  )
+//                                ],
+//                              )),
+//                        ),
 //                        TXDividerWidget(),
 //                        InkWell(
 //                          child: Container(
@@ -452,7 +513,7 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
         children: <Widget>[
           Container(
             child: Image.asset(
-              R.image.logo,
+              R.image.plani,
               width: 60,
               height: 60,
             ),

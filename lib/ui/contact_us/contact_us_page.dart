@@ -50,7 +50,7 @@ class _ContactUsState extends StateWithBloC<ContactUsPage, ContactUsBloC> {
                         height: 10,
                       ),
                       Image.asset(
-                        R.image.logo_blue,
+                        R.image.plani,
                         width: 100,
                         height: 100,
                       ),

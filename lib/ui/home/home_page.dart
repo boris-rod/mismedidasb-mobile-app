@@ -259,7 +259,7 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
         children: <Widget>[
           Container(
             child: Image.asset(
-              R.image.logo,
+              R.image.plani,
               width: 80,
               height: 80,
             ),

@@ -83,42 +83,35 @@ class _FoodCravingState
                   ),
                 ),
                 Expanded(
-                  child: Row(
+                  child: Stack(
                     children: <Widget>[
-                      Expanded(
-                        child: Stack(
-                          children: <Widget>[
-                            Container(
-                              margin:
-                                  EdgeInsets.only(left: 40, bottom: 30, top: 0),
-                              width: double.infinity,
-                              child: TXBlurWidget(),
-                            ),
-                            Container(
-                              margin:
-                                  EdgeInsets.only(left: 30, bottom: 30, top: 0),
-                              child: StreamBuilder<List<TitleSubTitlesModel>>(
-                                  stream: bloc.pollsResult,
-                                  initialData: [],
-                                  builder: (context, snapshot) {
-                                    return SingleChildScrollView(
-                                      physics: BouncingScrollPhysics(),
-                                      child: Container(
-                                        padding: EdgeInsets.only(right: 10),
-                                        width: double.infinity,
-                                        child: Column(
-                                          children: <Widget>[
-                                            ..._getCravingsView(snapshot.data)
-                                          ],
-                                        ),
-                                      ),
-                                    );
-                                  }),
-                            )
-                          ],
-                        ),
+                      Container(
+                        margin:
+                        EdgeInsets.only(left: 40, bottom: 30, top: 0, right: 40),
+                        width: double.infinity,
+                        child: TXBlurWidget(),
                       ),
-                      Image.asset(R.image.bar_scroll_icon)
+                      Container(
+                        margin:
+                        EdgeInsets.only(left: 30, bottom: 30, top: 0, right: 40),
+                        child: StreamBuilder<List<TitleSubTitlesModel>>(
+                            stream: bloc.pollsResult,
+                            initialData: [],
+                            builder: (context, snapshot) {
+                              return SingleChildScrollView(
+                                physics: BouncingScrollPhysics(),
+                                child: Container(
+                                  padding: EdgeInsets.only(right: 10),
+                                  width: double.infinity,
+                                  child: Column(
+                                    children: <Widget>[
+                                      ..._getCravingsView(snapshot.data)
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }),
+                      )
                     ],
                   ),
                 ),
