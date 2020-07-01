@@ -35,8 +35,8 @@ class _InvitePeopleState
       if (bloc.invited)
         _navBack();
       else
-        _keyInvite.currentState
-            .showSnackBar(getSnackBarWidget("Algunas invitaciones han fallado"));
+        _keyInvite.currentState.showSnackBar(
+            getSnackBarWidget("Algunas invitaciones han fallado"));
     });
   }
 
@@ -89,6 +89,7 @@ class _InvitePeopleState
                                       emailController.text = "";
                                     }
                                   },
+                                  iconData: Icons.group_add,
                                   onChanged: (value) {
                                     bloc.enableAdd(
                                         _keyFormInvite.currentState.validate());
@@ -198,7 +199,7 @@ class _InvitePeopleState
         children: <Widget>[
           Container(
             child: Image.asset(
-              R.image.plani,
+              R.image.logo,
               width: 60,
               height: 60,
             ),

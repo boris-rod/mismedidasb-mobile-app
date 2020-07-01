@@ -80,82 +80,80 @@ class TXBottomResumeFoodPlanWidget extends StatelessWidget {
                 )
               ],
             ),
-            (proteins == 0 && carbohydrates == 0 && fat == 0 && fiber == 0)
-                ? Container()
-                : Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Image.asset(
+                  R.image.plani,
+                  width: 60,
+                  height: 60,
+                ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Image.asset(
-                        R.image.plani,
-                        width: 60,
-                        height: 60,
+                      TXTextWidget(
+                        size: 12,
+                        color: proteins != 0
+                            ? Colors.redAccent
+                            : Colors.green,
+                        fontWeight: FontWeight.bold,
+                        text: proteins < 0
+                            ? "Debes incluir más Proteínas."
+                            : proteins > 0
+                            ? "Deberias reducir la cantidad de Proteínas."
+                            : "El balance de Proteínas es adecuado.",
                       ),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            proteins == 0
-                                ? Container()
-                                : Column(
-                                    children: <Widget>[
-                                      TXTextWidget(
-                                        size: 12,
-                                        color: Colors.redAccent,
-                                        fontWeight: FontWeight.bold,
-                                        text:
-                                            "Tu índice de proteinas es ${proteins < 0 ? "bajo" : "alto"}.",
-                                      ),
-                                      SizedBox(
-                                        height: 2,
-                                      )
-                                    ],
-                                  ),
-                            carbohydrates == 0
-                                ? Container()
-                                : Column(
-                                    children: <Widget>[
-                                      TXTextWidget(
-                                        size: 12,
-                                        color: Colors.redAccent,
-                                        fontWeight: FontWeight.bold,
-                                        text:
-                                            "Tu índice de carbohidratos es ${carbohydrates < 0 ? "bajo" : "alto"}.",
-                                      ),
-                                      SizedBox(
-                                        height: 2,
-                                      )
-                                    ],
-                                  ),
-                            fat == 0
-                                ? Container()
-                                : Column(
-                                    children: <Widget>[
-                                      TXTextWidget(
-                                        size: 12,
-                                        color: Colors.redAccent,
-                                        fontWeight: FontWeight.bold,
-                                        text:
-                                            "Tu índice de grasas es ${fat < 0 ? "bajo" : "alto"}.",
-                                      ),
-                                      SizedBox(
-                                        height: 2,
-                                      )
-                                    ],
-                                  ),
-                            fiber == 0
-                                ? Container()
-                                : TXTextWidget(
-                                    size: 12,
-                                    color: Colors.redAccent,
-                                    fontWeight: FontWeight.bold,
-                                    text:
-                                        "Tu índice de fibras es ${fiber < 0 ? "bajo" : "alto"}.",
-                                  )
-                          ],
-                        ),
+                      SizedBox(
+                        height: 2,
+                      ),
+                      TXTextWidget(
+                        size: 12,
+                        color: carbohydrates != 0
+                            ? Colors.redAccent
+                            : Colors.green,
+                        fontWeight: FontWeight.bold,
+                        text: carbohydrates < 0
+                            ? "Debes incluir más Carbohidratos."
+                            : carbohydrates > 0
+                            ? "Deberias reducir la cantidad de Carbohidratos."
+                            : "El balance de Carbohidratos es adecuado.",
+                      ),
+                      SizedBox(
+                        height: 2,
+                      ),
+                      TXTextWidget(
+                        size: 12,
+                        color: fat != 0
+                            ? Colors.redAccent
+                            : Colors.green,
+                        fontWeight: FontWeight.bold,
+                        text: fat < 0
+                            ? "Debes incluir más Grasa."
+                            : fat > 0
+                            ? "Deberias reducir la cantidad de Grasa."
+                            : "El balance de Grasa es adecuado.",
+                      ),
+                      SizedBox(
+                        height: 2,
+                      ),
+                      TXTextWidget(
+                        size: 12,
+                        color: fiber != 0
+                            ? Colors.redAccent
+                            : Colors.green,
+                        fontWeight: FontWeight.bold,
+                        text: fiber < 0
+                            ? "Debes incluir más Fibra."
+                            : fiber > 0
+                            ? "Deberias reducir la cantidad de Fibra."
+                            : "El balance de Fibra es adecuado.",
                       )
                     ],
                   ),
+                )
+              ],
+            ),
             Expanded(
               child: Container(
                 padding: EdgeInsets.only(left: 10, right: 20, bottom: 10),

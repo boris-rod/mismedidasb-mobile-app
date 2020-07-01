@@ -33,7 +33,7 @@ class TXFoodAppBarWidget extends StatelessWidget {
         centerTitle: false,
         leading: leading ??
             TXIconButtonWidget(
-              icon: Image.asset(R.image.plani),
+              icon: Image.asset(R.image.logo),
             ),
         title: TXTextWidget(
           text: title,

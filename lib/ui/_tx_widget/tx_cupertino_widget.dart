@@ -39,6 +39,7 @@ class TXCupertinoPickerWidget extends StatelessWidget {
     SingleSelectionModel current = list[index];
     return Container(
       height: height,
+      color: R.color.gray_light,
       child: Column(
         children: <Widget>[
           Container(

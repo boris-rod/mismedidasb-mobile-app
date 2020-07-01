@@ -15,32 +15,39 @@ class TXCupertinoDialogWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoAlertDialog(
-      title: TXTextWidget(
-        text: title,
-        fontWeight: FontWeight.bold,
+    return Theme(
+      isMaterialAppTheme: true,
+      data: ThemeData(
+          dialogBackgroundColor: Colors.white,
+          dialogTheme: DialogTheme(backgroundColor: Colors.white)
       ),
-      content: Container(
-        margin: EdgeInsets.only(top: 10),
-        child: TXTextWidget(
-          text: content,
+      child: CupertinoAlertDialog(
+        title: TXTextWidget(
+          text: title,
+          fontWeight: FontWeight.bold,
         ),
-      ),
-      actions: <Widget>[
-        if (onCancel != null)
+        content: Container(
+          margin: EdgeInsets.only(top: 10),
+          child: TXTextWidget(
+            text: content,
+          ),
+        ),
+        actions: <Widget>[
+          if (onCancel != null)
+            CupertinoDialogAction(
+              child: TXTextWidget(
+                text: R.string.cancel,
+              ),
+              onPressed: onCancel,
+            ),
           CupertinoDialogAction(
             child: TXTextWidget(
-              text: R.string.cancel,
+              text: R.string.ok,
             ),
-            onPressed: onCancel,
+            onPressed: onOK,
           ),
-        CupertinoDialogAction(
-          child: TXTextWidget(
-            text: R.string.ok,
-          ),
-          onPressed: onOK,
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

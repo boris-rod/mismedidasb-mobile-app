@@ -39,6 +39,7 @@ class TXReminderSettingCellWidget extends StatelessWidget {
                   builder: (context) {
                     final now = DateTime.now();
                     return Container(
+                      color: R.color.gray_light,
                       height: 200,
                       child: Column(
                         children: <Widget>[
@@ -52,6 +53,7 @@ class TXReminderSettingCellWidget extends StatelessWidget {
                                   ),
                                 ),
                                 TXTextLinkWidget(
+                                  textColor: R.color.primary_color,
                                   onTap: () {
                                     NavigationUtils.pop(context);
                                     onDateSelected(currentDateTime);
@@ -63,6 +65,7 @@ class TXReminderSettingCellWidget extends StatelessWidget {
                           ),
                           Expanded(
                             child: CupertinoDatePicker(
+                              backgroundColor: Colors.white,
                               mode: CupertinoDatePickerMode.time,
                               initialDateTime: time,
 //                              minimumDate: minimumDate,

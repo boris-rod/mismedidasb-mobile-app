@@ -140,7 +140,7 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                                                 height: double.infinity,
                                                 imageUrl: user.avatar,
                                                 placeholderImage:
-                                                    R.image.plani,
+                                                    R.image.logo,
                                                 boxFitImage: BoxFit.cover,
                                               ),
                                               Container(
@@ -157,7 +157,7 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                                             width: double.infinity,
                                             height: double.infinity,
                                             imageUrl: user.avatar,
-                                            placeholderImage: R.image.plani,
+                                            placeholderImage: R.image.logo,
                                           ),
                                         )
                                       ],
@@ -205,8 +205,8 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                                 child: TXNetworkImage(
                                   width: 60,
                                   height: 60,
-                                  imageUrl: R.image.plani,
-                                  placeholderImage: R.image.plani,
+                                  imageUrl: R.image.logo,
+                                  placeholderImage: R.image.logo,
                                 ),
                               ),
                               Column(
@@ -305,7 +305,7 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
 //                              height: 50,
 //                              child: Row(
 //                                children: <Widget>[
-//                                  Image.asset(R.image.plani, width: 35, height: 35,),
+//                                  Image.asset(R.image.logo, width: 35, height: 35,),
 //                                  Expanded(
 //                                    child: TXTextWidget(
 //                                      text: "Elige tu Plani favorito",
@@ -329,7 +329,7 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
 //                            height: 50,
 //                            child: Row(
 //                              children: <Widget>[
-//                                Image.asset(R.image.plani),
+//                                Image.asset(R.image.logo),
 //                                Expanded(child: TXTextWidget(text: "Escoge tu Plani",)),
 //                                Icon(
 //                                  Icons.keyboard_arrow_right,
@@ -340,7 +340,6 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
 //                            ),
 //                          ),
 //                        ),
-                        TXDividerWidget(),
 
 //                          Container(
 //                            padding: EdgeInsets.symmetric(horizontal: 10),

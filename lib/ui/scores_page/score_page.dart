@@ -76,7 +76,7 @@ class _ScoreState extends StateWithBloC<ScorePage, ScoreBloC> {
                                           height: 30,
                                           imageUrl: model.user.avatar,
                                           boxFitImage: BoxFit.cover,
-                                          placeholderImage: R.image.plani,
+                                          placeholderImage: R.image.logo,
                                           boxFitPlaceholderImage: BoxFit.cover,
                                         ),
                                         Expanded(

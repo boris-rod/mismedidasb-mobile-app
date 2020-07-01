@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -33,16 +34,31 @@ class MyMeasuresBApp extends StatefulWidget {
   State<StatefulWidget> createState() => _MyMeasuresBState();
 }
 
-class _MyMeasuresBState extends StateWithBloC<MyMeasuresBApp, AppBloC> {
+class _MyMeasuresBState extends StateWithBloC<MyMeasuresBApp, AppBloC> with WidgetsBindingObserver{
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
     widget.fcmFeature.setUp();
     widget.lnm.setup();
   }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangePlatformBrightness() {
+//    final Brightness brightness =
+//        WidgetsBinding.instance.window.platformBrightness;
+//    Injector.instance.darkTheme = brightness == Brightness.dark;
+  }
+
 
   @override
   Widget buildWidget(BuildContext context) {
@@ -65,10 +81,11 @@ class _MyMeasuresBState extends StateWithBloC<MyMeasuresBApp, AppBloC> {
             accentColor: R.color.accent_color,
           ),
           darkTheme: ThemeData(
-            dialogBackgroundColor: Colors.white,
-              appBarTheme:
-                  AppBarTheme(iconTheme: IconThemeData(color: Colors.white)),
-              brightness: Brightness.dark,
+//              popupMenuTheme: PopupMenuThemeData(color: Colors.white),
+//              dialogBackgroundColor: Colors.white,
+//              appBarTheme:
+//                  AppBarTheme(iconTheme: IconThemeData(color: Colors.white)),
+              brightness: Brightness.light,
 //        primarySwatch: Colors.deepOrange,
 //        accentColor: Colors.deepOrange,
               fontFamily: "Raleway",

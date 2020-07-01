@@ -67,7 +67,7 @@ class _ChangePasswordState
                         height: 10,
                       ),
                       Image.asset(
-                        R.image.plani,
+                        R.image.logo,
                         width: R.dim.logoInBody,
                         height: R.dim.logoInBody,
                       ),

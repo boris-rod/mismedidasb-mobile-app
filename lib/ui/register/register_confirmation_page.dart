@@ -62,7 +62,7 @@ class _RegisterConfirmationState
                               height: 30,
                             ),
                             Image.asset(
-                              R.image.plani,
+                              R.image.logo,
                               width: R.dim.logoInBody,
                               height: R.dim.logoInBody,
                             ),

@@ -1,9 +1,11 @@
 import 'dart:ui';
 
-class AppColor {
-  static bool isDarkTheme = false;
+import 'package:mismedidasb/di/injector.dart';
 
-  Color get black_color => isDarkTheme  ? Color(0xFF000000) : Color(0xFFFFFFFF);
+class AppColor {
+
+  Color get black_color => Injector.instance.darkTheme  ? Color(0xFFFFFFFF) : Color(0xFF000000);
+  Color get white_color => !Injector.instance.darkTheme  ? Color(0xFFFFFFFF) : Color(0xFF000000);
   final primary_color = Color(0xFF3F51B5);
   final primary_dark_color = Color(0xFF303F9F);
   final accent_color = Color(0xFF448AFF);
@@ -16,12 +18,12 @@ class AppColor {
   final habits_color = Color(0xFF2046d6);
   final habits_number_color = Color(0xFFf8a41f);
 
-  final gray_darkest = Color(0xFF808080);
-  final gray_dark = Color(0x5097A0AE);
-  final gray = Color(0xFF97A0AE);
-  final gray_light = Color(0xFFF6F7FB);
+  final gray_darkest = Injector.instance.darkTheme ? Color(0xFFF6F7FB) : Color(0xFF808080);
+  final gray_dark = Injector.instance.darkTheme ? Color(0xFF97A0AE) : Color(0x5097A0AE);
+  final gray = Injector.instance.darkTheme ? Color(0x5097A0AE) : Color(0xFF97A0AE);
+  final gray_light = Injector.instance.darkTheme ? Color(0xFF808080) : Color(0xFFF6F7FB);
 
-  Color get dialog_background => isDarkTheme ? Color(0xc8808080) : Color(0xc8F6F7FB);
+  Color get dialog_background => Injector.instance.darkTheme ? Color(0xc8808080) : Color(0xc8F6F7FB);
   Color get blue_transparent => Color(0xc8448AFF);
 
   AppColor();

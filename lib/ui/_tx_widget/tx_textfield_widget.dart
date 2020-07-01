@@ -63,8 +63,8 @@ class _TXTextFieldWidgetState extends State<TXTextFieldWidget> {
           suffixIcon: InkWell(
             onTap: widget.obscureText
                 ? () {
-              _setPasswordVisible(!passwordVisible);
-            }
+                    _setPasswordVisible(!passwordVisible);
+                  }
                 : null,
             child: Icon(
               widget.obscureText ? passwordIcon : widget.iconData,
@@ -72,6 +72,8 @@ class _TXTextFieldWidgetState extends State<TXTextFieldWidget> {
             ),
           ),
           border: OutlineInputBorder(
+              borderSide: BorderSide(
+                  color: Colors.black),
               borderRadius: BorderRadius.all(Radius.circular(45)))),
     );
   }

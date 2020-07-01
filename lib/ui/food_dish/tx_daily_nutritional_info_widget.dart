@@ -41,6 +41,7 @@ class TXDailyNutritionalInfoWidget extends StatelessWidget {
                               ? Icons.keyboard_arrow_up
                               : Icons.keyboard_arrow_down,
                           size: 28,
+                          color: R.color.primary_color,
                         ),
                         TXTextWidget(
                           text: R.string.nutritionalInfo,
