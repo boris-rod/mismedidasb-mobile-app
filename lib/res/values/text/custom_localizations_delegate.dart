@@ -12,8 +12,8 @@ class CustomLocalizationsDelegate extends LocalizationsDelegate<StringsBase> {
   List<Locale> get supportedLocales {
     return const <Locale>[
       Locale("es", ""),
-      Locale("en", ""),
-      Locale("it", ""),
+//      Locale("en", ""),
+//      Locale("it", ""),
     ];
   }
 
@@ -24,14 +24,14 @@ class CustomLocalizationsDelegate extends LocalizationsDelegate<StringsBase> {
         stringsBase = StringsEs();
         currentLang = AppLocale.ES;
         break;
-      case "en":
-        stringsBase = StringsEn();
-        currentLang = AppLocale.EN;
-        break;
-      case "it":
-        stringsBase = StringsIt();
-        currentLang = AppLocale.IT;
-        break;
+//      case "en":
+//        stringsBase = StringsEn();
+//        currentLang = AppLocale.EN;
+//        break;
+//      case "it":
+//        stringsBase = StringsIt();
+//        currentLang = AppLocale.IT;
+//        break;
       default:
         stringsBase = StringsEs();
         currentLang = AppLocale.ES;

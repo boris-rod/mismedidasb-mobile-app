@@ -64,7 +64,7 @@ class TXFoodAppBarWidget extends StatelessWidget {
                   selectedItemIndex == 0 ? R.color.primary_color : R.color.gray,
             ),
             title: TXTextWidget(
-              text: "Alimentos",
+              text: R.string.foods,
               maxLines: 2,
               color:
                   selectedItemIndex == 0 ? R.color.primary_color : R.color.gray,
@@ -78,7 +78,7 @@ class TXFoodAppBarWidget extends StatelessWidget {
                   selectedItemIndex == 1 ? R.color.primary_color : R.color.gray,
             ),
             title: TXTextWidget(
-              text: "Mis alimentos",
+              text: R.string.myFoods,
               maxLines: 2,
               color:
                   selectedItemIndex == 1 ? R.color.primary_color : R.color.gray,

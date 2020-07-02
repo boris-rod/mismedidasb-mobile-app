@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:mismedidasb/res/values/text/strings_base.dart';
 
-class StringsEn implements StringsBase {
+class StringsEn /*implements StringsBase*/ {
   @override
   TextDirection get textDirection => TextDirection.ltr;
 

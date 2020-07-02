@@ -8,7 +8,6 @@ import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/res/values/colors.dart';
 import 'package:mismedidasb/ui/_base/bloc_state.dart';
 import 'package:mismedidasb/ui/_base/navigation_utils.dart';
-import 'package:mismedidasb/ui/_tx_widget/tx_background_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_blur_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_bottom_result_info.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_bottom_sheet.dart';

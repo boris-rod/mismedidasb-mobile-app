@@ -5,7 +5,6 @@ import 'package:mismedidasb/domain/user/user_model.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/bloc_state.dart';
 import 'package:mismedidasb/ui/_base/navigation_utils.dart';
-import 'package:mismedidasb/ui/_tx_widget/tx_background_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_checkbox_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_gesture_hide_key_board.dart';

@@ -4,6 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mismedidasb/data/api/remote/result.dart';
 import 'package:mismedidasb/domain/dish/dish_model.dart';
 import 'package:mismedidasb/domain/dish/i_dish_repository.dart';
+import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/bloc_base.dart';
 import 'package:mismedidasb/ui/_base/bloc_error_handler.dart';
 import 'package:mismedidasb/ui/_base/bloc_form_validator.dart';
@@ -93,11 +94,11 @@ class FoodAddEditBloC extends BaseBloC
   String validateFoodsRules() {
     String rule = "";
     if (currentFoodModel.children.isEmpty) {
-      rule = "Debe adicionar al menos un alimento";
+      rule = R.string.atLeastOneFood;
       Fluttertoast.showToast(msg: rule);
     } else if (currentFoodModel.children.length == 1 &&
         currentFoodModel.children[0].count == 1) {
-      rule = "El número de porciones debe ser mayor que 1.";
+      rule = R.string.foodPortionMajorThan1;
       Fluttertoast.showToast(msg: rule);
     }
     return rule;

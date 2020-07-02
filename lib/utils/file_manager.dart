@@ -7,7 +7,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mismedidasb/res/R.dart';
-import 'package:mismedidasb/ui/_tx_widget/tx_blur_dialog.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_cupertino_dialog_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
 import 'package:path_provider/path_provider.dart';
@@ -138,55 +137,5 @@ class FileManager {
     ByteData bd = await rootBundle.load('$assetPath/$fileName');
     await tempFile.writeAsBytes(bd.buffer.asUint8List(), flush: true);
     return tempFile;
-  }
-
-  static _showWarningDialog(
-    BuildContext context, {
-    String title,
-    String content,
-    ValueChanged<bool> okAction,
-  }) {
-    return showBlurDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            backgroundColor: R.color.dialog_background,
-            title: TXTextWidget(
-              text: title,
-              maxLines: 2,
-              textAlign: TextAlign.start,
-              fontWeight: FontWeight.bold,
-            ),
-            content: TXTextWidget(
-              text: content,
-              textAlign: TextAlign.start,
-              color: R.color.gray_dark,
-              textOverflow: TextOverflow.visible,
-            ),
-            actions: <Widget>[
-              FlatButton(
-                child: TXTextWidget(
-                  text: R.string.ok,
-                  fontWeight: FontWeight.bold,
-                  color: R.color.primary_color,
-                ),
-                onPressed: () {
-                  okAction(true);
-                  Navigator.of(context).pop();
-                },
-              ),
-              FlatButton(
-                child: TXTextWidget(
-                  text: R.string.cancel,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.red,
-                ),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              )
-            ],
-          );
-        });
   }
 }

@@ -70,7 +70,7 @@ class _FoodAddEditState
       child: Stack(
         children: <Widget>[
           TXMainAppBarWidget(
-            title: widget.foodModel == null ? "Adicionar" : "Editar",
+            title: widget.foodModel == null ? R.string.add : R.string.edit,
             leading: TXIconButtonWidget(
               icon: Icon(Icons.arrow_back),
               onPressed: () {

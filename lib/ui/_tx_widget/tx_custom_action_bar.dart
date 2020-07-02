@@ -3,10 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/navigation_utils.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_action_bar_menu_widget.dart';
-import 'package:mismedidasb/ui/_tx_widget/tx_icon_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_icon_navigator_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
-import 'package:mismedidasb/ui/_tx_widget/tx_textfield_widget.dart';
 
 class TXCustomActionBar extends StatelessWidget {
   final Widget leading;
@@ -51,7 +49,7 @@ class TXCustomActionBar extends StatelessWidget {
                         onTap: () {
                           NavigationUtils.pop(context);
                         },
-                        text: "volver",
+                        text: R.string.back.toLowerCase(),
                       )
                   : Container(),
               Expanded(

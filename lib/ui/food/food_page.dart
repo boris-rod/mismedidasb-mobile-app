@@ -5,7 +5,6 @@ import 'package:mismedidasb/domain/dish/dish_model.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/bloc_state.dart';
 import 'package:mismedidasb/ui/_base/navigation_utils.dart';
-import 'package:mismedidasb/ui/_tx_widget/tx_action_chip_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_bottom_sheet.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_checkbox_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_combo_progress_bar_widget.dart';
@@ -307,7 +306,7 @@ class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
                                                                           });
                                                                         },
                                                                         title:
-                                                                            "Cantidad",
+                                                                            R.string.quantity,
                                                                         initialId:
                                                                             selectorList[3].id,
                                                                       );
@@ -369,7 +368,7 @@ class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
                                           child: Row(
                                             children: <Widget>[
                                               TXTextWidget(
-                                                text: "Filtro:",
+                                                text: "${R.string.filter}:",
                                                 color: R.color.primary_color,
                                                 size: 10,
                                               ),

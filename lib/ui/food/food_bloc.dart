@@ -216,15 +216,15 @@ class FoodBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
       list.add(TagModel(
           isSelected: foodFilterCategoryId == FoodHealthy.fruitVeg.index,
           id: FoodHealthy.fruitVeg.index,
-          name: "Frutas/Vegetales"));
+          name: R.string.fiberAndVegetables));
       list.add(TagModel(
           isSelected: foodFilterCategoryId == FoodHealthy.proteic.index,
           id: FoodHealthy.proteic.index,
-          name: "Protéico"));
+          name: R.string.proteic));
       list.add(TagModel(
           isSelected: foodFilterCategoryId == FoodHealthy.caloric.index,
           id: FoodHealthy.caloric.index,
-          name: "Calórico"));
+          name: R.string.caloric));
     }
     tagsAll.addAll(list);
   }

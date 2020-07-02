@@ -81,46 +81,5 @@ class TXBottomSheetSelectorWidget extends StatelessWidget {
         ],
       ),
     );
-
-//      ListTile(
-//      contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-//      trailing: Icon(
-//        Icons.arrow_forward_ios,
-//        size: 15,
-//      ),
-//      onTap: () {
-//        if (list.isEmpty)
-//          Fluttertoast.showToast(
-//              msg: R.string.emptyList, toastLength: Toast.LENGTH_SHORT);
-//        else
-//          showTXModalBottomSheet(
-//              context: context,
-//              builder: (ctx) {
-//                return TXCupertinoPickerWidget(
-//                  height: bottomSheetHeight ?? 300,
-//                  list: list,
-//                  onItemSelected: onItemSelected,
-//                  title: title,
-//                  initialId: initialId,
-//                );
-//              });
-//      },
-//      title: Container(
-//        child: TXTextWidget(
-//          text: title,
-//          textAlign: TextAlign.justify,
-//        ),
-//      ),
-//      dense: true,
-//      subtitle: Container(
-//        child:
-//
-//        TXTextWidget(
-//          text: list[index]?.displayName ?? "Vacio",
-//          color: R.color.gray_darkest,
-//          size: 20,
-//        ),
-//      ),
-//    );
   }
 }

@@ -9,7 +9,6 @@ import 'package:mismedidasb/domain/single_selection_model.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/bloc_state.dart';
 import 'package:mismedidasb/ui/_base/navigation_utils.dart';
-import 'package:mismedidasb/ui/_tx_widget/tx_background_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_blur_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_custom_action_bar.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_icon_button_widget.dart';

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/bloc_state.dart';
 import 'package:mismedidasb/ui/_base/navigation_utils.dart';
-import 'package:mismedidasb/ui/_tx_widget/tx_blur_dialog.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_gesture_hide_key_board.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';

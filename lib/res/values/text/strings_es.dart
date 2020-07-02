@@ -345,6 +345,9 @@ class StringsEs implements StringsBase {
   String get foods => "Alimentos";
 
   @override
+  String get myFoods => "Mis alimentos";
+
+  @override
   String get createFood => "Componer";
 
   @override
@@ -367,4 +370,28 @@ class StringsEs implements StringsBase {
 
   @override
   String get polls => "Cuestionarios";
+
+  @override
+  String get back => "Volver";
+
+  @override
+  String get caloric => "Calórico";
+
+  @override
+  String get proteic => "Protéico";
+
+  @override
+  String get quantity => "Cantidad";
+
+  @override
+  String get atLeastOneFood => "Debe adicionar al menos un alimento.";
+
+  @override
+  String get foodPortionMajorThan1 => "El número de porciones debe ser mayor que 1.";
+
+  @override
+  String get add => "Adicionar";
+
+  @override
+  String get edit => "Editar";
 }
