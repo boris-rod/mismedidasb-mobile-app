@@ -117,6 +117,7 @@ class Injector {
   ///Singleton instance
   static Injector instance;
   bool darkTheme = false;
+  int planiId = 1;
 
   Container container = Container();
 
@@ -204,7 +205,7 @@ class Injector {
         container.resolve()));
 
     container.registerSingleton<IUserApi, UserApi>(
-        (c) => UserApi(container.resolve(), container.resolve()));
+        (c) => UserApi(container.resolve(), container.resolve(), container.resolve()));
 
     container.registerSingleton<IAnswerApi, AnswerApi>(
         (c) => AnswerApi(container.resolve(), container.resolve()));
@@ -301,6 +302,7 @@ class Injector {
         container.resolve(),
         container.resolve(),
         container.resolve(),
+        container.resolve(),
         container.resolve()));
     container.registerFactory((c) => HabitBloC(container.resolve()));
     container.registerFactory((c) => FoodCravingBloC(container.resolve()));
@@ -317,7 +319,7 @@ class Injector {
     container.registerFactory(
         (c) => ProfileBloC(container.resolve(), container.resolve()));
     container.registerFactory(
-        (c) => SettingsBloC(c.resolve(), c.resolve(), c.resolve()));
+        (c) => SettingsBloC(c.resolve(), c.resolve(), c.resolve(), c.resolve()));
     container.registerFactory((c) => LegacyBloC(c.resolve()));
     container.registerFactory((c) => ContactUsBloC(c.resolve()));
     container.registerFactory((c) => ProfileEditBloC(c.resolve(), c.resolve()));

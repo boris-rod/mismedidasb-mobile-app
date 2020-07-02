@@ -7,4 +7,10 @@ abstract class IUserConverter {
 
   Map<String, dynamic> toJson(UserModel userModel);
 
+  ScoreModel fromJsonScore(Map<String, dynamic> json);
+
+  PersonalRankingModel fromJsonPersonalRanking(Map<String, dynamic> json);
+
+  UsernameSuggestionModel fromJsonUsernameSuggestionModel(
+      Map<String, dynamic> json);
 }

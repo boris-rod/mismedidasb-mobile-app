@@ -26,6 +26,32 @@ class TXBottomResumeFoodPlanWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double proteinPer = dailyFoodModel.currentProteinsSum *
+        100 /
+        (dailyFoodModel.dailyFoodPlanModel.kCalMax * 25 / 100);
+    int proteins = proteinPer <= 100 && proteinPer > (12 * 100 / 25)
+        ? 0
+        : proteinPer > 100 ? 1 : -1;
+
+    double carbohydratesPer = dailyFoodModel.currentCarbohydratesSum *
+        100 /
+        (dailyFoodModel.dailyFoodPlanModel.kCalMax * 55 / 100);
+    int carbohydrates =
+        carbohydratesPer <= 100 && carbohydratesPer > 35 * 100 / 55
+            ? 0
+            : carbohydratesPer > 100 ? 1 : -1;
+
+    double fatPer = dailyFoodModel.currentFatSum *
+        100 /
+        (dailyFoodModel.dailyFoodPlanModel.kCalMax * 35 / 100);
+    int fat =
+        fatPer <= 100 && fatPer > 20 * 100 / 35 ? 0 : fatPer > 100 ? 1 : -1;
+
+    double fiberPer = dailyFoodModel.currentFiberSum * 100 / 50;
+    int fiber = fiberPer <= 100 && fiberPer > 30 * 100 / 50
+        ? 0
+        : fiberPer > 100 ? 1 : -1;
+
     return Container(
       height: MediaQuery.of(context).size.height / 9 * 6,
       child: Container(
@@ -54,6 +80,80 @@ class TXBottomResumeFoodPlanWidget extends StatelessWidget {
                 )
               ],
             ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Image.asset(
+                  R.image.plani,
+                  width: 60,
+                  height: 60,
+                ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      TXTextWidget(
+                        size: 12,
+                        color: proteins != 0
+                            ? Colors.redAccent
+                            : Colors.green,
+                        fontWeight: FontWeight.bold,
+                        text: proteins < 0
+                            ? "Debes incluir más Proteínas."
+                            : proteins > 0
+                            ? "Deberias reducir la cantidad de Proteínas."
+                            : "El balance de Proteínas es adecuado.",
+                      ),
+                      SizedBox(
+                        height: 2,
+                      ),
+                      TXTextWidget(
+                        size: 12,
+                        color: carbohydrates != 0
+                            ? Colors.redAccent
+                            : Colors.green,
+                        fontWeight: FontWeight.bold,
+                        text: carbohydrates < 0
+                            ? "Debes incluir más Carbohidratos."
+                            : carbohydrates > 0
+                            ? "Deberias reducir la cantidad de Carbohidratos."
+                            : "El balance de Carbohidratos es adecuado.",
+                      ),
+                      SizedBox(
+                        height: 2,
+                      ),
+                      TXTextWidget(
+                        size: 12,
+                        color: fat != 0
+                            ? Colors.redAccent
+                            : Colors.green,
+                        fontWeight: FontWeight.bold,
+                        text: fat < 0
+                            ? "Debes incluir más Grasa."
+                            : fat > 0
+                            ? "Deberias reducir la cantidad de Grasa."
+                            : "El balance de Grasa es adecuado.",
+                      ),
+                      SizedBox(
+                        height: 2,
+                      ),
+                      TXTextWidget(
+                        size: 12,
+                        color: fiber != 0
+                            ? Colors.redAccent
+                            : Colors.green,
+                        fontWeight: FontWeight.bold,
+                        text: fiber < 0
+                            ? "Debes incluir más Fibra."
+                            : fiber > 0
+                            ? "Deberias reducir la cantidad de Fibra."
+                            : "El balance de Fibra es adecuado.",
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
             Expanded(
               child: Container(
                 padding: EdgeInsets.only(left: 10, right: 20, bottom: 10),
@@ -79,28 +179,36 @@ class TXBottomResumeFoodPlanWidget extends StatelessWidget {
                                         activityModel.foods[indexFoods];
                                     return Column(
                                       children: <Widget>[
-                                        indexFoods > 0 ?
-                                        TXDividerWidget(height: .2,): Container(),
+                                        indexFoods > 0
+                                            ? TXDividerWidget(
+                                                height: .2,
+                                              )
+                                            : Container(),
                                         Container(
-                                          padding: EdgeInsets.only(bottom: 5, top: 5),
+                                          padding: EdgeInsets.only(
+                                              bottom: 5, top: 5),
                                           child: Row(
                                             children: <Widget>[
                                               Expanded(
                                                 child: TXTextWidget(
-                                                  text: "${indexFoods + 1}- ${foodModel.name}",
+                                                  text:
+                                                      "${indexFoods + 1}- ${foodModel.name}",
                                                 ),
                                               ),
                                               foodModel.count != 1
                                                   ? CircleAvatar(
-                                                backgroundColor: R.color.accent_color,
-                                                child: TXTextWidget(
-                                                  text: "${foodModel.displayCount}",
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.bold,
-                                                  size: 7,
-                                                ),
-                                                radius: 8,
-                                              )
+                                                      backgroundColor:
+                                                          R.color.accent_color,
+                                                      child: TXTextWidget(
+                                                        text:
+                                                            "${foodModel.displayCount}",
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        size: 7,
+                                                      ),
+                                                      radius: 8,
+                                                    )
                                                   : Container()
                                             ],
                                           ),
@@ -114,7 +222,9 @@ class TXBottomResumeFoodPlanWidget extends StatelessWidget {
                                   shrinkWrap: true,
                                 ),
                               ),
-                              SizedBox(height: 20,)
+                              SizedBox(
+                                height: 20,
+                              )
                             ],
                           );
                         },
@@ -133,7 +243,7 @@ class TXBottomResumeFoodPlanWidget extends StatelessWidget {
                               TXButtonWidget(
                                   onPressed: () {
                                     NavigationUtils.pop(context);
-                                    onSaveConfirm();
+//                                    onSaveConfirm();
                                   },
                                   title: R.string.confirm),
                               TXCheckBoxWidget(

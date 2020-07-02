@@ -271,7 +271,7 @@ class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
                                                           height: 40,
                                                           imageUrl: food.image,
                                                           placeholderImage:
-                                                              R.image.logo_blue,
+                                                              R.image.logo,
                                                         ),
                                                         title: Row(
                                                           children: <Widget>[
@@ -452,7 +452,7 @@ class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
                 ),
                 leading: TXNetworkImage(
                   imageUrl: model.image,
-                  placeholderImage: R.image.logo_blue,
+                  placeholderImage: R.image.logo,
                   height: 40,
                   width: 40,
                 ),
@@ -506,7 +506,7 @@ class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
                 ),
                 leading: TXNetworkImage(
                   imageUrl: model.image,
-                  placeholderImage: R.image.logo_blue,
+                  placeholderImage: R.image.logo,
                   height: 40,
                   width: 40,
                 ),
@@ -547,10 +547,10 @@ class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
 
   Widget _showCategoryFilter(BuildContext context) {
     return Container(
-      height: widget.foodFilterMode == FoodFilterMode.tags ? math.min(
-          MediaQuery.of(context).size.height / 2,
-          ((bloc.tagsAll.length + 20) + 1) *
-              50.0) : 200,
+      height: widget.foodFilterMode == FoodFilterMode.tags
+          ? math.min(MediaQuery.of(context).size.height / 2,
+              ((bloc.tagsAll.length + 20) + 1) * 50.0)
+          : 200,
       child: Column(
         children: <Widget>[
           Container(

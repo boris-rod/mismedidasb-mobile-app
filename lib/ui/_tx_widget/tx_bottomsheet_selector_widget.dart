@@ -37,47 +37,49 @@ class TXBottomSheetSelectorWidget extends StatelessWidget {
           return null;
         })?.index ??
         0;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        SizedBox(
-          height: 20,
-        ),
-        Container(
-          width: double.infinity,
-          child: TXTextWidget(
-            text: title,
-            color: Colors.white,
-            fontWeight: titleFont ?? FontWeight.bold,
-            textAlign: TextAlign.left,
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          SizedBox(
+            height: 20,
           ),
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        TXBoxCellDataWidget(
-          width: boxAnswerWidth,
-          value: list[index]?.displayName ?? "",
-          onTap: () {
-            if (list.isEmpty)
-              Fluttertoast.showToast(
-                  msg: R.string.emptyList, toastLength: Toast.LENGTH_SHORT);
-            else
-              showTXModalBottomSheet(
-                  context: context,
-                  builder: (ctx) {
-                    return TXCupertinoPickerWidget(
-                      height: bottomSheetHeight ?? 300,
-                      list: list,
-                      onItemSelected: onItemSelected,
-                      title: title,
-                      useDatePicker: useDatePicker,
-                      initialId: initialId,
-                    );
-                  });
-          },
-        )
-      ],
+          Container(
+            width: double.infinity,
+            child: TXTextWidget(
+              text: title,
+              color: Colors.white,
+              fontWeight: titleFont ?? FontWeight.bold,
+              textAlign: TextAlign.left,
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          TXBoxCellDataWidget(
+            width: boxAnswerWidth,
+            value: list[index]?.displayName ?? "",
+            onTap: () {
+              if (list.isEmpty)
+                Fluttertoast.showToast(
+                    msg: R.string.emptyList, toastLength: Toast.LENGTH_SHORT);
+              else
+                showTXModalBottomSheet(
+                    context: context,
+                    builder: (ctx) {
+                      return TXCupertinoPickerWidget(
+                        height: bottomSheetHeight ?? 300,
+                        list: list,
+                        onItemSelected: onItemSelected,
+                        title: title,
+                        useDatePicker: useDatePicker,
+                        initialId: initialId,
+                      );
+                    });
+            },
+          )
+        ],
+      ),
     );
 
 //      ListTile(

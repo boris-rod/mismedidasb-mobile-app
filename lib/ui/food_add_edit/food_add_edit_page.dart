@@ -242,7 +242,7 @@ class _FoodAddEditState
           width: 40,
           height: 40,
           imageUrl: f.image,
-          placeholderImage: R.image.logo_blue,
+          placeholderImage: R.image.logo,
         ),
         title: Row(
           children: <Widget>[

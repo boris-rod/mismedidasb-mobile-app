@@ -71,7 +71,7 @@ class LoginBloC extends BaseBloC
     isLoading = true;
     final saveCredentials =
         await _sharedPreferencesManager.getSaveCredentials();
-    final previousUserId = await _sharedPreferencesManager.getUserId();
+    final previousUserId = await _sharedPreferencesManager.getIntValue(SharedKey.userId);
 
     final res = await _iSessionRepository.login(
         LoginModel(email: email, password: password), saveCredentials);

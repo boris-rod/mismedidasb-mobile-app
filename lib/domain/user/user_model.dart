@@ -1,3 +1,37 @@
+class ScoreModel {
+  int id;
+  int userId;
+  int points;
+  int coins;
+  int eatCurrentStreak;
+  int eatMaxStreak;
+  int balancedEatCurrentStreak;
+  int balancedEatMaxStreak;
+  PersonalRankingModel personalRanking;
+  UserModel user;
+
+  ScoreModel(
+      {this.id,
+      this.userId,
+      this.points,
+      this.coins,
+      this.eatCurrentStreak,
+      this.eatMaxStreak,
+      this.balancedEatCurrentStreak,
+      this.balancedEatMaxStreak,
+      this.personalRanking,
+      this.user});
+}
+
+class PersonalRankingModel {
+  int points;
+  int rankingPosition;
+  int percentageBehind;
+
+  PersonalRankingModel(
+      {this.points, this.rankingPosition, this.percentageBehind});
+}
+
 class UserModel {
   int id;
   String fullName;
@@ -65,4 +99,19 @@ class UserCredentialsModel {
 
   UserCredentialsModel(
       {this.email = "", this.password = "", this.saveCredentials = false});
+}
+
+class UserUpdateModel {
+  String username;
+  String fullName;
+  String phone;
+
+  UserUpdateModel({this.username, this.fullName, this.phone});
+}
+
+class UsernameSuggestionModel {
+  bool isValid;
+  List<String> suggestions;
+
+  UsernameSuggestionModel({this.isValid, this.suggestions});
 }

@@ -55,4 +55,38 @@ class UserConverter implements IUserConverter {
         validAt: DateTime.parse(json["validAt"]).toLocal());
     return model;
   }
+
+  @override
+  PersonalRankingModel fromJsonPersonalRanking(Map<String, dynamic> json) {
+    final PersonalRankingModel model = PersonalRankingModel(
+        points: json["points"],
+        rankingPosition: json["rankingPosition"],
+        percentageBehind: json["percentageBehind"]);
+    return model;
+  }
+
+  @override
+  ScoreModel fromJsonScore(Map<String, dynamic> json) {
+    final ScoreModel model = ScoreModel(
+        id: json["id"],
+        userId: json["userId"],
+        points: json["points"],
+        coins: json["coins"],
+        eatCurrentStreak: json["eatCurrentStreak"],
+        eatMaxStreak: json["eatMaxStreak"],
+        balancedEatCurrentStreak: json["balancedEatCurrentStreak"],
+        balancedEatMaxStreak: json["balancedEatMaxStreak"],
+        personalRanking: fromJsonPersonalRanking(json["personalRanking"]),
+        user: fromJson(json["user"]));
+    return model;
+  }
+
+  @override
+  UsernameSuggestionModel fromJsonUsernameSuggestionModel(Map<String, dynamic> json) {
+    UsernameSuggestionModel model = UsernameSuggestionModel(
+        isValid: json["isValid"],
+        suggestions: List.from(json["suggestions"])
+    );
+    return model;
+  }
 }

@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mismedidasb/data/_shared_prefs.dart';
 import 'package:mismedidasb/data/api/remote/remote_constanst.dart';
 import 'package:mismedidasb/data/api/remote/result.dart';
+import 'package:mismedidasb/domain/dish/i_dish_repository.dart';
 import 'package:mismedidasb/domain/health_concept/health_concept.dart';
 import 'package:mismedidasb/domain/health_concept/i_health_concept_repository.dart';
 import 'package:mismedidasb/domain/personal_data/i_personal_data_repository.dart';
@@ -30,9 +31,10 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   final SharedPreferencesManager _sharedPreferencesManager;
   final ILNM lnm;
   final IRealTimeContainer _iRealTimeContainer;
+  final IDishRepository _iDishRepository;
 
   HomeBloC(this._iHealthConceptRepository, this._iUserRepository,
-      this._sharedPreferencesManager, this.lnm, this._iRealTimeContainer);
+      this._sharedPreferencesManager, this.lnm, this._iRealTimeContainer, this._iDishRepository);
 
   BehaviorSubject<List<HealthConceptModel>> _conceptController =
       new BehaviorSubject();
@@ -47,6 +49,10 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   String userName = "";
   void loadHomeData() async {
     isLoading = true;
+
+    _iDishRepository.getFoodModelList(forceReload: true);
+    _iDishRepository.getTagList(forceReload: true);
+
     final profileRes = await _iUserRepository.getProfile();
     if (profileRes is ResultSuccess<UserModel>) {
       bool hasPlani = false;

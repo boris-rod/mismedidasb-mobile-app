@@ -241,46 +241,4 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
       ),
     );
   }
-
-  showAlertDialog(BuildContext context) {
-    // set up the button
-    Widget okButton = FlatButton(
-      child: Text("OK"),
-      onPressed: () {
-        NavigationUtils.pop(context);
-        NavigationUtils.pop(context);
-      },
-    );
-
-    // set up the AlertDialog
-    AlertDialog alert = AlertDialog(
-      titlePadding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-      title: Row(
-        children: <Widget>[
-          Container(
-            child: Image.asset(
-              R.image.logo,
-              width: 80,
-              height: 80,
-            ),
-          ),
-          Expanded(
-            child: TXTextWidget(
-              text: R.string.thanks,
-            ),
-          )
-        ],
-      ),
-      content: Text("This is my message."),
-      actions: [okButton],
-    );
-
-    // show the dialog
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
-  }
 }

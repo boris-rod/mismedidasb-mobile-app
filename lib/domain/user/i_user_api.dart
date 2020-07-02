@@ -11,4 +11,8 @@ abstract class IUserApi {
 
   Future<bool> invite(List<String> emails);
 
+  Future<ScoreModel> getScores();
+
+  Future<UsernameSuggestionModel> usernameValidation(
+      int userId, String email, String username, String fullName);
 }

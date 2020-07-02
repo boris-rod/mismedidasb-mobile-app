@@ -547,7 +547,7 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
               width: 40,
               height: 40,
               imageUrl: model.image,
-              placeholderImage: R.image.logo_blue,
+              placeholderImage: R.image.logo,
             ),
             Positioned(
               right: 0,

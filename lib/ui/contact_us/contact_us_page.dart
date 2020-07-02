@@ -37,6 +37,7 @@ class _ContactUsState extends StateWithBloC<ContactUsPage, ContactUsBloC> {
             },
           ),
           body: Container(
+            height: double.infinity,
             child: SingleChildScrollView(
               physics: BouncingScrollPhysics(),
               padding:
@@ -50,7 +51,7 @@ class _ContactUsState extends StateWithBloC<ContactUsPage, ContactUsBloC> {
                         height: 10,
                       ),
                       Image.asset(
-                        R.image.logo_blue,
+                        R.image.logo,
                         width: 100,
                         height: 100,
                       ),

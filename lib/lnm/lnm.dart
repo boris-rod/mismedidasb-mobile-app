@@ -93,11 +93,19 @@ class LNM implements ILNM {
 
   @override
   Future<void> cancel(int id) async {
+//    List<PendingNotificationRequest> list =
+//        await flutterLocalNotificationsPlugin.pendingNotificationRequests();
     await flutterLocalNotificationsPlugin.cancel(id);
+//    List<PendingNotificationRequest> list1 =
+//        await flutterLocalNotificationsPlugin.pendingNotificationRequests();
+//    print(list1.length.toString());
   }
 
   @override
   Future<void> initPollNotificationReminders() async {
+    final exist = await checkIfPendingNotificationExist(pollNotificationId);
+    final planiId = await _sharedPreferencesManager.getIntValue(SharedKey.planiId);
+    if (exist) return;
     final String userName =
         await _sharedPreferencesManager.getStringValue(SharedKey.userName);
     String title = 'Hola $userName';
@@ -112,22 +120,23 @@ class LNM implements ILNM {
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
 
     await flutterLocalNotificationsPlugin.showDailyAtTime(pollNotificationId,
-        title, content, Time(10, 30, 0), platformChannelSpecifics,
+        title, content, Time(22, 30, 0), platformChannelSpecifics,
         payload: '$pollNotificationId');
   }
 
   @override
   Future<void> initBreakFastReminder() async {
+    final exist = await checkIfPendingNotificationExist(breakFastIdReminderId);
+    if (exist) return;
     final bool showBreakFastTime = await _sharedPreferencesManager
         .getBoolValue(SharedKey.showBreakFastTime);
     if (showBreakFastTime) {
       final DateTime time = (await _sharedPreferencesManager
-              .getDateTimeValue(SharedKey.breakFastTime))
-          .subtract(Duration(minutes: 10));
+          .getDateTimeValue(SharedKey.breakFastTime));
       final String userName =
           await _sharedPreferencesManager.getStringValue(SharedKey.userName);
       String title = 'Hola $userName';
-      String content = 'Casi es tiempo de su desayuno.';
+      String content = 'Casi es tiempo de tu desayuno.';
       var androidPlatformChannelSpecifics = _getCommonAndroidNotificationDetail(
           channelId: '$breakFastIdReminderId',
           title: title,
@@ -149,16 +158,17 @@ class LNM implements ILNM {
 
   @override
   Future<void> initDinnerReminder() async {
+    final exist = await checkIfPendingNotificationExist(dinnerIdReminderId);
+    if (exist) return;
     final bool showDinnerTime =
         await _sharedPreferencesManager.getBoolValue(SharedKey.showDinnerTime);
     if (showDinnerTime) {
       final DateTime time = (await _sharedPreferencesManager
-              .getDateTimeValue(SharedKey.dinnerTime))
-          .subtract(Duration(minutes: 10));
+          .getDateTimeValue(SharedKey.dinnerTime));
       final String userName =
           await _sharedPreferencesManager.getStringValue(SharedKey.userName);
       String title = 'Hola $userName';
-      String content = 'Casi es tiempo de su cena.';
+      String content = 'Casi es tiempo de tu cena.';
       var androidPlatformChannelSpecifics = _getCommonAndroidNotificationDetail(
           channelId: '$dinnerIdReminderId',
           title: title,
@@ -180,14 +190,18 @@ class LNM implements ILNM {
 
   @override
   Future<void> initDrinkWater1Reminder() async {
+    final exist = await checkIfPendingNotificationExist(drinkWater1Id);
+    if (exist) return;
     final bool showDrinkWater =
         await _sharedPreferencesManager.getBoolValue(SharedKey.showDrinkWater);
     if (showDrinkWater) {
+      final DateTime time = (await _sharedPreferencesManager
+          .getDateTimeValue(SharedKey.drinkWater1Time));
       final String userName =
           await _sharedPreferencesManager.getStringValue(SharedKey.userName);
       String title = 'Hola $userName';
       String content =
-          'Recuerde beber agua, se recomienda al menos 2 litros diarios.';
+          'Recuerda beber agua, se recomienda al menos 2 litros diarios.';
       var androidPlatformChannelSpecifics = _getCommonAndroidNotificationDetail(
           channelId: '$drinkWater1Id',
           title: title,
@@ -197,22 +211,30 @@ class LNM implements ILNM {
       var platformChannelSpecifics = NotificationDetails(
           androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
 
-      await flutterLocalNotificationsPlugin.showDailyAtTime(drinkWater1Id,
-          title, content, Time(11, 0, 0), platformChannelSpecifics,
+      await flutterLocalNotificationsPlugin.showDailyAtTime(
+          drinkWater1Id,
+          title,
+          content,
+          Time(time.hour, time.minute, time.second),
+          platformChannelSpecifics,
           payload: '$drinkWater1Id');
     }
   }
 
   @override
   Future<void> initDrinkWater2Reminder() async {
+    final exist = await checkIfPendingNotificationExist(drinkWater2Id);
+    if (exist) return;
     final bool showDrinkWater =
         await _sharedPreferencesManager.getBoolValue(SharedKey.showDrinkWater);
     if (showDrinkWater) {
+      final DateTime time = (await _sharedPreferencesManager
+          .getDateTimeValue(SharedKey.drinkWater2Time));
       final String userName =
           await _sharedPreferencesManager.getStringValue(SharedKey.userName);
       String title = 'Hola $userName';
       String content =
-          'Recuerde beber agua, se recomienda al menos 2 litros diarios.';
+          'Recuerda beber agua, se recomienda al menos 2 litros diarios.';
       var androidPlatformChannelSpecifics = _getCommonAndroidNotificationDetail(
           channelId: '$drinkWater2Id',
           title: title,
@@ -222,24 +244,29 @@ class LNM implements ILNM {
       var platformChannelSpecifics = NotificationDetails(
           androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
 
-      await flutterLocalNotificationsPlugin.showDailyAtTime(drinkWater2Id,
-          title, content, Time(16, 0, 0), platformChannelSpecifics,
+      await flutterLocalNotificationsPlugin.showDailyAtTime(
+          drinkWater2Id,
+          title,
+          content,
+          Time(time.hour, time.minute, time.second),
+          platformChannelSpecifics,
           payload: '$drinkWater2Id');
     }
   }
 
   @override
   Future<void> initLunchReminder() async {
+    final exist = await checkIfPendingNotificationExist(lunchIdReminderId);
+    if (exist) return;
     final bool showLunchTime =
         await _sharedPreferencesManager.getBoolValue(SharedKey.showLunchTime);
     if (showLunchTime) {
       final DateTime time = (await _sharedPreferencesManager
-              .getDateTimeValue(SharedKey.lunchTime))
-          .subtract(Duration(minutes: 10));
+          .getDateTimeValue(SharedKey.lunchTime));
       final String userName =
           await _sharedPreferencesManager.getStringValue(SharedKey.userName);
       String title = 'Hola $userName';
-      String content = 'Casi es tiempo de su comida.';
+      String content = 'Casi es tiempo de tu comida.';
       var androidPlatformChannelSpecifics = _getCommonAndroidNotificationDetail(
           channelId: '$lunchIdReminderId',
           title: title,
@@ -261,16 +288,17 @@ class LNM implements ILNM {
 
   @override
   Future<void> initMakeExerciseReminder() async {
+    final exist = await checkIfPendingNotificationExist(makeExerciseId);
+    if (exist) return;
     final bool showPhysicalExerciseTime = await _sharedPreferencesManager
         .getBoolValue(SharedKey.showPhysicalExerciseTime);
     if (showPhysicalExerciseTime) {
       final DateTime time = (await _sharedPreferencesManager
-              .getDateTimeValue(SharedKey.physicalExerciseTime))
-          .subtract(Duration(minutes: 10));
+          .getDateTimeValue(SharedKey.physicalExerciseTime));
       final String userName =
           await _sharedPreferencesManager.getStringValue(SharedKey.userName);
       String title = 'Hola $userName';
-      String content = 'Casi es tiempo de hacer sus ejercicios.';
+      String content = 'Casi es tiempo de hacer tus ejercicios.';
       var androidPlatformChannelSpecifics = _getCommonAndroidNotificationDetail(
           channelId: '$makeExerciseId',
           title: title,
@@ -292,13 +320,17 @@ class LNM implements ILNM {
 
   @override
   Future<void> initPlanFoodsReminder() async {
+    final exist = await checkIfPendingNotificationExist(planFoodsId);
+    if (exist) return;
     final bool showPlanFood =
-        await _sharedPreferencesManager.getBoolValue(SharedKey.showPlanFood);
+        await _sharedPreferencesManager.getBoolValue(SharedKey.showPlanFoods);
     if (showPlanFood) {
+      final DateTime time = (await _sharedPreferencesManager
+          .getDateTimeValue(SharedKey.planFoodsTime));
       final String userName =
           await _sharedPreferencesManager.getStringValue(SharedKey.userName);
       String title = 'Hola $userName';
-      String content = 'Recuerde planificar sus comidas para mañana.';
+      String content = 'Recuerda planificar tus comidas para mañana.';
       var androidPlatformChannelSpecifics = _getCommonAndroidNotificationDetail(
           channelId: '$planFoodsId',
           title: title,
@@ -309,23 +341,24 @@ class LNM implements ILNM {
           androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
 
       await flutterLocalNotificationsPlugin.showDailyAtTime(planFoodsId, title,
-          content, Time(22, 00, 0), platformChannelSpecifics,
+          content, Time(time.hour, time.minute, time.second), platformChannelSpecifics,
           payload: '$planFoodsId');
     }
   }
 
   @override
   Future<void> initSnack1Reminder() async {
+    final exist = await checkIfPendingNotificationExist(snack1IdReminderId);
+    if (exist) return;
     final bool showSnack1Time =
         await _sharedPreferencesManager.getBoolValue(SharedKey.showSnack1Time);
     if (showSnack1Time) {
       final DateTime time = (await _sharedPreferencesManager
-              .getDateTimeValue(SharedKey.snack1Time))
-          .subtract(Duration(minutes: 10));
+          .getDateTimeValue(SharedKey.snack1Time));
       final String userName =
           await _sharedPreferencesManager.getStringValue(SharedKey.userName);
       String title = 'Hola $userName';
-      String content = 'Casi es tiempo de su tentenpié.';
+      String content = 'Casi es tiempo de tu tentempié.';
 
       var androidPlatformChannelSpecifics = _getCommonAndroidNotificationDetail(
           channelId: '$snack1IdReminderId',
@@ -348,16 +381,17 @@ class LNM implements ILNM {
 
   @override
   Future<void> initSnack2Reminder() async {
+    final exist = await checkIfPendingNotificationExist(snack2IdReminderId);
+    if (exist) return;
     final bool showSnack2Time =
         await _sharedPreferencesManager.getBoolValue(SharedKey.showSnack2Time);
     if (showSnack2Time) {
       final DateTime time = (await _sharedPreferencesManager
-              .getDateTimeValue(SharedKey.snack2Time))
-          .subtract(Duration(minutes: 10));
+          .getDateTimeValue(SharedKey.snack2Time));
       final String userName =
           await _sharedPreferencesManager.getStringValue(SharedKey.userName);
       String title = 'Hola $userName';
-      String content = 'Casi es tiempo de su merienda.';
+      String content = 'Casi es tiempo de tu merienda.';
       var androidPlatformChannelSpecifics = _getCommonAndroidNotificationDetail(
           channelId: '$snack2IdReminderId',
           title: title,
@@ -398,8 +432,19 @@ class LNM implements ILNM {
   }
 
   @override
-  Future<void> cancelAll() {
-    flutterLocalNotificationsPlugin.cancelAll();
+  Future<void> cancelAll() async {
+    await flutterLocalNotificationsPlugin.cancelAll();
+  }
+
+  Future<bool> checkIfPendingNotificationExist(int notiId) async {
+    List<PendingNotificationRequest> list =
+        await flutterLocalNotificationsPlugin.pendingNotificationRequests();
+    final noti = list.firstWhere((element) => element.id == notiId, orElse: () {
+      return null;
+    });
+
+
+    return noti != null;
   }
 
   AndroidNotificationDetails _getCommonAndroidNotificationDetail(
@@ -536,28 +581,28 @@ class LNM implements ILNM {
 //    await _flutterLocalNotificationsPlugin.showDailyAtTime(
 //        100,
 //        'Hola $userName',
-//        'Recuerde beber suficiente agua, se recomienda 2L diarios.',
+//        'Recuerda beber suficiente agua, se recomienda 2L diarios.',
 //        Time(16, 57, 0),
 //        platformChannelSpecifics);
 //
 ////    await _flutterLocalNotificationsPlugin.showDailyAtTime(
 ////        101,
 ////        'Hola $userName',
-////        'Recuerde beber suficiente agua, se recomienda 2L diarios.',
+////        'Recuerda beber suficiente agua, se recomienda 2L diarios.',
 ////        Time(16, 33, 0),
 ////        platformChannelSpecifics);
 ////
 ////    await _flutterLocalNotificationsPlugin.showDailyAtTime(
 ////        102,
 ////        'Hola $userName',
-////        'Recuerde beber suficiente agua, se recomienda 2L diarios.',
+////        'Recuerda beber suficiente agua, se recomienda 2L diarios.',
 ////        Time(16, 34, 0),
 ////        platformChannelSpecifics);
 ////
 ////    await _flutterLocalNotificationsPlugin.showDailyAtTime(
 ////        103,
 ////        'Hola $userName',
-////        'Recuerde planificar su comida de mañana',
+////        'Recuerda planificar su comida de mañana',
 ////        Time(20, 30, 0),
 ////        platformChannelSpecifics);
 //  }
@@ -574,14 +619,14 @@ class LNM implements ILNM {
 //    await _flutterLocalNotificationsPlugin.showDailyAtTime(
 //        0,
 //        'Recordatorio',
-//        'Recuerde planificar su comida',
+//        'Recuerda planificar su comida',
 //        Time(11, 50, 00),
 //        platformChannelSpecifics);
 //
 //    await _flutterLocalNotificationsPlugin.showDailyAtTime(
 //        0,
 //        'Recordatorio',
-//        'Recuerde planificar su comida',
+//        'Recuerda planificar su comida',
 //        Time(11, 51, 00),
 //        platformChannelSpecifics);
 //  }

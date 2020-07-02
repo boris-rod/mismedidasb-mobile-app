@@ -61,8 +61,8 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   Stream<bool> get kCalPercentageHideResult =>
       _kCalPercentageHideController.stream;
 
-  bool tagsLoaded = false;
-  bool foodsLoaded = false;
+//  bool tagsLoaded = false;
+//  bool foodsLoaded = false;
   bool showResume = false;
   int currentPage = 0;
   Map<DateTime, DailyFoodModel> dailyFoodModelMap = {};
@@ -77,8 +77,8 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     dailyFoodModelMap = {};
     firstDate = CalendarUtils.getFirstDateOfMonthAgo();
     lastDate = CalendarUtils.getLastDateOfMonthLater();
-    tagsLoaded = false;
-    foodsLoaded = false;
+//    tagsLoaded = false;
+//    foodsLoaded = false;
     showResume = await _sharedPreferencesManager.getShowDailyResume();
     imc = await _sharedPreferencesManager.getIMC();
 
@@ -101,23 +101,24 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     }
 
     loadDailyPlanData();
+    isLoading = false;
 
-    _iDishRepository.getFoodModelList(forceReload: true).then((onValue) {
-      foodsLoaded = true;
-      if (tagsLoaded) isLoading = false;
-    }).catchError((onError) {
-      foodsLoaded = true;
-      if (tagsLoaded) isLoading = false;
-      showErrorMessage(onError);
-    });
-    _iDishRepository.getTagList(forceReload: true).then((onValue) {
-      tagsLoaded = true;
-      if (foodsLoaded) isLoading = false;
-    }).catchError((onError) {
-      tagsLoaded = true;
-      if (foodsLoaded) isLoading = false;
-      showErrorMessage(onError);
-    });
+//    _iDishRepository.getFoodModelList(forceReload: true).then((onValue) {
+//      foodsLoaded = true;
+//      if (tagsLoaded) isLoading = false;
+//    }).catchError((onError) {
+//      foodsLoaded = true;
+//      if (tagsLoaded) isLoading = false;
+//      showErrorMessage(onError);
+//    });
+//    _iDishRepository.getTagList(forceReload: true).then((onValue) {
+//      tagsLoaded = true;
+//      if (foodsLoaded) isLoading = false;
+//    }).catchError((onError) {
+//      tagsLoaded = true;
+//      if (foodsLoaded) isLoading = false;
+//      showErrorMessage(onError);
+//    });
   }
 
   void loadDailyPlanData() {
@@ -184,6 +185,10 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
       daily.currentFatSum += dA.fat;
       daily.currentFiberSum += dA.fiber;
     });
+
+//    CreateDailyPlanModel createPlan = CreateDailyPlanModel.fromDailyFoodModel(daily);
+//    print(createPlan.toString());
+
     _dailyFoodController.sinkAddSafe(daily);
   }
 
@@ -247,6 +252,9 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     rootModel.currentFiberSum += model.fiber;
 
     await _iDishRepository.savePlanLocal(rootModel);
+
+//    CreateDailyPlanModel createPlan = CreateDailyPlanModel.fromDailyFoodModel(rootModel);
+//    print(createPlan.toString());
 
     _dailyFoodController.sink.add(rootModel);
   }

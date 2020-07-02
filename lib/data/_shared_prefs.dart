@@ -9,6 +9,7 @@ class SharedKey {
   static String userName = "userName";
   static String password = "password";
   static String userId = "userId";
+  static String planiId = "planiId";
   static String saveCredentials = "saveCredentials";
   static String activeAccount = "activeAccount";
   static String dailyKCal = "dailyKCal";
@@ -32,17 +33,26 @@ class SharedKey {
   static String showSnack2Time = "showSnack2Time";
   static String dinnerTime = "dinnerTime";
   static String showDinnerTime = "showDinnerTime";
+
   static String physicalExerciseTime = "physicalExerciseTime";
   static String showPhysicalExerciseTime = "showPhysicalExerciseTime";
-  static String showPlanFood = "showPlanFood";
+  static String showPlanFoods = "showPlanFoods";
+  static String planFoodsTime = "planFoodsTime";
+
   static String showDrinkWater = "drinkWater";
+  static String drinkWater1Time = "drinkWater1Time";
+  static String drinkWater2Time = "drinkWater2Time";
+
   static String hasPlaniVirtualAssesor = "hasPlaniVirtualAssesor";
+
   static String showDailyPollNotification = "showDailyPollNotification";
   static String launchNotiPoll = "launchNotiPoll";
 }
 
 class SharedPreferencesManager {
   Future<bool> init() async {
+    await setIntValue(SharedKey.planiId, 1);
+
     await setStringValue(SharedKey.accessToken, '');
     await setStringValue(SharedKey.refreshToken, '');
     await setStringValue(SharedKey.password, '');
@@ -62,7 +72,7 @@ class SharedPreferencesManager {
     await setBoolValue(SharedKey.showSnack2Time, true);
     await setBoolValue(SharedKey.showDinnerTime, true);
     await setBoolValue(SharedKey.showPhysicalExerciseTime, true);
-    await setBoolValue(SharedKey.showPlanFood, true);
+    await setBoolValue(SharedKey.showPlanFoods, true);
     await setBoolValue(SharedKey.showDrinkWater, true);
 
     await setBoolValue(SharedKey.hasPlaniVirtualAssesor, false);
@@ -71,16 +81,30 @@ class SharedPreferencesManager {
     final now = DateTime.now();
     await setDateTimeValue(SharedKey.breakFastTime,
         DateTime(now.year, now.month, now.day, 8, 0, 0));
+
     await setDateTimeValue(SharedKey.snack1Time,
         DateTime(now.year, now.month, now.day, 10, 00, 0));
+
     await setDateTimeValue(
-        SharedKey.lunchTime, DateTime(now.year, now.month, now.day, 12, 30, 0));
-    await setDateTimeValue(
-        SharedKey.snack2Time, DateTime(now.year, now.month, now.day, 16, 30, 0));
+        SharedKey.lunchTime, DateTime(now.year, now.month, now.day, 12, 00, 0));
+
+    await setDateTimeValue(SharedKey.snack2Time,
+        DateTime(now.year, now.month, now.day, 16, 00, 0));
+
     await setDateTimeValue(
         SharedKey.dinnerTime, DateTime(now.year, now.month, now.day, 22, 0, 0));
+
     await setDateTimeValue(SharedKey.physicalExerciseTime,
         DateTime(now.year, now.month, now.day, 7, 0, 0));
+
+    await setDateTimeValue(SharedKey.drinkWater1Time,
+        DateTime(now.year, now.month, now.day, 11, 0, 0));
+
+    await setDateTimeValue(SharedKey.drinkWater2Time,
+        DateTime(now.year, now.month, now.day, 16, 30, 0));
+
+    await setDateTimeValue(SharedKey.planFoodsTime,
+        DateTime(now.year, now.month, now.day, 22, 00, 0));
 
     await setIntValue(SharedKey.activeAccount, ACCOUNT_STATUS.PENDING.index);
     return true;
@@ -324,21 +348,21 @@ class SharedPreferencesManager {
     return res;
   }
 
-  Future<int> getUserId() async {
-    var value =
-        (await SharedPreferences.getInstance()).getInt(SharedKey.userId);
-    if (value == null) {
-      value = -1;
-      setUserId(value);
-    }
-    return value;
-  }
-
-  Future<bool> setUserId(int newValue) async {
-    var res = (await SharedPreferences.getInstance())
-        .setInt(SharedKey.userId, newValue);
-    return res;
-  }
+//  Future<int> getUserId() async {
+//    var value =
+//        (await SharedPreferences.getInstance()).getInt(SharedKey.userId);
+//    if (value == null) {
+//      value = -1;
+//      setUserId(value);
+//    }
+//    return value;
+//  }
+//
+//  Future<bool> setUserId(int newValue) async {
+//    var res = (await SharedPreferences.getInstance())
+//        .setInt(SharedKey.userId, newValue);
+//    return res;
+//  }
 
   Future<int> getLanguageCodeId() async {
     var value = (await SharedPreferences.getInstance())

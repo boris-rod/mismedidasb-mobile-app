@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_html/style.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/navigation_utils.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
@@ -14,6 +15,7 @@ class TXInstructionsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.topLeft,
+      color: Colors.white,
       child: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         padding: EdgeInsets.only(left: 10, right: 10,bottom: 30),
@@ -28,6 +30,7 @@ class TXInstructionsWidget extends StatelessWidget {
                     maxLines: 2,
                     textOverflow: TextOverflow.ellipsis,
                     size: 18,
+                    color: Colors.black,
                   ),
                 ),
                 Container(
@@ -44,6 +47,7 @@ class TXInstructionsWidget extends StatelessWidget {
             Container(
               child: Html(
                 data: instructions,
+                style: {"color": Style(color: Colors.black)},
               ),
             ),
             SizedBox(

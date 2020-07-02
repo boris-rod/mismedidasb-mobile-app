@@ -98,11 +98,10 @@ class AccountApi extends BaseApi implements IAccountApi {
   }
 
   @override
-  Future<bool> removeAccount(bool softDeletion) async{
+  Future<bool> removeAccount(bool softDeletion) async {
     final res = await _networkHandler.post(
         path: Endpoint.remove_account, params: "?softDeletion=$softDeletion");
-    if (res.statusCode == RemoteConstants.code_success)
-      return true;
+    if (res.statusCode == RemoteConstants.code_success) return true;
     throw serverException(res);
   }
 }

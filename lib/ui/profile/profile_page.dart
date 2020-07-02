@@ -14,6 +14,7 @@ import 'package:mismedidasb/ui/_base/navigation_utils.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_bottom_sheet.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_cupertino_dialog_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_cupertino_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_divider_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_icon_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';
@@ -28,6 +29,7 @@ import 'package:mismedidasb/ui/profile/profile_bloc.dart';
 import 'package:mismedidasb/ui/profile/tx_cell_selection_option_widget.dart';
 import 'package:mismedidasb/ui/profile/tx_stat_widget.dart';
 import 'package:mismedidasb/ui/profile_edit/profile_edit_page.dart';
+import 'package:mismedidasb/ui/scores_page/score_page.dart';
 import 'package:mismedidasb/ui/settings/settings_bloc.dart';
 import 'package:mismedidasb/ui/settings/settings_page.dart';
 import 'package:mismedidasb/utils/file_manager.dart';
@@ -138,7 +140,7 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                                                 height: double.infinity,
                                                 imageUrl: user.avatar,
                                                 placeholderImage:
-                                                    R.image.logo_blue,
+                                                    R.image.logo,
                                                 boxFitImage: BoxFit.cover,
                                               ),
                                               Container(
@@ -155,7 +157,7 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                                             width: double.infinity,
                                             height: double.infinity,
                                             imageUrl: user.avatar,
-                                            placeholderImage: R.image.logo_blue,
+                                            placeholderImage: R.image.logo,
                                           ),
                                         )
                                       ],
@@ -203,23 +205,31 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                                 child: TXNetworkImage(
                                   width: 60,
                                   height: 60,
-                                  imageUrl: R.image.logo_blue,
-                                  placeholderImage: R.image.logo_blue,
+                                  imageUrl: R.image.logo,
+                                  placeholderImage: R.image.logo,
                                 ),
                               ),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   TXTextWidget(
-                                    text: user.fullName ?? "---",
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  TXTextWidget(
-                                    text: user.email ?? "---",
+                                    text: "@${user?.username ?? ""}",
                                     fontWeight: FontWeight.bold,
                                     size: 16,
+                                  ),
+                                  TXTextWidget(
+                                    text: user?.fullName ?? "",
+                                    color: R.color.gray,
+                                    maxLines: 1,
+                                    textOverflow: TextOverflow.ellipsis,
+                                    size: 12,
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  TXTextWidget(
+                                    text: user?.email ?? "---",
+                                    size: 12,
                                   ),
                                 ],
                               )
@@ -243,13 +253,93 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                         TXDividerWidget(),
                         TXCellSelectionOptionWidget(
                           leading: Icons.contacts,
-                          optionName: "Hazle saber a tus contactos!",
+                          optionName: "Invita a tus contactos!",
+                          onOptionTap: () {},
+                        ),
+                        TXDividerWidget(),
+                        TXCellSelectionOptionWidget(
+                          leading: Icons.school,
+                          optionName: "Ver puntuaciones",
                           onOptionTap: () {
-                            Share.share(
-                                "http://ec2-34-244-181-197.eu-west-1.compute.amazonaws.com:8081/auth/login?redirect=%2Fpages%2Fdashboard");
+                            NavigationUtils.push(context, ScorePage());
                           },
                         ),
                         TXDividerWidget(),
+//                        InkWell(
+//                          onTap: (){
+//
+//                            showTXModalBottomSheet(
+//                                context: context,
+//                                builder: (ctx) {
+//                                  return Container(
+//                                    height: 400,
+//                                    child: Column(
+//                                      crossAxisAlignment: CrossAxisAlignment.center,
+//                                      children: <Widget>[
+//
+//                                        Row(
+//                                          children: <Widget>[
+//                                            Expanded(
+//                                              child: Column(
+//                                                children: <Widget>[
+//
+//                                                ],
+//                                              ),
+//                                            ),
+//                                            Expanded(
+//                                              child: Column(
+//                                                children: <Widget>[
+//
+//                                                ],
+//                                              ),
+//                                            ),
+//                                          ],
+//                                        )
+//                                      ],
+//                                    ),
+//                                  );
+//                                });
+//                          },
+//                          child: Container(
+//                              padding: EdgeInsets.only(right: 10),
+//                              height: 50,
+//                              child: Row(
+//                                children: <Widget>[
+//                                  Image.asset(R.image.logo, width: 35, height: 35,),
+//                                  Expanded(
+//                                    child: TXTextWidget(
+//                                      text: "Elige tu Plani favorito",
+//                                      maxLines: 1,
+//                                      textOverflow: TextOverflow.ellipsis,
+//                                      color: Colors.black,
+//                                    ),
+//                                  ),
+//                                  Icon(
+//                                    Icons.keyboard_arrow_right,
+//                                    color: R.color.primary_dark_color,
+//                                    size: 25,
+//                                  )
+//                                ],
+//                              )),
+//                        ),
+//                        TXDividerWidget(),
+//                        InkWell(
+//                          child: Container(
+//                            padding: EdgeInsets.symmetric(horizontal: 10),
+//                            height: 50,
+//                            child: Row(
+//                              children: <Widget>[
+//                                Image.asset(R.image.logo),
+//                                Expanded(child: TXTextWidget(text: "Escoge tu Plani",)),
+//                                Icon(
+//                                  Icons.keyboard_arrow_right,
+//                                  color: R.color.primary_dark_color,
+//                                  size: 25,
+//                                )
+//                              ],
+//                            ),
+//                          ),
+//                        ),
 
 //                          Container(
 //                            padding: EdgeInsets.symmetric(horizontal: 10),
@@ -422,7 +512,7 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
         children: <Widget>[
           Container(
             child: Image.asset(
-              R.image.logo,
+              R.image.plani,
               width: 60,
               height: 60,
             ),

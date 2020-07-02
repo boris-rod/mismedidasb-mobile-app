@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:mismedidasb/data/_shared_prefs.dart';
 import 'package:mismedidasb/data/api/remote/result.dart';
+import 'package:mismedidasb/domain/account/i_account_repository.dart';
 import 'package:mismedidasb/domain/user/i_user_repository.dart';
 import 'package:mismedidasb/domain/user/user_model.dart';
 import 'package:mismedidasb/ui/_base/bloc_base.dart';
@@ -23,28 +24,35 @@ class ProfileEditBloC extends BaseBloC
 
   Stream<UserModel> get userResult => _userController.stream;
 
+  BehaviorSubject<UsernameSuggestionModel> _usernameValidationController =
+      new BehaviorSubject();
+
+  Stream<UsernameSuggestionModel> get usernameValidationResult =>
+      _usernameValidationController.stream;
+
   String currentPassword = "";
   bool userEdited = false;
 
   void initData(UserModel model) async {
     currentPassword = await _sharedPreferencesManager.getPassword();
     _userController.sinkAddSafe(model);
+    userValidation(userName: model.username);
+    _usernameValidationController
+        .sinkAddSafe(UsernameSuggestionModel(isValid: true, suggestions: []));
   }
 
-  void updateProfile() async {
-    isLoading = true;
-//    final res = await _iUserRepository.updateProfile(userModel);
-    isLoading = false;
-  }
-
-  void updateUserName(String userName) async {
+  void updateProfile(String userName, String fullName) async {
     final user = await userResult.first;
-    if (user.fullName.trim().toLowerCase() == userName.trim().toLowerCase())
-      return;
+    if (fullName?.trim()?.toLowerCase()?.isNotEmpty == true)
+      user.fullName = fullName;
+    if (userName?.trim()?.toLowerCase()?.isNotEmpty == true)
+      user.username = userName;
+    user.phone = "";
+
     isLoading = true;
-    user.fullName = userName;
     final res = await _iUserRepository.updateProfile(user);
     if (res is ResultSuccess<UserModel>) {
+      userEdited = true;
       _userController.sinkAddSafe(res.value);
     } else {
       showErrorMessage(res);
@@ -69,9 +77,19 @@ class ProfileEditBloC extends BaseBloC
 //    await FileManager.deleteFile(file.path);
   }
 
+  void userValidation({String userName = ""}) async {
+    final user = await userResult.first;
+    final res = await _iUserRepository.usernameValidation(user.id, user.email,
+        userName.isNotEmpty ? userName : user.username, user.fullName);
+    if (res is ResultSuccess<UsernameSuggestionModel>) {
+      _usernameValidationController.sinkAddSafe(res.value);
+    }
+  }
+
   @override
   void dispose() {
     _userController.close();
+    _usernameValidationController.close();
     disposeLoadingBloC();
     disposeErrorHandlerBloC();
   }

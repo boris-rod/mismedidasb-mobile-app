@@ -14,12 +14,13 @@ import 'package:mismedidasb/ui/settings/settings_page.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:mismedidasb/utils/extensions.dart';
 
+import '../../enums.dart';
+
 class ProfileBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   final IUserRepository _iUserRepository;
   final SharedPreferencesManager _sharedPreferencesManager;
 
-  ProfileBloC(
-      this._iUserRepository, this._sharedPreferencesManager);
+  ProfileBloC(this._iUserRepository, this._sharedPreferencesManager);
 
   BehaviorSubject<UserModel> _userController = new BehaviorSubject();
 
@@ -28,7 +29,7 @@ class ProfileBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   SettingAction settingAction;
   String currentPassword = "";
 
-  set updateUser(UserModel user){
+  set updateUser(UserModel user) {
     _userController.sinkAddSafe(user);
   }
 
@@ -50,11 +51,14 @@ class ProfileBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     final res = await _iUserRepository.uploadAvatar(file);
     if (res is ResultSuccess<bool>) {
       getProfile();
-    } else{
+    } else {
       isLoading = false;
       showErrorMessage(res);
     }
+  }
 
+  void updatePlani(int id) async {
+    _sharedPreferencesManager.setIntValue(SharedKey.planiId, id);
   }
 
   void removeAvatar() async {}

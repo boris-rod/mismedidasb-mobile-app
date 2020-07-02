@@ -19,6 +19,7 @@ class Endpoint {
   static const String profile = "/api/account/profile";
   static const String save_settings = "/api/account/settings";
   static const String remove_account = "/api/account/remove-account";
+  static const String username_validation = "/api/account/username-validation";
 
   static const String health_concept = "/api/concept"; //id
 
@@ -35,9 +36,9 @@ class Endpoint {
   static const String personal_data_current_data =
       "/api/personal-data/current-datas";
 
-  static const String update_profile = "/api/account/update-profile";
   static const String upload_avatar = "/api/account/upload-avatar";
   static const String invite = "/api/user-referral";
+  static const String scores = "/api/user-statistics/by-user-id";
 
 
   static const String dish = "/api/dish";

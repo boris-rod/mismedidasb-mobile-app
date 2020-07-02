@@ -94,7 +94,7 @@ class _LoginState extends StateWithBloC<LoginPage, LoginBloC> {
                               height: 30,
                             ),
                             Image.asset(
-                              R.image.logo_blue,
+                              R.image.logo,
                               width: R.dim.logoInBody,
                               height: R.dim.logoInBody,
                             ),
@@ -152,7 +152,10 @@ class _LoginState extends StateWithBloC<LoginPage, LoginBloC> {
                                   title: R.string.forgotPassword,
                                   onTap: () async {
                                     final res = await NavigationUtils.push(
-                                        context, RecoverPasswordPage());
+                                        context,
+                                        RecoverPasswordPage(
+                                          email: emailTextController.text,
+                                        ));
                                     if (res is bool && res)
                                       Fluttertoast.showToast(
                                           msg: R.string.checkEmail,

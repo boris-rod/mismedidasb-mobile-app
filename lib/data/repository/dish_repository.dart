@@ -151,14 +151,10 @@ class DishRepository extends BaseRepository implements IDishRepository {
       if (list.isEmpty) {
         list = await _dishApi.getFoodModelList();
         if (list?.isNotEmpty == true) {
-          final rem = await _iDishDao.clearFoodModelList();
-          final saved = await _iDishDao.saveFoodModelList(list ?? []);
+          await _iDishDao.clearFoodModelList();
+          await _iDishDao.saveFoodModelList(list ?? []);
         }
       }
-//      List<FoodModel> listTemp = [];
-//      for(int i = 0; i < 100; i ++){
-//        listTemp.add(list[i]);
-//      }
       return Result.success(value: list);
     } catch (ex) {
       return resultError(ex);

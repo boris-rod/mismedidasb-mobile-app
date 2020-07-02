@@ -216,7 +216,7 @@ class FoodBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
       list.add(TagModel(
           isSelected: foodFilterCategoryId == FoodHealthy.fruitVeg.index,
           id: FoodHealthy.fruitVeg.index,
-          name: "Frutas y/o Vegetales"));
+          name: "Frutas/Vegetales"));
       list.add(TagModel(
           isSelected: foodFilterCategoryId == FoodHealthy.proteic.index,
           id: FoodHealthy.proteic.index,
