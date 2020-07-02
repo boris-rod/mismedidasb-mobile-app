@@ -29,47 +29,50 @@ class TXDailyNutritionalInfoWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Container(
-            height: 40,
-            alignment: Alignment.center,
-            padding: EdgeInsets.symmetric(horizontal: 15),
-            child: Stack(
-              alignment: Alignment.centerLeft,
-              children: <Widget>[
-                Container(
-                  alignment: Alignment.center,
-                  height: 16,
-                  margin: EdgeInsets.only(left: 15),
-                  padding: EdgeInsets.only(left: 20, right: 5),
-                  color: R.color.food_nutri_info,
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: TXTextWidget(
-                          text: R.string.nutritionalInfo,
-                          size: 11,
-                          textAlign: TextAlign.start,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
+          InkWell(
+            onTap: onHeaderTap,
+            child: Container(
+              height: 40,
+              alignment: Alignment.center,
+              padding: EdgeInsets.symmetric(horizontal: 15),
+              child: Stack(
+                alignment: Alignment.centerLeft,
+                children: <Widget>[
+                  Container(
+                    alignment: Alignment.center,
+                    height: 16,
+                    margin: EdgeInsets.only(left: 15),
+                    padding: EdgeInsets.only(left: 20, right: 5),
+                    color: R.color.food_nutri_info,
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: TXTextWidget(
+                            text: R.string.nutritionalInfo,
+                            size: 11,
+                            textAlign: TextAlign.start,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      TXTextWidget(
-                        text: CalendarUtils.showInFormat(
-                            "d/M/yyyy", dailyModel.dateTime),
-                        size: 11,
-                        color: Colors.black,
-                        textAlign: TextAlign.start,
-                        fontWeight: FontWeight.bold,
-                      )
-                    ],
+                        TXTextWidget(
+                          text: CalendarUtils.showInFormat(
+                              "d/M/yyyy", dailyModel.dateTime),
+                          size: 11,
+                          color: Colors.black,
+                          textAlign: TextAlign.start,
+                          fontWeight: FontWeight.bold,
+                        )
+                      ],
+                    ),
                   ),
-                ),
-                Image.asset(
-                  R.image.down_arrow_icon,
-                  height: 35,
-                  width: 35,
-                ),
-              ],
+                  Image.asset(
+                    R.image.down_arrow_icon,
+                    height: 35,
+                    width: 35,
+                  )
+                ],
+              ),
             ),
           ),
 //          Row(

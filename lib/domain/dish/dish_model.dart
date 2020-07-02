@@ -83,6 +83,8 @@ class DailyActivityFoodModel {
   DailyFoodPlanModel plan;
   DateTime dateTime;
   bool isExpanded;
+  double imc;
+  double kCal;
 
   double calories;
   double carbohydrates;
@@ -150,6 +152,8 @@ class DailyActivityFoodModel {
       this.foods,
       this.calories = 0,
       this.carbohydrates = 0,
+      this.imc,
+      this.kCal,
       this.proteins = 0,
       this.fat = 0,
       this.fiber = 0,
@@ -326,29 +330,41 @@ class CreateDailyPlanModel {
                 model.dailyFoodPlanModel.breakFastCalValExtra) &&
         breakfastKcalPer < 101;
 
-    double snack1KcalPer = model.dailyActivityFoodModelList[1].calories * 100 / (model.dailyFoodPlanModel.snack1CalVal +
-        model.dailyFoodPlanModel.snack1CalValExtra);
+    double snack1KcalPer = model.dailyActivityFoodModelList[1].calories *
+        100 /
+        (model.dailyFoodPlanModel.snack1CalVal +
+            model.dailyFoodPlanModel.snack1CalValExtra);
     bool snack1Kcal = model.dailyActivityFoodModelList[1].calories >=
             (model.dailyFoodPlanModel.snack1CalVal -
-                model.dailyFoodPlanModel.snack1CalValExtra) && snack1KcalPer < 101;
+                model.dailyFoodPlanModel.snack1CalValExtra) &&
+        snack1KcalPer < 101;
 
-    double lunchKcalPer = model.dailyActivityFoodModelList[2].calories * 100 / (model.dailyFoodPlanModel.lunchCalVal +
-        model.dailyFoodPlanModel.lunchCalValExtra);
+    double lunchKcalPer = model.dailyActivityFoodModelList[2].calories *
+        100 /
+        (model.dailyFoodPlanModel.lunchCalVal +
+            model.dailyFoodPlanModel.lunchCalValExtra);
     bool lunchKcal = model.dailyActivityFoodModelList[2].calories >=
             (model.dailyFoodPlanModel.lunchCalVal -
-                model.dailyFoodPlanModel.lunchCalValExtra) && lunchKcalPer < 101;
+                model.dailyFoodPlanModel.lunchCalValExtra) &&
+        lunchKcalPer < 101;
 
-    double snack2KcalPer = model.dailyActivityFoodModelList[3].calories * 100 / (model.dailyFoodPlanModel.snack2CalVal +
-        model.dailyFoodPlanModel.snack2CalValExtra);
+    double snack2KcalPer = model.dailyActivityFoodModelList[3].calories *
+        100 /
+        (model.dailyFoodPlanModel.snack2CalVal +
+            model.dailyFoodPlanModel.snack2CalValExtra);
     bool snack2Kcal = model.dailyActivityFoodModelList[3].calories >=
             (model.dailyFoodPlanModel.snack2CalVal -
-                model.dailyFoodPlanModel.snack2CalValExtra) && snack2KcalPer < 101;
+                model.dailyFoodPlanModel.snack2CalValExtra) &&
+        snack2KcalPer < 101;
 
-    double dinnerKcalPer = model.dailyActivityFoodModelList[4].calories * 100 / (model.dailyFoodPlanModel.dinnerCalVal +
-        model.dailyFoodPlanModel.dinnerCalValExtra);
+    double dinnerKcalPer = model.dailyActivityFoodModelList[4].calories *
+        100 /
+        (model.dailyFoodPlanModel.dinnerCalVal +
+            model.dailyFoodPlanModel.dinnerCalValExtra);
     bool dinnerKcal = model.dailyActivityFoodModelList[4].calories >=
             (model.dailyFoodPlanModel.dinnerCalVal -
-                model.dailyFoodPlanModel.dinnerCalValExtra) && dinnerKcalPer < 101;
+                model.dailyFoodPlanModel.dinnerCalValExtra) &&
+        dinnerKcalPer < 101;
 
     isBalancedPlan = kCalAll &&
         proteins &&

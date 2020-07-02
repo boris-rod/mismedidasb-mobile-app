@@ -467,17 +467,19 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                   ],
                 ),
               ),
-              Image.asset(R.image.divider_icon),
               model.isExpanded
                   ? Column(
                       children: <Widget>[
                         (model.id != 1 && model.id != 3)
                             ? Container(
                                 padding: EdgeInsets.only(
-                                    left: 10, top: 10, right: 10),
-                                child: TXFoodHealthyFilterWidget(
-                                  onFilterTapped: (index) async {
-                                    final resultList =
+                                    left: 10, right: 10),
+                                child: Column(
+                                  children: <Widget>[
+                                    Image.asset(R.image.divider_icon),
+                                    TXFoodHealthyFilterWidget(
+                                      onFilterTapped: (index) async {
+                                        final resultList =
                                         await NavigationUtils.push(
                                             context,
                                             FoodPage(
@@ -485,14 +487,16 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                                               selectedItems: model.foods,
                                               imc: bloc.imc,
                                               foodFilterMode:
-                                                  FoodFilterMode.dish_healthy,
+                                              FoodFilterMode.dish_healthy,
                                               foodFilterCategoryIndex: index,
                                             ));
-                                    if (resultList is List<FoodModel>) {
-                                      model.foods = resultList;
-                                      bloc.setFoodList(model);
-                                    }
-                                  },
+                                        if (resultList is List<FoodModel>) {
+                                          model.foods = resultList;
+                                          bloc.setFoodList(model);
+                                        }
+                                      },
+                                    )
+                                  ],
                                 )
 
 //                                Row(
@@ -508,7 +512,7 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                                 )
                             : Container(),
                         SizedBox(
-                          height: 10,
+                          height: 5,
                         ),
                         ..._getFoods(model, model.foods),
                         SizedBox(

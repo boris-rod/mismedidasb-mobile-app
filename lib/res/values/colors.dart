@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:mismedidasb/di/injector.dart';
 
 class AppColor {
-  final bool isDarkTheme;
 
   Color get black_color => Injector.instance.darkTheme  ? Color(0xFFFFFFFF) : Color(0xFF000000);
   Color get white_color => !Injector.instance.darkTheme  ? Color(0xFFFFFFFF) : Color(0xFF000000);

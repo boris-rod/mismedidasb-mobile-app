@@ -77,13 +77,13 @@ class TXComboProgressBarWidget extends StatelessWidget {
                   color: Colors.black,
                   size: titleSize ?? 10,
                 ),
-                childCenter: TXTextWidget(
+                childRight: TXTextWidget(
                   fontWeight: FontWeight.bold,
                   text: showPercentageInfo
                       ? "${percentage.toInt()}% ${showValueInBar ? "${value.toStringAsFixed(2)}kCal" : ""}"
                       : "",
                   size: titleSize ?? 10,
-                  color: Colors.black,
+                  color: Colors.white,
                 ),
                 margin: EdgeInsets.all(0),
                 style: RoundedProgressBarStyle(
