@@ -84,7 +84,9 @@ class DishRepository extends BaseRepository implements IDishRepository {
               dateTime: initial,
               synced: true,
               dailyActivityFoodModelList: dailyActivityMap[dateMapId],
-              dailyFoodPlanModel: dailyActivityMap[dateMapId][0].plan);
+              dailyFoodPlanModel: dailyActivityMap[dateMapId][0].plan
+                ..imc = dailyActivityMap[dateMapId][0].imc
+                ..dailyKCal = dailyActivityMap[dateMapId][0].kCal);
         } else {
           double kCal = await _sharedPreferencesManager.getDailyKCal();
           double imc = await _sharedPreferencesManager.getIMC();
@@ -213,7 +215,8 @@ class DishRepository extends BaseRepository implements IDishRepository {
   }
 
   @override
-  Future<Result<bool>> updateFoodCompoundModelList(int id, CreateFoodCompoundModel model) async {
+  Future<Result<bool>> updateFoodCompoundModelList(
+      int id, CreateFoodCompoundModel model) async {
     try {
       final res = await _dishApi.updateFoodCompoundModelList(id, model);
       return Result.success(value: res);
