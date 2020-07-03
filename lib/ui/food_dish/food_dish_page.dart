@@ -381,89 +381,102 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
             children: <Widget>[
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                child: Stack(
+                  alignment: Alignment.centerLeft,
                   children: <Widget>[
-                    Expanded(
-                      child: InkWell(
-                        child: Row(
-                          children: <Widget>[
-                            Image.asset(
-                              model.isExpanded
-                                  ? R.image.up_arrow_icon
-                                  : R.image.down_arrow_icon,
-                              height: 35,
-                              width: 35,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Expanded(
+                          child: Container(
+                            margin: EdgeInsets.only(left: 30),
+                            padding: EdgeInsets.only(left: 0),
+                            child: Row(
+                              children: <Widget>[
+                                Expanded(
+                                  child: Container(
+                                    padding: EdgeInsets.only(left: 10),
+                                    color: R.color.food_blue_lightest,
+                                    height: 15,
+                                    child: TXTextWidget(
+                                      text: "${model.name}",
+                                      maxLines: 1,
+                                      textOverflow: TextOverflow.ellipsis,
+                                      fontStyle: FontStyle.italic,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w300,
+                                      size: 12,
+                                    ),
+                                  ),
+                                  flex: 1,
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: Container(
+                                    child: TXComboProgressBarWidget(
+                                      imc: bloc.imc,
+                                      title: "",
+                                      showPercentageInfo: showKCalPercentage,
+                                      percentage: bloc
+                                          .getCurrentCaloriesPercentageByFood(
+                                              model),
+                                      mark1: bloc
+                                              .getActivityFoodCalories(model) -
+                                          bloc.getActivityFoodCaloriesOffSet(
+                                              model),
+                                      mark2: bloc
+                                              .getActivityFoodCalories(model) +
+                                          bloc.getActivityFoodCaloriesOffSet(
+                                              model),
+                                      height: 15,
+                                      value: model.caloriesSum,
+                                    ),
+                                  ),
+                                )
+                              ],
                             ),
-//                          Icon(
-//                            model.isExpanded
-//                                ? Icons.keyboard_arrow_up
-//                                : Icons.keyboard_arrow_down,
-//                            size: 28,
-//                            color: R.color.primary_dark_color,
-//                          ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            TXTextWidget(
-                              text: "${model.name}",
-                              maxLines: 1,
-                              textOverflow: TextOverflow.ellipsis,
-                              fontStyle: FontStyle.italic,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w300,
-                              size: 15,
-                            )
-                          ],
+                          ),
                         ),
-                        onTap: () {
-                          setState(() {
-                            model.isExpanded = !model.isExpanded;
-                          });
-                        },
-                      ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        TXIconButtonWidget(
+                          onPressed: () async {
+                            final resultList = await NavigationUtils.push(
+                                context,
+                                FoodPage(
+                                  dailyActivityFoodModel: model,
+                                  selectedItems: model.foods,
+                                  imc: bloc.imc,
+                                ));
+                            if (resultList is List<FoodModel>) {
+                              model.foods = resultList;
+                              bloc.setFoodList(model);
+                            }
+                          },
+                          icon: Icon(
+                            Icons.add,
+                            color: Colors.white,
+                            size: 30,
+                          ),
+                        )
+                      ],
                     ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Container(
-                      width: 160,
-                      child: TXComboProgressBarWidget(
-                        imc: bloc.imc,
-                        title: "",
-                        showPercentageInfo: showKCalPercentage,
-                        percentage:
-                            bloc.getCurrentCaloriesPercentageByFood(model),
-                        mark1: bloc.getActivityFoodCalories(model) -
-                            bloc.getActivityFoodCaloriesOffSet(model),
-                        mark2: bloc.getActivityFoodCalories(model) +
-                            bloc.getActivityFoodCaloriesOffSet(model),
-                        height: 15,
-                        value: model.caloriesSum,
-                      ),
-                    ),
-                    SizedBox(width: 10,),
-                    TXIconButtonWidget(
-                      onPressed: () async {
-                        final resultList = await NavigationUtils.push(
-                            context,
-                            FoodPage(
-                              dailyActivityFoodModel: model,
-                              selectedItems: model.foods,
-                              imc: bloc.imc,
-                            ));
-                        if (resultList is List<FoodModel>) {
-                          model.foods = resultList;
-                          bloc.setFoodList(model);
-                        }
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          model.isExpanded = !model.isExpanded;
+                        });
                       },
-                      icon: Icon(
-                        Icons.add,
-                        color: Colors.white,
-                        size: 30,
+                      child: Image.asset(
+                        model.isExpanded
+                            ? R.image.up_arrow_icon
+                            : R.image.down_arrow_icon,
+                        height: 40,
+                        width: 40,
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -472,24 +485,24 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                       children: <Widget>[
                         (model.id != 1 && model.id != 3)
                             ? Container(
-                                padding: EdgeInsets.only(
-                                    left: 10, right: 10),
+                                padding: EdgeInsets.only(left: 10, right: 10),
                                 child: Column(
                                   children: <Widget>[
                                     Image.asset(R.image.divider_icon),
                                     TXFoodHealthyFilterWidget(
                                       onFilterTapped: (index) async {
                                         final resultList =
-                                        await NavigationUtils.push(
-                                            context,
-                                            FoodPage(
-                                              dailyActivityFoodModel: model,
-                                              selectedItems: model.foods,
-                                              imc: bloc.imc,
-                                              foodFilterMode:
-                                              FoodFilterMode.dish_healthy,
-                                              foodFilterCategoryIndex: index,
-                                            ));
+                                            await NavigationUtils.push(
+                                                context,
+                                                FoodPage(
+                                                  dailyActivityFoodModel: model,
+                                                  selectedItems: model.foods,
+                                                  imc: bloc.imc,
+                                                  foodFilterMode: FoodFilterMode
+                                                      .dish_healthy,
+                                                  foodFilterCategoryIndex:
+                                                      index,
+                                                ));
                                         if (resultList is List<FoodModel>) {
                                           model.foods = resultList;
                                           bloc.setFoodList(model);
@@ -524,7 +537,7 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
             ],
           ),
         ),
-        color: R.color.food_blue_medium,
+        color: R.color.food_blue_light,
       );
       list.add(w);
 //      if (model.id != 4)
@@ -544,7 +557,7 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
     List<Widget> list = [];
     modelList.forEach((model) {
       final w = ListTile(
-        contentPadding: EdgeInsets.only(left: 5, right: 0),
+        contentPadding: EdgeInsets.only(left: 5, right: 5, top: 0, bottom: 0),
         leading: Stack(
           children: <Widget>[
             TXNetworkImage(
@@ -575,7 +588,7 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
           text: "${model.name}",
           color: Colors.white,
           fontStyle: FontStyle.italic,
-          fontWeight: FontWeight.w300,
+          fontWeight: FontWeight.bold,
         ),
         trailing: TXIconButtonWidget(
           onPressed: () {
@@ -585,9 +598,10 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
           icon: Icon(
             Icons.close,
             color: Colors.white,
-            size: 30,
+            size: 25,
           ),
         ),
+        dense: true,
       );
       list.add(Image.asset(R.image.divider_icon));
       list.add(w);
@@ -682,17 +696,22 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
               outsideDaysVisible: false,
             ),
             headerStyle: HeaderStyle(
-                centerHeaderTitle: true,
-                rightChevronIcon: Icon(
-                  Icons.keyboard_arrow_right,
-                  size: 30,
-                  color: R.color.primary_color,
-                ),
-                leftChevronIcon: Icon(
-                  Icons.keyboard_arrow_left,
-                  size: 30,
-                  color: R.color.primary_color,
-                )),
+              centerHeaderTitle: true,
+              titleTextStyle: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 25),
+              rightChevronIcon: Icon(
+                Icons.keyboard_arrow_right,
+                size: 30,
+                color: R.color.food_nutri_info,
+              ),
+              leftChevronIcon: Icon(
+                Icons.keyboard_arrow_left,
+                size: 30,
+                color: R.color.food_nutri_info,
+              ),
+            ),
             builders: CalendarBuilders(
               markersBuilder: (context, date, events, holidays) {
                 final children = <Widget>[];
@@ -707,12 +726,14 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                 return TXTextWidget(
                   text: str.toCapitalize().substring(0, str.length - 1),
                   textAlign: TextAlign.center,
+                  color: Colors.white,
                 );
               },
               dowWeekdayBuilder: (context, str) {
                 return TXTextWidget(
                   text: str.toCapitalize().substring(0, str.length - 1),
                   textAlign: TextAlign.center,
+                  color: Colors.white,
                 );
               },
               dayBuilder: (context, date, events) {
@@ -731,7 +752,7 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                   child: Center(
                     child: TXTextWidget(
                       text: "${date.day}",
-                      color: isValidDay ? Colors.black : R.color.gray,
+                      color: isValidDay ? Colors.white : R.color.gray,
                       size: isValidDay ? 14 : 11,
                     ),
                   ),
@@ -746,7 +767,7 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                       children: <Widget>[
                         Center(
                           child: CircleAvatar(
-                            backgroundColor: Colors.blueAccent[100],
+                            backgroundColor: R.color.button_color,
                             radius: 12,
                           ),
                         ),
@@ -771,7 +792,7 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                       children: <Widget>[
                         Center(
                           child: CircleAvatar(
-                            backgroundColor: R.color.gray_dark,
+                            backgroundColor: R.color.food_action_bar,
                             radius: 12,
                           ),
                         ),
@@ -779,6 +800,7 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                           child: TXTextWidget(
                             text: "${date.day}",
                             size: 14,
+                            color: Colors.white,
                           ),
                         )
                       ],
@@ -799,6 +821,8 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                         alignment: WrapAlignment.spaceBetween,
                         children: <Widget>[
                           TXTextLinkWidget(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
                             title: R.string.copyPlan,
                             onTap: snapshot.data.hasFoods != null
                                 ? () {
@@ -806,18 +830,22 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                                   }
                                 : null,
                             textColor: snapshot.data.hasFoods != null
-                                ? R.color.accent_color
-                                : R.color.gray,
+                                ? R.color.food_nutri_info
+                                : R.color.food_blue_light,
                           ),
                           TXTextLinkWidget(
                             title: R.string.editPlan,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
                             onTap: () {
                               bloc.changePage(0);
                             },
-                            textColor: R.color.accent_color,
+                            textColor: R.color.food_nutri_info,
                           ),
                           TXTextLinkWidget(
                             title: R.string.resumePlan,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
                             onTap: snapshot.data.hasFoods != null
                                 ? () {
                                     showTXModalBottomSheet(
@@ -830,8 +858,8 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                                   }
                                 : null,
                             textColor: snapshot.data.hasFoods != null
-                                ? R.color.accent_color
-                                : R.color.gray,
+                                ? R.color.food_nutri_info
+                                : R.color.food_blue_light,
                           ),
                         ],
                       );
@@ -845,26 +873,22 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
     final DailyFoodModel dailyModel =
         events.isNotEmpty ? events[0] as DailyFoodModel : null;
     bool hasFoods = dailyModel != null && dailyModel.hasFoods != null;
-    if(hasFoods){
-      double calSum = dailyModel.currentCaloriesSumTest;
+    if (hasFoods) {
+      double calSum = dailyModel.currentCaloriesSum;
       return Align(
         alignment: Alignment.bottomCenter,
         child: Icon(
-          calSum >
-              dailyModel.dailyFoodPlanModel.kCalMax
+          calSum > dailyModel.dailyFoodPlanModel.kCalMax
               ? Icons.add_circle_outline
-              : calSum >
-              dailyModel.dailyFoodPlanModel.kCalMin
-              ? Icons.check_circle_outline
-              : Icons.remove_circle_outline,
+              : calSum > dailyModel.dailyFoodPlanModel.kCalMin
+                  ? Icons.check_circle_outline
+                  : Icons.remove_circle_outline,
           size: 14,
-          color: calSum >
-              dailyModel.dailyFoodPlanModel.kCalMax
+          color: calSum > dailyModel.dailyFoodPlanModel.kCalMax
               ? Colors.red[400]
-              : calSum >
-              dailyModel.dailyFoodPlanModel.kCalMin
-              ? Colors.green[400]
-              : Colors.yellow[400],
+              : calSum > dailyModel.dailyFoodPlanModel.kCalMin
+                  ? Colors.green[400]
+                  : Colors.yellow[400],
         ),
       );
     }

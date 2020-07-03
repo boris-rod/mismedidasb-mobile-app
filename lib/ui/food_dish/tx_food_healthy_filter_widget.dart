@@ -35,7 +35,7 @@ class TXFoodHealthyFilterWidget extends StatelessWidget {
               TXTextWidget(
                 text: "Frutas/Vegetales",
                 color: Colors.white,
-                size: 11,
+                size: 10,
               )
             ],
           ),
@@ -58,7 +58,7 @@ class TXFoodHealthyFilterWidget extends StatelessWidget {
               TXTextWidget(
                 text: "Protéico",
                 color: Colors.white,
-                size: 11,
+                size: 10,
               )
             ],
           ),
@@ -81,7 +81,7 @@ class TXFoodHealthyFilterWidget extends StatelessWidget {
               TXTextWidget(
                 text: "Calórico",
                 color: Colors.white,
-                size: 11,
+                size: 10,
               )
             ],
           ),

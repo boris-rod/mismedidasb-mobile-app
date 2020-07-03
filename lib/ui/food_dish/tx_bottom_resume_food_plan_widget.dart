@@ -94,15 +94,13 @@ class TXBottomResumeFoodPlanWidget extends StatelessWidget {
                     children: <Widget>[
                       TXTextWidget(
                         size: 12,
-                        color: proteins != 0
-                            ? Colors.redAccent
-                            : Colors.green,
+                        color: proteins != 0 ? Colors.redAccent : Colors.green,
                         fontWeight: FontWeight.bold,
                         text: proteins < 0
                             ? "Debes incluir más Proteínas."
                             : proteins > 0
-                            ? "Deberias reducir la cantidad de Proteínas."
-                            : "El balance de Proteínas es adecuado.",
+                                ? "Deberias reducir la cantidad de Proteínas."
+                                : "El balance de Proteínas es adecuado.",
                       ),
                       SizedBox(
                         height: 2,
@@ -116,38 +114,34 @@ class TXBottomResumeFoodPlanWidget extends StatelessWidget {
                         text: carbohydrates < 0
                             ? "Debes incluir más Carbohidratos."
                             : carbohydrates > 0
-                            ? "Deberias reducir la cantidad de Carbohidratos."
-                            : "El balance de Carbohidratos es adecuado.",
+                                ? "Deberias reducir la cantidad de Carbohidratos."
+                                : "El balance de Carbohidratos es adecuado.",
                       ),
                       SizedBox(
                         height: 2,
                       ),
                       TXTextWidget(
                         size: 12,
-                        color: fat != 0
-                            ? Colors.redAccent
-                            : Colors.green,
+                        color: fat != 0 ? Colors.redAccent : Colors.green,
                         fontWeight: FontWeight.bold,
                         text: fat < 0
                             ? "Debes incluir más Grasa."
                             : fat > 0
-                            ? "Deberias reducir la cantidad de Grasa."
-                            : "El balance de Grasa es adecuado.",
+                                ? "Deberias reducir la cantidad de Grasa."
+                                : "El balance de Grasa es adecuado.",
                       ),
                       SizedBox(
                         height: 2,
                       ),
                       TXTextWidget(
                         size: 12,
-                        color: fiber != 0
-                            ? Colors.redAccent
-                            : Colors.green,
+                        color: fiber != 0 ? Colors.redAccent : Colors.green,
                         fontWeight: FontWeight.bold,
                         text: fiber < 0
                             ? "Debes incluir más Fibra."
                             : fiber > 0
-                            ? "Deberias reducir la cantidad de Fibra."
-                            : "El balance de Fibra es adecuado.",
+                                ? "Deberias reducir la cantidad de Fibra."
+                                : "El balance de Fibra es adecuado.",
                       )
                     ],
                   ),
@@ -245,6 +239,7 @@ class TXBottomResumeFoodPlanWidget extends StatelessWidget {
                                     NavigationUtils.pop(context);
                                     onSaveConfirm();
                                   },
+                                  mainColor: R.color.button_color,
                                   title: R.string.confirm),
                               TXCheckBoxWidget(
                                 text: R.string.showAlways,

@@ -80,7 +80,7 @@ class ProfileEditBloC extends BaseBloC
   void userValidation({String userName = ""}) async {
     final user = await userResult.first;
     final res = await _iUserRepository.usernameValidation(user.id, user.email,
-        userName.isNotEmpty ? userName : user.username, user.fullName);
+        userName?.isNotEmpty == true ? userName : user.username, user.fullName);
     if (res is ResultSuccess<UsernameSuggestionModel>) {
       _usernameValidationController.sinkAddSafe(res.value);
     }

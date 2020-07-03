@@ -22,15 +22,16 @@ class AppColor {
   final gray_dark = Injector.instance.darkTheme ? Color(0xFF97A0AE) : Color(0x5097A0AE);
   final gray = Injector.instance.darkTheme ? Color(0x5097A0AE) : Color(0xFF97A0AE);
   final gray_light = Injector.instance.darkTheme ? Color(0xFF808080) : Color(0xFFF6F7FB);
-  final food_action_bar = Color(0xFF2383D5);
-  final food_background = Color(0xFF0000FE);
-  final food_nutri_info = Color(0xFFFEB300);
-  final food_yellow = Color(0xFFFFFF00);
-  final food_green = Color(0xFF30FE00);
-  final food_red = Color(0xFFFF0000);
-  final food_blue_dark = Color(0xFF282FBB);
-  final food_blue_medium = Color(0xFF353FFA);
-  final food_blue_violet = Color(0xFF5D62FA);
+  final food_action_bar = Color(0xFF265070);
+  final food_background = Color(0xFF4F82AE);
+  final food_nutri_info = Color(0xFFFAB32B);
+  final food_yellow = Color(0xFFFEFD38);
+  final food_green = Color(0xFF2C871F);
+  final food_red = Color(0xFFF90D1B);
+  final food_blue_dark = Color(0xFF54758D);
+  final food_blue_light = Color(0xFF729BBE);
+  final food_blue_lightest = Color(0xFF8EAFCB);
+  final button_color = Color(0xFFFF3B3D);
 
   Color get dialog_background =>
       Injector.instance.darkTheme ? Color(0xc8808080) : Color(0xc8F6F7FB);

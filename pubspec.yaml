@@ -53,7 +53,7 @@ dependencies:
   share: ^0.6.4+3
   flutter_image_compress: ^0.6.8
 #  flutter_mailer: ^0.4.2
-
+  percent_indicator: ^2.1.5
 #  cloud_firestore: ^0.13.0+1
 #  firebase_auth: ^0.15.3+1
 #  google_sign_in: ^4.1.1

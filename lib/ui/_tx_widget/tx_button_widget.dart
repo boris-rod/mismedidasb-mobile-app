@@ -24,14 +24,14 @@ class TXButtonWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RaisedButton(
-      color: mainColor ?? R.color.primary_color,
+      color: R.color.button_color,
       splashColor: splashColor,
       onPressed: onPressed,
       child: Text(
         title,
         style: TextStyle(
           color: textColor,
-          fontWeight: fontWeight,
+          fontWeight: FontWeight.bold,
           fontSize: fontSize,
         ),
       ),

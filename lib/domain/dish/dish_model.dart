@@ -48,19 +48,51 @@ class DailyFoodModel {
   bool synced;
   bool headerExpanded;
   bool showKCalPercentages;
-  double currentCaloriesSum;
-  double currentProteinsSum;
-  double currentCarbohydratesSum;
-  double currentFatSum;
-  double currentFiberSum;
+//  double currentCaloriesSum;
+//  double currentProteinsSum;
+//  double currentCarbohydratesSum;
+//  double currentFatSum;
+//  double currentFiberSum;
 
-  double get currentCaloriesSumTest => dailyActivityFoodModelList.isEmpty
+  double get currentCaloriesSum => dailyActivityFoodModelList.isEmpty
       ? 0.0
       : dailyActivityFoodModelList.length == 1
           ? dailyActivityFoodModelList[0].caloriesSum
           : dailyActivityFoodModelList
               .map((d) => d.caloriesSum)
               .reduce((v1, v2) => v1 + v2);
+
+  double get currentProteinsSum => dailyActivityFoodModelList.isEmpty
+      ? 0.0
+      : dailyActivityFoodModelList.length == 1
+      ? dailyActivityFoodModelList[0].proteinsSum
+      : dailyActivityFoodModelList
+      .map((d) => d.proteinsSum)
+      .reduce((v1, v2) => v1 + v2);
+
+  double get currentCarbohydratesSum => dailyActivityFoodModelList.isEmpty
+      ? 0.0
+      : dailyActivityFoodModelList.length == 1
+      ? dailyActivityFoodModelList[0].carbohydratesSum
+      : dailyActivityFoodModelList
+      .map((d) => d.caloriesSum)
+      .reduce((v1, v2) => v1 + v2);
+
+  double get currentFatSum => dailyActivityFoodModelList.isEmpty
+      ? 0.0
+      : dailyActivityFoodModelList.length == 1
+      ? dailyActivityFoodModelList[0].fatSum
+      : dailyActivityFoodModelList
+      .map((d) => d.fatSum)
+      .reduce((v1, v2) => v1 + v2);
+
+  double get currentFiberSum => dailyActivityFoodModelList.isEmpty
+      ? 0.0
+      : dailyActivityFoodModelList.length == 1
+      ? dailyActivityFoodModelList[0].fiberSum
+      : dailyActivityFoodModelList
+      .map((d) => d.fiberSum)
+      .reduce((v1, v2) => v1 + v2);
 
   DailyActivityFoodModel get hasFoods => dailyActivityFoodModelList
           .firstWhere((dA) => dA.foods.isNotEmpty, orElse: () {
@@ -72,11 +104,11 @@ class DailyFoodModel {
       this.synced = true,
       this.dailyActivityFoodModelList,
       this.dailyFoodPlanModel,
-      this.currentCaloriesSum = 0,
-      this.currentCarbohydratesSum = 0,
-      this.currentFatSum = 0,
-      this.currentFiberSum = 0,
-      this.currentProteinsSum = 0,
+//      this.currentCaloriesSum = 0,
+//      this.currentCarbohydratesSum = 0,
+//      this.currentFatSum = 0,
+//      this.currentFiberSum = 0,
+//      this.currentProteinsSum = 0,
       this.headerExpanded = true,
       this.showKCalPercentages = false});
 }
@@ -341,9 +373,10 @@ class CreateDailyPlanModel {
 
   static CreateDailyPlanModel fromDailyFoodModel(DailyFoodModel model) {
     bool isBalancedPlan = false;
+    final currentCaloriesSum = model.currentCaloriesSum;
     bool kCalAll =
-        model.currentCaloriesSum > model.dailyFoodPlanModel.kCalMin &&
-            model.currentCaloriesSum <= model.dailyFoodPlanModel.kCalMax;
+        currentCaloriesSum > model.dailyFoodPlanModel.kCalMin &&
+            currentCaloriesSum <= model.dailyFoodPlanModel.kCalMax;
 
     double proteinPer = model.currentProteinsSum *
         100 /

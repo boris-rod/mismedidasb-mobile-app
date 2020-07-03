@@ -102,23 +102,6 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
     loadDailyPlanData();
     isLoading = false;
-
-//    _iDishRepository.getFoodModelList(forceReload: true).then((onValue) {
-//      foodsLoaded = true;
-//      if (tagsLoaded) isLoading = false;
-//    }).catchError((onError) {
-//      foodsLoaded = true;
-//      if (tagsLoaded) isLoading = false;
-//      showErrorMessage(onError);
-//    });
-//    _iDishRepository.getTagList(forceReload: true).then((onValue) {
-//      tagsLoaded = true;
-//      if (foodsLoaded) isLoading = false;
-//    }).catchError((onError) {
-//      tagsLoaded = true;
-//      if (foodsLoaded) isLoading = false;
-//      showErrorMessage(onError);
-//    });
   }
 
   void loadDailyPlanData() {
@@ -132,11 +115,11 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
     _calendarOptionsController.sinkAddSafe(daily);
 
-    daily.currentCaloriesSum = 0;
-    daily.currentProteinsSum = 0;
-    daily.currentCarbohydratesSum = 0;
-    daily.currentFatSum = 0;
-    daily.currentFiberSum = 0;
+//    daily.currentCaloriesSum = 0;
+//    daily.currentProteinsSum = 0;
+//    daily.currentCarbohydratesSum = 0;
+//    daily.currentFatSum = 0;
+//    daily.currentFiberSum = 0;
 
     daily.dailyActivityFoodModelList.forEach((dA) {
       dA.proteinsDishCalories = 0;
@@ -178,12 +161,12 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
           (dA.carbohydratesDishCalories * 100 ~/ activityFoodCalories).toInt();
       dA.foodsFiberPercentage =
           (dA.fiberDishCalories * 100 ~/ activityFoodCalories).toInt();
-
-      daily.currentCaloriesSum += dA.caloriesSum;
-      daily.currentProteinsSum += dA.proteinsSum;
-      daily.currentCarbohydratesSum += dA.carbohydratesSum;
-      daily.currentFatSum += dA.fatSum;
-      daily.currentFiberSum += dA.fiberSum;
+//
+//      daily.currentCaloriesSum += dA.caloriesSum;
+//      daily.currentProteinsSum += dA.proteinsSum;
+//      daily.currentCarbohydratesSum += dA.carbohydratesSum;
+//      daily.currentFatSum += dA.fatSum;
+//      daily.currentFiberSum += dA.fiberSum;
     });
 
 //    CreateDailyPlanModel createPlan = CreateDailyPlanModel.fromDailyFoodModel(daily);
@@ -195,15 +178,15 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   void setFoodList(DailyActivityFoodModel model) async {
     final rootModel = await dailyFoodResult.first;
 
-    rootModel.currentCaloriesSum =
-        rootModel.currentCaloriesSum - model.caloriesSum;
-
-    rootModel.currentProteinsSum =
-        rootModel.currentProteinsSum - model.proteinsSum;
-    rootModel.currentCarbohydratesSum =
-        rootModel.currentCarbohydratesSum - model.carbohydratesSum;
-    rootModel.currentFatSum = rootModel.currentFatSum - model.fatSum;
-    rootModel.currentFiberSum = rootModel.currentFiberSum - model.fiberSum;
+//    rootModel.currentCaloriesSum =
+//        rootModel.currentCaloriesSum - model.caloriesSum;
+//
+//    rootModel.currentProteinsSum =
+//        rootModel.currentProteinsSum - model.proteinsSum;
+//    rootModel.currentCarbohydratesSum =
+//        rootModel.currentCarbohydratesSum - model.carbohydratesSum;
+//    rootModel.currentFatSum = rootModel.currentFatSum - model.fatSum;
+//    rootModel.currentFiberSum = rootModel.currentFiberSum - model.fiberSum;
 
     model.proteinsDishCalories = 0;
     model.fiberDishCalories = 0;
@@ -245,11 +228,11 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     model.foodsFiberPercentage =
         (model.fiberDishCalories * 100 ~/ activityFoodCalories).toInt();
 
-    rootModel.currentCaloriesSum += model.caloriesSum;
-    rootModel.currentProteinsSum += model.proteinsSum;
-    rootModel.currentCarbohydratesSum += model.carbohydratesSum;
-    rootModel.currentFatSum += model.fatSum;
-    rootModel.currentFiberSum += model.fiberSum;
+//    rootModel.currentCaloriesSum += model.caloriesSum;
+//    rootModel.currentProteinsSum += model.proteinsSum;
+//    rootModel.currentCarbohydratesSum += model.carbohydratesSum;
+//    rootModel.currentFatSum += model.fatSum;
+//    rootModel.currentFiberSum += model.fiberSum;
 
     await _iDishRepository.savePlanLocal(rootModel);
 
