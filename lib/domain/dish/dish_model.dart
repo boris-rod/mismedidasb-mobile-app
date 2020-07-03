@@ -1,3 +1,4 @@
+import 'package:mismedidasb/data/api/remote/remote_constanst.dart';
 import 'package:mismedidasb/domain/single_selection_model.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/measure_health/health_result.dart';
@@ -53,9 +54,13 @@ class DailyFoodModel {
   double currentFatSum;
   double currentFiberSum;
 
-  double get currentCaloriesSumTest => dailyActivityFoodModelList
-      .map((d) => d.calories)
-      .reduce((v1, v2) => v1 + v2);
+  double get currentCaloriesSumTest => dailyActivityFoodModelList.isEmpty
+      ? 0.0
+      : dailyActivityFoodModelList.length == 1
+          ? dailyActivityFoodModelList[0].caloriesSum
+          : dailyActivityFoodModelList
+              .map((d) => d.caloriesSum)
+              .reduce((v1, v2) => v1 + v2);
 
   DailyActivityFoodModel get hasFoods => dailyActivityFoodModelList
           .firstWhere((dA) => dA.foods.isNotEmpty, orElse: () {
@@ -86,11 +91,49 @@ class DailyActivityFoodModel {
   double imc;
   double kCal;
 
-  double calories;
-  double carbohydrates;
-  double proteins;
-  double fat;
-  double fiber;
+//  double calories;
+//  double carbohydrates;
+//  double proteins;
+//  double fat;
+//  double fiber;
+
+  double get caloriesSum => proteinsSum + carbohydratesSum + fatSum;
+
+  double get proteinsSum => foods.isEmpty
+      ? 0.0
+      : foods.length == 1
+          ? foods[0].proteins * foods[0].count * 4
+          : foods
+                  ?.map((e) => e.proteins * e.count * 4)
+                  ?.reduce((value, element) => value + element) ??
+              1 * 4;
+
+  double get carbohydratesSum => foods.isEmpty
+      ? 0.0
+      : foods.length == 1
+          ? foods[0].carbohydrates * foods[0].count * 4
+          : foods
+                  ?.map((e) => e.carbohydrates * e.count * 4)
+                  ?.reduce((value, element) => value + element) ??
+              1;
+
+  double get fatSum => foods.isEmpty
+      ? 0.0
+      : foods.length == 1
+          ? foods[0].fat * foods[0].count * 9
+          : foods
+                  ?.map((e) => e.fat * e.count * 9)
+                  ?.reduce((value, element) => value + element) ??
+              1;
+
+  double get fiberSum => foods.isEmpty
+      ? 0.0
+      : foods.length == 1
+          ? foods[0].fiber * foods[0].count
+          : foods
+                  ?.map((e) => e.fiber * e.count)
+                  ?.reduce((value, element) => value + element) ??
+              1;
 
   int foodsProteinsPercentage;
   int foodsCarbohydratesPercentage;
@@ -150,13 +193,13 @@ class DailyActivityFoodModel {
       {this.id,
       this.type,
       this.foods,
-      this.calories = 0,
-      this.carbohydrates = 0,
+//      this.calories = 0,
+//      this.carbohydrates = 0,
       this.imc,
       this.kCal,
-      this.proteins = 0,
-      this.fat = 0,
-      this.fiber = 0,
+//      this.proteins = 0,
+//      this.fat = 0,
+//      this.fiber = 0,
       this.dateTime,
       this.plan,
       this.isExpanded = true});
@@ -321,47 +364,47 @@ class CreateDailyPlanModel {
     double fiberPer = model.currentFiberSum * 100 / 50;
     bool fiber = fiberPer <= 100 && fiberPer > 30 * 100 / 50;
 
-    double breakfastKcalPer = model.dailyActivityFoodModelList[0].calories *
+    double breakfastKcalPer = model.dailyActivityFoodModelList[0].caloriesSum *
         100 /
         (model.dailyFoodPlanModel.breakFastCalVal +
             model.dailyFoodPlanModel.breakFastCalValExtra);
-    bool breakfastKcal = model.dailyActivityFoodModelList[0].calories >=
+    bool breakfastKcal = model.dailyActivityFoodModelList[0].caloriesSum >=
             (model.dailyFoodPlanModel.breakFastCalVal -
                 model.dailyFoodPlanModel.breakFastCalValExtra) &&
         breakfastKcalPer < 101;
 
-    double snack1KcalPer = model.dailyActivityFoodModelList[1].calories *
+    double snack1KcalPer = model.dailyActivityFoodModelList[1].caloriesSum *
         100 /
         (model.dailyFoodPlanModel.snack1CalVal +
             model.dailyFoodPlanModel.snack1CalValExtra);
-    bool snack1Kcal = model.dailyActivityFoodModelList[1].calories >=
+    bool snack1Kcal = model.dailyActivityFoodModelList[1].caloriesSum >=
             (model.dailyFoodPlanModel.snack1CalVal -
                 model.dailyFoodPlanModel.snack1CalValExtra) &&
         snack1KcalPer < 101;
 
-    double lunchKcalPer = model.dailyActivityFoodModelList[2].calories *
+    double lunchKcalPer = model.dailyActivityFoodModelList[2].caloriesSum *
         100 /
         (model.dailyFoodPlanModel.lunchCalVal +
             model.dailyFoodPlanModel.lunchCalValExtra);
-    bool lunchKcal = model.dailyActivityFoodModelList[2].calories >=
+    bool lunchKcal = model.dailyActivityFoodModelList[2].caloriesSum >=
             (model.dailyFoodPlanModel.lunchCalVal -
                 model.dailyFoodPlanModel.lunchCalValExtra) &&
         lunchKcalPer < 101;
 
-    double snack2KcalPer = model.dailyActivityFoodModelList[3].calories *
+    double snack2KcalPer = model.dailyActivityFoodModelList[3].caloriesSum *
         100 /
         (model.dailyFoodPlanModel.snack2CalVal +
             model.dailyFoodPlanModel.snack2CalValExtra);
-    bool snack2Kcal = model.dailyActivityFoodModelList[3].calories >=
+    bool snack2Kcal = model.dailyActivityFoodModelList[3].caloriesSum >=
             (model.dailyFoodPlanModel.snack2CalVal -
                 model.dailyFoodPlanModel.snack2CalValExtra) &&
         snack2KcalPer < 101;
 
-    double dinnerKcalPer = model.dailyActivityFoodModelList[4].calories *
+    double dinnerKcalPer = model.dailyActivityFoodModelList[4].caloriesSum *
         100 /
         (model.dailyFoodPlanModel.dinnerCalVal +
             model.dailyFoodPlanModel.dinnerCalValExtra);
-    bool dinnerKcal = model.dailyActivityFoodModelList[4].calories >=
+    bool dinnerKcal = model.dailyActivityFoodModelList[4].caloriesSum >=
             (model.dailyFoodPlanModel.dinnerCalVal -
                 model.dailyFoodPlanModel.dinnerCalValExtra) &&
         dinnerKcalPer < 101;

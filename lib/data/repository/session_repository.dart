@@ -33,7 +33,7 @@ class SessionRepository extends BaseRepository implements ISessionRepository {
         _sharedPreferencesManager.setIntValue(SharedKey.userId, result.id);
         _sharedPreferencesManager.setPassword(loginModel.password);
       }
-      await _fcmFeature.refreshToken();
+      _fcmFeature.refreshToken();
       return Result.success(value: result);
     } catch (ex) {
       return resultError(ex);
@@ -56,7 +56,7 @@ class SessionRepository extends BaseRepository implements ISessionRepository {
   Future<Result<bool>> validateToken() async {
     try {
       final result = await _iSessionApi.validateToken();
-      await _fcmFeature.refreshToken();
+      _fcmFeature.refreshToken();
       return Result.success(value: result);
     } catch (ex) {
       return resultError(ex);

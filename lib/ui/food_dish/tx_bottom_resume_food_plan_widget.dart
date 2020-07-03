@@ -243,7 +243,7 @@ class TXBottomResumeFoodPlanWidget extends StatelessWidget {
                               TXButtonWidget(
                                   onPressed: () {
                                     NavigationUtils.pop(context);
-//                                    onSaveConfirm();
+                                    onSaveConfirm();
                                   },
                                   title: R.string.confirm),
                               TXCheckBoxWidget(

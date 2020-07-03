@@ -78,8 +78,8 @@ class FCMFeature extends IFCMFeature {
   Future<void> refreshToken() async {
     try {
       final token = await _fireBaseMessaging.getToken();
-      print('FCM TOKEN');
-      print(token);
+      logger.log('FCM TOKEN');
+      logger.log(token);
       final deviceType = Platform.isAndroid ? 0 : (Platform.isIOS ? 1 : -1);
       await networkHandler.post(
           path: '/api/device',

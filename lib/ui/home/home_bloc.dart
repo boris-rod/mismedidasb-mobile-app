@@ -33,8 +33,13 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   final IRealTimeContainer _iRealTimeContainer;
   final IDishRepository _iDishRepository;
 
-  HomeBloC(this._iHealthConceptRepository, this._iUserRepository,
-      this._sharedPreferencesManager, this.lnm, this._iRealTimeContainer, this._iDishRepository);
+  HomeBloC(
+      this._iHealthConceptRepository,
+      this._iUserRepository,
+      this._sharedPreferencesManager,
+      this.lnm,
+      this._iRealTimeContainer,
+      this._iDishRepository);
 
   BehaviorSubject<List<HealthConceptModel>> _conceptController =
       new BehaviorSubject();
@@ -47,13 +52,62 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   Stream<bool> get launchNotiPollResult => _launchNotiPollController.stream;
 
   String userName = "";
+  bool profileLoaded = false;
+  bool conceptsLoaded = false;
+
   void loadHomeData() async {
     isLoading = true;
-
+    profileLoaded = false;
+    conceptsLoaded = false;
+    _iDishRepository.getPlansMergedAPI(CalendarUtils.getFirstDateOfMonthAgo(), CalendarUtils.getLastDateOfMonthLater(), forceReload: true);
     _iDishRepository.getFoodModelList(forceReload: true);
     _iDishRepository.getTagList(forceReload: true);
 
+    loadProfile();
+    loadConcepts();
+//    final profileRes = await _iUserRepository.getProfile();
+//    if (profileRes is ResultSuccess<UserModel>) {
+//      bool hasPlani = false;
+//      final plani = profileRes.value.subscriptions.firstWhere(
+//          (element) => element.product == 'VIRTUAL_ASESSOR', orElse: () {
+//        return null;
+//      });
+//      if (plani != null) {
+//        hasPlani = CalendarUtils.compare(plani.validAt, DateTime.now()) >= 0;
+//      }
+//
+//      await _sharedPreferencesManager.setBoolValue(
+//          SharedKey.hasPlaniVirtualAssesor, hasPlani);
+//      if (hasPlani) {
+//        initLNM();
+//      } else {
+//        lnm.cancelAll();
+//      }
+//
+//      await _sharedPreferencesManager.setStringValue(
+//          SharedKey.userName, profileRes.value.username);
+//
+//      userName = profileRes.value.username;
+//      await _sharedPreferencesManager.setDailyKCal(profileRes.value.dailyKCal);
+//      await _sharedPreferencesManager.setIMC(profileRes.value.imc);
+//      await _sharedPreferencesManager
+//          .setFirstDateHealthResult(profileRes.value.firstDateHealthResult);
+//      final res = await _iHealthConceptRepository.getHealthConceptList();
+//      if (res is ResultSuccess<List<HealthConceptModel>>) {
+//        _conceptController.sinkAddSafe(res.value);
+//      } else
+//        showErrorMessage(res);
+//    } else
+//      showErrorMessage(profileRes);
+//
+//    isLoading = false;
+  }
+
+  void loadProfile() async {
     final profileRes = await _iUserRepository.getProfile();
+    profileLoaded = true;
+    if(conceptsLoaded)
+      isLoading = false;
     if (profileRes is ResultSuccess<UserModel>) {
       bool hasPlani = false;
       final plani = profileRes.value.subscriptions.firstWhere(
@@ -80,14 +134,20 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
       await _sharedPreferencesManager.setIMC(profileRes.value.imc);
       await _sharedPreferencesManager
           .setFirstDateHealthResult(profileRes.value.firstDateHealthResult);
-      final res = await _iHealthConceptRepository.getHealthConceptList();
-      if (res is ResultSuccess<List<HealthConceptModel>>) {
-        _conceptController.sinkAddSafe(res.value);
-      } else
-        showErrorMessage(res);
     } else
       showErrorMessage(profileRes);
+  }
 
+  void loadConcepts() async {
+    final res = await _iHealthConceptRepository.getHealthConceptList();
+    conceptsLoaded = true;
+    if(profileLoaded){
+      isLoading = false;
+    }
+    if (res is ResultSuccess<List<HealthConceptModel>>) {
+      _conceptController.sinkAddSafe(res.value);
+    } else
+      showErrorMessage(res);
     final show =
         await _sharedPreferencesManager.getBoolValue(SharedKey.launchNotiPoll);
     if (show) {
@@ -95,7 +155,6 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
           SharedKey.launchNotiPoll, false);
       _launchNotiPollController.sinkAddSafe(true);
     }
-    isLoading = false;
   }
 
   Future<bool> canNavigateToDishes() async {

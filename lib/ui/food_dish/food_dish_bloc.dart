@@ -166,11 +166,11 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
         }
       });
 
-      dA.proteins = pro * 4;
-      dA.carbohydrates = car * 4;
-      dA.fat = fat * 9;
-      dA.fiber = fib;
-      dA.calories = dA.fat + dA.proteins + dA.carbohydrates;
+//      dA.proteins = pro * 4;
+//      dA.carbohydrates = car * 4;
+//      dA.fat = fat * 9;
+//      dA.fiber = fib;
+//      dA.calories = dA.fat + dA.proteins + dA.carbohydrates;
 
       dA.foodsProteinsPercentage =
           (dA.proteinsDishCalories * 100 ~/ activityFoodCalories).toInt();
@@ -179,11 +179,11 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
       dA.foodsFiberPercentage =
           (dA.fiberDishCalories * 100 ~/ activityFoodCalories).toInt();
 
-      daily.currentCaloriesSum += dA.calories;
-      daily.currentProteinsSum += dA.proteins;
-      daily.currentCarbohydratesSum += dA.carbohydrates;
-      daily.currentFatSum += dA.fat;
-      daily.currentFiberSum += dA.fiber;
+      daily.currentCaloriesSum += dA.caloriesSum;
+      daily.currentProteinsSum += dA.proteinsSum;
+      daily.currentCarbohydratesSum += dA.carbohydratesSum;
+      daily.currentFatSum += dA.fatSum;
+      daily.currentFiberSum += dA.fiberSum;
     });
 
 //    CreateDailyPlanModel createPlan = CreateDailyPlanModel.fromDailyFoodModel(daily);
@@ -196,14 +196,14 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     final rootModel = await dailyFoodResult.first;
 
     rootModel.currentCaloriesSum =
-        rootModel.currentCaloriesSum - model.calories;
+        rootModel.currentCaloriesSum - model.caloriesSum;
 
     rootModel.currentProteinsSum =
-        rootModel.currentProteinsSum - model.proteins;
+        rootModel.currentProteinsSum - model.proteinsSum;
     rootModel.currentCarbohydratesSum =
-        rootModel.currentCarbohydratesSum - model.carbohydrates;
-    rootModel.currentFatSum = rootModel.currentFatSum - model.fat;
-    rootModel.currentFiberSum = rootModel.currentFiberSum - model.fiber;
+        rootModel.currentCarbohydratesSum - model.carbohydratesSum;
+    rootModel.currentFatSum = rootModel.currentFatSum - model.fatSum;
+    rootModel.currentFiberSum = rootModel.currentFiberSum - model.fiberSum;
 
     model.proteinsDishCalories = 0;
     model.fiberDishCalories = 0;
@@ -231,11 +231,11 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
       }
     });
 
-    model.proteins = pro * 4;
-    model.carbohydrates = car * 4;
-    model.fat = fat * 9;
-    model.fiber = fib;
-    model.calories = model.fat + model.proteins + model.carbohydrates;
+//    model.proteins = pro * 4;
+//    model.carbohydrates = car * 4;
+//    model.fat = fat * 9;
+//    model.fiber = fib;
+//    model.calories = model.fat + model.proteins + model.carbohydrates;
 
     final double activityFoodCalories = getActivityFoodCalories(model);
     model.foodsProteinsPercentage =
@@ -245,11 +245,11 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     model.foodsFiberPercentage =
         (model.fiberDishCalories * 100 ~/ activityFoodCalories).toInt();
 
-    rootModel.currentCaloriesSum += model.calories;
-    rootModel.currentProteinsSum += model.proteins;
-    rootModel.currentCarbohydratesSum += model.carbohydrates;
-    rootModel.currentFatSum += model.fat;
-    rootModel.currentFiberSum += model.fiber;
+    rootModel.currentCaloriesSum += model.caloriesSum;
+    rootModel.currentProteinsSum += model.proteinsSum;
+    rootModel.currentCarbohydratesSum += model.carbohydratesSum;
+    rootModel.currentFatSum += model.fatSum;
+    rootModel.currentFiberSum += model.fiberSum;
 
     await _iDishRepository.savePlanLocal(rootModel);
 
@@ -348,7 +348,7 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
   double getCurrentCaloriesPercentageByFood(
       DailyActivityFoodModel dailyActivityFoodModel) {
-    return dailyActivityFoodModel.calories *
+    return dailyActivityFoodModel.caloriesSum *
         100 /
         (getActivityFoodCalories(dailyActivityFoodModel) +
             getActivityFoodCaloriesOffSet(dailyActivityFoodModel));

@@ -440,7 +440,7 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                         mark2: bloc.getActivityFoodCalories(model) +
                             bloc.getActivityFoodCaloriesOffSet(model),
                         height: 15,
-                        value: model.calories,
+                        value: model.caloriesSum,
                       ),
                     ),
                     SizedBox(width: 10,),
@@ -844,28 +844,31 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
   Widget _buildEventsMarker(DateTime date, List events) {
     final DailyFoodModel dailyModel =
         events.isNotEmpty ? events[0] as DailyFoodModel : null;
-    return (dailyModel != null && dailyModel.hasFoods != null)
-        ? Align(
-            alignment: Alignment.bottomCenter,
-            child: Icon(
-              dailyModel.currentCaloriesSum >
-                      dailyModel.dailyFoodPlanModel.kCalMax
-                  ? Icons.add_circle_outline
-                  : dailyModel.currentCaloriesSum >
-                          dailyModel.dailyFoodPlanModel.kCalMin
-                      ? Icons.check_circle_outline
-                      : Icons.remove_circle_outline,
-              size: 14,
-              color: dailyModel.currentCaloriesSum >
-                      dailyModel.dailyFoodPlanModel.kCalMax
-                  ? Colors.red[400]
-                  : dailyModel.currentCaloriesSum >
-                          dailyModel.dailyFoodPlanModel.kCalMin
-                      ? Colors.green[400]
-                      : Colors.yellow[400],
-            ),
-          )
-        : Container();
+    bool hasFoods = dailyModel != null && dailyModel.hasFoods != null;
+    if(hasFoods){
+      double calSum = dailyModel.currentCaloriesSumTest;
+      return Align(
+        alignment: Alignment.bottomCenter,
+        child: Icon(
+          calSum >
+              dailyModel.dailyFoodPlanModel.kCalMax
+              ? Icons.add_circle_outline
+              : calSum >
+              dailyModel.dailyFoodPlanModel.kCalMin
+              ? Icons.check_circle_outline
+              : Icons.remove_circle_outline,
+          size: 14,
+          color: calSum >
+              dailyModel.dailyFoodPlanModel.kCalMax
+              ? Colors.red[400]
+              : calSum >
+              dailyModel.dailyFoodPlanModel.kCalMin
+              ? Colors.green[400]
+              : Colors.yellow[400],
+        ),
+      );
+    }
+    return Container();
   }
 
   Future<Null> _selectDate(BuildContext context) async {

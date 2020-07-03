@@ -13,6 +13,6 @@ class LoggerEmptyImpl implements Logger {
 class LoggerImpl implements Logger {
   @override
   log(Object message) {
-    print(message);
+    print(message is String ? message : message.toString());
   }
 }

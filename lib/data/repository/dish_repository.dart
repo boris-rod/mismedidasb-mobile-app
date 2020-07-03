@@ -35,30 +35,29 @@ class DishRepository extends BaseRepository implements IDishRepository {
 
   @override
   Future<Result<Map<DateTime, DailyFoodModel>>> getPlansMergedAPI(
-      DateTime start, DateTime end) async {
+      DateTime start, DateTime end, {bool forceReload: false}) async {
     try {
-      //Get list of daily activities from API
-      List<DailyActivityFoodModel> apiList =
-          await _dishApi.getPlansMergedAPI(start.toUtc(), end.toUtc());
-
-      //Converting from UTC to Local time
-      apiList.map((f) => f.dateTime = f.dateTime.toLocal()).toList();
-
       Map<String, List<DailyActivityFoodModel>> dailyActivityMap = {};
-      //Grouping daily activities by datetime
-      apiList.forEach((ac) {
-        final dateMapId =
-            CalendarUtils.getTimeIdBasedDay(dateTime: ac.dateTime);
-
-        if (dailyActivityMap[dateMapId]?.isNotEmpty == true) {
-          dailyActivityMap[dateMapId].insert(ac.id, ac);
-        } else {
-          dailyActivityMap[dateMapId] = [ac];
-        }
-      });
-
       final List<DailyFoodModel> localList =
-          await _iDishDao.getDailyFoodModelList();
+      await _iDishDao.getDailyFoodModelList();
+      if(forceReload || localList.isEmpty){
+        //Get list of daily activities from API
+        List<DailyActivityFoodModel> apiList =
+        await _dishApi.getPlansMergedAPI(start.toUtc(), end.toUtc());
+        //Converting from UTC to Local time
+        apiList.map((f) => f.dateTime = f.dateTime.toLocal()).toList();
+        //Grouping daily activities by datetime
+        apiList.forEach((ac) {
+          final dateMapId =
+          CalendarUtils.getTimeIdBasedDay(dateTime: ac.dateTime);
+
+          if (dailyActivityMap[dateMapId]?.isNotEmpty == true) {
+            dailyActivityMap[dateMapId].insert(ac.id, ac);
+          } else {
+            dailyActivityMap[dateMapId] = [ac];
+          }
+        });
+      }
 
       Map<DateTime, DailyFoodModel> resultMap = {};
       Map<String, DailyFoodModel> dailyMap = {};
