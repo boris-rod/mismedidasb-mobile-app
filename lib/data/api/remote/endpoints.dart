@@ -39,6 +39,7 @@ class Endpoint {
   static const String upload_avatar = "/api/account/upload-avatar";
   static const String invite = "/api/user-referral";
   static const String scores = "/api/user-statistics/by-user-id";
+  static const String solo_question_stats = "/api/solo-question";
 
 
   static const String dish = "/api/dish";

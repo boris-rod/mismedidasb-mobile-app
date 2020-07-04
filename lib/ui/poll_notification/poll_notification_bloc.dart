@@ -62,6 +62,7 @@ class PollNotificationBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
   int currentPageIndex = 0;
   String userName = "";
+  int emotionValue = 0;
 
   void loadData() async {
     isLoading = true;
@@ -112,11 +113,14 @@ class PollNotificationBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     } else if (currentPageIndex == _feelingTodayResult.index) {
       createModel.questionCode = _feelingTodayResult.code;
       createModel.answerCode = _feelingTodayResult.soloAnswerModelSelected.code;
+      createModel.answerValue = emotionValue.toString();
     } else if (currentPageIndex == _exercisePlanTomorrowResult.index) {
       createModel.questionCode = _exercisePlanTomorrowResult.code;
       createModel.answerCode =
           _exercisePlanTomorrowResult.soloAnswerModelSelected.code;
-
+      final date = DateTime(DateTime.now().year, DateTime.now().month,
+          DateTime.now().day, exerciseTime.hour, exerciseTime.minute, 0, 0, 0);
+      createModel.answerValue = date.toUtc().toString();
       if (createModel.answerCode == 'SQ-3-SA-2') {
         await _sharedPreferencesManager.setBoolValue(
             SharedKey.showPhysicalExerciseTime, false);

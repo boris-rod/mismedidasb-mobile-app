@@ -13,6 +13,8 @@ abstract class IUserApi {
 
   Future<ScoreModel> getScores();
 
+  Future<SoloQuestionStatsModel> getSoloQuestionStats(int daysAgo);
+
   Future<UsernameSuggestionModel> usernameValidation(
       int userId, String email, String username, String fullName);
 }

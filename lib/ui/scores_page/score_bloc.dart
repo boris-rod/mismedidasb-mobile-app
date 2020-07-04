@@ -16,20 +16,48 @@ class ScoreBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
   Stream<ScoreModel> get scoresResult => _scoresController.stream;
 
-  void getScores() async {
+  BehaviorSubject<SoloQuestionStatsModel> _soloQuestionStatsController =
+      new BehaviorSubject();
+
+  Stream<SoloQuestionStatsModel> get soloQuestionStatsResult =>
+      _soloQuestionStatsController.stream;
+
+  bool pointsLoaded = false;
+  bool soloQuestionStatsLoaded = false;
+
+  void loadData() {
     isLoading = true;
+    getScores();
+    getSoloQuestionStats(true, 7);
+  }
+
+  void getScores() async {
     final res = await _iUserRepository.getScores();
+    pointsLoaded = true;
+    if (soloQuestionStatsLoaded) isLoading = false;
     if (res is ResultSuccess<ScoreModel>) {
       _scoresController.sinkAddSafe(res.value);
     } else {
       showErrorMessage(res);
     }
-    isLoading = false;
+  }
+
+  void getSoloQuestionStats(bool initLoad, daysAgo) async {
+    if (!initLoad) isLoading = true;
+    final res = await _iUserRepository.getSoloQuestionStats(daysAgo);
+    soloQuestionStatsLoaded = true;
+    if (res is ResultSuccess<SoloQuestionStatsModel>) {
+      _soloQuestionStatsController.sinkAddSafe(res.value);
+    } else {
+      showErrorMessage(res);
+    }
+    if (pointsLoaded) isLoading = false;
   }
 
   @override
   void dispose() {
     _scoresController.close();
+    _soloQuestionStatsController.close();
     disposeLoadingBloC();
     disposeErrorHandlerBloC();
   }
