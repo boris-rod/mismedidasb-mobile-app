@@ -115,3 +115,18 @@ class UsernameSuggestionModel {
 
   UsernameSuggestionModel({this.isValid, this.suggestions});
 }
+
+class SoloQuestionStatsModel {
+  int bestComplyEatStreak;
+  int totalDaysPlannedSport;
+  int totalDaysComplySportPlan;
+  int mostFrequentEmotion;
+  int mostFrequentEmotionCount;
+
+  SoloQuestionStatsModel(
+      {this.bestComplyEatStreak,
+      this.totalDaysPlannedSport,
+      this.totalDaysComplySportPlan,
+      this.mostFrequentEmotion,
+      this.mostFrequentEmotionCount});
+}

@@ -13,4 +13,6 @@ abstract class IUserConverter {
 
   UsernameSuggestionModel fromJsonUsernameSuggestionModel(
       Map<String, dynamic> json);
+
+  SoloQuestionStatsModel fromJsonSoloQuestionStats(Map<String, dynamic> json);
 }

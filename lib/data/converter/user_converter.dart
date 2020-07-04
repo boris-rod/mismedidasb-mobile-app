@@ -82,11 +82,21 @@ class UserConverter implements IUserConverter {
   }
 
   @override
-  UsernameSuggestionModel fromJsonUsernameSuggestionModel(Map<String, dynamic> json) {
+  UsernameSuggestionModel fromJsonUsernameSuggestionModel(
+      Map<String, dynamic> json) {
     UsernameSuggestionModel model = UsernameSuggestionModel(
-        isValid: json["isValid"],
-        suggestions: List.from(json["suggestions"])
-    );
+        isValid: json["isValid"], suggestions: List.from(json["suggestions"]));
+    return model;
+  }
+
+  @override
+  SoloQuestionStatsModel fromJsonSoloQuestionStats(Map<String, dynamic> json) {
+    SoloQuestionStatsModel model = SoloQuestionStatsModel(
+        bestComplyEatStreak: json["bestComplyEatStreak"],
+        totalDaysPlannedSport: json["totalDaysPlannedSport"],
+        totalDaysComplySportPlan: json["totalDaysComplySportPlan"],
+        mostFrequentEmotion: json["mostFrequentEmotion"],
+        mostFrequentEmotionCount: json["mostFrequentEmotionCount"]);
     return model;
   }
 }
