@@ -339,7 +339,7 @@ class StringsEs implements StringsBase {
       "Se requiere permiso para acceder a sus fotos";
 
   @override
-  String get showBarPercentages => "Mostrar percentiles";
+  String get showBarPercentages => "Mostrar porcentajes";
 
   @override
   String get foods => "Alimentos";

@@ -1,6 +1,6 @@
 class DBConstants {
   static final String db_name = 'mismedidas';
-  static final int db_version = 7;
+  static final int db_version = 8;
 
   ///Common table schema
   static final Map<String, String> table_cols = {

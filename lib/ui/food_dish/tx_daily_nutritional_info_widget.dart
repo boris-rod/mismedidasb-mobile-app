@@ -123,6 +123,7 @@ class TXDailyNutritionalInfoWidget extends StatelessWidget {
                             showPercentage: dailyModel.showKCalPercentages,
                             percentage: proteinSum * 100 / (kCalMax * 25 / 100),
                             color: Colors.grey[350],
+                            value: proteinSum,
                             minMark: 12 * 100 / 25,
                           ),
                           SizedBox(
@@ -134,6 +135,7 @@ class TXDailyNutritionalInfoWidget extends StatelessWidget {
                             percentage:
                                 carbohydratesSum * 100 / (kCalMax * 55 / 100),
                             color: Colors.grey[350],
+                            value: carbohydratesSum,
                             minMark: 35 * 100 / 55,
                           ),
                           SizedBox(
@@ -145,6 +147,7 @@ class TXDailyNutritionalInfoWidget extends StatelessWidget {
                             percentage: fatSum * 100 / (kCalMax * 35 / 100),
                             color: Colors.grey[350],
                             minMark: 20 * 100 / 35,
+                            value: fatSum,
                           ),
                           SizedBox(
                             height: 5,
@@ -155,6 +158,7 @@ class TXDailyNutritionalInfoWidget extends StatelessWidget {
                             percentage: fibberSum * 100 / 50,
                             color: Colors.grey[350],
                             minMark: 30 * 100 / 50,
+                            value: fibberSum,
                           ),
                         ],
                       ),

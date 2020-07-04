@@ -18,6 +18,7 @@ class TXProgressBarCheckedWidget extends StatefulWidget {
   final double titleSize;
   final bool showPercentage;
   final double minMark;
+  final double value;
 
   const TXProgressBarCheckedWidget(
       {Key key,
@@ -28,7 +29,7 @@ class TXProgressBarCheckedWidget extends StatefulWidget {
       this.showTitle = true,
       this.showPercentage = true,
       this.titleSize,
-      this.minMark})
+      this.minMark, this.value})
       : super(key: key);
 
   @override
@@ -58,7 +59,7 @@ class _TXProgressBarCheckedWidgetState
                 left: 15,
                 top: 2,
                 child: TXTextWidget(
-                  text: widget.title,
+                  text: "${widget.title}",
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                   size: 10,

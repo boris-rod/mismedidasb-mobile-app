@@ -79,8 +79,9 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
     super.initState();
     _calendarController = CalendarController();
     bloc.pageResult.listen((onData) {
-      _pageController.animateToPage(onData,
-          duration: Duration(milliseconds: 300), curve: Curves.linear);
+      if (_pageController.page != onData)
+        _pageController.animateToPage(onData,
+            duration: Duration(milliseconds: 300), curve: Curves.linear);
     });
 
     bloc.copyPlanResult.listen((onData) {
@@ -167,79 +168,84 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                 },
               ),
             ],
-            body: StreamBuilder<DailyFoodModel>(
-              stream: bloc.dailyFoodResult,
-              initialData: null,
-              builder: (ctx, snapshot) {
-                final dailyModel = snapshot.data;
-                return dailyModel == null
-                    ? Container()
-                    : Container(
-                        color: R.color.food_background,
-                        child: StreamBuilder<bool>(
-                          stream: bloc.kCalPercentageHideResult,
-                          initialData: false,
-                          builder: (ctx, snapshotHidPercentages) {
-                            dailyModel.showKCalPercentages =
-                                snapshotHidPercentages.data;
-                            return Column(
-                              children: <Widget>[
-                                Container(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: <Widget>[
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      StreamBuilder(
-                                        stream: bloc.nutriInfoHeaderResult,
-                                        initialData: false,
-                                        builder:
-                                            (ctx, snapshotNutriInfoHeader) {
-                                          dailyModel.headerExpanded =
-                                              snapshotNutriInfoHeader.data;
-                                          return TXDailyNutritionalInfoWidget(
-                                            imc: bloc.imc,
-                                            currentCaloriesPercentage: bloc
-                                                .getCurrentCaloriesPercentage(
-                                                    dailyModel),
-                                            dailyModel: dailyModel,
-                                            onHeaderTap: () {
-                                              dailyModel.headerExpanded =
-                                                  !dailyModel.headerExpanded;
-                                              bloc.changeNutriInfoHeader(
-                                                  dailyModel.headerExpanded);
-                                            },
-                                          );
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Container(
-                                    child: PageView.builder(
-                                      itemBuilder: (ctx, index) {
-                                        return index == 0
-                                            ? _getListModeView(
-                                                context,
-                                                snapshot.data
-                                                    .dailyActivityFoodModelList,
-                                                dailyModel)
-                                            : _getCalendarView(context, []);
-                                      },
-                                      itemCount: 2,
-                                      controller: _pageController,
+            body: Container(
+              color: R.color.food_background,
+              child: StreamBuilder<DailyFoodModel>(
+                stream: bloc.dailyFoodResult,
+                initialData: null,
+                builder: (ctx, snapshot) {
+                  final dailyModel = snapshot.data;
+                  return dailyModel == null
+                      ? Container()
+                      : Container(
+                          child: StreamBuilder<bool>(
+                            stream: bloc.kCalPercentageHideResult,
+                            initialData: false,
+                            builder: (ctx, snapshotHidPercentages) {
+                              dailyModel.showKCalPercentages =
+                                  snapshotHidPercentages.data;
+                              return Column(
+                                children: <Widget>[
+                                  Container(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: <Widget>[
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        StreamBuilder(
+                                          stream: bloc.nutriInfoHeaderResult,
+                                          initialData: false,
+                                          builder:
+                                              (ctx, snapshotNutriInfoHeader) {
+                                            dailyModel.headerExpanded =
+                                                snapshotNutriInfoHeader.data;
+                                            return TXDailyNutritionalInfoWidget(
+                                              imc: bloc.imc,
+                                              currentCaloriesPercentage: bloc
+                                                  .getCurrentCaloriesPercentage(
+                                                      dailyModel),
+                                              dailyModel: dailyModel,
+                                              onHeaderTap: () {
+                                                dailyModel.headerExpanded =
+                                                    !dailyModel.headerExpanded;
+                                                bloc.changeNutriInfoHeader(
+                                                    dailyModel.headerExpanded);
+                                              },
+                                            );
+                                          },
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                ),
-                              ],
-                            );
-                          },
-                        ),
-                      );
-              },
+                                  Expanded(
+                                    child: Container(
+                                      child: PageView.builder(
+                                        itemBuilder: (ctx, index) {
+                                          return index == 0
+                                              ? _getListModeView(
+                                                  context,
+                                                  snapshot.data
+                                                      .dailyActivityFoodModelList,
+                                                  dailyModel)
+                                              : _getCalendarView(context, []);
+                                        },
+                                        itemCount: 2,
+                                        controller: _pageController,
+                                        onPageChanged: (index) {
+                                          bloc.changePage(index);
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                        );
+                },
+              ),
             ),
           ),
           TXLoadingWidget(
@@ -421,14 +427,10 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                                       percentage: bloc
                                           .getCurrentCaloriesPercentageByFood(
                                               model),
-                                      mark1: bloc
-                                              .getActivityFoodCalories(model) -
-                                          bloc.getActivityFoodCaloriesOffSet(
-                                              model),
-                                      mark2: bloc
-                                              .getActivityFoodCalories(model) +
-                                          bloc.getActivityFoodCaloriesOffSet(
-                                              model),
+                                      mark1: model.activityFoodCalories -
+                                          model.activityFoodCaloriesOffSet,
+                                      mark2: model.activityFoodCalories +
+                                          model.activityFoodCaloriesOffSet,
                                       height: 15,
                                       value: model.caloriesSum,
                                     ),
@@ -510,19 +512,7 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                                       },
                                     )
                                   ],
-                                )
-
-//                                Row(
-//                                  crossAxisAlignment: CrossAxisAlignment.start,
-//                                  children: <Widget>[
-//                                    Expanded(
-//                                      child: TXDishNutritionalInfoWidget(
-//                                          model: model),
-//                                    ),
-//                                    TXIdealPieChartFoodWidget(model: model)
-//                                  ],
-//                                ),
-                                )
+                                ))
                             : Container(),
                         SizedBox(
                           height: 5,
@@ -585,7 +575,7 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
           ],
         ),
         title: TXTextWidget(
-          text: "${model.name}",
+          text: model.name,
           color: Colors.white,
           fontStyle: FontStyle.italic,
           fontWeight: FontWeight.bold,
@@ -611,6 +601,9 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
 
   Widget _getCalendarView(
       BuildContext context, List<DailyFoodModel> modelList) {
+    final firstD = CalendarUtils.getFirstDateOfPreviousMonth();
+    final lastD = CalendarUtils.getLastDateOfNextMonth();
+
     if (bloc.isCopying) {
       _calendarController.setSelectedDay(bloc.selectedDate);
       bloc.isCopying = false;
@@ -675,9 +668,10 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                 ? 'en_US'
                 : AppConfig.locale == AppLocale.IT ? 'it_IT' : 'es_ES',
             calendarController: _calendarController,
-            startDay: bloc.firstDate,
-            endDay: bloc.lastDate,
+            startDay: firstD,
+            endDay: lastD,
             onDaySelected: (datetime, events) {
+//              print(datetime.toIso8601String());
               if (CalendarUtils.compare(datetime, bloc.selectedDate) != 0) {
                 bloc.selectedDate = datetime;
                 bloc.loadDailyPlanData();
@@ -695,6 +689,9 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
             calendarStyle: CalendarStyle(
               outsideDaysVisible: false,
             ),
+//            onVisibleDaysChanged: (dateTimeFirst, dateTimeLast, calendarFormat){
+//
+//            },
             headerStyle: HeaderStyle(
               centerHeaderTitle: true,
               titleTextStyle: TextStyle(
@@ -739,13 +736,13 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
               dayBuilder: (context, date, events) {
                 bool isValidDay = (CalendarUtils.compare(
                             date,
-                            (CalendarUtils.compare(bloc.firstDate,
-                                        bloc.firstDateHealthResult) >
+                            (CalendarUtils.compare(
+                                        firstD, bloc.firstDateHealthResult) >
                                     0
-                                ? bloc.firstDate
+                                ? firstD
                                 : bloc.firstDateHealthResult)) >=
                         0 &&
-                    CalendarUtils.compare(date, bloc.lastDate) <= 0);
+                    CalendarUtils.compare(date, lastD) <= 0);
                 return Container(
                   height: double.infinity,
                   width: double.infinity,
@@ -896,21 +893,26 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
   }
 
   Future<Null> _selectDate(BuildContext context) async {
+    final firstD = CalendarUtils.getFirstDateOfPreviousMonth();
+    final lastD = CalendarUtils.getLastDateOfNextMonth();
     final DateTime picked = await showDatePicker(
         context: context,
+        locale: const Locale('es', 'ES'),
+        confirmText: "COPIAR PLAN PARA ESTE DIA",
+        cancelText: "CANCELAR",
         initialDate: bloc.selectedDate,
-        firstDate: bloc.firstDate,
-        lastDate: bloc.lastDate,
+        firstDate: firstD,
+        lastDate: lastD,
         selectableDayPredicate: (date) {
           return (CalendarUtils.compare(
                       date,
                       (CalendarUtils.compare(
-                                  bloc.firstDate, bloc.firstDateHealthResult) >
+                                  firstD, bloc.firstDateHealthResult) >
                               0
-                          ? bloc.firstDate
+                          ? firstD
                           : bloc.firstDateHealthResult)) >=
                   0 &&
-              CalendarUtils.compare(date, bloc.lastDate) <= 0);
+              CalendarUtils.compare(date, lastD) <= 0);
         });
     if (picked != null && picked != bloc.selectedDate) {
       bloc.copyPlan(false, picked);

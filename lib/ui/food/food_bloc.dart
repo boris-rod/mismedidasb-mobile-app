@@ -45,7 +45,7 @@ class FoodBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
   set changePage(int value) => _pageController.sinkAddSafe(value);
 
-  double imc = 1;
+//  double imc = 1;
   bool kCalPercentageHide = false;
 
   List<FoodModel> foodsAll = [];
@@ -73,7 +73,7 @@ class FoodBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   void loadData(List<FoodModel> selectedItems, FoodFilterMode foodFilterMode,
       int foodFilterCategoryIndex) async {
     isLoading = true;
-    imc = await _sharedPreferencesManager.getIMC();
+//    imc = await _sharedPreferencesManager.getIMC();
     kCalPercentageHide = await _sharedPreferencesManager
         .getBoolValue(SharedKey.kCalPercentageHide);
 

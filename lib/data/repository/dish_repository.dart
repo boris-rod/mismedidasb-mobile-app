@@ -20,7 +20,10 @@ class DishRepository extends BaseRepository implements IDishRepository {
   @override
   Future<bool> savePlanLocal(DailyFoodModel dailyFoodModel) async {
     try {
-      List<DailyFoodModel> list = await _iDishDao.getDailyFoodModelList();
+      List<DailyFoodModel> list = await _iDishDao.getDailyFoodModelList(
+          CalendarUtils.getFirstDateOfPreviousMonth(),
+          CalendarUtils.getLastDateOfNextMonth()
+      );
       if (list.length >= 100) {
         await _iDishDao.removeDailyFoodModel(
             CalendarUtils.getTimeIdBasedDay(dateTime: list[0].dateTime));
@@ -35,21 +38,22 @@ class DishRepository extends BaseRepository implements IDishRepository {
 
   @override
   Future<Result<Map<DateTime, DailyFoodModel>>> getPlansMergedAPI(
-      DateTime start, DateTime end, {bool forceReload: false}) async {
+      DateTime start, DateTime end,
+      {bool forceReload: false}) async {
     try {
       Map<String, List<DailyActivityFoodModel>> dailyActivityMap = {};
       final List<DailyFoodModel> localList =
-      await _iDishDao.getDailyFoodModelList();
-      if(forceReload || localList.isEmpty){
+          await _iDishDao.getDailyFoodModelList(start, end);
+      if (forceReload || localList.isEmpty) {
         //Get list of daily activities from API
         List<DailyActivityFoodModel> apiList =
-        await _dishApi.getPlansMergedAPI(start.toUtc(), end.toUtc());
+            await _dishApi.getPlansMergedAPI(start.toUtc(), end.toUtc());
         //Converting from UTC to Local time
         apiList.map((f) => f.dateTime = f.dateTime.toLocal()).toList();
         //Grouping daily activities by datetime
         apiList.forEach((ac) {
           final dateMapId =
-          CalendarUtils.getTimeIdBasedDay(dateTime: ac.dateTime);
+              CalendarUtils.getTimeIdBasedDay(dateTime: ac.dateTime);
 
           if (dailyActivityMap[dateMapId]?.isNotEmpty == true) {
             dailyActivityMap[dateMapId].insert(ac.id, ac);
@@ -116,7 +120,10 @@ class DishRepository extends BaseRepository implements IDishRepository {
   @override
   Future<Result<Map<DateTime, DailyFoodModel>>> syncData() async {
     try {
-      List<DailyFoodModel> localList = await _iDishDao.getDailyFoodModelList();
+      List<DailyFoodModel> localList = await _iDishDao.getDailyFoodModelList(
+        CalendarUtils.getFirstDateOfPreviousMonth(),
+        CalendarUtils.getLastDateOfNextMonth()
+      );
       List<DailyFoodModel> notSavedList =
           localList.where((p) => !p.synced).toList();
       List<DailyFoodModel> syncedList = [];
@@ -129,7 +136,10 @@ class DishRepository extends BaseRepository implements IDishRepository {
 
       await _iDishDao.saveDailyFoodModelList(syncedList);
 
-      final newSyncedLocalList = await _iDishDao.getDailyFoodModelList();
+      final newSyncedLocalList = await _iDishDao.getDailyFoodModelList(
+          CalendarUtils.getFirstDateOfPreviousMonth(),
+          CalendarUtils.getLastDateOfNextMonth()
+      );
       Map<DateTime, DailyFoodModel> map = {};
       newSyncedLocalList.forEach((d) {
         map[d.dateTime] = d;
@@ -204,10 +214,19 @@ class DishRepository extends BaseRepository implements IDishRepository {
   }
 
   @override
-  Future<Result<List<FoodModel>>> getFoodCompoundModelList() async {
+  Future<Result<List<FoodModel>>> getFoodCompoundModelList(
+      {bool forceReload: false}) async {
     try {
-      final res = await _dishApi.getFoodCompoundModelList();
-      return ResultSuccess(value: res);
+      List<FoodModel> list = [];
+      if (!forceReload) {
+        list = await _iDishDao.getFoodCompoundModelList();
+      }
+      if (list.isEmpty) {
+        final res = await _dishApi.getFoodCompoundModelList();
+        await _iDishDao.clearFoodCompoundModelList();
+        await _iDishDao.saveFoodCompoundModelList(res);
+      }
+      return ResultSuccess(value: list);
     } catch (ex) {
       return resultError(ex);
     }

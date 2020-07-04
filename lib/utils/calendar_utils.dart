@@ -65,11 +65,11 @@ class CalendarUtils {
       return datetime1.year > datetime2.year ? 1 : -1;
     } else if (datetime1.month != datetime2.month) {
       return datetime1.month > datetime2.month ? 1 : -1;
-    }  else
+    } else
       return 0;
   }
 
-  static DateTime getFirstDateOfMonthAgo() {
+  static DateTime getFirstDateOfPreviousMonth() {
     DateTime now = DateTime.now();
     int year = now.month == DateTime.january ? now.year - 1 : now.year;
     int month =
@@ -78,7 +78,48 @@ class CalendarUtils {
     return DateTime(year, month, day);
   }
 
-  static DateTime getLastDateOfMonthLater() {
+  static DateTime getFirstDateOfNextMonth() {
+    DateTime now = DateTime.now();
+    int year = now.month == DateTime.december ? now.year + 1 : now.year;
+    int month =
+    now.month == DateTime.december ? DateTime.january : now.month + 1;
+    int day = 1;
+    return DateTime(year, month, day);
+  }
+
+  static DateTime getFirstDateOfMonth({DateTime dateTime}) {
+    DateTime now = dateTime ?? DateTime.now();
+    int day = 1;
+    return DateTime(now.year, now.month, day);
+  }
+
+  static DateTime getLastDateOfMonth({DateTime dateTime}) {
+    DateTime now = dateTime ?? DateTime.now();
+    int day = now.day;
+    if ([
+      DateTime.january,
+      DateTime.march,
+      DateTime.may,
+      DateTime.july,
+      DateTime.august,
+      DateTime.october,
+      DateTime.december
+    ].contains(now.month))
+      day = 31;
+    else if ([
+      DateTime.april,
+      DateTime.june,
+      DateTime.september,
+      DateTime.november
+    ].contains(now.month))
+      day = 30;
+    else {
+      day = _isLeapYear(now) ? 29 : 28;
+    }
+    return DateTime(now.year, now.month, day);
+  }
+
+  static DateTime getLastDateOfNextMonth() {
     DateTime now = DateTime.now();
     int year = now.month == DateTime.december ? now.year + 1 : now.year;
     int month =
@@ -100,7 +141,36 @@ class CalendarUtils {
       DateTime.september,
       DateTime.november
     ].contains(month))
+      day = 30;
+    else {
+      day = _isLeapYear(now) ? 29 : 28;
+    }
+    return DateTime(year, month, day);
+  }
+
+  static DateTime getLastDateOfPreviousMonth() {
+    DateTime now = DateTime.now();
+    int year = now.month == DateTime.january ? now.year - 1 : now.year;
+    int month =
+        now.month == DateTime.january ? DateTime.december : now.month - 1;
+    int day = now.day;
+    if ([
+      DateTime.january,
+      DateTime.march,
+      DateTime.may,
+      DateTime.july,
+      DateTime.august,
+      DateTime.october,
+      DateTime.december
+    ].contains(month))
       day = 31;
+    else if ([
+      DateTime.april,
+      DateTime.june,
+      DateTime.september,
+      DateTime.november
+    ].contains(month))
+      day = 30;
     else {
       day = _isLeapYear(now) ? 29 : 28;
     }

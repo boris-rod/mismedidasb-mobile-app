@@ -48,6 +48,7 @@ class DailyFoodModel {
   bool synced;
   bool headerExpanded;
   bool showKCalPercentages;
+
 //  double currentCaloriesSum;
 //  double currentProteinsSum;
 //  double currentCarbohydratesSum;
@@ -65,34 +66,34 @@ class DailyFoodModel {
   double get currentProteinsSum => dailyActivityFoodModelList.isEmpty
       ? 0.0
       : dailyActivityFoodModelList.length == 1
-      ? dailyActivityFoodModelList[0].proteinsSum
-      : dailyActivityFoodModelList
-      .map((d) => d.proteinsSum)
-      .reduce((v1, v2) => v1 + v2);
+          ? dailyActivityFoodModelList[0].proteinsSum
+          : dailyActivityFoodModelList
+              .map((d) => d.proteinsSum)
+              .reduce((v1, v2) => v1 + v2);
 
   double get currentCarbohydratesSum => dailyActivityFoodModelList.isEmpty
       ? 0.0
       : dailyActivityFoodModelList.length == 1
-      ? dailyActivityFoodModelList[0].carbohydratesSum
-      : dailyActivityFoodModelList
-      .map((d) => d.caloriesSum)
-      .reduce((v1, v2) => v1 + v2);
+          ? dailyActivityFoodModelList[0].carbohydratesSum
+          : dailyActivityFoodModelList
+              .map((d) => d.carbohydratesSum)
+              .reduce((v1, v2) => v1 + v2);
 
   double get currentFatSum => dailyActivityFoodModelList.isEmpty
       ? 0.0
       : dailyActivityFoodModelList.length == 1
-      ? dailyActivityFoodModelList[0].fatSum
-      : dailyActivityFoodModelList
-      .map((d) => d.fatSum)
-      .reduce((v1, v2) => v1 + v2);
+          ? dailyActivityFoodModelList[0].fatSum
+          : dailyActivityFoodModelList
+              .map((d) => d.fatSum)
+              .reduce((v1, v2) => v1 + v2);
 
   double get currentFiberSum => dailyActivityFoodModelList.isEmpty
       ? 0.0
       : dailyActivityFoodModelList.length == 1
-      ? dailyActivityFoodModelList[0].fiberSum
-      : dailyActivityFoodModelList
-      .map((d) => d.fiberSum)
-      .reduce((v1, v2) => v1 + v2);
+          ? dailyActivityFoodModelList[0].fiberSum
+          : dailyActivityFoodModelList
+              .map((d) => d.fiberSum)
+              .reduce((v1, v2) => v1 + v2);
 
   DailyActivityFoodModel get hasFoods => dailyActivityFoodModelList
           .firstWhere((dA) => dA.foods.isNotEmpty, orElse: () {
@@ -128,6 +129,27 @@ class DailyActivityFoodModel {
 //  double proteins;
 //  double fat;
 //  double fiber;
+
+  double get activityFoodCalories => id == 0
+      ? plan.breakFastCalVal ?? 1
+      : (id == 1
+              ? plan.snack1CalVal ?? 1
+              : (id == 2
+                  ? plan.lunchCalVal ?? 1
+                  : (id == 3
+                      ? plan.snack2CalVal ?? 1
+                      : plan.dinnerCalVal ?? 1))) ??
+          1;
+
+  double get activityFoodCaloriesOffSet => id == 0
+      ? plan.breakFastCalValExtra ?? 1
+      : (id == 1
+          ? plan.snack1CalValExtra ?? 1
+          : (id == 2
+              ? plan.lunchCalValExtra ?? 1
+              : (id == 3
+                  ? plan.snack2CalValExtra ?? 1
+                  : plan.dinnerCalValExtra ?? 1)));
 
   double get caloriesSum => proteinsSum + carbohydratesSum + fatSum;
 
@@ -167,13 +189,13 @@ class DailyActivityFoodModel {
                   ?.reduce((value, element) => value + element) ??
               1;
 
-  int foodsProteinsPercentage;
-  int foodsCarbohydratesPercentage;
-  int foodsFiberPercentage;
-
-  double proteinsDishCalories;
-  double fiberDishCalories;
-  double carbohydratesDishCalories;
+//  int foodsProteinsPercentage;
+//  int foodsCarbohydratesPercentage;
+//  int foodsFiberPercentage;
+//
+//  double proteinsDishCalories;
+//  double fiberDishCalories;
+//  double carbohydratesDishCalories;
 
   String get name => id == 0
       ? R.string.breakfast
@@ -182,14 +204,6 @@ class DailyActivityFoodModel {
           : (id == 2
               ? R.string.lunch
               : (id == 3 ? R.string.snack2 : R.string.dinner)));
-
-//  double activityCalories() {
-//    double cal = 0;
-//    foods.forEach((f) {
-//      cal += f.caloriesFixed;
-//    });
-//    return cal;
-//  }
 
   double get activityCalories => foods.isEmpty
       ? 0.0
@@ -200,26 +214,10 @@ class DailyActivityFoodModel {
               .toList()
               .reduce((c1, c2) => c1 + c2);
 
-  double get getActivityFoodCaloriesOffSet => id == 0
-      ? plan.breakFastCalValExtra
-      : (id == 1
-          ? plan.snack1CalValExtra
-          : (id == 2
-              ? plan.lunchCalValExtra
-              : (id == 3 ? plan.snack2CalValExtra : plan.dinnerCalValExtra)));
-
   double get getCurrentCaloriesPercentageByFood =>
       activityCalories *
       100 /
-      (getActivityFoodCalories + getActivityFoodCaloriesOffSet);
-
-  double get getActivityFoodCalories => id == 0
-      ? plan.breakFastCalVal
-      : (id == 1
-          ? plan.snack1CalVal
-          : (id == 2
-              ? plan.lunchCalVal
-              : (id == 3 ? plan.snack2CalVal : plan.dinnerCalVal)));
+      (activityFoodCalories + activityFoodCaloriesOffSet);
 
   DailyActivityFoodModel(
       {this.id,
@@ -374,9 +372,8 @@ class CreateDailyPlanModel {
   static CreateDailyPlanModel fromDailyFoodModel(DailyFoodModel model) {
     bool isBalancedPlan = false;
     final currentCaloriesSum = model.currentCaloriesSum;
-    bool kCalAll =
-        currentCaloriesSum > model.dailyFoodPlanModel.kCalMin &&
-            currentCaloriesSum <= model.dailyFoodPlanModel.kCalMax;
+    bool kCalAll = currentCaloriesSum > model.dailyFoodPlanModel.kCalMin &&
+        currentCaloriesSum <= model.dailyFoodPlanModel.kCalMax;
 
     double proteinPer = model.currentProteinsSum *
         100 /

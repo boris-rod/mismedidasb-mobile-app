@@ -15,7 +15,8 @@ class DishDao extends IDishDao {
   DishDao(this._appDatabase, this._foodConverter);
 
   @override
-  Future<List<DailyFoodModel>> getDailyFoodModelList() async {
+  Future<List<DailyFoodModel>> getDailyFoodModelList(
+      DateTime start, DateTime end) async {
     List<DailyFoodModel> list = [];
     try {
       Database db = await _appDatabase.db;
@@ -24,7 +25,8 @@ class DishDao extends IDishDao {
         final value = map[DBConstants.data_key];
         final DailyFoodModel obj =
             _foodConverter.fromJsonDailyFoodModel(jsonDecode(value));
-        list.add(obj);
+        if (CalendarUtils.compare(obj.dateTime,start) >= 0 &&
+            CalendarUtils.compare(obj.dateTime, end) <= 0) list.add(obj);
       });
     } catch (ex) {
       print(ex.toString());
@@ -185,17 +187,42 @@ class DishDao extends IDishDao {
 
   @override
   Future<List<FoodModel>> getFoodCompoundModelList() async {
+    List<FoodModel> list = [];
     try {
       Database db = await _appDatabase.db;
-      await db.delete(DBConstants.food_compound_table);
-      return [];
+      final data = await db.query(DBConstants.food_compound_table);
+      data.forEach((map) {
+        final value = map[DBConstants.data_key];
+        final FoodModel obj =
+            _foodConverter.fromJsonFoodModel(jsonDecode(value), fromAPI: false);
+        list.add(obj);
+      });
+    } catch (ex) {}
+    return list;
+  }
+
+  @override
+  Future<bool> saveFoodCompoundModelList(List<FoodModel> list) async {
+    try {
+      Database db = await _appDatabase.db;
+      list.forEach((model) async {
+        final map = {
+          DBConstants.id_key: model.id,
+          DBConstants.data_key:
+              jsonEncode(_foodConverter.toJsonFoodModel(model)),
+          DBConstants.parent_key: model.id,
+        };
+        await db.insert(DBConstants.food_compound_table, map,
+            conflictAlgorithm: ConflictAlgorithm.replace);
+      });
+      return true;
     } catch (ex) {
-      return [];
+      return false;
     }
   }
 
   @override
-  Future<bool> saveFoodCompoundModelList() async {
+  Future<bool> clearFoodCompoundModelList() async {
     try {
       Database db = await _appDatabase.db;
       await db.delete(DBConstants.food_compound_table);

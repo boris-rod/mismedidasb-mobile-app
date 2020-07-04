@@ -54,7 +54,7 @@ class _TXComboProgressBarWidgetState extends State<TXComboProgressBarWidget> {
         LinearPercentIndicator(
           lineHeight: widget.height ?? 20,
           linearStrokeCap: LinearStrokeCap.butt,
-          backgroundColor: R.color.food_blue_light,
+          backgroundColor: widget.backgroundProgress ?? R.color.food_blue_lightest,
           progressColor: color,
           padding: EdgeInsets.all(0),
           animation: false,
@@ -64,7 +64,7 @@ class _TXComboProgressBarWidgetState extends State<TXComboProgressBarWidget> {
           left: 15,
           top: widget.height == 20 ? 4 : 2,
           child: TXTextWidget(
-            text: widget.title,
+            text: "${widget.title}",
             color: Colors.black,
             fontWeight: FontWeight.bold,
             size: 10,

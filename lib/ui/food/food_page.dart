@@ -219,16 +219,16 @@ class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
                                                         .getCurrentCaloriesPercentageByFood,
                                                     mark1: widget
                                                             .dailyActivityFoodModel
-                                                            .getActivityFoodCalories -
+                                                            .activityFoodCalories -
                                                         widget
                                                             .dailyActivityFoodModel
-                                                            .getActivityFoodCaloriesOffSet,
+                                                            .activityFoodCaloriesOffSet,
                                                     mark2: widget
                                                             .dailyActivityFoodModel
-                                                            .getActivityFoodCalories +
+                                                            .activityFoodCalories +
                                                         widget
                                                             .dailyActivityFoodModel
-                                                            .getActivityFoodCaloriesOffSet,
+                                                            .activityFoodCaloriesOffSet,
                                                     height: 15,
                                                     value: widget
                                                         .dailyActivityFoodModel
@@ -305,8 +305,9 @@ class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
                                                                                 value.partialValue;
                                                                           });
                                                                         },
-                                                                        title:
-                                                                            R.string.quantity,
+                                                                        title: R
+                                                                            .string
+                                                                            .quantity,
                                                                         initialId:
                                                                             selectorList[3].id,
                                                                       );

@@ -54,15 +54,36 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   String userName = "";
   bool profileLoaded = false;
   bool conceptsLoaded = false;
+  bool plansBulk1Loaded = false;
+  bool plansBulk2Loaded = false;
+  bool plansBulk3Loaded = false;
 
   void loadHomeData() async {
     isLoading = true;
     profileLoaded = false;
     conceptsLoaded = false;
-    _iDishRepository.getPlansMergedAPI(CalendarUtils.getFirstDateOfMonthAgo(), CalendarUtils.getLastDateOfMonthLater(), forceReload: true);
-    _iDishRepository.getFoodModelList(forceReload: true);
-    _iDishRepository.getTagList(forceReload: true);
+    plansBulk1Loaded = false;
+    plansBulk2Loaded = false;
+    plansBulk3Loaded = false;
 
+//    final now = DateTime.now();
+//    _iDishRepository.getPlansMergedAPI(
+//        CalendarUtils.getFirstDateOfMonth(dateTime: now),
+//        CalendarUtils.getLastDateOfMonth(dateTime: now),
+//        forceReload: true);
+//    _iDishRepository.getPlansMergedAPI(CalendarUtils.getFirstDateOfNextMonth(),
+//        CalendarUtils.getLastDateOfNextMonth(),
+//        forceReload: true);
+//    _iDishRepository.getPlansMergedAPI(
+//        CalendarUtils.getFirstDateOfPreviousMonth(),
+//        CalendarUtils.getLastDateOfPreviousMonth(),
+//        forceReload: true);
+//    _iDishRepository.getFoodModelList(forceReload: true);
+//    _iDishRepository.getTagList(forceReload: true);
+
+    loadPlansBulk1();
+    loadPlansBulk2();
+    loadPlansBulk3();
     loadProfile();
     loadConcepts();
 //    final profileRes = await _iUserRepository.getProfile();
@@ -103,11 +124,44 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 //    isLoading = false;
   }
 
+  void loadPlansBulk1() async {
+    final now = DateTime.now();
+    await _iDishRepository.getPlansMergedAPI(
+        CalendarUtils.getFirstDateOfMonth(dateTime: now),
+        CalendarUtils.getLastDateOfMonth(dateTime: now),
+        forceReload: true);
+    plansBulk1Loaded = true;
+    if (conceptsLoaded && profileLoaded && plansBulk2Loaded && plansBulk3Loaded)
+      isLoading = false;
+  }
+
+  void loadPlansBulk2() async {
+    await _iDishRepository.getPlansMergedAPI(
+        CalendarUtils.getFirstDateOfNextMonth(),
+        CalendarUtils.getLastDateOfNextMonth(),
+        forceReload: true);
+    plansBulk2Loaded = true;
+    if (conceptsLoaded && profileLoaded && plansBulk1Loaded && plansBulk3Loaded)
+      isLoading = false;
+  }
+
+  void loadPlansBulk3() async {
+    await _iDishRepository.getPlansMergedAPI(
+        CalendarUtils.getFirstDateOfPreviousMonth(),
+        CalendarUtils.getLastDateOfPreviousMonth(),
+        forceReload: true);
+    plansBulk3Loaded = true;
+    if (conceptsLoaded && profileLoaded && plansBulk1Loaded && plansBulk2Loaded)
+      isLoading = false;
+  }
+
   void loadProfile() async {
     final profileRes = await _iUserRepository.getProfile();
     profileLoaded = true;
-    if(conceptsLoaded)
-      isLoading = false;
+    if (conceptsLoaded &&
+        plansBulk1Loaded &&
+        plansBulk2Loaded &&
+        plansBulk3Loaded) isLoading = false;
     if (profileRes is ResultSuccess<UserModel>) {
       bool hasPlani = false;
       final plani = profileRes.value.subscriptions.firstWhere(
@@ -141,7 +195,7 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   void loadConcepts() async {
     final res = await _iHealthConceptRepository.getHealthConceptList();
     conceptsLoaded = true;
-    if(profileLoaded){
+    if (profileLoaded) {
       isLoading = false;
     }
     if (res is ResultSuccess<List<HealthConceptModel>>) {

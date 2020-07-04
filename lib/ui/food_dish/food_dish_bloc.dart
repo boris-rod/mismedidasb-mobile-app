@@ -72,15 +72,22 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   DateTime firstDateHealthResult = DateTime.now();
   bool isCopying = false;
   double imc = 1;
+  double kCal = 1;
 
   void loadInitialData() async {
+    ///Pre loading compound foods
+    _iDishRepository.getFoodCompoundModelList();
+
     dailyFoodModelMap = {};
-    firstDate = CalendarUtils.getFirstDateOfMonthAgo();
-    lastDate = CalendarUtils.getLastDateOfMonthLater();
+
+    firstDate = CalendarUtils.getFirstDateOfPreviousMonth();
+    lastDate = CalendarUtils.getLastDateOfNextMonth();
+
 //    tagsLoaded = false;
 //    foodsLoaded = false;
     showResume = await _sharedPreferencesManager.getShowDailyResume();
     imc = await _sharedPreferencesManager.getIMC();
+    kCal = await _sharedPreferencesManager.getDailyKCal();
 
     isLoading = true;
     firstDateHealthResult =
@@ -94,14 +101,27 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
         .getBoolValue(SharedKey.kCalPercentageHide);
     _kCalPercentageHideController.sinkAddSafe(kCalPercentageHide);
 
-    final resPlans =
-        await _iDishRepository.getPlansMergedAPI(firstDate, lastDate);
-    if (resPlans is ResultSuccess<Map<DateTime, DailyFoodModel>>) {
-      dailyFoodModelMap = resPlans.value;
-    }
-
-    loadDailyPlanData();
+    await Future.delayed(Duration(milliseconds: 200), () async {
+      final resPlans =
+          await _iDishRepository.getPlansMergedAPI(firstDate, lastDate);
+      if (resPlans is ResultSuccess<Map<DateTime, DailyFoodModel>>) {
+        dailyFoodModelMap.addAll(resPlans.value);
+      }
+      loadDailyPlanData();
+    });
     isLoading = false;
+  }
+
+  void loadPlansBulks1()async{
+
+  }
+
+  void loadPlansBulks2()async{
+
+  }
+
+  void loadPlansBulks3()async{
+
   }
 
   void loadDailyPlanData() {
@@ -121,33 +141,33 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 //    daily.currentFatSum = 0;
 //    daily.currentFiberSum = 0;
 
-    daily.dailyActivityFoodModelList.forEach((dA) {
-      dA.proteinsDishCalories = 0;
-      dA.fiberDishCalories = 0;
-      dA.carbohydratesDishCalories = 0;
+//    daily.dailyActivityFoodModelList.forEach((dA) {
+//      dA.proteinsDishCalories = 0;
+//      dA.fiberDishCalories = 0;
+//      dA.carbohydratesDishCalories = 0;
 
-      final double activityFoodCalories = getActivityFoodCalories(dA);
+//      final double activityFoodCalories = dA.activityFoodCalories;
 
-      double car = 0;
-      double fat = 0;
-      double fib = 0;
-      double pro = 0;
-      dA.foods.forEach((f) {
-        car += f.carbohydrates * f.count;
-        fat += f.fat * f.count;
-        fib += f.fiber * f.count;
-        pro += f.proteins * f.count;
+//      double car = 0;
+//      double fat = 0;
+//      double fib = 0;
+//      double pro = 0;
+//      dA.foods.forEach((f) {
+//        car += f.carbohydrates * f.count;
+//        fat += f.fat * f.count;
+//        fib += f.fiber * f.count;
+//        pro += f.proteins * f.count;
 
-        if (f.tag.id == RemoteConstants.proteins_category_code) {
-          dA.proteinsDishCalories += f.caloriesFixed;
-        } else if (f.tag.id == RemoteConstants.carbohydrate_fat_category_code ||
-            f.tag.id == RemoteConstants.milk_category_code ||
-            f.tag.id == RemoteConstants.soft_drinks_category_code) {
-          dA.fiberDishCalories += f.caloriesFixed;
-        } else if (f.tag.id == RemoteConstants.fiber_category_code) {
-          dA.carbohydratesDishCalories += f.caloriesFixed;
-        }
-      });
+//        if (f.tag.id == RemoteConstants.proteins_category_code) {
+//          dA.proteinsDishCalories += f.caloriesFixed;
+//        } else if (f.tag.id == RemoteConstants.carbohydrate_fat_category_code ||
+//            f.tag.id == RemoteConstants.milk_category_code ||
+//            f.tag.id == RemoteConstants.soft_drinks_category_code) {
+//          dA.fiberDishCalories += f.caloriesFixed;
+//        } else if (f.tag.id == RemoteConstants.fiber_category_code) {
+//          dA.carbohydratesDishCalories += f.caloriesFixed;
+//        }
+//      });
 
 //      dA.proteins = pro * 4;
 //      dA.carbohydrates = car * 4;
@@ -155,19 +175,29 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 //      dA.fiber = fib;
 //      dA.calories = dA.fat + dA.proteins + dA.carbohydrates;
 
-      dA.foodsProteinsPercentage =
-          (dA.proteinsDishCalories * 100 ~/ activityFoodCalories).toInt();
-      dA.foodsCarbohydratesPercentage =
-          (dA.carbohydratesDishCalories * 100 ~/ activityFoodCalories).toInt();
-      dA.foodsFiberPercentage =
-          (dA.fiberDishCalories * 100 ~/ activityFoodCalories).toInt();
+//      dA.foodsProteinsPercentage =
+//          ((dA.proteinsDishCalories > 0 ? dA.proteinsDishCalories : 1) *
+//                  100 ~/
+//                  activityFoodCalories)
+//              .toInt();
+//      dA.foodsCarbohydratesPercentage = ((dA.carbohydratesDishCalories > 0
+//                  ? dA.carbohydratesDishCalories
+//                  : 1) *
+//              100 ~/
+//              activityFoodCalories)
+//          .toInt();
+//      dA.foodsFiberPercentage =
+//          ((dA.fiberDishCalories > 0 ? dA.fiberDishCalories : 1) *
+//                  100 ~/
+//                  activityFoodCalories)
+//              .toInt();
 //
 //      daily.currentCaloriesSum += dA.caloriesSum;
 //      daily.currentProteinsSum += dA.proteinsSum;
 //      daily.currentCarbohydratesSum += dA.carbohydratesSum;
 //      daily.currentFatSum += dA.fatSum;
 //      daily.currentFiberSum += dA.fiberSum;
-    });
+//    });
 
 //    CreateDailyPlanModel createPlan = CreateDailyPlanModel.fromDailyFoodModel(daily);
 //    print(createPlan.toString());
@@ -188,31 +218,31 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 //    rootModel.currentFatSum = rootModel.currentFatSum - model.fatSum;
 //    rootModel.currentFiberSum = rootModel.currentFiberSum - model.fiberSum;
 
-    model.proteinsDishCalories = 0;
-    model.fiberDishCalories = 0;
-    model.carbohydratesDishCalories = 0;
+//    model.proteinsDishCalories = 0;
+//    model.fiberDishCalories = 0;
+//    model.carbohydratesDishCalories = 0;
 
-    double car = 0;
-    double fat = 0;
-    double fib = 0;
-    double pro = 0;
+//    double car = 0;
+//    double fat = 0;
+//    double fib = 0;
+//    double pro = 0;
 
-    model.foods.forEach((f) {
-      car += f.carbohydrates * f.count;
-      fat += f.fat * f.count;
-      pro += f.proteins * f.count;
-      fib += f.fiber * f.count;
-
-      if (f.tag.id == RemoteConstants.proteins_category_code) {
-        model.proteinsDishCalories += f.caloriesFixed;
-      } else if (f.tag.id == RemoteConstants.carbohydrate_fat_category_code ||
-          f.tag.id == RemoteConstants.milk_category_code ||
-          f.tag.id == RemoteConstants.soft_drinks_category_code) {
-        model.carbohydratesDishCalories += f.caloriesFixed;
-      } else if (f.tag.id == RemoteConstants.fiber_category_code) {
-        model.fiberDishCalories += f.caloriesFixed;
-      }
-    });
+//    model.foods.forEach((f) {
+//      car += f.carbohydrates * f.count;
+//      fat += f.fat * f.count;
+//      pro += f.proteins * f.count;
+//      fib += f.fiber * f.count;
+//
+//      if (f.tag.id == RemoteConstants.proteins_category_code) {
+//        model.proteinsDishCalories += f.caloriesFixed;
+//      } else if (f.tag.id == RemoteConstants.carbohydrate_fat_category_code ||
+//          f.tag.id == RemoteConstants.milk_category_code ||
+//          f.tag.id == RemoteConstants.soft_drinks_category_code) {
+//        model.carbohydratesDishCalories += f.caloriesFixed;
+//      } else if (f.tag.id == RemoteConstants.fiber_category_code) {
+//        model.fiberDishCalories += f.caloriesFixed;
+//      }
+//    });
 
 //    model.proteins = pro * 4;
 //    model.carbohydrates = car * 4;
@@ -220,13 +250,13 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 //    model.fiber = fib;
 //    model.calories = model.fat + model.proteins + model.carbohydrates;
 
-    final double activityFoodCalories = getActivityFoodCalories(model);
-    model.foodsProteinsPercentage =
-        (model.proteinsDishCalories * 100 ~/ activityFoodCalories).toInt();
-    model.foodsCarbohydratesPercentage =
-        (model.carbohydratesDishCalories * 100 ~/ activityFoodCalories).toInt();
-    model.foodsFiberPercentage =
-        (model.fiberDishCalories * 100 ~/ activityFoodCalories).toInt();
+//    final double activityFoodCalories = model.activityFoodCalories;
+//    model.foodsProteinsPercentage =
+//        (model.proteinsDishCalories * 100 ~/ activityFoodCalories).toInt();
+//    model.foodsCarbohydratesPercentage =
+//        (model.carbohydratesDishCalories * 100 ~/ activityFoodCalories).toInt();
+//    model.foodsFiberPercentage =
+//        (model.fiberDishCalories * 100 ~/ activityFoodCalories).toInt();
 
 //    rootModel.currentCaloriesSum += model.caloriesSum;
 //    rootModel.currentProteinsSum += model.proteinsSum;
@@ -267,7 +297,7 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
         isCopying = true;
         selectedDate = newSelectedDate;
-        loadDailyPlanData();
+        saveDailyPlan();
       } else if (daily.hasFoods != null) {
         _copyPlanController.sinkAddSafe(newSelectedDate);
       } else {
@@ -287,7 +317,7 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
         isCopying = true;
         selectedDate = newSelectedDate;
-        loadDailyPlanData();
+        saveDailyPlan();
       }
     }
   }
@@ -299,7 +329,7 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     final dishesRes = await _iDishRepository.syncData();
     if (dishesRes is ResultSuccess<Map<DateTime, DailyFoodModel>>) {
       dailyFoodModelMap = dishesRes.value;
-    }else{
+    } else {
       showErrorMessage(dishesRes);
     }
     loadDailyPlanData();
@@ -316,38 +346,12 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
         dailyModel.dailyFoodPlanModel.kCalMax;
   }
 
-  double getActivityFoodCalories(
-      DailyActivityFoodModel dailyActivityFoodModel) {
-    return dailyActivityFoodModel.id == 0
-        ? dailyActivityFoodModel.plan.breakFastCalVal
-        : (dailyActivityFoodModel.id == 1
-            ? dailyActivityFoodModel.plan.snack1CalVal
-            : (dailyActivityFoodModel.id == 2
-                ? dailyActivityFoodModel.plan.lunchCalVal
-                : (dailyActivityFoodModel.id == 3
-                    ? dailyActivityFoodModel.plan.snack2CalVal
-                    : dailyActivityFoodModel.plan.dinnerCalVal)));
-  }
-
   double getCurrentCaloriesPercentageByFood(
       DailyActivityFoodModel dailyActivityFoodModel) {
     return dailyActivityFoodModel.caloriesSum *
         100 /
-        (getActivityFoodCalories(dailyActivityFoodModel) +
-            getActivityFoodCaloriesOffSet(dailyActivityFoodModel));
-  }
-
-  double getActivityFoodCaloriesOffSet(
-      DailyActivityFoodModel dailyActivityFoodModel) {
-    return dailyActivityFoodModel.id == 0
-        ? dailyActivityFoodModel.plan.breakFastCalValExtra
-        : (dailyActivityFoodModel.id == 1
-            ? dailyActivityFoodModel.plan.snack1CalValExtra
-            : (dailyActivityFoodModel.id == 2
-                ? dailyActivityFoodModel.plan.lunchCalValExtra
-                : (dailyActivityFoodModel.id == 3
-                    ? dailyActivityFoodModel.plan.snack2CalValExtra
-                    : dailyActivityFoodModel.plan.dinnerCalValExtra)));
+        (dailyActivityFoodModel.activityFoodCalories +
+            dailyActivityFoodModel.activityFoodCaloriesOffSet);
   }
 
   Color getProgressColor(DailyFoodModel dailyModel) {
@@ -391,6 +395,12 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     await _sharedPreferencesManager.setBoolValue(
         SharedKey.kCalPercentageHide, value);
     _kCalPercentageHideController.sinkAddSafe(value);
+  }
+
+  bool enableNextMonth(){
+    final next = CalendarUtils.getLastDateOfPreviousMonth();
+    final val = CalendarUtils.compareByMonth(DateTime.now(), next);
+    return val >=0;
   }
 
   @override
