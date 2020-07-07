@@ -353,7 +353,7 @@ class _ScoreState extends StateWithBloC<ScorePage, ScoreBloC> {
                                       fontSize: FontSize.xLarge)
                                 },
                                 data:
-                                    "<b><span>${model.bestComplyEatStreak}</span></b> día${model.bestComplyEatStreak > 1 ? "s" : ""} has cumplido tu plan.",
+                                    "<b><span>${model.bestComplyEatStreak}</span></b> día${model.bestComplyEatStreak > 1 ? "s" : ""} has cumplido tu Plan de Comidas.",
                               ),
                             ),
                           ),

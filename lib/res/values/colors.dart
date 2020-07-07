@@ -32,6 +32,7 @@ class AppColor {
   final food_blue_light = Color(0xFF729BBE);
   final food_blue_lightest = Color(0xFF8EAFCB);
   final button_color = Color(0xFFFF3B3D);
+  final profile_options_color = Color(0xFF194F7D);
 
   Color get dialog_background =>
       Injector.instance.darkTheme ? Color(0xc8808080) : Color(0xc8F6F7FB);
