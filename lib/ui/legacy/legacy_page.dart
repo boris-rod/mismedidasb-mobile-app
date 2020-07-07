@@ -9,10 +9,13 @@ import 'package:mismedidasb/domain/legacy/legacy_model.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/bloc_state.dart';
 import 'package:mismedidasb/ui/_base/navigation_utils.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_action_bar_menu_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_checkbox_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_custom_action_bar.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_icon_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_main_app_bar_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
 import 'package:mismedidasb/ui/legacy/legacy_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -53,19 +56,17 @@ class _LegacyState extends StateWithBloC<LegacyPage, LegacyBloC> {
       },
       child: Stack(
         children: <Widget>[
-          TXMainAppBarWidget(
-            backgroundColorAppBar: R.color.profile_options_color,
-            title: bloc.getTitleBar(widget.contentType),
-            leading: widget.termsCondAccepted
-                ? TXIconButtonWidget(
-                    icon: Icon(Icons.arrow_back),
-                    onPressed: () {
-                      NavigationUtils.pop(context);
-                    },
-                  )
-                : null,
-            actions: <Widget>[Image.asset(R.image.logo)],
-            centeredTitle: true,
+          TXCustomActionBar(
+            actionBarColor: R.color.profile_options_color,
+            actions: <TXActionBarMenuWidget>[
+              TXActionBarMenuWidget(
+                icon: Image.asset(
+                  R.image.logo,
+                  width: 60,
+                  height: 60,
+                ),
+              )
+            ],
             body: Container(
               color: R.color.profile_options_color,
               child: StreamBuilder<LegacyModel>(
@@ -78,6 +79,12 @@ class _LegacyState extends StateWithBloC<LegacyPage, LegacyBloC> {
                           padding: EdgeInsets.symmetric(horizontal: 5),
                           child: Column(
                             children: <Widget>[
+                              TXTextWidget(
+                                text: bloc.getTitleBar(widget.contentType),
+                                size: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
                               Expanded(
                                 child: SingleChildScrollView(
                                   child: Html(

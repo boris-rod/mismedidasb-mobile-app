@@ -325,7 +325,7 @@ class StringsEs implements StringsBase {
   String get editProfile => "Editar perfil";
 
   @override
-  String get aboutUs => "Quienes somos";
+  String get aboutUs => "Quiénes somos";
 
   @override
   String get faq => "Preguntas frecuentes";
