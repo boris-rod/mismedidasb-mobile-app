@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mismedidasb/data/_shared_prefs.dart';
 import 'package:mismedidasb/data/api/remote/result.dart';
 import 'package:mismedidasb/domain/account/i_account_repository.dart';
@@ -54,6 +55,7 @@ class ProfileEditBloC extends BaseBloC
     if (res is ResultSuccess<UserModel>) {
       userEdited = true;
       _userController.sinkAddSafe(res.value);
+      Fluttertoast.showToast(msg: "Los datos del perfil fueron actualizados exitosamente.");
     } else {
       showErrorMessage(res);
     }

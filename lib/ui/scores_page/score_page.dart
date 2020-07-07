@@ -153,7 +153,7 @@ class _ScoreState extends StateWithBloC<ScorePage, ScoreBloC> {
                                             TXTextLinkWidget(
                                               textColor: R.color.accent_color,
                                               fontSize: 12,
-                                              title: "Obtén más monedas",
+                                              title: "",
                                               onTap: () {},
                                             )
                                           ],
@@ -184,6 +184,10 @@ class _ScoreState extends StateWithBloC<ScorePage, ScoreBloC> {
                                               fontWeight: FontWeight.bold,
                                               size: 10,
                                             ),
+                                            TXTextWidget(
+                                              text: "-días consecutivos-",
+                                              size: 10,
+                                            ),
                                             SizedBox(
                                               height: 10,
                                             ),
@@ -194,7 +198,7 @@ class _ScoreState extends StateWithBloC<ScorePage, ScoreBloC> {
                                                 Expanded(
                                                   flex: 1,
                                                   child: TXStatWidget(
-                                                    title: "Maxima racha",
+                                                    title: "Récord",
                                                     value: model.eatMaxStreak
                                                         .toString(),
                                                     titleSize: 10,
@@ -204,7 +208,7 @@ class _ScoreState extends StateWithBloC<ScorePage, ScoreBloC> {
                                                 Expanded(
                                                   flex: 1,
                                                   child: TXStatWidget(
-                                                    title: "Racha actual",
+                                                    title: "Actual",
                                                     value: model
                                                         .eatCurrentStreak
                                                         .toString(),
@@ -236,6 +240,10 @@ class _ScoreState extends StateWithBloC<ScorePage, ScoreBloC> {
                                               fontWeight: FontWeight.bold,
                                               size: 10,
                                             ),
+                                            TXTextWidget(
+                                              text: "-días consecutivos-",
+                                              size: 10,
+                                            ),
                                             SizedBox(
                                               height: 10,
                                             ),
@@ -246,7 +254,7 @@ class _ScoreState extends StateWithBloC<ScorePage, ScoreBloC> {
                                                 Expanded(
                                                   flex: 1,
                                                   child: TXStatWidget(
-                                                    title: "Maxima racha",
+                                                    title: "Récord",
                                                     value: model
                                                         .balancedEatMaxStreak
                                                         .toString(),
@@ -257,7 +265,7 @@ class _ScoreState extends StateWithBloC<ScorePage, ScoreBloC> {
                                                 Expanded(
                                                   flex: 1,
                                                   child: TXStatWidget(
-                                                    title: "Racha actual",
+                                                    title: "Actual",
                                                     value: model
                                                         .balancedEatCurrentStreak
                                                         .toString(),
@@ -307,16 +315,9 @@ class _ScoreState extends StateWithBloC<ScorePage, ScoreBloC> {
                                         color: Colors.orange,
                                         fontSize: FontSize.xLarge)
                                   },
-                                  data:
-                                      "Encuestas de Plani en los últimos <b><span>7</span></b> días.",
+                                  data: "Últimos <b><span>7</span></b> días.",
                                 ),
                               ),
-//                              TXTextLinkWidget(
-//                                title: "Filtrar",'
-//                                onTap: () {
-//
-//                                },
-//                              )
                             ],
                           ),
                           SizedBox(
@@ -331,71 +332,10 @@ class _ScoreState extends StateWithBloC<ScorePage, ScoreBloC> {
                             child: Container(
                               padding: EdgeInsets.symmetric(
                                   vertical: 10, horizontal: 10),
-                              child: Column(
+                              child: Row(
                                 children: <Widget>[
-                                  TXTextWidget(
-                                    text: "Estado de ánimo más frecuente",
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  Row(
-                                    children: <Widget>[
-                                      Expanded(
-                                        flex: 1,
-                                        child: Center(
-                                          child: Icon(
-                                            model.mostFrequentEmotion == -2
-                                                ? Icons
-                                                    .sentiment_very_dissatisfied
-                                                : model.mostFrequentEmotion == -1
-                                                    ? Icons
-                                                        .sentiment_dissatisfied
-                                                    : model.mostFrequentEmotion ==
-                                                            -1
-                                                        ? Icons
-                                                            .sentiment_neutral
-                                                        : model.mostFrequentEmotion ==
-                                                                -1
-                                                            ? Icons
-                                                                .sentiment_satisfied
-                                                            : Icons
-                                                                .sentiment_very_satisfied,
-                                            size: 20,
-                                            color: model.mostFrequentEmotion ==
-                                                    -2
-                                                ? Colors.red
-                                                : model.mostFrequentEmotion ==
-                                                        -1
-                                                    ? Colors.redAccent
-                                                    : model.mostFrequentEmotion ==
-                                                            -1
-                                                        ? Colors.amber
-                                                        : model.mostFrequentEmotion ==
-                                                                -1
-                                                            ? Colors.lightGreen
-                                                            : Icons
-                                                                .sentiment_very_satisfied,
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        flex: 1,
-                                        child: Center(
-                                          child: Html(
-                                            shrinkWrap: true,
-                                            style: {
-                                              "span": Style(
-                                                  color: Colors.orange,
-                                                  fontSize: FontSize.xLarge)
-                                            },
-                                            data:
-                                                "${model.mostFrequentEmotionCount}</span></b> día${model.mostFrequentEmotionCount > 1 ? "s" : ""}",
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                  )
+                                  ..._getFeelingFaces(model.mostFrequentEmotions,
+                                      model.mostFrequentEmotionCount)
                                 ],
                               ),
                             ),
@@ -413,7 +353,7 @@ class _ScoreState extends StateWithBloC<ScorePage, ScoreBloC> {
                                       fontSize: FontSize.xLarge)
                                 },
                                 data:
-                                    "Llevas <b><span>${model.bestComplyEatStreak}</span></b> día${model.bestComplyEatStreak > 1 ? "s" : ""} cumpliendo tu plan de comidas.",
+                                    "<b><span>${model.bestComplyEatStreak}</span></b> día${model.bestComplyEatStreak > 1 ? "s" : ""} has cumplido tu plan.",
                               ),
                             ),
                           ),
@@ -430,7 +370,24 @@ class _ScoreState extends StateWithBloC<ScorePage, ScoreBloC> {
                                       fontSize: FontSize.xLarge)
                                 },
                                 data:
-                                    "Llevas <b><span>${model.totalDaysPlannedSport}</span></b> día${model.totalDaysPlannedSport > 1 ? "s" : ""} planificando ejercicios físicos. Y <b><span>${model.totalDaysPlannedSport}</span></b> día${model.totalDaysPlannedSport > 1 ? "s" : ""} realizándolos.",
+                                    "<b><span>${model.totalDaysPlannedSport}</span></b> día${model.totalDaysPlannedSport > 1 ? "s" : ""} has planificado hacer ejercicios.",
+                              ),
+                            ),
+                          ),
+                          Card(
+                            color: R.color.gray_light,
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 10, horizontal: 10),
+                              child: Html(
+                                shrinkWrap: true,
+                                style: {
+                                  "span": Style(
+                                      color: Colors.orange,
+                                      fontSize: FontSize.xLarge)
+                                },
+                                data:
+                                    "<b><span>${model.totalDaysComplySportPlan}</span></b> día${model.totalDaysComplySportPlan > 1 ? "s" : ""} has hecho ejercicios.",
                               ),
                             ),
                           ),
@@ -448,5 +405,42 @@ class _ScoreState extends StateWithBloC<ScorePage, ScoreBloC> {
         )
       ],
     );
+  }
+
+  List<Widget> _getFeelingFaces(List<int> faces, int count) {
+    List<Widget> list = [];
+
+    faces.forEach((face) {
+      final w = Icon(
+        face == -2
+            ? Icons.sentiment_very_dissatisfied
+            : face == -1
+                ? Icons.sentiment_dissatisfied
+                : face == 0
+                    ? Icons.sentiment_neutral
+                    : face == 1
+                        ? Icons.sentiment_satisfied
+                        : Icons.sentiment_very_satisfied,
+        size: 30,
+        color: face == -2
+            ? Colors.red
+            : face == -1
+                ? Colors.redAccent
+                : face == 0
+                    ? Colors.amber
+                    : face == 1 ? Colors.lightGreen : Colors.green,
+      );
+      list.add(w);
+    });
+
+    list.add(Expanded(
+      child: Html(
+        shrinkWrap: true,
+        style: {"span": Style(color: Colors.orange, fontSize: FontSize.xLarge)},
+        data: "<b><span>${count}</span></b> día${count > 1 ? "s." : "."}",
+      ),
+    ));
+
+    return list;
   }
 }

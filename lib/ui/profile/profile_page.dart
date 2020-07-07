@@ -213,7 +213,7 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   TXTextWidget(
-                                    text: "@${user?.username ?? ""}",
+                                    text: user?.username?.trim()?.isNotEmpty == true ?"@${user.username}" : "",
                                     fontWeight: FontWeight.bold,
                                     size: 16,
                                   ),

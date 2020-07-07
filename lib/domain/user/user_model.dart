@@ -120,13 +120,13 @@ class SoloQuestionStatsModel {
   int bestComplyEatStreak;
   int totalDaysPlannedSport;
   int totalDaysComplySportPlan;
-  int mostFrequentEmotion;
+  List<int> mostFrequentEmotions;
   int mostFrequentEmotionCount;
 
   SoloQuestionStatsModel(
       {this.bestComplyEatStreak,
       this.totalDaysPlannedSport,
       this.totalDaysComplySportPlan,
-      this.mostFrequentEmotion,
+      this.mostFrequentEmotions,
       this.mostFrequentEmotionCount});
 }
