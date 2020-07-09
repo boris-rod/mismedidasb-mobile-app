@@ -121,7 +121,7 @@ class _MeasureHealthState
                                 ),
                                 constraints: BoxConstraints(
                                     maxWidth:
-                                        math.min(300, screenWidth * 90 / 100)),
+                                    math.min(300, screenWidth * 90 / 100)),
                               ),
                             ),
                             SizedBox(
@@ -187,9 +187,13 @@ class _MeasureHealthState
     return TXBlurWidget(
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: _getQuestions(context, pageIndex, model),
+        child: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+          padding: EdgeInsets.only(bottom: 30),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: _getQuestions(context, pageIndex, model),
+          ),
         ),
       ),
     );

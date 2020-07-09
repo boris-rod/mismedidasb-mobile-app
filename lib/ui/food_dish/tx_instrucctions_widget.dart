@@ -15,10 +15,10 @@ class TXInstructionsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.topLeft,
-      color: Colors.white,
+      color: R.color.profile_options_color,
       child: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
-        padding: EdgeInsets.only(left: 10, right: 10,bottom: 30),
+        padding: EdgeInsets.only(left: 10, right: 10, bottom: 30),
         child: Column(
           children: <Widget>[
             Row(
@@ -30,13 +30,13 @@ class TXInstructionsWidget extends StatelessWidget {
                     maxLines: 2,
                     textOverflow: TextOverflow.ellipsis,
                     size: 18,
-                    color: Colors.black,
+                    color: Colors.white,
                   ),
                 ),
                 Container(
                   child: TXTextLinkWidget(
                     title: R.string.ok,
-                    textColor: R.color.primary_color,
+                    textColor: R.color.gray_light,
                     onTap: () {
                       NavigationUtils.pop(context);
                     },
@@ -47,7 +47,7 @@ class TXInstructionsWidget extends StatelessWidget {
             Container(
               child: Html(
                 data: instructions,
-                style: {"color": Style(color: Colors.black)},
+                style: {"p": Style(color: Colors.white)},
               ),
             ),
             SizedBox(
@@ -57,7 +57,7 @@ class TXInstructionsWidget extends StatelessWidget {
               textAlign: TextAlign.center,
               text: R.string.appClinicalWarning,
               size: 10,
-              color: R.color.accent_color,
+              color: R.color.gray_light,
             ),
           ],
         ),

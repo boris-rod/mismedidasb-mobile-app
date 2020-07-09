@@ -95,7 +95,7 @@ class UserConverter implements IUserConverter {
         bestComplyEatStreak: json["bestComplyEatStreak"],
         totalDaysPlannedSport: json["totalDaysPlannedSport"],
         totalDaysComplySportPlan: json["totalDaysComplySportPlan"],
-        mostFrequentEmotion: json["mostFrequentEmotion"],
+        mostFrequentEmotions: List.from(json["mostFrequentEmotions"]),
         mostFrequentEmotionCount: json["mostFrequentEmotionCount"]);
     return model;
   }

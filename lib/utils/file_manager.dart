@@ -18,25 +18,13 @@ class FileManager {
   static Future<File> getImageFromSource(
       BuildContext context, ImageSource source) async {
     try {
-      final File image = await ImagePicker.pickImage(source: source);
+      final picker = ImagePicker();
+      final pickedFile = await picker.getImage(source: source);
 
-      if (image == null) {
-        if (source == ImageSource.gallery &&
-            !await Permission.storage.isGranted) {
-          _showPermissionRequired(
-              context: context, content: R.string.galleryPermissionContent);
-        } else if (source == ImageSource.camera &&
-            !await Permission.camera.isGranted) {
-          _showPermissionRequired(
-              context: context, content: R.string.cameraPermissionContent);
-        }
-        return image;
+      if (pickedFile.path?.isNotEmpty == true) {
+        return File(pickedFile.path);
       }
-//      String fileName = "${CalendarUtils.getTimeIdBasedSeconds()}.png";
-//      String rootDir = await getRootFilesDir();
-//      File file = await image.copy("$rootDir/$fileName");
-
-      return image;
+      return null;
     } catch (ex) {
       if (ex is PlatformException) {
         if (ex.code == "photo_access_denied" ||

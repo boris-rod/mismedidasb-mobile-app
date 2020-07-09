@@ -9,7 +9,7 @@ Widget showSnackBar({String title = "", String content = ""}) {
     content: Container(
       constraints: BoxConstraints(maxHeight: 80),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Container(
             child: Image.asset(
@@ -22,7 +22,8 @@ Widget showSnackBar({String title = "", String content = ""}) {
               child: Container(
             width: double.infinity,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 TXTextWidget(
                   maxLines: 1,

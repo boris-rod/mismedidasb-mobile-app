@@ -65,8 +65,18 @@ class UserRepository extends BaseRepository implements IUserRepository {
   Future<Result<UsernameSuggestionModel>> usernameValidation(
       int userId, String email, String username, String fullName) async {
     try {
-      final result = await _iUserApi.usernameValidation(
-          userId, email, username, fullName);
+      final result =
+          await _iUserApi.usernameValidation(userId, email, username, fullName);
+      return Result.success(value: result);
+    } catch (ex) {
+      return resultError(ex);
+    }
+  }
+
+  @override
+  Future<Result<SoloQuestionStatsModel>> getSoloQuestionStats(int daysAgo) async {
+    try {
+      final result = await _iUserApi.getSoloQuestionStats(daysAgo);
       return Result.success(value: result);
     } catch (ex) {
       return resultError(ex);

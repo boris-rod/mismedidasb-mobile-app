@@ -15,6 +15,8 @@ abstract class IUserRepository {
 
   Future<Result<ScoreModel>> getScores();
 
+  Future<Result<SoloQuestionStatsModel>> getSoloQuestionStats(int daysAgo);
+
   Future<Result<UsernameSuggestionModel>> usernameValidation(
       int userId, String email, String username, String fullName);
 }

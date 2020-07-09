@@ -337,6 +337,11 @@ class _PollNotificationState
                       }
                     },
                     onRatingUpdate: (rating) {
+                      bloc.emotionValue = rating == 1
+                          ? -2
+                          : rating == 2
+                              ? -1
+                              : rating == 3 ? 0 : rating == 4 ? 1 : 2;
                       setState(() {
 //          _rating = rating;
                       });

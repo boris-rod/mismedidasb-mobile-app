@@ -16,7 +16,8 @@ class UserApi extends BaseApi implements IUserApi {
   final NetworkHandler _networkHandler;
   final SharedPreferencesManager _sharedPreferencesManager;
 
-  UserApi(this._iUserConverter, this._networkHandler, this._sharedPreferencesManager);
+  UserApi(this._iUserConverter, this._networkHandler,
+      this._sharedPreferencesManager);
 
   @override
   Future<UserModel> getProfile() async {
@@ -68,12 +69,11 @@ class UserApi extends BaseApi implements IUserApi {
   }
 
   @override
-  Future<ScoreModel> getScores() async{
-    final userId = await _sharedPreferencesManager.getIntValue(SharedKey.userId);
+  Future<ScoreModel> getScores() async {
+    final userId =
+        await _sharedPreferencesManager.getIntValue(SharedKey.userId);
     final res = await _networkHandler.get(
-      path: Endpoint.scores,
-      params: "?userId=$userId"
-    );
+        path: Endpoint.scores, params: "?userId=$userId");
     if (res.statusCode == RemoteConstants.code_success)
       return _iUserConverter
           .fromJsonScore(jsonDecode(res.body)[RemoteConstants.result]);
@@ -85,13 +85,26 @@ class UserApi extends BaseApi implements IUserApi {
   Future<UsernameSuggestionModel> usernameValidation(
       int userId, String email, String username, String fullName) async {
     final res = await _networkHandler.get(
-      path: Endpoint.username_validation,
-      params: "?userId=$userId&username=$username&fullName=$fullName&email=$email"
-    );
+        path: Endpoint.username_validation,
+        params:
+            "?userId=$userId&username=$username&fullName=$fullName&email=$email");
     if (res.statusCode == RemoteConstants.code_success) {
       return _iUserConverter
           .fromJsonUsernameSuggestionModel(jsonDecode(res.body)["result"]);
     }
     throw serverException(res);
+  }
+
+  @override
+  Future<SoloQuestionStatsModel> getSoloQuestionStats(int daysAgo) async {
+    final userId =
+        await _sharedPreferencesManager.getIntValue(SharedKey.userId);
+    final res = await _networkHandler.get(
+        path: Endpoint.solo_question_stats, params: "/$userId/extended?lastNDays=$daysAgo");
+    if (res.statusCode == RemoteConstants.code_success)
+      return _iUserConverter.fromJsonSoloQuestionStats(
+          jsonDecode(res.body)[RemoteConstants.result]);
+    else
+      throw serverException(res);
   }
 }
