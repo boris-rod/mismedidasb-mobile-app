@@ -241,8 +241,12 @@ abstract class StringsBase implements WidgetsLocalizations {
   String get caloric;
 
   String get quantity;
+
   String get atLeastOneFood;
+
   String get foodPortionMajorThan1;
+
   String get add;
+
   String get edit;
 }

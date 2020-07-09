@@ -124,7 +124,12 @@ class _FoodAddEditState
                                           children: <Widget>[
                                             Container(
                                               color: R.color.gray_light,
-                                              child: widget.foodModel == null
+                                              child: (widget.foodModel ==
+                                                          null ||
+                                                      !widget.foodModel.image
+                                                              .startsWith(
+                                                                  "https://") ==
+                                                          true)
                                                   ? Center(
                                                       child: snapshot.data.image
                                                               .isEmpty
