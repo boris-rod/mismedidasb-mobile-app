@@ -76,7 +76,7 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
   void loadInitialData() async {
     ///Pre loading compound foods
-    _iDishRepository.getFoodCompoundModelList();
+    _iDishRepository.getFoodCompoundModelList(forceReload: true);
 
     dailyFoodModelMap = {};
 

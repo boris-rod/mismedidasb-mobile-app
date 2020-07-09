@@ -16,7 +16,7 @@ abstract class IDishRepository {
 
   Future<Result<List<FoodModel>>> getFoodModelList({bool forceReload: false});
 
-  Future<Result<List<FoodModel>>> getFoodCompoundModelList();
+  Future<Result<List<FoodModel>>> getFoodCompoundModelList({bool forceReload: false});
 
   Future<Result<bool>> createFoodCompoundModelList(
       CreateFoodCompoundModel model);

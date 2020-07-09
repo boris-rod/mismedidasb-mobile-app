@@ -225,6 +225,7 @@ class DishRepository extends BaseRepository implements IDishRepository {
         final res = await _dishApi.getFoodCompoundModelList();
         await _iDishDao.clearFoodCompoundModelList();
         await _iDishDao.saveFoodCompoundModelList(res);
+        list = res;
       }
       return ResultSuccess(value: list);
     } catch (ex) {

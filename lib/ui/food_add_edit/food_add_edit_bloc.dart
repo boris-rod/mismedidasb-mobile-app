@@ -87,7 +87,6 @@ class FoodAddEditBloC extends BaseBloC
     } else {
       showErrorMessage(res);
     }
-    reload = true;
     isLoading = false;
   }
 
@@ -129,7 +128,9 @@ class FoodAddEditBloC extends BaseBloC
           } else
             showErrorMessage(res);
         }
-      } catch (ex) {}
+      } catch (ex) {
+        print(ex.toString());
+      }
       isLoading = false;
     }
   }

@@ -345,6 +345,8 @@ class NetworkHandler {
           _url,
           data: formData,
         );
+        _logger.log("-> RESPONSE: ${res.data}");
+        _logger.log("-> RESPONSE CODE: ${res.statusCode}");
         return res.statusCode;
       } else {
         final res = await dio.post(

@@ -42,7 +42,7 @@ class _FoodAddEditState
   final TextEditingController _nameController = TextEditingController();
   final _keyFormFood = new GlobalKey<FormState>();
 
-  void _navBack() async {
+  void _navBack() {
     if (!bloc.reload && widget.foodModel != null) {
       bloc.currentFoodModel.children = bloc.currentChildren;
       bloc.currentFoodModel.children.forEach((f) => f.isSelected = true);

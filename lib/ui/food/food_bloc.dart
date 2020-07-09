@@ -71,7 +71,7 @@ class FoodBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   }
 
   void loadData(List<FoodModel> selectedItems, FoodFilterMode foodFilterMode,
-      int foodFilterCategoryIndex) async {
+      int foodFilterCategoryIndex, {bool forceReload = false}) async {
     isLoading = true;
 //    imc = await _sharedPreferencesManager.getIMC();
     kCalPercentageHide = await _sharedPreferencesManager
@@ -90,7 +90,7 @@ class FoodBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
       foodsAll.addAll(foodsRes.value);
     }
 
-    final foodsCompoundRes = await _iDishRepository.getFoodCompoundModelList();
+    final foodsCompoundRes = await _iDishRepository.getFoodCompoundModelList(forceReload:  forceReload);
     if (foodsCompoundRes is ResultSuccess<List<FoodModel>>) {
       foodsAll.addAll(foodsCompoundRes.value);
     }

@@ -103,11 +103,12 @@ class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
                       } else {
                         final res = await NavigationUtils.push(
                             context, FoodAddEditPage());
-                        if (res) {
+                        if (res ?? false) {
                           bloc.loadData(
                               widget.selectedItems,
                               widget.foodFilterMode,
-                              widget.foodFilterCategoryIndex);
+                              widget.foodFilterCategoryIndex,
+                              forceReload: true);
                         }
                       }
                     },
@@ -518,9 +519,10 @@ class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
                       FoodAddEditPage(
                         foodModel: model,
                       ));
-                  if (res) {
+                  if (res ?? false) {
                     bloc.loadData(widget.selectedItems, widget.foodFilterMode,
-                        widget.foodFilterCategoryIndex);
+                        widget.foodFilterCategoryIndex,
+                        forceReload: true);
                   }
                 },
                 title: TXTextWidget(
