@@ -57,6 +57,7 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   bool plansBulk1Loaded = false;
   bool plansBulk2Loaded = false;
   bool plansBulk3Loaded = false;
+  bool termsAccepted = false;
 
   void loadHomeData() async {
     isLoading = true;
@@ -164,6 +165,7 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
         plansBulk3Loaded) isLoading = false;
     if (profileRes is ResultSuccess<UserModel>) {
       bool hasPlani = false;
+      termsAccepted = profileRes.value.termsAndConditionsAccepted;
       final plani = profileRes.value.subscriptions.firstWhere(
           (element) => element.product == 'VIRTUAL_ASESSOR', orElse: () {
         return null;

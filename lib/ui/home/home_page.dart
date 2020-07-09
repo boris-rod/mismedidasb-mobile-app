@@ -28,6 +28,7 @@ import 'package:mismedidasb/ui/food_craving/food_craving_page.dart';
 import 'package:mismedidasb/ui/food_dish/food_dish_page.dart';
 import 'package:mismedidasb/ui/habit/habit_page.dart';
 import 'package:mismedidasb/ui/home/home_bloc.dart';
+import 'package:mismedidasb/ui/legacy/legacy_page.dart';
 import 'package:mismedidasb/ui/login/login_page.dart';
 import 'package:mismedidasb/ui/measure_health/measure_health_page.dart';
 import 'package:mismedidasb/ui/measure_value/measure_value_page.dart';
@@ -89,14 +90,26 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
                 ),
                 onTap: () async {
 //                  NavigationUtils.push(context, PollNotificationPage());
-                  final res =
-                      await NavigationUtils.push(context, ProfilePage());
-                  if (res is SettingAction) {
-                    if (res == SettingAction.logout ||
-                        res == SettingAction.removeAccount) {
-                      NavigationUtils.pushReplacement(context, LoginPage());
-                    } else if (res == SettingAction.languageCodeChanged) {
-                      bloc.loadHomeData();
+                  if (!bloc.termsAccepted) {
+                    final res = await NavigationUtils.push(
+                        context,
+                        LegacyPage(
+                          contentType: 1,
+                          termsCondAccepted: false,
+                        ));
+                    if (res ?? false) {
+                      bloc.termsAccepted = true;
+                    }
+                  } else {
+                    final res =
+                        await NavigationUtils.push(context, ProfilePage());
+                    if (res is SettingAction) {
+                      if (res == SettingAction.logout ||
+                          res == SettingAction.removeAccount) {
+                        NavigationUtils.pushReplacement(context, LoginPage());
+                      } else if (res == SettingAction.languageCodeChanged) {
+                        bloc.loadHomeData();
+                      }
                     }
                   }
                 },
@@ -148,63 +161,75 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
         width: screenW / totalRowCount,
         height: screenW / totalRowCount,
         child: _getHomeButton(model, () async {
-          Widget page;
-          if (model.codeName == RemoteConstants.concept_health_measure)
-            page = MeasureHealthPage(
-              conceptModel: model,
-            );
-          else if (model.codeName == RemoteConstants.concept_values_measure)
-            page = MeasureValuePage(
-              conceptModel: model,
-            );
-          else if (model.codeName == RemoteConstants.concept_wellness_measure)
-            page = MeasureWellnessPage(
-              conceptModel: model,
-            );
-          else if (model.codeName == RemoteConstants.concept_dishes)
-            page = FoodDishPage(
-              instructions: model.instructions,
-            );
-          else if (model.codeName == RemoteConstants.concept_habits)
-            page = HabitPage(
-              conceptModel: model,
-            );
-          else if (model.codeName == RemoteConstants.concept_craving)
-            page = FoodCravingPage(
-              conceptModel: model,
-            );
-          if (page != null) {
-            if (page is FoodDishPage && !(await bloc.canNavigateToDishes())) {
-              showTXModalBottomSheet(
-                  context: context,
-                  builder: (ctx) {
-                    return TXBottomResultInfo(
-                      content: R.string.fillHealthPoll,
-                      height: 200,
-                      title: R.string.foodInstructionsTitle,
-                    );
-                  });
-            } else {
-              final res = await NavigationUtils.push(context, page);
-              if (res is PollResponseModel && res.reward.points > 0) {
-                if (page is MeasureHealthPage) {
-                  _keyHome.currentState.showSnackBar(showSnackBar(
-                      title: "${R.string.congratulations} ${bloc.userName}",
-                      content:
-                          "${R.string.rewardGain} ${res.reward.points} ${R.string.rewardGainPoints}"));
-                } else if (page is MeasureValuePage) {
-                  _keyHome.currentState.showSnackBar(showSnackBar(
-                      title: "${R.string.congratulations} ${bloc.userName}",
-                      content:
-                          "${R.string.rewardGain} ${res.reward.points} ${R.string.rewardGainPoints}"));
-                } else if (page is MeasureWellnessPage) {
-                  _keyHome.currentState.showSnackBar(showSnackBar(
-                      title: "${R.string.congratulations} ${bloc.userName}",
-                      content:
-                          "${R.string.rewardGain} ${res.reward.points} ${R.string.rewardGainPoints}"));
+          if (!bloc.termsAccepted) {
+            final res = await NavigationUtils.push(
+                context,
+                LegacyPage(
+                  contentType: 1,
+                  termsCondAccepted: false,
+                ));
+            if (res ?? false) {
+              bloc.termsAccepted = true;
+            }
+          } else {
+            Widget page;
+            if (model.codeName == RemoteConstants.concept_health_measure)
+              page = MeasureHealthPage(
+                conceptModel: model,
+              );
+            else if (model.codeName == RemoteConstants.concept_values_measure)
+              page = MeasureValuePage(
+                conceptModel: model,
+              );
+            else if (model.codeName == RemoteConstants.concept_wellness_measure)
+              page = MeasureWellnessPage(
+                conceptModel: model,
+              );
+            else if (model.codeName == RemoteConstants.concept_dishes)
+              page = FoodDishPage(
+                instructions: model.instructions,
+              );
+            else if (model.codeName == RemoteConstants.concept_habits)
+              page = HabitPage(
+                conceptModel: model,
+              );
+            else if (model.codeName == RemoteConstants.concept_craving)
+              page = FoodCravingPage(
+                conceptModel: model,
+              );
+            if (page != null) {
+              if (page is FoodDishPage && !(await bloc.canNavigateToDishes())) {
+                showTXModalBottomSheet(
+                    context: context,
+                    builder: (ctx) {
+                      return TXBottomResultInfo(
+                        content: R.string.fillHealthPoll,
+                        height: 200,
+                        title: R.string.foodInstructionsTitle,
+                      );
+                    });
+              } else {
+                final res = await NavigationUtils.push(context, page);
+                if (res is PollResponseModel && res.reward.points > 0) {
+                  if (page is MeasureHealthPage) {
+                    _keyHome.currentState.showSnackBar(showSnackBar(
+                        title: "${R.string.congratulations} ${bloc.userName}",
+                        content:
+                            "${R.string.rewardGain} ${res.reward.points} ${R.string.rewardGainPoints}"));
+                  } else if (page is MeasureValuePage) {
+                    _keyHome.currentState.showSnackBar(showSnackBar(
+                        title: "${R.string.congratulations} ${bloc.userName}",
+                        content:
+                            "${R.string.rewardGain} ${res.reward.points} ${R.string.rewardGainPoints}"));
+                  } else if (page is MeasureWellnessPage) {
+                    _keyHome.currentState.showSnackBar(showSnackBar(
+                        title: "${R.string.congratulations} ${bloc.userName}",
+                        content:
+                            "${R.string.rewardGain} ${res.reward.points} ${R.string.rewardGainPoints}"));
+                  }
                 }
+                Utils.setStatusBarColor(R.color.primary_dark_color);
               }
-              Utils.setStatusBarColor(R.color.primary_dark_color);
             }
           }
         }),

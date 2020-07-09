@@ -122,6 +122,7 @@ class _LegacyState extends StateWithBloC<LegacyPage, LegacyBloC> {
                                       child: TXCheckBoxWidget(
                                         text: R.string.iAgree,
                                         leading: true,
+                                        textColor: Colors.white,
                                         value: false,
                                         onChange: (value) {
                                           bloc.acceptTermsCond();
