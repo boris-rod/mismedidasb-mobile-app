@@ -1,3 +1,4 @@
+import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mismedidasb/data/_shared_prefs.dart';
 import 'package:mismedidasb/data/api/remote/remote_constanst.dart';
@@ -73,8 +74,9 @@ class LoginBloC extends BaseBloC
         await _sharedPreferencesManager.getSaveCredentials();
     final previousUserId = await _sharedPreferencesManager.getIntValue(SharedKey.userId);
 
+    final String currentTimeZone = await FlutterNativeTimezone.getLocalTimezone();
     final res = await _iSessionRepository.login(
-        LoginModel(email: email, password: password), saveCredentials);
+        LoginModel(email: email, password: password, timezone: currentTimeZone), saveCredentials);
     if (res is ResultSuccess<UserModel>) {
       //Cleaning DB in case of different user login
       if (previousUserId != res.value.id) {

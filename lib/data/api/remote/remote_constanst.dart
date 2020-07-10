@@ -53,6 +53,7 @@ class RemoteConstants {
   static const first_date_health_result = 'firstHealthMeasured';
   static const imc = 'imc';
   static const password = 'password';
+  static const timezone = 'timezone';
   static const confirmation_password = 'confirmationPassword';
   static const language = 'language';
   static const terms_cond = 'termsAndConditionsAccepted';

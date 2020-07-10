@@ -58,9 +58,9 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
       }
     });
 
-    onPollNotificationLaunch.listen((value) {
-      NavigationUtils.push(context, PollNotificationPage());
-    });
+//    onPollNotificationLaunch.listen((value) {
+//      NavigationUtils.push(context, PollNotificationPage());
+//    });
   }
 
   @override

@@ -7,7 +7,8 @@ class SessionConverter implements ISessionConverter {
   Map<String, dynamic> toJsonLoginModel(LoginModel loginModel) {
     return {
       RemoteConstants.email: loginModel.email,
-      RemoteConstants.password: loginModel.password
+      RemoteConstants.password: loginModel.password,
+      RemoteConstants.timezone: loginModel.timezone
     };
   }
 

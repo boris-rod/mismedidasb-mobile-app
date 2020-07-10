@@ -28,8 +28,8 @@ class SessionApi extends BaseApi implements ISessionApi {
     if (res.statusCode == RemoteConstants.code_success) {
       final token = res.headers["authorization"];
       final refreshToken = res.headers["refreshtoken"];
-      _sharedPreferencesManager.setAccessToken(token);
-      _sharedPreferencesManager.setRefreshToken(refreshToken);
+      await _sharedPreferencesManager.setAccessToken(token);
+      await _sharedPreferencesManager.setRefreshToken(refreshToken);
       return _iUserConverter
           .fromJson(jsonDecode(res.body)[RemoteConstants.result]);
     } else

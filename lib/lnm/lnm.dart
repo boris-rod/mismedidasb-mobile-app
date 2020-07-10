@@ -60,7 +60,7 @@ class LNM implements ILNM {
         if (payload == pollNotificationId.toString()) {
           await _sharedPreferencesManager.setBoolValue(
               SharedKey.launchNotiPoll, true);
-          onPollNotificationLaunch.sinkAddSafe(true);
+//          onPollNotificationLaunch.sinkAddSafe(true);
         }
 //        onNotiTap(payload);
 //        Fluttertoast.showToast(msg: payload);
@@ -104,7 +104,7 @@ class LNM implements ILNM {
   @override
   Future<void> initPollNotificationReminders() async {
     final exist = await checkIfPendingNotificationExist(pollNotificationId);
-    final planiId = await _sharedPreferencesManager.getIntValue(SharedKey.planiId);
+//    final hasPlaniVirtualAssesor = await _sharedPreferencesManager.getBoolValue(SharedKey.hasPlaniVirtualAssesor);
     if (exist) return;
     final String userName =
         await _sharedPreferencesManager.getStringValue(SharedKey.userName);
