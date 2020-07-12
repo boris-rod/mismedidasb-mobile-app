@@ -36,6 +36,8 @@ class AppColor {
 
   Color get dialog_background =>
       Injector.instance.darkTheme ? Color(0xc8808080) : Color(0xc8F6F7FB);
+
+  Color get discover_background => Color(0xe8101010) ;
   Color get blue_transparent => Color(0xc8448AFF);
 
   AppColor();

@@ -17,6 +17,7 @@ import 'package:mismedidasb/ui/_base/navigation_utils.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_action_bar_menu_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_bottom_result_info.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_bottom_sheet.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_custom_action_bar.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_icon_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';
@@ -24,9 +25,11 @@ import 'package:mismedidasb/ui/_tx_widget/tx_main_app_bar_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_network_image.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_show_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_textlink_widget.dart';
 import 'package:mismedidasb/ui/food_craving/food_craving_page.dart';
 import 'package:mismedidasb/ui/food_dish/food_dish_page.dart';
 import 'package:mismedidasb/ui/habit/habit_page.dart';
+import 'package:mismedidasb/ui/home/hole_puncher.dart';
 import 'package:mismedidasb/ui/home/home_bloc.dart';
 import 'package:mismedidasb/ui/legacy/legacy_page.dart';
 import 'package:mismedidasb/ui/login/login_page.dart';
@@ -145,9 +148,60 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
               ),
             ),
           ),
+//          Container(child: HolePuncher()),
+//          Positioned(
+//            bottom: 0,
+//            left: 0,
+//            child: Container(
+//                height: 30,
+//                child: TXTextLinkWidget(
+//                  title: "Saltar",
+//                  onTap: () {
+//                    Fluttertoast.showToast(msg: "Saltar");
+//                  },
+//                )),
+//          ),
+//          Positioned(
+//            bottom: 0,
+//            right: 0,
+//            child: Container(
+//              height: 30,
+//              child: TXButtonWidget(
+//                title: "Entiendo",
+//                onPressed: () {
+//                  Fluttertoast.showToast(msg: "Entiendo");
+//                },
+//              ),
+//            ),
+//          ),
+//          Positioned(
+//            bottom: 10,
+//            left: 150,
+//            child: Row(
+//              children: <Widget>[
+//                CircleAvatar(
+//                  radius: 3,
+//                  backgroundColor: R.color.gray_light,
+//                ),
+//                SizedBox(width: 3,),
+//                CircleAvatar(
+//                  radius: 3,
+//                  backgroundColor: R.color.gray_dark,
+//                ),
+//                SizedBox(width: 3,),
+//                CircleAvatar(
+//                  radius: 3,
+//                  backgroundColor: R.color.gray_dark,
+//                )
+//              ],
+//            ),
+//          ),
           TXLoadingWidget(
             loadingStream: bloc.isLoadingStream,
-          )
+          ),
+//          Container(
+//            color: R.color.discover_background,
+//          ),
         ],
       ),
     );
