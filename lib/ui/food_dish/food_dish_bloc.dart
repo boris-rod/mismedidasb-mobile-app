@@ -38,9 +38,11 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
   Stream<int> get pageResult => _pageController.stream;
 
-  BehaviorSubject<int> _calendarPageController = new BehaviorSubject();
+  BehaviorSubject<Map<DateTime, List<DailyFoodModel>>> _calendarPageController =
+      new BehaviorSubject();
 
-  Stream<int> get calendarPageResult => _calendarPageController.stream;
+  Stream<Map<DateTime, List<DailyFoodModel>>> get calendarPageResult =>
+      _calendarPageController.stream;
 
   BehaviorSubject<DailyFoodModel> _calendarOptionsController =
       new BehaviorSubject();
@@ -65,6 +67,7 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 //  bool foodsLoaded = false;
   bool showResume = false;
   int currentPage = 0;
+  int currentCalendarPage = 0;
   Map<DateTime, DailyFoodModel> dailyFoodModelMap = {};
   DateTime selectedDate = DateTime.now();
   DateTime firstDate = DateTime.now();
@@ -102,26 +105,14 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     _kCalPercentageHideController.sinkAddSafe(kCalPercentageHide);
 
     await Future.delayed(Duration(milliseconds: 200), () async {
-      final resPlans =
-          await _iDishRepository.getPlansMergedAPI(firstDate, lastDate);
+      final now = DateTime.now();
+      final resPlans = await _iDishRepository.getPlansMergedAPI(now, now);
       if (resPlans is ResultSuccess<Map<DateTime, DailyFoodModel>>) {
         dailyFoodModelMap.addAll(resPlans.value);
       }
       loadDailyPlanData();
     });
     isLoading = false;
-  }
-
-  void loadPlansBulks1()async{
-
-  }
-
-  void loadPlansBulks2()async{
-
-  }
-
-  void loadPlansBulks3()async{
-
   }
 
   void loadDailyPlanData() {
@@ -280,6 +271,20 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
         return null;
       });
       DailyFoodModel daily = dailyFoodModelMap[key];
+//      if (daily == null) {
+//        final kCalPercentageHide = await _sharedPreferencesManager
+//            .getBoolValue(SharedKey.kCalPercentageHide);
+//
+//        final plan = DailyFoodPlanModel();
+//        final da = DailyFoodModel(
+//            dateTime: newSelectedDate,
+//            dailyActivityFoodModelList:
+//                DailyActivityFoodModel.getDailyActivityFoodModelList(
+//                    plan, newSelectedDate),
+//            dailyFoodPlanModel: plan,
+//            showKCalPercentages: kCalPercentageHide);
+//        daily = da;
+//      }
       if (forceCopy) {
         daily.synced = false;
         daily.dailyActivityFoodModelList[0].foods =
@@ -365,16 +370,112 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
             : Colors.redAccent);
   }
 
-  void changePage(int value) {
+  void changePage(int value) async {
     currentPage = value;
     _pageController.sinkAddSafe(currentPage);
+    if (value == 1) {
+      changeCalendarPage();
+    }
   }
 
-  void changeCalendarPage(bool next) async {
-//    final currentPage = await calendarPageResult.first;
-//    if(next && currentPage < 1){
-//      _calendarPageController.sinkAddSafe(currentPage + 1);
+  bool plansBulk1Loaded = false;
+  bool plansBulk2Loaded = false;
+  bool plansBulk3Loaded = false;
+
+  void changeCalendarPage() async {
+    isLoading = true;
+//    final firstDate = currentCalendarPage == 1
+//        ? CalendarUtils.getFirstDateOfNextMonth()
+//        : currentCalendarPage == -1
+//            ? CalendarUtils.getFirstDateOfPreviousMonth()
+//            : CalendarUtils.getFirstDateOfMonth();
+//
+//    final lastDate = currentCalendarPage == 1
+//        ? CalendarUtils.getLastDateOfNextMonth()
+//        : currentCalendarPage == -1
+//            ? CalendarUtils.getLastDateOfPreviousMonth()
+//            : CalendarUtils.getLastDateOfMonth();
+//
+//    final resPlans = await _iDishRepository.getPlansMergedAPI(
+//      firstDate,
+//      lastDate,
+//    );
+//    if (resPlans is ResultSuccess<Map<DateTime, DailyFoodModel>>) {
+//      dailyFoodModelMap.removeWhere(
+//          (key, value) => CalendarUtils.compareByMonth(firstDate, key) == 0);
+//      dailyFoodModelMap.addAll(resPlans.value);
+//      Map<DateTime, List<DailyFoodModel>> map = {};
+//      resPlans.value.forEach((key, value) {
+//        map[key] = [value];
+//      });
+//      _calendarPageController.sinkAddSafe(map);
 //    }
+//
+//    isLoading = false;
+    loadPlansBulk1();
+    loadPlansBulk2();
+    loadPlansBulk3();
+  }
+
+  void loadPlansBulk1() async {
+    final firstD = CalendarUtils.getFirstDateOfMonth();
+    final lastD = CalendarUtils.getLastDateOfMonth();
+    final resPlans = await _iDishRepository.getPlansMergedAPI(
+        firstD, lastD,);
+    plansBulk1Loaded = true;
+    if (resPlans is ResultSuccess<Map<DateTime, DailyFoodModel>>) {
+      dailyFoodModelMap.removeWhere(
+          (key, value) => CalendarUtils.compareByMonth(firstD, key) == 0);
+      dailyFoodModelMap.addAll(resPlans.value);
+      Map<DateTime, List<DailyFoodModel>> map = {};
+      dailyFoodModelMap.forEach((key, value) {
+        map[key] = [value];
+      });
+      _calendarPageController.sinkAddSafe(map);
+    }
+    if (plansBulk2Loaded && plansBulk3Loaded) {
+      isLoading = false;
+    }
+  }
+
+  void loadPlansBulk2() async {
+    final firstD = CalendarUtils.getFirstDateOfNextMonth();
+    final lastD = CalendarUtils.getLastDateOfNextMonth();
+    final resPlans = await _iDishRepository.getPlansMergedAPI(
+        firstD,
+        lastD,);
+    plansBulk2Loaded = true;
+    if (resPlans is ResultSuccess<Map<DateTime, DailyFoodModel>>) {
+      dailyFoodModelMap.removeWhere(
+          (key, value) => CalendarUtils.compareByMonth(firstD, key) == 0);
+      dailyFoodModelMap.addAll(resPlans.value);
+      Map<DateTime, List<DailyFoodModel>> map = {};
+      dailyFoodModelMap.forEach((key, value) {
+        map[key] = [value];
+      });
+      _calendarPageController.sinkAddSafe(map);
+    }
+    if (plansBulk1Loaded && plansBulk3Loaded) isLoading = false;
+  }
+
+  void loadPlansBulk3() async {
+    final firstD = CalendarUtils.getFirstDateOfPreviousMonth();
+    final lastD = CalendarUtils.getLastDateOfPreviousMonth();
+    final resPlans = await _iDishRepository.getPlansMergedAPI(
+        firstD,
+        lastD,);
+    plansBulk3Loaded = true;
+    if (resPlans is ResultSuccess<Map<DateTime, DailyFoodModel>>) {
+      dailyFoodModelMap.removeWhere(
+          (key, value) => CalendarUtils.compareByMonth(firstD, key) == 0);
+      dailyFoodModelMap.addAll(resPlans.value);
+      Map<DateTime, List<DailyFoodModel>> map = {};
+      dailyFoodModelMap.forEach((key, value) {
+        map[key] = [value];
+      });
+      _calendarPageController.sinkAddSafe(map);
+    }
+    if (plansBulk1Loaded && plansBulk2Loaded) isLoading = false;
   }
 
   Map<DateTime, List<DailyFoodModel>> getEvents() {
@@ -397,10 +498,10 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     _kCalPercentageHideController.sinkAddSafe(value);
   }
 
-  bool enableNextMonth(){
+  bool enableNextMonth() {
     final next = CalendarUtils.getLastDateOfPreviousMonth();
     final val = CalendarUtils.compareByMonth(DateTime.now(), next);
-    return val >=0;
+    return val >= 0;
   }
 
   @override
