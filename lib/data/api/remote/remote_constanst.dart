@@ -54,6 +54,7 @@ class RemoteConstants {
   static const imc = 'imc';
   static const password = 'password';
   static const timezone = 'userTimeZone';
+  static const timezoneOffset = 'userTimeZoneOffset';
   static const confirmation_password = 'confirmationPassword';
   static const language = 'language';
   static const terms_cond = 'termsAndConditionsAccepted';

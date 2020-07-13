@@ -59,39 +59,49 @@ class LoginBloC extends BaseBloC
     _saveCredentialsController.sinkAddSafe(value);
   }
 
-  Future<String> userEmail()async{
+  Future<String> userEmail() async {
     return await _sharedPreferencesManager.getUserEmail();
   }
 
-  Future<String> userPassword()async{
+  Future<String> userPassword() async {
     return await _sharedPreferencesManager.getPassword();
   }
-
 
   void login(String email, String password) async {
     isLoading = true;
     final saveCredentials =
         await _sharedPreferencesManager.getSaveCredentials();
-    final previousUserId = await _sharedPreferencesManager.getIntValue(SharedKey.userId);
+    final previousUserId =
+        await _sharedPreferencesManager.getIntValue(SharedKey.userId);
 
-    final String currentTimeZone = await FlutterNativeTimezone.getLocalTimezone();
+    final String currentTimeZone =
+        await FlutterNativeTimezone.getLocalTimezone();
     final res = await _iSessionRepository.login(
-        LoginModel(email: email, password: password, timezone: currentTimeZone), saveCredentials);
+        LoginModel(
+            email: email,
+            password: password,
+            timezone: currentTimeZone,
+            userTimeZoneOffset: DateTime.now().timeZoneOffset.inHours),
+        saveCredentials);
     if (res is ResultSuccess<UserModel>) {
       //Cleaning DB in case of different user login
       if (previousUserId != res.value.id) {
         await _iCommonRepository.cleanDB();
       }
-      _sharedPreferencesManager.setTermsCond(res.value.termsAndConditionsAccepted);
+      _sharedPreferencesManager
+          .setTermsCond(res.value.termsAndConditionsAccepted);
       _loginController.sinkAddSafe(res.value.termsAndConditionsAccepted
           ? LOGIN_RESULT.HOME
           : LOGIN_RESULT.TERMS_COND);
     } else {
-      if (res is ResultError && (res as ResultError).code == RemoteConstants.code_forbidden) {
+      if (res is ResultError &&
+          (res as ResultError).code == RemoteConstants.code_forbidden) {
         _loginController.sinkAddSafe(LOGIN_RESULT.CONFIRMATION_CODE);
-      } if (res is ResultError && (res as ResultError).code == RemoteConstants.code_not_found) {
+      }
+      if (res is ResultError &&
+          (res as ResultError).code == RemoteConstants.code_not_found) {
         _loginController.sinkAddSafe(LOGIN_RESULT.REGISTER);
-      }else
+      } else
         showErrorMessage(res);
     }
     isLoading = false;

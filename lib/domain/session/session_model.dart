@@ -5,8 +5,9 @@ class LoginModel {
   String email;
   String password;
   String timezone;
+  int userTimeZoneOffset;
 
-  LoginModel({this.email, this.password, this.timezone});
+  LoginModel({this.email, this.password, this.timezone, this.userTimeZoneOffset});
 }
 
 class ValidateTokenModel {

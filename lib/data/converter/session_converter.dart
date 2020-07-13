@@ -8,7 +8,8 @@ class SessionConverter implements ISessionConverter {
     return {
       RemoteConstants.email: loginModel.email,
       RemoteConstants.password: loginModel.password,
-      RemoteConstants.timezone: loginModel.timezone
+      RemoteConstants.timezone: loginModel.timezone,
+      RemoteConstants.timezoneOffset: loginModel.userTimeZoneOffset
     };
   }
 
