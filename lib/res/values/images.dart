@@ -52,4 +52,5 @@ class AppImage {
   final add_icon = 'lib/res/assets/img/add_icon.png';
   final under_limit_icon = 'lib/res/assets/img/under_limit_icon.png';
   final bar_scroll_icon = 'lib/res/assets/img/bar_scroll_icon.png';
+  final divider_icon_yellow = 'lib/res/assets/img/divider_icon_yellow.jpeg';
 }

@@ -16,7 +16,9 @@ import 'package:mismedidasb/ui/_tx_widget/tx_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_cupertino_dialog_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_cupertino_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_divider_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_divider_widget1.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_icon_button_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_icon_navigator_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_main_app_bar_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_network_image.dart';
@@ -27,6 +29,7 @@ import 'package:mismedidasb/ui/invite_page/invite_page.dart';
 import 'package:mismedidasb/ui/legacy/legacy_page.dart';
 import 'package:mismedidasb/ui/profile/profile_bloc.dart';
 import 'package:mismedidasb/ui/profile/tx_cell_selection_option_widget.dart';
+import 'package:mismedidasb/ui/profile/tx_cell_selection_option_widget1.dart';
 import 'package:mismedidasb/ui/profile/tx_stat_widget.dart';
 import 'package:mismedidasb/ui/profile_edit/profile_edit_page.dart';
 import 'package:mismedidasb/ui/scores_page/score_page.dart';
@@ -66,18 +69,22 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
         children: <Widget>[
           TXMainAppBarWidget(
             scaffoldKey: _keyInviteProfile,
-            leading: TXIconButtonWidget(
-              icon: Icon(Icons.arrow_back),
-              onPressed: () {
-                _navBack();
-              },
+            backgroundColorAppBar: R.color.food_action_bar,
+            titleFont: FontWeight.w300,
+            leading: Container(
+              margin: EdgeInsets.only(left: 10),
+              child: TXIconNavigatorWidget(
+                onTap: () {
+                  _navBack();
+                },
+              ),
             ),
             title: R.string.profile,
             actions: <Widget>[
               PopupMenuButton(
                 icon: Icon(
                   Icons.more_vert,
-                  color: Colors.white,
+                  color: R.color.food_nutri_info,
                 ),
                 itemBuilder: (ctx) {
                   return [..._popupActions()];
@@ -111,160 +118,160 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                 },
               )
             ],
-            body: SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
-              padding: EdgeInsets.only(bottom: 30),
-              child: StreamBuilder<UserModel>(
-                stream: bloc.userResult,
-                initialData: UserModel(),
-                builder: (context, snapshot) {
-                  final user = snapshot.data;
-                  return Container(
-                    child: Column(
-                      children: <Widget>[
-                        Container(
-                          height: 220,
-                          color: R.color.gray_light,
-                          child: Stack(
-                            children: <Widget>[
-                              Column(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: Stack(
-                                      children: <Widget>[
-                                        Container(
-                                          child: Stack(
-                                            children: <Widget>[
-                                              TXNetworkImage(
-                                                width: double.infinity,
-                                                height: double.infinity,
-                                                imageUrl: user.avatar,
-                                                placeholderImage:
-                                                    R.image.logo,
-                                                boxFitImage: BoxFit.cover,
-                                              ),
-                                              Container(
-                                                width: double.infinity,
-                                                height: double.infinity,
-                                                color:
-                                                    R.color.dialog_background,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Container(
-                                          child: TXNetworkImage(
-                                            width: double.infinity,
-                                            height: double.infinity,
-                                            imageUrl: user.avatar,
-                                            placeholderImage: R.image.logo,
-                                          ),
-                                        )
-                                      ],
+            body: Container(
+              height: double.infinity,
+              color: R.color.profile_color,
+              child: SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
+                padding: EdgeInsets.only(bottom: 30),
+                child: StreamBuilder<UserModel>(
+                  stream: bloc.userResult,
+                  initialData: UserModel(),
+                  builder: (context, snapshot) {
+                    final user = snapshot.data;
+                    return Container(
+                      padding: EdgeInsets.all(10).copyWith(top: 30),
+                      child: Column(
+                        children: <Widget>[
+                          Container(
+                            height: 235,
+                            width: double.infinity,
+                            child: Stack(
+                              children: <Widget>[
+                                Align(
+                                  child: Container(
+                                    width: 250,
+                                    height: 200,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(4)),
+                                        border: Border.all(
+                                            color: Color(0xFF606060), width: 2),
+                                        color: R.color.gray_dark),
+                                    child: Container(
+                                      child: TXNetworkImage(
+                                        boxFitImage: BoxFit.cover,
+                                        width: double.infinity,
+                                        height: double.infinity,
+                                        imageUrl: user.avatar,
+                                        placeholderImage: R.image.logo,
+                                      ),
                                     ),
                                   ),
-                                  Container(
-                                    height: .5,
-                                    color: R.color.gray,
-                                    margin: EdgeInsets.only(bottom: 25),
-                                  )
-                                ],
-                              ),
-                              Positioned(
-                                  bottom: 0,
-                                  right: 20,
-                                  child: InkWell(
-                                    onTap: () async {
-                                      final res = await NavigationUtils.push(
-                                          context,
-                                          ProfileEditPage(
-                                            userModel:
-                                                await bloc.userResult.first,
-                                          ));
-                                      if (res != null) {
-                                        bloc.updateUser = res;
-                                      }
-                                    },
-                                    child: CircleAvatar(
-                                      radius: 25,
-                                      child: Icon(Icons.edit,
-                                          size: 25, color: Colors.white),
-                                      backgroundColor: R.color.primary_color,
-                                    ),
-                                  )),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.only(bottom: 10),
-                          color: R.color.gray_light,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              Container(
-                                child: TXNetworkImage(
-                                  width: 60,
-                                  height: 60,
-                                  imageUrl: R.image.logo,
-                                  placeholderImage: R.image.logo,
+                                  alignment: Alignment.topCenter,
                                 ),
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  TXTextWidget(
-                                    text: user?.username?.trim()?.isNotEmpty == true ?"@${user.username}" : "",
-                                    fontWeight: FontWeight.bold,
-                                    size: 16,
-                                  ),
-                                  TXTextWidget(
-                                    text: user?.fullName ?? "",
-                                    color: R.color.gray,
-                                    maxLines: 1,
-                                    textOverflow: TextOverflow.ellipsis,
-                                    size: 12,
-                                  ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  TXTextWidget(
-                                    text: user?.email ?? "---",
-                                    size: 12,
-                                  ),
-                                ],
-                              )
-                            ],
+                                Positioned(
+                                  bottom: 25,
+                                  left: 0,
+                                  right: 0,
+                                  child: TXDividerWidget1(),
+                                ),
+                                Positioned(
+                                    bottom: 0,
+                                    right: 0,
+                                    child: InkWell(
+                                      onTap: () async {
+                                        final res = await NavigationUtils.push(
+                                            context,
+                                            ProfileEditPage(
+                                              userModel:
+                                                  await bloc.userResult.first,
+                                            ));
+                                        if (res != null) {
+                                          bloc.updateUser = res;
+                                        }
+                                      },
+                                      child: CircleAvatar(
+                                        radius: 25,
+                                        child: Icon(Icons.edit,
+                                            size: 25, color: Colors.white),
+                                        backgroundColor: R.color.primary_color,
+                                      ),
+                                    ))
+                              ],
+                            ),
                           ),
-                        ),
-                        TXDividerWidget(),
-                        TXCellSelectionOptionWidget(
-                          leading: Icons.group_add,
-                          optionName: "Invita y gana una recompensa!",
-                          onOptionTap: () async {
-                            final res = await NavigationUtils.push(
-                                context, InvitePeoplePage());
-                            if (res) {
-                              _keyInviteProfile.currentState.showSnackBar(
-                                  getSnackBarWidget(
-                                      "Felicidades, será recompensado!"));
-                            }
-                          },
-                        ),
-                        TXDividerWidget(),
-                        TXCellSelectionOptionWidget(
-                          leading: Icons.contacts,
-                          optionName: "Invita a tus contactos!",
-                          onOptionTap: () {},
-                        ),
-                        TXDividerWidget(),
-                        TXCellSelectionOptionWidget(
-                          leading: Icons.school,
-                          optionName: "Ver puntuaciones",
-                          onOptionTap: () {
-                            NavigationUtils.push(context, ScorePage());
-                          },
-                        ),
-                        TXDividerWidget(),
+                          SizedBox(
+                            height: 30,
+                          ),
+                          Container(
+                            padding: EdgeInsets.only(bottom: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                Container(
+                                  child: TXNetworkImage(
+                                    width: 60,
+                                    height: 60,
+                                    imageUrl: R.image.logo,
+                                    placeholderImage: R.image.logo,
+                                  ),
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    TXTextWidget(
+                                      text:
+                                          user?.username?.trim()?.isNotEmpty ==
+                                                  true
+                                              ? "@${user.username}"
+                                              : "",
+                                      fontWeight: FontWeight.bold,
+                                      size: 16,
+                                      color: Colors.white,
+                                    ),
+                                    TXTextWidget(
+                                      text: user?.fullName ?? "",
+                                      color: Colors.white,
+                                      maxLines: 1,
+                                      textOverflow: TextOverflow.ellipsis,
+                                      size: 12,
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    TXTextWidget(
+                                      text: user?.email ?? "---",
+                                      size: 12,
+                                      color: Colors.white,
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: 30,
+                          ),
+                          TXDividerWidget1(),
+                          TXCellSelectionOptionWidget1(
+                            leading: Icons.group_add,
+                            optionName: "Invita y gana una recompensa!",
+                            onOptionTap: () async {
+                              final res = await NavigationUtils.push(
+                                  context, InvitePeoplePage());
+                              if (res) {
+                                _keyInviteProfile.currentState.showSnackBar(
+                                    getSnackBarWidget(
+                                        "Felicidades, será recompensado!"));
+                              }
+                            },
+                          ),
+                          TXDividerWidget1(),
+                          TXCellSelectionOptionWidget1(
+                            leading: Icons.contacts,
+                            optionName: "Invita a tus contactos!",
+                            onOptionTap: () {},
+                          ),
+                          TXDividerWidget1(),
+                          TXCellSelectionOptionWidget1(
+                            leading: Icons.school,
+                            optionName: "Ver puntuaciones",
+                            onOptionTap: () {
+                              NavigationUtils.push(context, ScorePage());
+                            },
+                          ),
+                          TXDividerWidget1(),
 //                        InkWell(
 //                          onTap: (){
 //
@@ -490,10 +497,11 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
 //                              ],
 //                            ),
 //                          ),
-                      ],
-                    ),
-                  );
-                },
+                        ],
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
           ),
