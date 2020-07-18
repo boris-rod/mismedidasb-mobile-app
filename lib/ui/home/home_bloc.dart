@@ -56,8 +56,6 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   bool profileLoaded = false;
   bool conceptsLoaded = false;
   bool plansBulk1Loaded = false;
-//  bool plansBulk2Loaded = false;
-//  bool plansBulk3Loaded = false;
   bool termsAccepted = false;
 
   void loadHomeData() async {
@@ -65,65 +63,9 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     profileLoaded = false;
     conceptsLoaded = false;
     plansBulk1Loaded = false;
-//    plansBulk2Loaded = false;
-//    plansBulk3Loaded = false;
-
-//    final now = DateTime.now();
-//    _iDishRepository.getPlansMergedAPI(
-//        CalendarUtils.getFirstDateOfMonth(dateTime: now),
-//        CalendarUtils.getLastDateOfMonth(dateTime: now),
-//        forceReload: true);
-//    _iDishRepository.getPlansMergedAPI(CalendarUtils.getFirstDateOfNextMonth(),
-//        CalendarUtils.getLastDateOfNextMonth(),
-//        forceReload: true);
-//    _iDishRepository.getPlansMergedAPI(
-//        CalendarUtils.getFirstDateOfPreviousMonth(),
-//        CalendarUtils.getLastDateOfPreviousMonth(),
-//        forceReload: true);
-//    _iDishRepository.getFoodModelList(forceReload: true);
-//    _iDishRepository.getTagList(forceReload: true);
-
     loadPlansBulk1();
-//    loadPlansBulk2();
-//    loadPlansBulk3();
     loadProfile();
     loadConcepts();
-//    final profileRes = await _iUserRepository.getProfile();
-//    if (profileRes is ResultSuccess<UserModel>) {
-//      bool hasPlani = false;
-//      final plani = profileRes.value.subscriptions.firstWhere(
-//          (element) => element.product == 'VIRTUAL_ASESSOR', orElse: () {
-//        return null;
-//      });
-//      if (plani != null) {
-//        hasPlani = CalendarUtils.compare(plani.validAt, DateTime.now()) >= 0;
-//      }
-//
-//      await _sharedPreferencesManager.setBoolValue(
-//          SharedKey.hasPlaniVirtualAssesor, hasPlani);
-//      if (hasPlani) {
-//        initLNM();
-//      } else {
-//        lnm.cancelAll();
-//      }
-//
-//      await _sharedPreferencesManager.setStringValue(
-//          SharedKey.userName, profileRes.value.username);
-//
-//      userName = profileRes.value.username;
-//      await _sharedPreferencesManager.setDailyKCal(profileRes.value.dailyKCal);
-//      await _sharedPreferencesManager.setIMC(profileRes.value.imc);
-//      await _sharedPreferencesManager
-//          .setFirstDateHealthResult(profileRes.value.firstDateHealthResult);
-//      final res = await _iHealthConceptRepository.getHealthConceptList();
-//      if (res is ResultSuccess<List<HealthConceptModel>>) {
-//        _conceptController.sinkAddSafe(res.value);
-//      } else
-//        showErrorMessage(res);
-//    } else
-//      showErrorMessage(profileRes);
-//
-//    isLoading = false;
   }
 
   void loadPlansBulk1() async {
@@ -133,40 +75,20 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
         now,
         forceReload: true);
     plansBulk1Loaded = true;
-    if (conceptsLoaded && profileLoaded /*&& plansBulk2Loaded && plansBulk3Loaded*/)
+    if (conceptsLoaded && profileLoaded)
       isLoading = false;
-  }
-
-  void loadPlansBulk2() async {
-//    await _iDishRepository.getPlansMergedAPI(
-//        CalendarUtils.getFirstDateOfNextMonth(),
-//        CalendarUtils.getLastDateOfNextMonth(),
-//        forceReload: true);
-//    plansBulk2Loaded = true;
-//    if (conceptsLoaded && profileLoaded && plansBulk1Loaded && plansBulk3Loaded)
-//      isLoading = false;
-  }
-
-  void loadPlansBulk3() async {
-//    await _iDishRepository.getPlansMergedAPI(
-//        CalendarUtils.getFirstDateOfPreviousMonth(),
-//        CalendarUtils.getLastDateOfPreviousMonth(),
-//        forceReload: true);
-//    plansBulk3Loaded = true;
-//    if (conceptsLoaded && profileLoaded && plansBulk1Loaded && plansBulk2Loaded)
-//      isLoading = false;
   }
 
   void loadProfile() async {
     final profileRes = await _iUserRepository.getProfile();
     profileLoaded = true;
     if (conceptsLoaded &&
-        plansBulk1Loaded /*&&
-        plansBulk2Loaded &&
-        plansBulk3Loaded*/) isLoading = false;
+        plansBulk1Loaded ) isLoading = false;
     if (profileRes is ResultSuccess<UserModel>) {
-      bool hasPlani = false;
       termsAccepted = profileRes.value.termsAndConditionsAccepted;
+
+      bool hasPlani = false;
+
       final plani = profileRes.value.subscriptions.firstWhere(
           (element) => element.product == 'VIRTUAL_ASESSOR', orElse: () {
         return null;

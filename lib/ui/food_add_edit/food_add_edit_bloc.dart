@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mismedidasb/data/api/remote/result.dart';
 import 'package:mismedidasb/domain/dish/dish_model.dart';
@@ -94,11 +95,15 @@ class FoodAddEditBloC extends BaseBloC
     String rule = "";
     if (currentFoodModel.children.isEmpty) {
       rule = R.string.atLeastOneFood;
-      Fluttertoast.showToast(msg: rule);
+      Fluttertoast.showToast(msg: rule,
+          backgroundColor: Colors.redAccent,
+          textColor: Colors.white);
     } else if (currentFoodModel.children.length == 1 &&
         currentFoodModel.children[0].count == 1) {
       rule = R.string.foodPortionMajorThan1;
-      Fluttertoast.showToast(msg: rule);
+      Fluttertoast.showToast(msg: rule,
+          backgroundColor: Colors.redAccent,
+          textColor: Colors.white);
     }
     return rule;
   }

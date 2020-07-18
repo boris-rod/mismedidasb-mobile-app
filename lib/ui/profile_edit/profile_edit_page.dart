@@ -54,187 +54,193 @@ class _ProfileEditState
 
   @override
   Widget buildWidget(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        TXMainAppBarWidget(
-          leading: TXIconButtonWidget(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              _navBack();
-            },
-          ),
-          title: R.string.editProfile,
-          body: SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-            padding: EdgeInsets.only(bottom: 30),
-            child: StreamBuilder<UserModel>(
-              stream: bloc.userResult,
-              initialData: UserModel(),
-              builder: (context, snapshot) {
-                final user = snapshot.data;
-                userNameTextController.text = user.username;
-                fullNameTextController.text = user.fullName;
-                return Form(
-                  key: _keyFormProfile,
-                  child: Container(
-                    child: Column(
-                      children: <Widget>[
-                        Container(
-                          height: 200,
-                          color: R.color.gray_light,
-                          child: Stack(
-                            children: <Widget>[
-                              TXNetworkImage(
-                                width: double.infinity,
-                                height: double.infinity,
-                                imageUrl: user.avatar,
-                                placeholderImage: R.image.logo,
-                                boxFitImage: BoxFit.cover,
-                              ),
-                              Center(
-                                child: InkWell(
-                                  onTap: () {
-                                    _showMediaSelector(context);
-                                  },
-                                  child: Icon(
-                                    Icons.photo_camera,
-                                    color: R.color.dialog_background,
-                                    size: 200,
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        TXDividerWidget(),
-                        TXCellSelectionOptionWidget(
-                          leading: Icons.visibility,
-                          optionName: R.string.changePassword,
-                          onOptionTap: () {
-                            NavigationUtils.push(
-                                context,
-                                ChangePasswordPage(
-                                  oldPassword: bloc.currentPassword,
-                                ));
-                          },
-                        ),
-                        TXDividerWidget(),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: 10),
-                          child: TXTextFieldWidget(
-                            label: "Nombre completo",
-                            iconData: Icons.text_fields,
-                            controller: fullNameTextController,
-                            textInputAction: TextInputAction.done,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        TXDividerWidget(),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: 10),
-                          child: TXTextFieldWidget(
-                            label: R.string.userName,
-                            iconData: Icons.person,
-                            controller: userNameTextController,
-                            validator: bloc.required(),
-                            textInputAction: TextInputAction.done,
-                          ),
-                        ),
-                        StreamBuilder<UsernameSuggestionModel>(
-                            stream: bloc.usernameValidationResult,
-                            initialData: null,
-                            builder: (context, snapshotSuggest) {
-                              final UsernameSuggestionModel model =
-                                  snapshotSuggest.data;
-                              return model == null
-                                  ? Container()
-                                  : Container(
-                                      width: double.infinity,
-                                      height: 50,
-                                      alignment: Alignment.centerRight,
-                                      child: TXTextLinkWidget(
-                                        textColor: R.color.primary_color,
-                                        title: "Sugerencias",
-                                        onTap: () {
-                                          List<SingleSelectionModel>
-                                              suggestions = [];
-                                          for (int i = 0;
-                                              i < model.suggestions.length;
-                                              i++) {
-                                            suggestions.add(
-                                                SingleSelectionModel(
-                                                    index: i,
-                                                    id: i,
-                                                    displayName:
-                                                        model.suggestions[i],
-                                                    isSelected: i == 0));
-                                          }
-                                          if (suggestions.isEmpty)
-                                            suggestions.add(
-                                                SingleSelectionModel(
-                                                    index: 1,
-                                                    id: 1,
-                                                    displayName:
-                                                        R.string.emptyList,
-                                                    isSelected: false));
-                                          if (suggestions.isNotEmpty)
-                                            showTXModalBottomSheet(
-                                                context: context,
-                                                builder: (ctx) {
-                                                  return Container(
-                                                    height: 200,
-                                                    child:
-                                                        TXCupertinoPickerWidget(
-                                                      height: 300,
-                                                      list: suggestions,
-                                                      onItemSelected: (value) {
-                                                        userNameTextController
-                                                                .text =
-                                                            value.displayName;
-                                                      },
-                                                      title: "Sugerencias",
-                                                      initialId:
-                                                          suggestions[0].id,
-                                                    ),
-                                                  );
-                                                });
-                                        },
-                                      ),
-                                    );
-                            }),
-                        TXDividerWidget(),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        TXButtonWidget(
-                          title: "Guardar",
-                          onPressed: () {
-                            if (_keyFormProfile.currentState.validate()) {
-                              bloc.updateProfile(userNameTextController.text,
-                                  fullNameTextController.text);
-                            }
-                          },
-                        )
-                      ],
-                    ),
-                  ),
-                );
+    return WillPopScope(
+      onWillPop: () async {
+        _navBack();
+        return false;
+      },
+      child: Stack(
+        children: <Widget>[
+          TXMainAppBarWidget(
+            leading: TXIconButtonWidget(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                _navBack();
               },
             ),
+            title: R.string.editProfile,
+            body: SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
+              padding: EdgeInsets.only(bottom: 30),
+              child: StreamBuilder<UserModel>(
+                stream: bloc.userResult,
+                initialData: UserModel(),
+                builder: (context, snapshot) {
+                  final user = snapshot.data;
+                  userNameTextController.text = user.username;
+                  fullNameTextController.text = user.fullName;
+                  return Form(
+                    key: _keyFormProfile,
+                    child: Container(
+                      child: Column(
+                        children: <Widget>[
+                          Container(
+                            height: 200,
+                            color: R.color.gray_light,
+                            child: Stack(
+                              children: <Widget>[
+                                TXNetworkImage(
+                                  width: double.infinity,
+                                  height: double.infinity,
+                                  imageUrl: user.avatar,
+                                  placeholderImage: R.image.logo,
+                                  boxFitImage: BoxFit.cover,
+                                ),
+                                Center(
+                                  child: InkWell(
+                                    onTap: () {
+                                      _showMediaSelector(context);
+                                    },
+                                    child: Icon(
+                                      Icons.photo_camera,
+                                      color: R.color.dialog_background,
+                                      size: 200,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                          TXDividerWidget(),
+                          TXCellSelectionOptionWidget(
+                            leading: Icons.visibility,
+                            optionName: R.string.changePassword,
+                            onOptionTap: () {
+                              NavigationUtils.push(
+                                  context,
+                                  ChangePasswordPage(
+                                    oldPassword: bloc.currentPassword,
+                                  ));
+                            },
+                          ),
+                          TXDividerWidget(),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Container(
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            child: TXTextFieldWidget(
+                              label: "Nombre completo",
+                              iconData: Icons.text_fields,
+                              controller: fullNameTextController,
+                              textInputAction: TextInputAction.done,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          TXDividerWidget(),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Container(
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            child: TXTextFieldWidget(
+                              label: R.string.userName,
+                              iconData: Icons.person,
+                              controller: userNameTextController,
+                              validator: bloc.required(),
+                              textInputAction: TextInputAction.done,
+                            ),
+                          ),
+                          StreamBuilder<UsernameSuggestionModel>(
+                              stream: bloc.usernameValidationResult,
+                              initialData: null,
+                              builder: (context, snapshotSuggest) {
+                                final UsernameSuggestionModel model =
+                                    snapshotSuggest.data;
+                                return model == null
+                                    ? Container()
+                                    : Container(
+                                        width: double.infinity,
+                                        height: 50,
+                                        alignment: Alignment.centerRight,
+                                        child: TXTextLinkWidget(
+                                          textColor: R.color.primary_color,
+                                          title: "Sugerencias",
+                                          onTap: () {
+                                            List<SingleSelectionModel>
+                                                suggestions = [];
+                                            for (int i = 0;
+                                                i < model.suggestions.length;
+                                                i++) {
+                                              suggestions.add(
+                                                  SingleSelectionModel(
+                                                      index: i,
+                                                      id: i,
+                                                      displayName:
+                                                          model.suggestions[i],
+                                                      isSelected: i == 0));
+                                            }
+                                            if (suggestions.isEmpty)
+                                              suggestions.add(
+                                                  SingleSelectionModel(
+                                                      index: 1,
+                                                      id: 1,
+                                                      displayName:
+                                                          R.string.emptyList,
+                                                      isSelected: false));
+                                            if (suggestions.isNotEmpty)
+                                              showTXModalBottomSheet(
+                                                  context: context,
+                                                  builder: (ctx) {
+                                                    return Container(
+                                                      height: 200,
+                                                      child:
+                                                          TXCupertinoPickerWidget(
+                                                        height: 300,
+                                                        list: suggestions,
+                                                        onItemSelected: (value) {
+                                                          userNameTextController
+                                                                  .text =
+                                                              value.displayName;
+                                                        },
+                                                        title: "Sugerencias",
+                                                        initialId:
+                                                            suggestions[0].id,
+                                                      ),
+                                                    );
+                                                  });
+                                          },
+                                        ),
+                                      );
+                              }),
+                          TXDividerWidget(),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          TXButtonWidget(
+                            title: "Guardar",
+                            onPressed: () {
+                              if (_keyFormProfile.currentState.validate()) {
+                                bloc.updateProfile(userNameTextController.text,
+                                    fullNameTextController.text);
+                              }
+                            },
+                          )
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
           ),
-        ),
-        TXLoadingWidget(
-          loadingStream: bloc.isLoadingStream,
-        )
-      ],
+          TXLoadingWidget(
+            loadingStream: bloc.isLoadingStream,
+          )
+        ],
+      ),
     );
   }
 

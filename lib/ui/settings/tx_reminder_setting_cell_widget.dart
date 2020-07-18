@@ -31,7 +31,7 @@ class TXReminderSettingCellWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     var currentDateTime = time;
     return ListTile(
-      contentPadding: EdgeInsets.only(right: 0, left: 10),
+      contentPadding: EdgeInsets.only(right: 10, left: 10),
       onTap: isActive
           ? () {
               showTXModalBottomSheet(

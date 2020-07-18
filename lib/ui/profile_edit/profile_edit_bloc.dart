@@ -1,11 +1,13 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mismedidasb/data/_shared_prefs.dart';
 import 'package:mismedidasb/data/api/remote/result.dart';
 import 'package:mismedidasb/domain/account/i_account_repository.dart';
 import 'package:mismedidasb/domain/user/i_user_repository.dart';
 import 'package:mismedidasb/domain/user/user_model.dart';
+import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/bloc_base.dart';
 import 'package:mismedidasb/ui/_base/bloc_error_handler.dart';
 import 'package:mismedidasb/ui/_base/bloc_form_validator.dart';
@@ -53,9 +55,12 @@ class ProfileEditBloC extends BaseBloC
     isLoading = true;
     final res = await _iUserRepository.updateProfile(user);
     if (res is ResultSuccess<UserModel>) {
+      Fluttertoast.showToast(
+          msg: "Los datos del perfil fueron actualizados exitosamente.",
+          backgroundColor: R.color.wellness_color,
+          textColor: Colors.white);
       userEdited = true;
       _userController.sinkAddSafe(res.value);
-      Fluttertoast.showToast(msg: "Los datos del perfil fueron actualizados exitosamente.");
     } else {
       showErrorMessage(res);
     }

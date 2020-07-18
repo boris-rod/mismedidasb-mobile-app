@@ -146,7 +146,7 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                                         borderRadius: BorderRadius.all(
                                             Radius.circular(4)),
                                         border: Border.all(
-                                            color: Color(0xFF606060), width: 2),
+                                            color: Colors.white, width: 2),
                                         color: R.color.gray_dark),
                                     child: Container(
                                       child: TXNetworkImage(

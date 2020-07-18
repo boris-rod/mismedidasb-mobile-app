@@ -158,7 +158,9 @@ class _LoginState extends StateWithBloC<LoginPage, LoginBloC> {
                                     if (res is bool && res)
                                       Fluttertoast.showToast(
                                           msg: R.string.checkEmail,
-                                          toastLength: Toast.LENGTH_SHORT);
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          backgroundColor: R.color.wellness_color,
+                                          textColor: Colors.white);
                                   },
                                 ),
                                 Icon(

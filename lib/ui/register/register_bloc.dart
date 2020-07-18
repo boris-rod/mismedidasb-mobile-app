@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mismedidasb/data/_shared_prefs.dart';
 import 'package:mismedidasb/data/api/remote/result.dart';
@@ -19,7 +20,8 @@ class RegisterBloC extends BaseBloC
   final SharedPreferencesManager _sharedPreferencesManager;
   final ISessionRepository _iSessionRepository;
 
-  RegisterBloC(this._iAccountRepository, this._sharedPreferencesManager, this._iSessionRepository);
+  RegisterBloC(this._iAccountRepository, this._sharedPreferencesManager,
+      this._iSessionRepository);
 
   BehaviorSubject<bool> _registerController = new BehaviorSubject();
 
@@ -31,8 +33,7 @@ class RegisterBloC extends BaseBloC
 
   String currentPassword = "";
 
-  void register(String email, String password,
-      String confirmPassword) async {
+  void register(String email, String password, String confirmPassword) async {
     isLoading = true;
     String locale = await _sharedPreferencesManager.getLanguageCode();
 
@@ -80,7 +81,10 @@ class RegisterBloC extends BaseBloC
     final res = await _iAccountRepository.resendCode(email);
     if (res is ResultSuccess<int>) {
       Fluttertoast.showToast(
-          msg: R.string.checkEmail, toastLength: Toast.LENGTH_LONG);
+          msg: R.string.checkEmail,
+          toastLength: Toast.LENGTH_LONG,
+          backgroundColor: R.color.wellness_color,
+          textColor: Colors.white);
     } else {
       showErrorMessage(res);
     }

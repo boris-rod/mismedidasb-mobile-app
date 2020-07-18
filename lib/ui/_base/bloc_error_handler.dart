@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mismedidasb/data/api/remote/result.dart';
+import 'package:mismedidasb/res/R.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:mismedidasb/utils/extensions.dart';
 
@@ -12,7 +14,12 @@ class ErrorHandlerBloC {
 
   void showErrorMessage(Result res) {
     String errorMessage = (res as ResultError).error;
-    Fluttertoast.showToast(msg: errorMessage, toastLength: Toast.LENGTH_LONG);
+    Fluttertoast.showToast(
+      msg: errorMessage,
+      toastLength: Toast.LENGTH_LONG,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+    );
   }
 
   onError(dynamic error) {

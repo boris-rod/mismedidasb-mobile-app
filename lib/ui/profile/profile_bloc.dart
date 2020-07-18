@@ -7,10 +7,12 @@ import 'package:mismedidasb/domain/common_db/i_common_repository.dart';
 import 'package:mismedidasb/domain/session/i_session_repository.dart';
 import 'package:mismedidasb/domain/user/i_user_repository.dart';
 import 'package:mismedidasb/domain/user/user_model.dart';
+import 'package:mismedidasb/lnm/i_lnm.dart';
 import 'package:mismedidasb/ui/_base/bloc_base.dart';
 import 'package:mismedidasb/ui/_base/bloc_error_handler.dart';
 import 'package:mismedidasb/ui/_base/bloc_loading.dart';
 import 'package:mismedidasb/ui/settings/settings_page.dart';
+import 'package:mismedidasb/utils/calendar_utils.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:mismedidasb/utils/extensions.dart';
 
@@ -19,8 +21,9 @@ import '../../enums.dart';
 class ProfileBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   final IUserRepository _iUserRepository;
   final SharedPreferencesManager _sharedPreferencesManager;
+  final ILNM lnm;
 
-  ProfileBloC(this._iUserRepository, this._sharedPreferencesManager);
+  ProfileBloC(this._iUserRepository, this._sharedPreferencesManager, this.lnm);
 
   BehaviorSubject<UserModel> _userController = new BehaviorSubject();
 
@@ -38,6 +41,21 @@ class ProfileBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     isLoading = true;
     final res = await _iUserRepository.getProfile();
     if (res is ResultSuccess<UserModel>) {
+      bool hasPlani = false;
+      final plani = res.value.subscriptions.firstWhere(
+          (element) => element.product == 'VIRTUAL_ASESSOR', orElse: () {
+        return null;
+      });
+      if (plani != null) {
+        hasPlani = CalendarUtils.compare(plani.validAt, DateTime.now()) >= 0;
+      }
+
+      await _sharedPreferencesManager.setBoolValue(
+          SharedKey.hasPlaniVirtualAssesor, hasPlani);
+      if (!hasPlani) {
+        lnm.cancelAll();
+      }
+
       _userController.sinkAddSafe(res.value);
     } else
       showErrorMessage(res);

@@ -25,7 +25,6 @@ import 'package:mismedidasb/ui/food_dish/tx_bottom_resume_food_plan_widget.dart'
 import 'package:mismedidasb/ui/food_dish/tx_daily_nutritional_info_widget.dart';
 import 'package:mismedidasb/ui/food_dish/tx_dish_nutritional_info_widget.dart';
 import 'package:mismedidasb/ui/food_dish/tx_food_healthy_filter_widget.dart';
-import 'package:mismedidasb/ui/food_dish/tx_ideal_pie_chart_food_widget.dart';
 import 'package:mismedidasb/ui/food_dish/tx_instrucctions_widget.dart';
 import 'package:mismedidasb/ui/home/home_page.dart';
 import 'package:mismedidasb/utils/calendar_utils.dart';
@@ -319,6 +318,7 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
         return TXBottomResumeFoodPlanWidget(
           dailyFoodModel: dailyModel,
           showValue: showSnapshot.data,
+          showPlaniSuggest: bloc.showPlaniSuggest,
           showConfirm: showConfirm,
           setShowDailyResume: (value) {
             bloc.showResume = value;
@@ -357,7 +357,9 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                 child: TXButtonWidget(
                     onPressed: () {
                       if (dailyModel.hasFoods == null)
-                        Fluttertoast.showToast(msg: R.string.emptyFoodList);
+                        Fluttertoast.showToast(msg: R.string.emptyFoodList,
+                            backgroundColor: R.color.gray,
+                            textColor: Colors.white);
                       else {
                         if (bloc.showResume)
                           showTXModalBottomSheet(

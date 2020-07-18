@@ -66,6 +66,7 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 //  bool tagsLoaded = false;
 //  bool foodsLoaded = false;
   bool showResume = false;
+  bool showPlaniSuggest = false;
   int currentPage = 0;
   int currentCalendarPage = 0;
   Map<DateTime, DailyFoodModel> dailyFoodModelMap = {};
@@ -89,6 +90,7 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 //    tagsLoaded = false;
 //    foodsLoaded = false;
     showResume = await _sharedPreferencesManager.getShowDailyResume();
+    showPlaniSuggest = await _sharedPreferencesManager.getBoolValue(SharedKey.hasPlaniVirtualAssesor);
     imc = await _sharedPreferencesManager.getIMC();
     kCal = await _sharedPreferencesManager.getDailyKCal();
 

@@ -34,7 +34,9 @@ class _ChangePasswordState
     oldTextController.text = widget.oldPassword;
     bloc.changeResult.listen((onData){
       if(onData == true){
-        Fluttertoast.showToast(msg: R.string.changePasswordSuccess);
+        Fluttertoast.showToast(msg: R.string.changePasswordSuccess,
+            backgroundColor: R.color.wellness_color,
+            textColor: Colors.white);
         NavigationUtils.pop(context);
       }
     });
