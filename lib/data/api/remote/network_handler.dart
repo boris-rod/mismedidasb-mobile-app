@@ -6,6 +6,7 @@ import 'package:http_parser/src/media_type.dart' as mt;
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
+import 'package:mime/mime.dart';
 import 'package:mismedidasb/data/_shared_prefs.dart';
 import 'package:mismedidasb/data/api/remote/endpoints.dart';
 import 'package:mismedidasb/data/api/remote/remote_constanst.dart';
@@ -277,9 +278,12 @@ class NetworkHandler {
         postFile = File(file.path);
       }
 
+      final String mime = lookupMimeType(postFile.path);
+      final mimeArray = mime.split("/");
+
       FormData formData = FormData.fromMap({
         "file": MultipartFile.fromFileSync(postFile.path,
-            filename: fileName, contentType: mt.MediaType("image", "jpeg"))
+            filename: fileName, contentType: mt.MediaType(mimeArray.first, mimeArray.last))
       });
       BaseOptions options = new BaseOptions(
           connectTimeout: 10000, receiveTimeout: 4000, headers: _headers);
@@ -325,16 +329,22 @@ class NetworkHandler {
         } else {
           postFile = File(file.path);
         }
+        final String mime = lookupMimeType(postFile.path);
+        final mimeArray = mime.split("/");
         multipartFile = await MultipartFile.fromFile(postFile.path,
             filename: fileName,
-            contentType: mt.MediaType("image", "jpeg"));
+            contentType: mt.MediaType(mimeArray.first, mimeArray.last));
       }
 
       final FormData formData = FormData.fromMap({
         "name": name,
         "dishes": dishes,
-        "image": multipartFile,
+        "file": multipartFile,
       });
+
+      _logger.log(formData.fields);
+      formData.files.map((e) =>  _logger.log(e.toString()));
+
 
       BaseOptions options = new BaseOptions(
           connectTimeout: 10000, receiveTimeout: 4000, headers: _headers);

@@ -455,6 +455,7 @@ class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
                   imageUrl: model.image,
                   placeholderImage: R.image.logo,
                   height: 40,
+                  boxFitImage: BoxFit.cover,
                   width: 40,
                 ),
                 contentPadding:
@@ -508,6 +509,7 @@ class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
                 leading: TXNetworkImage(
                   imageUrl: model.image,
                   placeholderImage: R.image.logo,
+                  boxFitImage: BoxFit.cover,
                   height: 40,
                   width: 40,
                 ),

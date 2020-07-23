@@ -56,6 +56,7 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
   void initState() {
     super.initState();
     bloc.getProfile();
+    bloc.loadVersion();
   }
 
   @override
@@ -272,6 +273,17 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                             },
                           ),
                           TXDividerWidget1(),
+                          SizedBox(height: 10,),
+                          StreamBuilder<String>(
+                            stream: bloc.appVersionResult,
+                            initialData: "",
+                            builder: (ctx, snapshotVersion) {
+                              return TXTextWidget(
+                                text: snapshotVersion.data,
+                                color: Colors.white,
+                              );
+                            },
+                          )
 //                        InkWell(
 //                          onTap: (){
 //

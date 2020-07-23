@@ -13,6 +13,7 @@ import 'package:mismedidasb/ui/_base/bloc_error_handler.dart';
 import 'package:mismedidasb/ui/_base/bloc_loading.dart';
 import 'package:mismedidasb/ui/settings/settings_page.dart';
 import 'package:mismedidasb/utils/calendar_utils.dart';
+import 'package:package_info/package_info.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:mismedidasb/utils/extensions.dart';
 
@@ -29,11 +30,25 @@ class ProfileBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
   Stream<UserModel> get userResult => _userController.stream;
 
+  BehaviorSubject<String> _appVersionController = new BehaviorSubject();
+
+  Stream<String> get appVersionResult => _appVersionController.stream;
+
   SettingAction settingAction;
   String currentPassword = "";
 
   set updateUser(UserModel user) {
     _userController.sinkAddSafe(user);
+  }
+
+  void loadVersion()async{
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    String appName = packageInfo.appName;
+    String packageName = packageInfo.packageName;
+    String version = packageInfo.version;
+    String buildNumber = packageInfo.buildNumber;
+
+    _appVersionController.sinkAddSafe("$appName => $version+$buildNumber");
   }
 
   void getProfile() async {
@@ -84,6 +99,7 @@ class ProfileBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   @override
   void dispose() {
     _userController.close();
+    _appVersionController.close();
     disposeLoadingBloC();
     disposeErrorHandlerBloC();
   }
