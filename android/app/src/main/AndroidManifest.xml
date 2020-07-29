@@ -13,6 +13,7 @@
         android:name="io.flutter.app.FlutterApplication"
         android:label="PlaniFive"
         android:roundIcon="@mipmap/logo"
+        android:requestLegacyExternalStorage="true"
         android:icon="@mipmap/logo">
         <activity
             android:name=".MainActivity"

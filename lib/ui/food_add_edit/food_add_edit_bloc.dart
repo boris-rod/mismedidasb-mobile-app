@@ -125,40 +125,41 @@ class FoodAddEditBloC extends BaseBloC
         return null;
       });
 
-      if (exist != null) {
+      if (exist != null && isAdding) {
         Fluttertoast.showToast(
             msg: "El nombre de este alimento compuesto ya existe.",
             backgroundColor: Colors.red,
             textColor: Colors.white, toastLength: Toast.LENGTH_LONG);
         return;
-      }
-      isLoading = true;
-      try {
-        if (isAdding) {
-          final res = await _iDishRepository.createFoodCompoundModelList(
-              CreateFoodCompoundModel.fromFoodModel(currentFoodModel));
-          if (res is ResultSuccess<bool>) {
-            reload = true;
-            _addEditController.sinkAddSafe(true);
-          } else
-            showErrorMessage(res);
-        } else {
-          if (currentFoodModel.image.contains("http"))
-            currentFoodModel.image = "";
+      }else{
+        isLoading = true;
+        try {
+          if (isAdding) {
+            final res = await _iDishRepository.createFoodCompoundModelList(
+                CreateFoodCompoundModel.fromFoodModel(currentFoodModel));
+            if (res is ResultSuccess<bool>) {
+              reload = true;
+              _addEditController.sinkAddSafe(true);
+            } else
+              showErrorMessage(res);
+          } else {
+            if (currentFoodModel.image.contains("http"))
+              currentFoodModel.image = "";
 
-          final res = await _iDishRepository.updateFoodCompoundModelList(
-              currentFoodModel.id,
-              CreateFoodCompoundModel.fromFoodModel(currentFoodModel));
-          if (res is ResultSuccess<bool>) {
-            reload = true;
-            _addEditController.sinkAddSafe(true);
-          } else
-            showErrorMessage(res);
+            final res = await _iDishRepository.updateFoodCompoundModelList(
+                currentFoodModel.id,
+                CreateFoodCompoundModel.fromFoodModel(currentFoodModel));
+            if (res is ResultSuccess<bool>) {
+              reload = true;
+              _addEditController.sinkAddSafe(true);
+            } else
+              showErrorMessage(res);
+          }
+        } catch (ex) {
+          print(ex.toString());
         }
-      } catch (ex) {
-        print(ex.toString());
+        isLoading = false;
       }
-      isLoading = false;
     }
   }
 
