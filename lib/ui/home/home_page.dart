@@ -94,29 +94,29 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
                   width: 35,
                 ),
                 onTap: () async {
-                  NavigationUtils.push(context, PollNotificationPage());
-//                  if (!bloc.termsAccepted) {
-//                    final res = await NavigationUtils.push(
-//                        context,
-//                        LegacyPage(
-//                          contentType: 1,
-//                          termsCondAccepted: false,
-//                        ));
-//                    if (res ?? false) {
-//                      bloc.termsAccepted = true;
-//                    }
-//                  } else {
-//                    final res =
-//                        await NavigationUtils.push(context, ProfilePage());
-//                    if (res is SettingAction) {
-//                      if (res == SettingAction.logout ||
-//                          res == SettingAction.removeAccount) {
-//                        NavigationUtils.pushReplacement(context, LoginPage());
-//                      } else if (res == SettingAction.languageCodeChanged) {
-//                        bloc.loadHomeData();
-//                      }
-//                    }
-//                  }
+//                  NavigationUtils.push(context, PollNotificationPage());
+                  if (!bloc.termsAccepted) {
+                    final res = await NavigationUtils.push(
+                        context,
+                        LegacyPage(
+                          contentType: 1,
+                          termsCondAccepted: false,
+                        ));
+                    if (res ?? false) {
+                      bloc.termsAccepted = true;
+                    }
+                  } else {
+                    final res =
+                        await NavigationUtils.push(context, ProfilePage());
+                    if (res is SettingAction) {
+                      if (res == SettingAction.logout ||
+                          res == SettingAction.removeAccount) {
+                        NavigationUtils.pushReplacement(context, LoginPage());
+                      } else if (res == SettingAction.languageCodeChanged) {
+                        bloc.loadHomeData();
+                      }
+                    }
+                  }
                 },
               )
             ],

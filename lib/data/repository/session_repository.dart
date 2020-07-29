@@ -24,7 +24,8 @@ class SessionRepository extends BaseRepository implements ISessionRepository {
     try {
       final result = await _iSessionApi.login(loginModel);
       _sharedPreferencesManager.setUserEmail(result.email);
-      _sharedPreferencesManager.setStringValue(SharedKey.userName, result.username);
+      _sharedPreferencesManager.setStringValue(
+          SharedKey.userName, result.username);
       _sharedPreferencesManager.setDailyKCal(result.dailyKCal);
       _sharedPreferencesManager.setIMC(result.imc);
       _sharedPreferencesManager
@@ -55,9 +56,9 @@ class SessionRepository extends BaseRepository implements ISessionRepository {
   @override
   Future<Result<bool>> validateToken() async {
     try {
-      final result = await _iSessionApi.validateToken();
+//      final result = await _iSessionApi.validateToken();
       _fcmFeature.refreshToken();
-      return Result.success(value: result);
+      return Result.success(value: true);
     } catch (ex) {
       return resultError(ex);
     }
