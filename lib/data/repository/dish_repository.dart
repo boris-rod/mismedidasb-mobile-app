@@ -217,17 +217,18 @@ class DishRepository extends BaseRepository implements IDishRepository {
   Future<Result<List<FoodModel>>> getFoodCompoundModelList(
       {bool forceReload: false}) async {
     try {
-      List<FoodModel> list = [];
-      if (!forceReload) {
-        list = await _iDishDao.getFoodCompoundModelList();
-      }
-      if (list.isEmpty) {
-        final res = await _dishApi.getFoodCompoundModelList();
-        await _iDishDao.clearFoodCompoundModelList();
-        await _iDishDao.saveFoodCompoundModelList(res);
-        list = res;
-      }
-      return ResultSuccess(value: list);
+//      List<FoodModel> list = [];
+//      if (!forceReload) {
+//        list = await _iDishDao.getFoodCompoundModelList();
+//      }
+//      if (list.isEmpty) {
+//        final res = await _dishApi.getFoodCompoundModelList();
+//        await _iDishDao.clearFoodCompoundModelList();
+//        await _iDishDao.saveFoodCompoundModelList(res);
+//        list = res;
+//      }
+      final res = await _dishApi.getFoodCompoundModelList();
+      return ResultSuccess(value: res);
     } catch (ex) {
       return resultError(ex);
     }

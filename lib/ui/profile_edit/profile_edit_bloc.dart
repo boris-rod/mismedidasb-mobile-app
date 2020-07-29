@@ -7,6 +7,7 @@ import 'package:mismedidasb/data/api/remote/result.dart';
 import 'package:mismedidasb/domain/account/i_account_repository.dart';
 import 'package:mismedidasb/domain/user/i_user_repository.dart';
 import 'package:mismedidasb/domain/user/user_model.dart';
+import 'package:mismedidasb/lnm/i_lnm.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/bloc_base.dart';
 import 'package:mismedidasb/ui/_base/bloc_error_handler.dart';
@@ -20,8 +21,9 @@ class ProfileEditBloC extends BaseBloC
     with LoadingBloC, ErrorHandlerBloC, FormValidatorBloC {
   final IUserRepository _iUserRepository;
   final SharedPreferencesManager _sharedPreferencesManager;
+  final ILNM _ilnm;
 
-  ProfileEditBloC(this._iUserRepository, this._sharedPreferencesManager);
+  ProfileEditBloC(this._iUserRepository, this._sharedPreferencesManager, this._ilnm);
 
   BehaviorSubject<UserModel> _userController = new BehaviorSubject();
 
@@ -59,6 +61,8 @@ class ProfileEditBloC extends BaseBloC
           msg: "Los datos del perfil fueron actualizados exitosamente.",
           backgroundColor: R.color.wellness_color,
           textColor: Colors.white);
+      await _ilnm.cancelAll();
+      await _ilnm.initReminders();
       userEdited = true;
       _userController.sinkAddSafe(res.value);
     } else {

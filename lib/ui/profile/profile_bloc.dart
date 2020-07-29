@@ -34,6 +34,10 @@ class ProfileBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
   Stream<String> get appVersionResult => _appVersionController.stream;
 
+  BehaviorSubject<bool> _showFirstTimeController = new BehaviorSubject();
+
+  Stream<bool> get showFirstTimeResult => _showFirstTimeController.stream;
+
   SettingAction settingAction;
   String currentPassword = "";
 
@@ -72,6 +76,7 @@ class ProfileBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
       }
 
       _userController.sinkAddSafe(res.value);
+      launchFirstTime();
     } else
       showErrorMessage(res);
     isLoading = false;
@@ -96,10 +101,23 @@ class ProfileBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
   void removeAvatar() async {}
 
+  void launchFirstTime() async {
+    final value =
+    await _sharedPreferencesManager.getBoolValue(SharedKey.firstTimeInProfile, defValue: true);
+    _showFirstTimeController.sinkAddSafe(value);
+  }
+
+  void setNotFirstTime() async {
+    await _sharedPreferencesManager.setBoolValue(
+        SharedKey.firstTimeInProfile, false);
+    _showFirstTimeController.sinkAddSafe(false);
+  }
+
   @override
   void dispose() {
     _userController.close();
     _appVersionController.close();
+    _showFirstTimeController.close();
     disposeLoadingBloC();
     disposeErrorHandlerBloC();
   }

@@ -8,6 +8,7 @@ class TXTextLinkWidget extends StatelessWidget {
   final Color textColor;
   final FontWeight fontWeight;
   final double fontSize;
+  final TextDecoration textDecoration;
 
   const TXTextLinkWidget({
     @required this.onTap,
@@ -15,7 +16,7 @@ class TXTextLinkWidget extends StatelessWidget {
     this.splashColor,
     this.fontWeight = FontWeight.normal,
     this.textColor = Colors.grey,
-    this.fontSize = 14,
+    this.fontSize = 14, this.textDecoration = TextDecoration.underline,
   });
 
   @override
@@ -28,7 +29,8 @@ class TXTextLinkWidget extends StatelessWidget {
             color: textColor ?? R.color.primary_color,
             fontSize: fontSize,
             fontWeight: fontWeight,
-            decoration: TextDecoration.underline),
+            decoration: textDecoration,
+        ),
       ),
       splashColor: splashColor,
     );

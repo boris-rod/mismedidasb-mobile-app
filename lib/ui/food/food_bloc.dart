@@ -45,6 +45,10 @@ class FoodBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
   set changePage(int value) => _pageController.sinkAddSafe(value);
 
+  BehaviorSubject<bool> _showFirstTimeController = new BehaviorSubject();
+
+  Stream<bool> get showFirstTimeResult => _showFirstTimeController.stream;
+
 //  double imc = 1;
   bool kCalPercentageHide = false;
 
@@ -60,6 +64,18 @@ class FoodBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
   bool isSearching = false;
   String currentQuery = "";
+
+  void launchFirstTime() async {
+    final value =
+    await _sharedPreferencesManager.getBoolValue(SharedKey.firstTimeInFoodPortions, defValue: true);
+    _showFirstTimeController.sinkAddSafe(value);
+  }
+
+  void setNotFirstTime() async {
+    await _sharedPreferencesManager.setBoolValue(
+        SharedKey.firstTimeInFoodPortions, false);
+    _showFirstTimeController.sinkAddSafe(false);
+  }
 
   void setShowSearch() async {
 //    isSearching = !isSearching;
@@ -246,6 +262,7 @@ class FoodBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     _foodsFilteredController.close();
     _foodsSelectedController.close();
     _filterController.close();
+    _showFirstTimeController.close();
     disposeLoadingBloC();
     disposeErrorHandlerBloC();
   }

@@ -21,7 +21,6 @@ class SharedKey {
   static String termsCond = "termsCond";
   static String kCalPercentageHide = "kCalPercentageHide";
   static String nutriInfoExpanded = "nutriInfoExpanded";
-  static String showIntro = "showIntro";
 
   static String breakFastTime = "breakFastTime";
   static String showBreakFastTime = "showBreakFastTime";
@@ -47,23 +46,42 @@ class SharedKey {
 
   static String showDailyPollNotification = "showDailyPollNotification";
   static String launchNotiPoll = "launchNotiPoll";
+  static String firstTimeInHome = "firstTimeInHome";
+  static String firstTimeInProfile = "firstTimeInProfile";
+  static String firstTimeInCopyPlan = "firstTimeInCopyPlan";
+  static String firstTimeInFoodPlan = "firstTimeInFoodPlan";
+  static String firstTimeInFoodPortions = "firstTimeInFoodPortions";
 }
 
 class SharedPreferencesManager {
-  Future<bool> init() async {
-    await setIntValue(SharedKey.planiId, 1);
-
+  Future<void> cleanLogout() async {
     await setStringValue(SharedKey.accessToken, '');
     await setStringValue(SharedKey.refreshToken, '');
     await setStringValue(SharedKey.password, '');
     await setStringValue(SharedKey.userName, '');
+    await setBoolValue(SharedKey.saveCredentials, true);
+    await initVideoTutorials();
+  }
+
+  Future<void> initVideoTutorials() async {
+    await setBoolValue(SharedKey.firstTimeInHome, true);
+    await setBoolValue(SharedKey.firstTimeInProfile, true);
+    await setBoolValue(SharedKey.firstTimeInCopyPlan, true);
+    await setBoolValue(SharedKey.firstTimeInFoodPlan, true);
+    await setBoolValue(SharedKey.firstTimeInFoodPortions, true);
+  }
+
+
+  Future<void> init() async {
+    await cleanLogout();
+
+    await setIntValue(SharedKey.planiId, 1);
 
     await setBoolValue(SharedKey.firstUse, true);
-    await setBoolValue(SharedKey.saveCredentials, true);
+
     await setBoolValue(SharedKey.showDailyResume, true);
     await setBoolValue(SharedKey.kCalPercentageHide, false);
     await setBoolValue(SharedKey.nutriInfoExpanded, false);
-    await setBoolValue(SharedKey.showIntro, true);
     await setBoolValue(SharedKey.launchNotiPoll, false);
 
     await setBoolValue(SharedKey.showBreakFastTime, true);
@@ -107,7 +125,6 @@ class SharedPreferencesManager {
         DateTime(now.year, now.month, now.day, 22, 00, 0));
 
     await setIntValue(SharedKey.activeAccount, ACCOUNT_STATUS.PENDING.index);
-    return true;
   }
 
   Future<bool> getBoolValue(String key, {bool defValue = false}) async {

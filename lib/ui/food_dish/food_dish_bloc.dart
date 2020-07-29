@@ -63,6 +63,14 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   Stream<bool> get kCalPercentageHideResult =>
       _kCalPercentageHideController.stream;
 
+  BehaviorSubject<bool> _showFirstTimePlanController = new BehaviorSubject();
+
+  Stream<bool> get showFirstTimePlanResult => _showFirstTimePlanController.stream;
+
+  BehaviorSubject<bool> _showFirstTimePlanCopyController = new BehaviorSubject();
+
+  Stream<bool> get showFirstTimePlanCopyResult => _showFirstTimePlanCopyController.stream;
+
 //  bool tagsLoaded = false;
 //  bool foodsLoaded = false;
   bool showResume = false;
@@ -78,10 +86,31 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   double imc = 1;
   double kCal = 1;
 
-  void loadInitialData() async {
-    ///Pre loading compound foods
-    _iDishRepository.getFoodCompoundModelList(forceReload: true);
+  void launchFirstTimePlan() async {
+    final value =
+    await _sharedPreferencesManager.getBoolValue(SharedKey.firstTimeInFoodPlan, defValue: true);
+    _showFirstTimePlanController.sinkAddSafe(value);
+  }
 
+  void setNotFirstTimePlan() async {
+    await _sharedPreferencesManager.setBoolValue(
+        SharedKey.firstTimeInFoodPlan, false);
+    _showFirstTimePlanController.sinkAddSafe(false);
+  }
+
+  void launchFirstTimePlanCopy() async {
+    final value =
+    await _sharedPreferencesManager.getBoolValue(SharedKey.firstTimeInCopyPlan, defValue: true);
+    _showFirstTimePlanCopyController.sinkAddSafe(value);
+  }
+
+  void setNotFirstTimePlanCopy() async {
+    await _sharedPreferencesManager.setBoolValue(
+        SharedKey.firstTimeInCopyPlan, false);
+    _showFirstTimePlanCopyController.sinkAddSafe(false);
+  }
+
+  void loadInitialData() async {
     dailyFoodModelMap = {};
 
     firstDate = CalendarUtils.getFirstDateOfPreviousMonth();
@@ -515,6 +544,8 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     _showResumeController.close();
     _calendarPageController.close();
     _calendarOptionsController.close();
+    _showFirstTimePlanController.close();
+    _showFirstTimePlanCopyController.close();
     _copyPlanController.close();
     _pageController.close();
     disposeErrorHandlerBloC();

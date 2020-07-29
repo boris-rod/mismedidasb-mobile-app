@@ -27,18 +27,18 @@ class MyMeasuresBApp extends StatefulWidget {
   final ILNM lnm;
 
   const MyMeasuresBApp(
-      {Key key, @required this.initPage, @required this.fcmFeature, this.lnm})
+      {Key key, this.initPage, this.fcmFeature, this.lnm})
       : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _MyMeasuresBState();
 }
 
-class _MyMeasuresBState extends StateWithBloC<MyMeasuresBApp, AppBloC> with WidgetsBindingObserver{
+class _MyMeasuresBState extends StateWithBloC<MyMeasuresBApp, AppBloC> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
+//    WidgetsBinding.instance.addObserver(this);
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
@@ -46,18 +46,18 @@ class _MyMeasuresBState extends StateWithBloC<MyMeasuresBApp, AppBloC> with Widg
     widget.lnm.setup();
   }
 
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
+//  @override
+//  void dispose() {
+//    WidgetsBinding.instance.removeObserver(this);
+//    super.dispose();
+//  }
 
-  @override
-  void didChangePlatformBrightness() {
+//  @override
+//  void didChangePlatformBrightness() {
 //    final Brightness brightness =
 //        WidgetsBinding.instance.window.platformBrightness;
 //    Injector.instance.darkTheme = brightness == Brightness.dark;
-  }
+//  }
 
 
   @override

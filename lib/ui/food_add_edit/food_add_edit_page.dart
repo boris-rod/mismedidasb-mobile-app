@@ -30,8 +30,10 @@ import '../../enums.dart';
 
 class FoodAddEditPage extends StatefulWidget {
   final FoodModel foodModel;
+  final List<FoodModel> compoundFoodModelList;
 
-  const FoodAddEditPage({Key key, this.foodModel}) : super(key: key);
+  const FoodAddEditPage({Key key, this.foodModel, this.compoundFoodModelList})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _FoodAddEditState();
@@ -54,7 +56,7 @@ class _FoodAddEditState
   void initState() {
     super.initState();
     _nameController.text = widget.foodModel?.name ?? "";
-    bloc.init(widget.foodModel);
+    bloc.init(widget.foodModel, widget.compoundFoodModelList);
     bloc.addEditResult.listen((onData) {
       _navBack();
     });

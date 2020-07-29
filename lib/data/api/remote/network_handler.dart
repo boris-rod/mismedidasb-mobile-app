@@ -339,7 +339,7 @@ class NetworkHandler {
       final FormData formData = FormData.fromMap({
         "name": name,
         "dishes": dishes,
-        "file": multipartFile,
+        "image": multipartFile,
       });
 
       _logger.log(formData.fields);

@@ -52,6 +52,10 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
   Stream<bool> get launchNotiPollResult => _launchNotiPollController.stream;
 
+  BehaviorSubject<bool> _showFirstTimeController = new BehaviorSubject();
+
+  Stream<bool> get showFirstTimeResult => _showFirstTimeController.stream;
+
   String userName = "";
   bool profileLoaded = false;
   bool conceptsLoaded = false;
@@ -70,20 +74,21 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
   void loadPlansBulk1() async {
     final now = DateTime.now();
-    await _iDishRepository.getPlansMergedAPI(
-        now,
-        now,
-        forceReload: true);
+    await _iDishRepository.getPlansMergedAPI(now, now, forceReload: true);
     plansBulk1Loaded = true;
-    if (conceptsLoaded && profileLoaded)
+    if (conceptsLoaded && profileLoaded) {
       isLoading = false;
+      launchFirstTime();
+    }
   }
 
   void loadProfile() async {
     final profileRes = await _iUserRepository.getProfile();
     profileLoaded = true;
-    if (conceptsLoaded &&
-        plansBulk1Loaded ) isLoading = false;
+    if (conceptsLoaded && plansBulk1Loaded) {
+      isLoading = false;
+      launchFirstTime();
+    }
     if (profileRes is ResultSuccess<UserModel>) {
       termsAccepted = profileRes.value.termsAndConditionsAccepted;
 
@@ -122,6 +127,7 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     conceptsLoaded = true;
     if (profileLoaded && plansBulk1Loaded) {
       isLoading = false;
+      launchFirstTime();
     }
     if (res is ResultSuccess<List<HealthConceptModel>>) {
       _conceptController.sinkAddSafe(res.value);
@@ -134,6 +140,18 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
           SharedKey.launchNotiPoll, false);
       _launchNotiPollController.sinkAddSafe(true);
     }
+  }
+
+  void launchFirstTime() async {
+    final value =
+        await _sharedPreferencesManager.getBoolValue(SharedKey.firstTimeInHome, defValue: true);
+    _showFirstTimeController.sinkAddSafe(value);
+  }
+
+  void setNotFirstTime() async {
+    await _sharedPreferencesManager.setBoolValue(
+        SharedKey.firstTimeInHome, false);
+    _showFirstTimeController.sinkAddSafe(false);
   }
 
   Future<bool> canNavigateToDishes() async {
@@ -225,6 +243,7 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   void dispose() {
     _conceptController.close();
     _launchNotiPollController.close();
+    _showFirstTimeController.close();
     disposeLoadingBloC();
     disposeErrorHandlerBloC();
 //    _loadingController.close();

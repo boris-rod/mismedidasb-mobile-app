@@ -249,4 +249,14 @@ abstract class StringsBase implements WidgetsLocalizations {
   String get add;
 
   String get edit;
+
+  String get planiIntroHelper;
+
+  String get foodPlanHelper;
+
+  String get copyPlanHelper;
+
+  String get portionFoodHelper;
+
+  String get profileSettingsHelper;
 }

@@ -274,7 +274,7 @@ class SettingsBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   void logout() async {
     isLoading = true;
     final res = await _iSessionRepository.logout();
-    await _sharedPreferencesManager.init();
+    await _sharedPreferencesManager.cleanLogout();
     settingAction = SettingAction.logout;
     _logoutController.sinkAddSafe(true);
     isLoading = false;

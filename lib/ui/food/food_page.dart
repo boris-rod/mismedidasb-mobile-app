@@ -17,11 +17,13 @@ import 'package:mismedidasb/ui/_tx_widget/tx_main_app_bar_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_network_image.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_textfield_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_video_intro_widet.dart';
 import 'package:mismedidasb/ui/food/food_bloc.dart';
 import 'package:mismedidasb/ui/food/tx_food_app_bar_widget.dart';
 import 'package:mismedidasb/ui/food_add_edit/food_add_edit_page.dart';
 import 'package:mismedidasb/ui/food_search/food_search_page.dart';
 import 'package:mismedidasb/ui/profile/tx_cell_selection_option_widget.dart';
+import 'package:mismedidasb/utils/file_manager.dart';
 import 'dart:math' as math;
 import '../../enums.dart';
 
@@ -58,6 +60,9 @@ class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
     bloc.pageResult.listen((onData) {
       _pageController.animateToPage(onData,
           duration: Duration(milliseconds: 300), curve: Curves.linear);
+    });
+    Future.delayed(Duration(milliseconds: 500), () {
+      bloc.launchFirstTime();
     });
   }
 
@@ -102,7 +107,12 @@ class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
                         bloc.syncFoods();
                       } else {
                         final res = await NavigationUtils.push(
-                            context, FoodAddEditPage());
+                            context,
+                            FoodAddEditPage(
+                              compoundFoodModelList: bloc.foodsAll
+                                  .where((f) => f.isCompound)
+                                  .toList(),
+                            ));
                         if (res ?? false) {
                           bloc.loadData(
                               widget.selectedItems,
@@ -423,7 +433,24 @@ class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
           ),
           TXLoadingWidget(
             loadingStream: bloc.isLoadingStream,
-          )
+          ),
+          StreamBuilder<bool>(
+              stream: bloc.showFirstTimeResult,
+              initialData: false,
+              builder: (context, snapshotShow) {
+                return snapshotShow.data
+                    ? TXVideoIntroWidget(
+                        title: R.string.portionFoodHelper,
+                        onSeeVideo: () {
+                          bloc.setNotFirstTime();
+                          FileManager.playVideo("portions_food_sizes.mp4");
+                        },
+                        onSkip: () {
+                          bloc.setNotFirstTime();
+                        },
+                      )
+                    : Container();
+              }),
         ],
       ),
     );
@@ -519,8 +546,10 @@ class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
                   final res = await NavigationUtils.push(
                       context,
                       FoodAddEditPage(
-                        foodModel: model,
-                      ));
+                          foodModel: model,
+                          compoundFoodModelList: bloc.foodsAll
+                              .where((f) => f.isCompound)
+                              .toList()));
                   if (res ?? false) {
                     bloc.loadData(widget.selectedItems, widget.foodFilterMode,
                         widget.foodFilterCategoryIndex,

@@ -23,6 +23,7 @@ import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_main_app_bar_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_network_image.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_video_intro_widet.dart';
 import 'package:mismedidasb/ui/change_password/change_password_page.dart';
 import 'package:mismedidasb/ui/contact_us/contact_us_page.dart';
 import 'package:mismedidasb/ui/invite_page/invite_page.dart';
@@ -35,6 +36,7 @@ import 'package:mismedidasb/ui/profile_edit/profile_edit_page.dart';
 import 'package:mismedidasb/ui/scores_page/score_page.dart';
 import 'package:mismedidasb/ui/settings/settings_bloc.dart';
 import 'package:mismedidasb/ui/settings/settings_page.dart';
+import 'package:mismedidasb/ui/videos/video_page.dart';
 import 'package:mismedidasb/utils/file_manager.dart';
 import 'package:mismedidasb/utils/mail_manager.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -192,9 +194,6 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                               ],
                             ),
                           ),
-                          SizedBox(
-                            height: 30,
-                          ),
                           Container(
                             padding: EdgeInsets.only(bottom: 10),
                             child: Row(
@@ -242,7 +241,7 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                             ),
                           ),
                           SizedBox(
-                            height: 30,
+                            height: 10,
                           ),
                           TXDividerWidget1(),
                           TXCellSelectionOptionWidget1(
@@ -254,7 +253,7 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                               if (res) {
                                 _keyInviteProfile.currentState.showSnackBar(
                                     getSnackBarWidget(
-                                        "Felicidades, será recompensado!"));
+                                        "Felicidades, recibirás una recompensa!"));
                               }
                             },
                           ),
@@ -270,6 +269,14 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                             optionName: "Ver puntuaciones",
                             onOptionTap: () {
                               NavigationUtils.push(context, ScorePage());
+                            },
+                          ),
+                          TXDividerWidget1(),
+                          TXCellSelectionOptionWidget1(
+                            leading: Icons.video_library,
+                            optionName: "Ver tutoriales",
+                            onOptionTap: () {
+                              NavigationUtils.push(context, VideoPage());
                             },
                           ),
                           TXDividerWidget1(),
@@ -519,7 +526,23 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
           ),
           TXLoadingWidget(
             loadingStream: bloc.isLoadingStream,
-          )
+          ),
+          StreamBuilder<bool>(
+              stream: bloc.showFirstTimeResult,
+              initialData: false,
+              builder: (context, snapshotShow) {
+                return snapshotShow.data ? TXVideoIntroWidget(
+                  title: R.string.profileSettingsHelper,
+                  onSeeVideo: () {
+                    bloc.setNotFirstTime();
+                    FileManager.playVideo("profile_settings.mp4");
+                  },
+                  onSkip: () {
+                    bloc.setNotFirstTime();
+                  },
+                ) : Container();
+              }
+          ),
         ],
       ),
     );

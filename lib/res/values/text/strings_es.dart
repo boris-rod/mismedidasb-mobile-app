@@ -394,4 +394,19 @@ class StringsEs implements StringsBase {
 
   @override
   String get edit => "Editar";
+
+  @override
+  String get copyPlanHelper => "¿Cómo copiar Mi Plan de Comidas de un día para otro?";
+
+  @override
+  String get foodPlanHelper => "¿Cómo realizar Mi Plan de Comidas?";
+
+  @override
+  String get planiIntroHelper => "Introducción a PlaniFive";
+
+  @override
+  String get portionFoodHelper => "¿Cómo saber el tamaño de cada porción que elijo?";
+
+  @override
+  String get profileSettingsHelper => "Perfil y ajustes";
 }

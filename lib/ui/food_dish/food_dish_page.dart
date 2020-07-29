@@ -19,6 +19,7 @@ import 'package:mismedidasb/ui/_tx_widget/tx_main_app_bar_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_network_image.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_textlink_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_video_intro_widet.dart';
 import 'package:mismedidasb/ui/food/food_page.dart';
 import 'package:mismedidasb/ui/food_dish/food_dish_bloc.dart';
 import 'package:mismedidasb/ui/food_dish/tx_bottom_resume_food_plan_widget.dart';
@@ -28,6 +29,7 @@ import 'package:mismedidasb/ui/food_dish/tx_food_healthy_filter_widget.dart';
 import 'package:mismedidasb/ui/food_dish/tx_instrucctions_widget.dart';
 import 'package:mismedidasb/ui/home/home_page.dart';
 import 'package:mismedidasb/utils/calendar_utils.dart';
+import 'package:mismedidasb/utils/file_manager.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:mismedidasb/utils/extensions.dart';
 
@@ -249,7 +251,41 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
           ),
           TXLoadingWidget(
             loadingStream: bloc.isLoadingStream,
-          )
+          ),
+          StreamBuilder<bool>(
+              stream: bloc.showFirstTimePlanResult,
+              initialData: false,
+              builder: (context, snapshotShow) {
+                return snapshotShow.data
+                    ? TXVideoIntroWidget(
+                        title: R.string.foodPlanHelper,
+                        onSeeVideo: () {
+                          bloc.setNotFirstTimePlan();
+                          FileManager.playVideo("my_food_plan.mp4");
+                        },
+                        onSkip: () {
+                          bloc.setNotFirstTimePlan();
+                        },
+                      )
+                    : Container();
+              }),
+          StreamBuilder<bool>(
+              stream: bloc.showFirstTimePlanCopyResult,
+              initialData: false,
+              builder: (context, snapshotShow) {
+                return snapshotShow.data
+                    ? TXVideoIntroWidget(
+                        title: R.string.copyPlanHelper,
+                        onSeeVideo: () {
+                          bloc.setNotFirstTimePlanCopy();
+                          FileManager.playVideo("copy_food_plan.mp4");
+                        },
+                        onSkip: () {
+                          bloc.setNotFirstTimePlanCopy();
+                        },
+                      )
+                    : Container();
+              }),
         ],
       ),
     );
@@ -334,6 +370,7 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
 
   Widget _getListModeView(BuildContext context,
       List<DailyActivityFoodModel> modelList, DailyFoodModel dailyModel) {
+    bloc.launchFirstTimePlan();
     return Column(
       children: <Widget>[
         Expanded(
@@ -357,7 +394,8 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                 child: TXButtonWidget(
                     onPressed: () {
                       if (dailyModel.hasFoods == null)
-                        Fluttertoast.showToast(msg: R.string.emptyFoodList,
+                        Fluttertoast.showToast(
+                            msg: R.string.emptyFoodList,
                             backgroundColor: R.color.gray,
                             textColor: Colors.white);
                       else {
@@ -603,6 +641,7 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
 
   Widget _getCalendarView(
       BuildContext context, List<DailyFoodModel> modelList) {
+    bloc.launchFirstTimePlanCopy();
     final firstD = CalendarUtils.getFirstDateOfPreviousMonth();
     final lastD = CalendarUtils.getLastDateOfNextMonth();
     if (bloc.isCopying) {
@@ -614,228 +653,247 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
       child: Column(
         children: <Widget>[
           StreamBuilder<Map<DateTime, List<DailyFoodModel>>>(
-          stream: bloc.calendarPageResult,
-          initialData: {},
-          builder: (ctx, snapshotCalendarData) {
-            final currentDateMonth = bloc.currentCalendarPage < 0 ? CalendarUtils.getFirstDateOfPreviousMonth() :
-            bloc.currentCalendarPage > 0 ? CalendarUtils.getFirstDateOfNextMonth() : DateTime.now();
+              stream: bloc.calendarPageResult,
+              initialData: {},
+              builder: (ctx, snapshotCalendarData) {
+                final currentDateMonth = bloc.currentCalendarPage < 0
+                    ? CalendarUtils.getFirstDateOfPreviousMonth()
+                    : bloc.currentCalendarPage > 0
+                        ? CalendarUtils.getFirstDateOfNextMonth()
+                        : DateTime.now();
 
-            return Column(
-              children: <Widget>[
-                SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  constraints: BoxConstraints(maxWidth: 350),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      TXIconButtonWidget(
-                        icon: Icon(
-                          Icons.keyboard_arrow_left,
-                          size: 30,
-                          color: bloc.currentCalendarPage < 0
-                              ? R.color.gray_dark
-                              : R.color.food_nutri_info,
-                        ),
-                        onPressed: bloc.currentCalendarPage < 0
-                            ? null
-                            : () {
-                          bloc.currentCalendarPage -= 1;
-                          bloc.changeCalendarPage();
-                          final focus = bloc.currentCalendarPage < 0 ? CalendarUtils.getFirstDateOfPreviousMonth() :
-                          bloc.currentCalendarPage > 0 ? CalendarUtils.getFirstDateOfNextMonth() : DateTime.now();
-                          _calendarController.setFocusedDay(focus);
-
-                        },
+                return Column(
+                  children: <Widget>[
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      constraints: BoxConstraints(maxWidth: 350),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          TXIconButtonWidget(
+                            icon: Icon(
+                              Icons.keyboard_arrow_left,
+                              size: 30,
+                              color: bloc.currentCalendarPage < 0
+                                  ? R.color.gray_dark
+                                  : R.color.food_nutri_info,
+                            ),
+                            onPressed: bloc.currentCalendarPage < 0
+                                ? null
+                                : () {
+                                    bloc.currentCalendarPage -= 1;
+                                    bloc.changeCalendarPage();
+                                    final focus = bloc.currentCalendarPage < 0
+                                        ? CalendarUtils
+                                            .getFirstDateOfPreviousMonth()
+                                        : bloc.currentCalendarPage > 0
+                                            ? CalendarUtils
+                                                .getFirstDateOfNextMonth()
+                                            : DateTime.now();
+                                    _calendarController.setFocusedDay(focus);
+                                  },
+                          ),
+                          Expanded(
+                            child: TXTextWidget(
+                                textAlign: TextAlign.center,
+                                text: "${CalendarUtils.showInFormat(
+                                  "MMMM",
+                                  currentDateMonth,
+                                )} de ${CalendarUtils.showInFormat(
+                                  "yyyy",
+                                  currentDateMonth,
+                                )}",
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                size: 25),
+                          ),
+                          TXIconButtonWidget(
+                            icon: Icon(
+                              Icons.keyboard_arrow_right,
+                              size: 30,
+                              color: bloc.currentCalendarPage > 0
+                                  ? R.color.gray_dark
+                                  : R.color.food_nutri_info,
+                            ),
+                            onPressed: bloc.currentCalendarPage > 0
+                                ? null
+                                : () {
+                                    bloc.currentCalendarPage += 1;
+                                    bloc.changeCalendarPage();
+                                    final focus = bloc.currentCalendarPage < 0
+                                        ? CalendarUtils
+                                            .getFirstDateOfPreviousMonth()
+                                        : bloc.currentCalendarPage > 0
+                                            ? CalendarUtils
+                                                .getFirstDateOfNextMonth()
+                                            : DateTime.now();
+                                    _calendarController.setFocusedDay(focus);
+                                  },
+                          ),
+                        ],
                       ),
-                      Expanded(
-                        child: TXTextWidget(
-                            textAlign: TextAlign.center,
-                            text: "${CalendarUtils.showInFormat(
-                              "MMMM",
-                              currentDateMonth,
-                            )} de ${CalendarUtils.showInFormat(
-                              "yyyy",
-                              currentDateMonth,
-                            )}",
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            size: 25),
-                      ),
-                      TXIconButtonWidget(
-                        icon: Icon(
-                          Icons.keyboard_arrow_right,
-                          size: 30,
-                          color: bloc.currentCalendarPage > 0
-                              ? R.color.gray_dark
-                              : R.color.food_nutri_info,
-                        ),
-                        onPressed: bloc.currentCalendarPage > 0
-                            ? null
-                            : () {
-                          bloc.currentCalendarPage += 1;
-                          bloc.changeCalendarPage();
-                          final focus = bloc.currentCalendarPage < 0 ? CalendarUtils.getFirstDateOfPreviousMonth() :
-                          bloc.currentCalendarPage > 0 ? CalendarUtils.getFirstDateOfNextMonth() : DateTime.now();
-                          _calendarController.setFocusedDay(focus);
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                TableCalendar(
-                  availableGestures: AvailableGestures.none,
-                  headerVisible: false,
-                  locale: AppConfig.locale == AppLocale.EN
-                      ? 'en_US'
-                      : AppConfig.locale == AppLocale.IT ? 'it_IT' : 'es_ES',
-                  calendarController: _calendarController,
-                  startDay: firstD,
-                  endDay: lastD,
-                  onDaySelected: (datetime, events) {
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    TableCalendar(
+                      availableGestures: AvailableGestures.none,
+                      headerVisible: false,
+                      locale: AppConfig.locale == AppLocale.EN
+                          ? 'en_US'
+                          : AppConfig.locale == AppLocale.IT
+                              ? 'it_IT'
+                              : 'es_ES',
+                      calendarController: _calendarController,
+                      startDay: firstD,
+                      endDay: lastD,
+                      onDaySelected: (datetime, events) {
 //              print(datetime.toIso8601String());
-                    if (CalendarUtils.compare(datetime, bloc.selectedDate) != 0) {
-                      bloc.selectedDate = datetime;
-                      bloc.loadDailyPlanData();
-                    }
-                  },
-                  enabledDayPredicate: (datetime) {
-                    return CalendarUtils.compare(
-                        datetime, bloc.firstDateHealthResult) >=
-                        0;
-                  },
-                  initialSelectedDay: bloc.selectedDate,
-                  events: snapshotCalendarData.data,
-                  initialCalendarFormat: CalendarFormat.month,
-                  availableCalendarFormats: Map.of({CalendarFormat.month: ""}),
-                  calendarStyle: CalendarStyle(
-                    outsideDaysVisible: false,
-                  ),
+                        if (CalendarUtils.compare(
+                                datetime, bloc.selectedDate) !=
+                            0) {
+                          bloc.selectedDate = datetime;
+                          bloc.loadDailyPlanData();
+                        }
+                      },
+                      enabledDayPredicate: (datetime) {
+                        return CalendarUtils.compare(
+                                datetime, bloc.firstDateHealthResult) >=
+                            0;
+                      },
+                      initialSelectedDay: bloc.selectedDate,
+                      events: snapshotCalendarData.data,
+                      initialCalendarFormat: CalendarFormat.month,
+                      availableCalendarFormats:
+                          Map.of({CalendarFormat.month: ""}),
+                      calendarStyle: CalendarStyle(
+                        outsideDaysVisible: false,
+                      ),
 //            onVisibleDaysChanged: (dateTimeFirst, dateTimeLast, calendarFormat){
 //
 //            },
-                  headerStyle: HeaderStyle(
-                    centerHeaderTitle: true,
-                    titleTextStyle: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 25),
-                    rightChevronIcon: Icon(
-                      Icons.keyboard_arrow_right,
-                      size: 30,
-                      color: R.color.food_nutri_info,
-                    ),
-                    leftChevronIcon: Icon(
-                      Icons.keyboard_arrow_left,
-                      size: 30,
-                      color: R.color.food_nutri_info,
-                    ),
-                  ),
-                  builders: CalendarBuilders(
-                    markersBuilder: (context, date, events, holidays) {
-                      final children = <Widget>[];
-                      if (events.isNotEmpty) {
-                        children.add(
-                          _buildEventsMarker(date, events),
-                        );
-                      }
-                      return children;
-                    },
-                    dowWeekendBuilder: (context, str) {
-                      return TXTextWidget(
-                        text: str.toCapitalize().substring(0, str.length - 1),
-                        textAlign: TextAlign.center,
-                        color: Colors.white,
-                      );
-                    },
-                    dowWeekdayBuilder: (context, str) {
-                      return TXTextWidget(
-                        text: str.toCapitalize().substring(0, str.length - 1),
-                        textAlign: TextAlign.center,
-                        color: Colors.white,
-                      );
-                    },
-                    dayBuilder: (context, date, events) {
-                      bool isValidDay = (CalendarUtils.compare(
-                          date,
-                          (CalendarUtils.compare(firstD,
-                              bloc.firstDateHealthResult) >
-                              0
-                              ? firstD
-                              : bloc.firstDateHealthResult)) >=
-                          0 &&
-                          CalendarUtils.compare(date, lastD) <= 0);
-                      return Container(
-                        height: double.infinity,
-                        width: double.infinity,
-                        child: Center(
-                          child: TXTextWidget(
-                            text: "${date.day}",
-                            color: isValidDay ? Colors.white : R.color.gray,
-                            size: isValidDay ? 14 : 11,
-                          ),
+                      headerStyle: HeaderStyle(
+                        centerHeaderTitle: true,
+                        titleTextStyle: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 25),
+                        rightChevronIcon: Icon(
+                          Icons.keyboard_arrow_right,
+                          size: 30,
+                          color: R.color.food_nutri_info,
                         ),
-                      );
-                    },
-                    selectedDayBuilder: (context, date, events) {
-                      return Container(
-                        height: double.infinity,
-                        width: double.infinity,
-                        child: Center(
-                          child: Stack(
-                            children: <Widget>[
-                              Center(
-                                child: CircleAvatar(
-                                  backgroundColor: R.color.button_color,
-                                  radius: 12,
-                                ),
+                        leftChevronIcon: Icon(
+                          Icons.keyboard_arrow_left,
+                          size: 30,
+                          color: R.color.food_nutri_info,
+                        ),
+                      ),
+                      builders: CalendarBuilders(
+                        markersBuilder: (context, date, events, holidays) {
+                          final children = <Widget>[];
+                          if (events.isNotEmpty) {
+                            children.add(
+                              _buildEventsMarker(date, events),
+                            );
+                          }
+                          return children;
+                        },
+                        dowWeekendBuilder: (context, str) {
+                          return TXTextWidget(
+                            text:
+                                str.toCapitalize().substring(0, str.length - 1),
+                            textAlign: TextAlign.center,
+                            color: Colors.white,
+                          );
+                        },
+                        dowWeekdayBuilder: (context, str) {
+                          return TXTextWidget(
+                            text:
+                                str.toCapitalize().substring(0, str.length - 1),
+                            textAlign: TextAlign.center,
+                            color: Colors.white,
+                          );
+                        },
+                        dayBuilder: (context, date, events) {
+                          bool isValidDay = (CalendarUtils.compare(
+                                      date,
+                                      (CalendarUtils.compare(firstD,
+                                                  bloc.firstDateHealthResult) >
+                                              0
+                                          ? firstD
+                                          : bloc.firstDateHealthResult)) >=
+                                  0 &&
+                              CalendarUtils.compare(date, lastD) <= 0);
+                          return Container(
+                            height: double.infinity,
+                            width: double.infinity,
+                            child: Center(
+                              child: TXTextWidget(
+                                text: "${date.day}",
+                                color: isValidDay ? Colors.white : R.color.gray,
+                                size: isValidDay ? 14 : 11,
                               ),
-                              Center(
-                                child: TXTextWidget(
-                                  text: "${date.day}",
-                                  color: Colors.white,
-                                  size: 14,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                    todayDayBuilder: (context, date, events) {
-                      return Container(
-                        height: double.infinity,
-                        width: double.infinity,
-                        child: Center(
-                          child: Stack(
-                            children: <Widget>[
-                              Center(
-                                child: CircleAvatar(
-                                  backgroundColor: R.color.food_action_bar,
-                                  radius: 12,
-                                ),
+                            ),
+                          );
+                        },
+                        selectedDayBuilder: (context, date, events) {
+                          return Container(
+                            height: double.infinity,
+                            width: double.infinity,
+                            child: Center(
+                              child: Stack(
+                                children: <Widget>[
+                                  Center(
+                                    child: CircleAvatar(
+                                      backgroundColor: R.color.button_color,
+                                      radius: 12,
+                                    ),
+                                  ),
+                                  Center(
+                                    child: TXTextWidget(
+                                      text: "${date.day}",
+                                      color: Colors.white,
+                                      size: 14,
+                                    ),
+                                  )
+                                ],
                               ),
-                              Center(
-                                child: TXTextWidget(
-                                  text: "${date.day}",
-                                  size: 14,
-                                  color: Colors.white,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
-            );
-          }),
+                            ),
+                          );
+                        },
+                        todayDayBuilder: (context, date, events) {
+                          return Container(
+                            height: double.infinity,
+                            width: double.infinity,
+                            child: Center(
+                              child: Stack(
+                                children: <Widget>[
+                                  Center(
+                                    child: CircleAvatar(
+                                      backgroundColor: R.color.food_action_bar,
+                                      radius: 12,
+                                    ),
+                                  ),
+                                  Center(
+                                    child: TXTextWidget(
+                                      text: "${date.day}",
+                                      size: 14,
+                                      color: Colors.white,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                );
+              }),
           StreamBuilder<DailyFoodModel>(
               stream: bloc.calendarOptionsResult,
               initialData: null,

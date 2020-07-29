@@ -32,8 +32,10 @@ class FoodAddEditBloC extends BaseBloC
   List<FoodModel> allFoods = [];
   List<FoodModel> currentChildren = [];
   bool reload = false;
+  List<FoodModel> compoundFoodModelList = [];
 
-  void init(FoodModel foodModel) async {
+  void init(FoodModel foodModel, List<FoodModel> list) async {
+    compoundFoodModelList = list;
     final res = await _iDishRepository.getFoodModelList();
     if (res is ResultSuccess<List<FoodModel>>) {
       allFoods.addAll(res.value);
@@ -47,8 +49,8 @@ class FoodAddEditBloC extends BaseBloC
       allFoods.forEach((f) {
         final sF = foodModel.children.firstWhere((food) => food.id == f.id,
             orElse: () {
-              return null;
-            });
+          return null;
+        });
         if (sF != null) {
           f.isSelected = sF.isSelected;
           f.count = sF.count;
@@ -95,13 +97,15 @@ class FoodAddEditBloC extends BaseBloC
     String rule = "";
     if (currentFoodModel.children.isEmpty) {
       rule = R.string.atLeastOneFood;
-      Fluttertoast.showToast(msg: rule,
+      Fluttertoast.showToast(
+          msg: rule,
           backgroundColor: Colors.redAccent,
           textColor: Colors.white);
     } else if (currentFoodModel.children.length == 1 &&
         currentFoodModel.children[0].count == 1) {
       rule = R.string.foodPortionMajorThan1;
-      Fluttertoast.showToast(msg: rule,
+      Fluttertoast.showToast(
+          msg: rule,
           backgroundColor: Colors.redAccent,
           textColor: Colors.white);
     }
@@ -110,6 +114,24 @@ class FoodAddEditBloC extends BaseBloC
 
   void addFood(bool isAdding) async {
     if (validateFoodsRules().isEmpty) {
+      final list = compoundFoodModelList.where((f) => f.isCompound).toList();
+      final exist = list
+          .map((e) => e.name.trim().toLowerCase())
+          .toList()
+          .firstWhere(
+              (element) =>
+                  element == currentFoodModel.name.trim().toLowerCase(),
+              orElse: () {
+        return null;
+      });
+
+      if (exist != null) {
+        Fluttertoast.showToast(
+            msg: "El nombre de este alimento compuesto ya existe.",
+            backgroundColor: Colors.red,
+            textColor: Colors.white, toastLength: Toast.LENGTH_LONG);
+        return;
+      }
       isLoading = true;
       try {
         if (isAdding) {

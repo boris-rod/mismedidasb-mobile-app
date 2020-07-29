@@ -26,6 +26,7 @@ import 'package:mismedidasb/ui/_tx_widget/tx_network_image.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_show_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_textlink_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_video_intro_widet.dart';
 import 'package:mismedidasb/ui/food_craving/food_craving_page.dart';
 import 'package:mismedidasb/ui/food_dish/food_dish_page.dart';
 import 'package:mismedidasb/ui/habit/habit_page.dart';
@@ -39,6 +40,7 @@ import 'package:mismedidasb/ui/measure_wellness/measure_wellness_page.dart';
 import 'package:mismedidasb/ui/poll_notification/poll_notification_page.dart';
 import 'package:mismedidasb/ui/profile/profile_page.dart';
 import 'package:mismedidasb/ui/settings/settings_page.dart';
+import 'package:mismedidasb/utils/file_manager.dart';
 import 'package:mismedidasb/utils/utils.dart';
 
 class HomePage extends StatefulWidget {
@@ -92,29 +94,29 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
                   width: 35,
                 ),
                 onTap: () async {
-//                  NavigationUtils.push(context, PollNotificationPage());
-                  if (!bloc.termsAccepted) {
-                    final res = await NavigationUtils.push(
-                        context,
-                        LegacyPage(
-                          contentType: 1,
-                          termsCondAccepted: false,
-                        ));
-                    if (res ?? false) {
-                      bloc.termsAccepted = true;
-                    }
-                  } else {
-                    final res =
-                        await NavigationUtils.push(context, ProfilePage());
-                    if (res is SettingAction) {
-                      if (res == SettingAction.logout ||
-                          res == SettingAction.removeAccount) {
-                        NavigationUtils.pushReplacement(context, LoginPage());
-                      } else if (res == SettingAction.languageCodeChanged) {
-                        bloc.loadHomeData();
-                      }
-                    }
-                  }
+                  NavigationUtils.push(context, PollNotificationPage());
+//                  if (!bloc.termsAccepted) {
+//                    final res = await NavigationUtils.push(
+//                        context,
+//                        LegacyPage(
+//                          contentType: 1,
+//                          termsCondAccepted: false,
+//                        ));
+//                    if (res ?? false) {
+//                      bloc.termsAccepted = true;
+//                    }
+//                  } else {
+//                    final res =
+//                        await NavigationUtils.push(context, ProfilePage());
+//                    if (res is SettingAction) {
+//                      if (res == SettingAction.logout ||
+//                          res == SettingAction.removeAccount) {
+//                        NavigationUtils.pushReplacement(context, LoginPage());
+//                      } else if (res == SettingAction.languageCodeChanged) {
+//                        bloc.loadHomeData();
+//                      }
+//                    }
+//                  }
                 },
               )
             ],
@@ -199,6 +201,23 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
           TXLoadingWidget(
             loadingStream: bloc.isLoadingStream,
           ),
+          StreamBuilder<bool>(
+              stream: bloc.showFirstTimeResult,
+              initialData: false,
+              builder: (context, snapshotShow) {
+                return snapshotShow.data
+                    ? TXVideoIntroWidget(
+                        title: R.string.planiIntroHelper,
+                        onSeeVideo: () {
+                          bloc.setNotFirstTime();
+                          FileManager.playVideo("main_menu.mp4");
+                        },
+                        onSkip: () {
+                          bloc.setNotFirstTime();
+                        },
+                      )
+                    : Container();
+              }),
 //          Container(
 //            color: R.color.discover_background,
 //          ),

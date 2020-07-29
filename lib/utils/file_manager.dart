@@ -9,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_cupertino_dialog_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
+import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -125,5 +126,14 @@ class FileManager {
     ByteData bd = await rootBundle.load('$assetPath/$fileName');
     await tempFile.writeAsBytes(bd.buffer.asUint8List(), flush: true);
     return tempFile;
+  }
+
+  static playVideo(String videoName) async {
+    Directory tempDir = await getTemporaryDirectory();
+    File tempFile = File('${tempDir.path}/$videoName');
+    final filePath = 'lib/res/assets/$videoName';
+    ByteData bd = await rootBundle.load(filePath);
+    await tempFile.writeAsBytes(bd.buffer.asUint8List(), flush: true);
+    OpenFile.open(tempFile.path);
   }
 }

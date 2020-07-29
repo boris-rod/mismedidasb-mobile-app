@@ -14,6 +14,7 @@ class AppImage {
   );
 //  final logo_blue = 'lib/res/assets/img/logo_blue.png';
   final logo = 'lib/res/assets/img/logo.png';
+  final plani1 = 'lib/res/assets/img/plani1.png';
   final logo_planifive = 'lib/res/assets/img/logo_planifive.png';
   final car = 'lib/res/assets/img/car_placeholder.png';
   final user = 'lib/res/assets/img/user_placeholder.png';

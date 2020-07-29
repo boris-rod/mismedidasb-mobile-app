@@ -108,6 +108,7 @@ import 'package:mismedidasb/ui/register/register_bloc.dart';
 import 'package:mismedidasb/ui/scores_page/score_bloc.dart';
 import 'package:mismedidasb/ui/settings/settings_bloc.dart';
 import 'package:mismedidasb/ui/splash/splash_bloc.dart';
+import 'package:mismedidasb/ui/videos/video_bloc.dart';
 import 'package:mismedidasb/utils/logger.dart';
 
 ///Part dependency injector engine and Part service locator.
@@ -322,11 +323,12 @@ class Injector {
         (c) => SettingsBloC(c.resolve(), c.resolve(), c.resolve(), c.resolve()));
     container.registerFactory((c) => LegacyBloC(c.resolve()));
     container.registerFactory((c) => ContactUsBloC(c.resolve()));
-    container.registerFactory((c) => ProfileEditBloC(c.resolve(), c.resolve()));
+    container.registerFactory((c) => ProfileEditBloC(c.resolve(), c.resolve(), c.resolve()));
     container.registerFactory((c) => InvitePeopleBloC(c.resolve()));
     container
         .registerFactory((c) => PollNotificationBloC(c.resolve(), c.resolve(), c.resolve()));
     container.registerFactory((c) => ScoreBloC(c.resolve()));
+    container.registerFactory((c) => VideoBloC());
   }
 
   _registerCommon() {

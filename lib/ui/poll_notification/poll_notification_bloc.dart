@@ -100,21 +100,21 @@ class PollNotificationBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
   void answer() async {
     isLoading = true;
-    final _foodPlanReachedResult = await foodPlanReachedResult.first;
-    final _feelingTodayResult = await feelingTodayResult.first;
-    final _exercisePlanTomorrowResult = await exercisePlanTomorrowResult.first;
-    final _exercisePlanReachedResult = await exercisePlanReachedResult.first;
+    final _foodPlanReachedResult =  _foodPlanReachedController.value;
+    final _feelingTodayResult = _feelingTodayController.value;
+    final _exercisePlanTomorrowResult = _exercisePlanTomorrowController.value;
+    final _exercisePlanReachedResult = _exercisePlanReachedController.value;
 
     final createModel = SoloAnswerCreateModel();
-    if (currentPageIndex == _foodPlanReachedResult.index) {
+    if (currentPageIndex == _foodPlanReachedResult?.index) {
       createModel.questionCode = _foodPlanReachedResult.code;
       createModel.answerCode =
           _foodPlanReachedResult.soloAnswerModelSelected.code;
-    } else if (currentPageIndex == _feelingTodayResult.index) {
+    } else if (currentPageIndex == _feelingTodayResult?.index) {
       createModel.questionCode = _feelingTodayResult.code;
       createModel.answerCode = _feelingTodayResult.soloAnswerModelSelected.code;
       createModel.answerValue = emotionValue.toString();
-    } else if (currentPageIndex == _exercisePlanTomorrowResult.index) {
+    } else if (currentPageIndex == _exercisePlanTomorrowResult?.index) {
       createModel.questionCode = _exercisePlanTomorrowResult.code;
       createModel.answerCode =
           _exercisePlanTomorrowResult.soloAnswerModelSelected.code;
@@ -130,7 +130,7 @@ class PollNotificationBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
             SharedKey.showPhysicalExerciseTime, true);
         await _ilnm.initMakeExerciseReminder();
       }
-    } else if (currentPageIndex == _exercisePlanReachedResult.index) {
+    } else if (currentPageIndex == _exercisePlanReachedResult?.index) {
       createModel.questionCode = _exercisePlanReachedResult.code;
       createModel.answerCode =
           _exercisePlanReachedResult.soloAnswerModelSelected.code;
