@@ -249,6 +249,8 @@ class _PollNotificationState
                     bloc.timeMarked = true;
                     bloc.exerciseTime = picked;
                     setState(() {});
+                    bloc.saveExercisePlanTimeTomorrow(exerciseAnswer, 0);
+                    bloc.updateExerciseTime(picked);
                     print(picked.toString());
                   }
                 },
@@ -262,6 +264,7 @@ class _PollNotificationState
                 onTap: () {
                   bloc.timeMarked = false;
                   setState(() {});
+                  bloc.saveExercisePlanTimeTomorrow(exerciseAnswerDont, 0);
                 },
               )
             ],
