@@ -70,6 +70,12 @@ class _MyMeasuresBState extends StateWithBloC<MyMeasuresBApp, AppBloC> {
       builder: (ctx, snapshot) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
+          builder: (BuildContext context, Widget child) {
+            return MediaQuery(
+              data: MediaQuery.of(context).copyWith(textScaleFactor: 1),
+              child: child,
+            );
+          },
           theme: ThemeData(
             appBarTheme:
                 AppBarTheme(iconTheme: IconThemeData(color: Colors.black)),
