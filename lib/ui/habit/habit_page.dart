@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_html/style.dart';
 import 'package:mismedidasb/domain/habit/habit_model.dart';
 import 'package:mismedidasb/domain/health_concept/health_concept.dart';
 import 'package:mismedidasb/domain/poll_model/poll_model.dart';
@@ -15,7 +17,9 @@ import 'package:mismedidasb/ui/_tx_widget/tx_icon_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_main_app_bar_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_textlink_widget.dart';
 import 'package:mismedidasb/ui/habit/habit_bloc.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class HabitPage extends StatefulWidget {
@@ -56,49 +60,50 @@ class _HabitState extends StateWithBloC<HabitPage, HabitBloC> {
                   image: ExactAssetImage(R.image.habits_home_blur),
                 ))),
               ),
-              Column(crossAxisAlignment: CrossAxisAlignment.center, children: <
-                  Widget>[
-                Image.asset(
-                  R.image.habits_title,
-                  width: 300,
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                Expanded(
-                  child: Stack(
-                    children: <Widget>[
-                      Container(
-                        margin:
-                        EdgeInsets.only(left: 40, bottom: 30, top: 0, right: 40),
-                        width: double.infinity,
-                        child: TXBlurWidget(),
+              Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Image.asset(
+                      R.image.habits_title,
+                      width: 300,
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Expanded(
+                      child: Stack(
+                        children: <Widget>[
+                          Container(
+                            margin: EdgeInsets.only(
+                                left: 40, bottom: 30, top: 0, right: 40),
+                            width: double.infinity,
+                            child: TXBlurWidget(),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(
+                                left: 30, bottom: 30, top: 0, right: 40),
+                            child: StreamBuilder<List<TitleSubTitlesModel>>(
+                                stream: bloc.pollsResult,
+                                initialData: [],
+                                builder: (context, snapshot) {
+                                  return SingleChildScrollView(
+                                    physics: BouncingScrollPhysics(),
+                                    child: Container(
+                                      width: double.infinity,
+                                      padding: EdgeInsets.only(right: 10),
+                                      child: Column(
+                                        children: <Widget>[
+                                          ..._getHabitsView(snapshot.data)
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                }),
+                          ),
+                        ],
                       ),
-                      Container(
-                        margin:
-                        EdgeInsets.only(left: 30, bottom: 30, top: 0, right: 40),
-                        child: StreamBuilder<List<TitleSubTitlesModel>>(
-                            stream: bloc.pollsResult,
-                            initialData: [],
-                            builder: (context, snapshot) {
-                              return SingleChildScrollView(
-                                physics: BouncingScrollPhysics(),
-                                child: Container(
-                                  width: double.infinity,
-                                  padding: EdgeInsets.only(right: 10),
-                                  child: Column(
-                                    children: <Widget>[
-                                      ..._getHabitsView(snapshot.data)
-                                    ],
-                                  ),
-                                ),
-                              );
-                            }),
-                      ),
-                    ],
-                  ),
-                )
-              ])
+                    )
+                  ])
             ],
           ),
         ),
@@ -167,11 +172,33 @@ class _HabitState extends StateWithBloC<HabitPage, HabitBloC> {
   List<Widget> _getHabitsSubtitles(List<String> subtitles) {
     List<Widget> list = [];
     subtitles.forEach((s) {
-      final w = TXTextWidget(
-        text: s,
-        color: Colors.white,
-        fontWeight: FontWeight.w500,
-        size: 14,
+      final w = Column(
+        children: <Widget>[
+          s.contains("<https://link>")
+              ? InkWell(
+                  onTap: () {
+                    launch("https://www.amazon.com/dp/B08DN2V7WL");
+                  },
+                  child: RichText(
+                    text: TextSpan(
+                        text: s.replaceFirst("<https://link>", ""),
+                        children: [
+                          TextSpan(
+                              text: "saber más...",
+                              style: TextStyle(fontWeight: FontWeight.bold))
+                        ]),
+                  ),
+                )
+              : TXTextWidget(
+                  text: s,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                  size: 14,
+                ),
+          SizedBox(
+            height: 3,
+          )
+        ],
       );
       list.add(w);
     });

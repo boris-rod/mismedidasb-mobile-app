@@ -173,7 +173,8 @@ class TitleSubTitlesModel {
         title: "Reduzca el consumo de alcohol:",
         subTitles: [
           "No beba a diario, debe haber días de abstinencia.",
-          "Máximo una o dos copas de vino o botellines de cerveza."
+          "Máximo una o dos copas de vino o botellines de cerveza.",
+          "Las adicciones son un importante problema de salud. <https://link>",
         ]));
 
     habits.add(TitleSubTitlesModel(
@@ -181,7 +182,8 @@ class TitleSubTitlesModel {
         title: "Establezca límites para el uso del teléfono móvil:",
         subTitles: [
           "Puede perder alrededor de 4 horas de su día.",
-          "Pase más tiempo conectado con la familia o amigos."
+          "Pase más tiempo conectado con la familia o amigos.",
+          "Evite los comportamientos con potencial adictivo. <https://link>",
         ]));
 
     habits.add(TitleSubTitlesModel(

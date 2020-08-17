@@ -95,7 +95,7 @@ class StringsEs implements StringsBase {
 
   @override
   String get checkEmail =>
-      "Revise su correo para obtener el código de activación.";
+      "Introduzca el código que le hemos enviado al email con el que se ha registrado.";
 
   @override
   String get profile => "Perfil";
