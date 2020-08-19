@@ -48,6 +48,7 @@ class SharedKey {
   static String launchNotiPoll = "launchNotiPoll";
   static String firstTimeInHome = "firstTimeInHome";
   static String firstTimeInProfile = "firstTimeInProfile";
+  static String firstTimeInMeasureHealth = "firstTimeInMeasureHealth";
   static String firstTimeInCopyPlan = "firstTimeInCopyPlan";
   static String firstTimeInFoodPlan = "firstTimeInFoodPlan";
   static String firstTimeInFoodPortions = "firstTimeInFoodPortions";
@@ -66,6 +67,7 @@ class SharedPreferencesManager {
   Future<void> initVideoTutorials() async {
     await setBoolValue(SharedKey.firstTimeInHome, true);
     await setBoolValue(SharedKey.firstTimeInProfile, true);
+    await setBoolValue(SharedKey.firstTimeInMeasureHealth, true);
     await setBoolValue(SharedKey.firstTimeInCopyPlan, true);
     await setBoolValue(SharedKey.firstTimeInFoodPlan, true);
     await setBoolValue(SharedKey.firstTimeInFoodPortions, true);

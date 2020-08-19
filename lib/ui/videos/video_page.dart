@@ -91,6 +91,18 @@ class _VideoState extends StateWithBloC<VideoPage, VideoBloC>{
                 FileManager.playVideo("profile_settings.mp4");
               },
             ),
+            TXDividerWidget(),
+            ListTile(
+              title: TXTextWidget(
+                text: R.string.planiHelper,
+              ),
+              trailing: Icon(Icons.play_circle_filled, color: R.color.button_color,),
+              contentPadding:
+              EdgeInsets.only(right: 10, left: 10),
+              onTap: () {
+                FileManager.playVideo("plani.mp4");
+              },
+            ),
             TXDividerWidget()
           ],
         ),

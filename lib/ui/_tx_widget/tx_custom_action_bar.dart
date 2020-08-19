@@ -46,7 +46,7 @@ class TXCustomActionBar extends StatelessWidget {
               showLeading
                   ? leading ??
                       TXIconNavigatorWidget(
-                        onTap: () {
+                        onTap: onLeadingTap ?? () {
                           NavigationUtils.pop(context);
                         },
                         text: R.string.back.toLowerCase(),

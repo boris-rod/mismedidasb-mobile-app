@@ -45,11 +45,19 @@ class MeasureHealthBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
   Stream<PollResponseModel> get rewardResult => _rewardController.stream;
 
+  BehaviorSubject<bool> _showFirstTimeController = new BehaviorSubject();
+
+  Stream<bool> get showFirstTimeResult => _showFirstTimeController.stream;
+
   int currentPage = 1;
   HealthMeasureResultModel healthMeasureResultModel;
+  PollResponseModel pollResponseModel;
+  bool isFirstTime = false;
+
   String userName = "";
   void loadPolls(int conceptId) async {
     isLoading = true;
+    isFirstTime = await _sharedPreferencesManager.getBoolValue(SharedKey.firstTimeInMeasureHealth, defValue: true);
     userName = await _sharedPreferencesManager.getStringValue(SharedKey.userName);
     final res = await _iPollRepository.getPollsByConcept(conceptId);
     if (res is ResultSuccess<List<PollModel>>) {
@@ -86,6 +94,7 @@ class MeasureHealthBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
         await _sharedPreferencesManager
             .setFirstDateHealthResult(profileRes.value.firstDateHealthResult);
       }
+      pollResponseModel = res.value;
       _pollSaveController.sinkAddSafe(res.value);
     } else {
       showErrorMessage(res);
@@ -93,10 +102,23 @@ class MeasureHealthBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     isLoading = false;
   }
 
+  void launchFirstTime() async {
+    final value =
+    await _sharedPreferencesManager.getBoolValue(SharedKey.firstTimeInMeasureHealth, defValue: true);
+    _showFirstTimeController.sinkAddSafe(value);
+  }
+
+  void setNotFirstTime() async {
+    await _sharedPreferencesManager.setBoolValue(
+        SharedKey.firstTimeInMeasureHealth, false);
+    _showFirstTimeController.sinkAddSafe(false);
+  }
+
   @override
   void dispose() {
     _measureController.close();
     _rewardController.close();
+    _showFirstTimeController.close();
     _pageController.close();
     disposeLoadingBloC();
     disposeErrorHandlerBloC();

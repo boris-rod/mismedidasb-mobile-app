@@ -16,7 +16,9 @@ import 'package:mismedidasb/ui/_tx_widget/tx_custom_action_bar.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_show_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_video_intro_widet.dart';
 import 'package:mismedidasb/ui/measure_health/measure_health_bloc.dart';
+import 'package:mismedidasb/utils/file_manager.dart';
 import 'package:mismedidasb/utils/utils.dart';
 
 class MeasureHealthPage extends StatefulWidget {
@@ -32,6 +34,10 @@ class _MeasureHealthState
     extends StateWithBloC<MeasureHealthPage, MeasureHealthBloC> {
   final PageController pageController = PageController();
   final _keyPollHealthy = new GlobalKey<ScaffoldState>();
+
+  _navBack() {
+    NavigationUtils.pop(context, result: bloc.pollResponseModel);
+  }
 
   @override
   void initState() {
@@ -50,7 +56,10 @@ class _MeasureHealthState
             title: "${R.string.thanks} ${bloc.userName}",
             onOk: () {
               NavigationUtils.pop(context);
-              NavigationUtils.pop(context, result: onData);
+              if (bloc.isFirstTime)
+                bloc.launchFirstTime();
+              else
+                NavigationUtils.pop(context, result: onData);
             });
 //        showTXModalBottomSheet(
 //            context: context,
@@ -73,113 +82,141 @@ class _MeasureHealthState
   @override
   Widget buildWidget(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    return Stack(
-      children: <Widget>[
-        TXCustomActionBar(
-          scaffoldKey: _keyPollHealthy,
-          actionBarColor: R.color.health_color,
-          body: StreamBuilder<List<PollModel>>(
-            stream: bloc.pollsResult,
-            initialData: [],
-            builder: (ctx, snapshot) {
-              return Stack(
-                children: <Widget>[
-                  Positioned(
-                    top: 0,
-                    left: -40,
-                    right: 0,
-                    bottom: 0,
-                    child: Container(
-                        decoration: BoxDecoration(
-                            image: DecorationImage(
-                      fit: BoxFit.contain,
-                      image: ExactAssetImage(R.image.health_home_blur),
-                    ))),
-                  ),
-                  Column(
-                    children: <Widget>[
-                      Image.asset(
-                        R.image.health_title,
-                        width: 300,
-                      ),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      Expanded(
-                        child: Column(
-                          children: <Widget>[
-                            Expanded(
-                              child: Container(
-                                child: PageView.builder(
-                                  physics: NeverScrollableScrollPhysics(),
-                                  controller: pageController,
-                                  itemBuilder: (ctx, index) {
-                                    final model = snapshot.data[index];
-                                    return _getPageView(context, model, index);
-                                  },
-                                  itemCount: snapshot.data.length,
+    return WillPopScope(
+      onWillPop: () async {
+        _navBack();
+        return false;
+      },
+      child: Stack(
+        children: <Widget>[
+          TXCustomActionBar(
+            scaffoldKey: _keyPollHealthy,
+            actionBarColor: R.color.health_color,
+            onLeadingTap: () {
+              _navBack();
+            },
+            body: StreamBuilder<List<PollModel>>(
+              stream: bloc.pollsResult,
+              initialData: [],
+              builder: (ctx, snapshot) {
+                return Stack(
+                  children: <Widget>[
+                    Positioned(
+                      top: 0,
+                      left: -40,
+                      right: 0,
+                      bottom: 0,
+                      child: Container(
+                          decoration: BoxDecoration(
+                              image: DecorationImage(
+                        fit: BoxFit.contain,
+                        image: ExactAssetImage(R.image.health_home_blur),
+                      ))),
+                    ),
+                    Column(
+                      children: <Widget>[
+                        Image.asset(
+                          R.image.health_title,
+                          width: 300,
+                        ),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        Expanded(
+                          child: Column(
+                            children: <Widget>[
+                              Expanded(
+                                child: Container(
+                                  child: PageView.builder(
+                                    physics: NeverScrollableScrollPhysics(),
+                                    controller: pageController,
+                                    itemBuilder: (ctx, index) {
+                                      final model = snapshot.data[index];
+                                      return _getPageView(
+                                          context, model, index);
+                                    },
+                                    itemCount: snapshot.data.length,
+                                  ),
+                                  constraints: BoxConstraints(
+                                      maxWidth: math.min(
+                                          300, screenWidth * 90 / 100)),
                                 ),
+                              ),
+                              SizedBox(
+                                height: 15,
+                              ),
+                              Container(
                                 constraints: BoxConstraints(
                                     maxWidth:
-                                    math.min(300, screenWidth * 90 / 100)),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 15,
-                            ),
-                            Container(
-                              constraints: BoxConstraints(
-                                  maxWidth:
-                                      math.min(300, screenWidth * 90 / 100)),
-                              child: TXTextWidget(
-                                textAlign: TextAlign.center,
-                                text: snapshot.data.isNotEmpty
-                                    ? snapshot.data[bloc.currentPage - 1]
-                                        .bottomTip()
-                                    : "",
-                                color: Colors.white,
-                              ),
-                            )
-                          ],
+                                        math.min(300, screenWidth * 90 / 100)),
+                                child: TXTextWidget(
+                                  textAlign: TextAlign.center,
+                                  text: snapshot.data.isNotEmpty
+                                      ? snapshot.data[bloc.currentPage - 1]
+                                          .bottomTip()
+                                      : "",
+                                  color: Colors.white,
+                                ),
+                              )
+                            ],
+                          ),
                         ),
-                      ),
-                      Container(
-                        child: StreamBuilder<int>(
-                          stream: bloc.pageResult,
-                          initialData: bloc.currentPage,
-                          builder: (ctx, snapshotPage) {
-                            return TXButtonPaginateWidget(
-                              page: bloc.currentPage,
-                              total: snapshot.data.length,
-                              onNext: () {
-                                snapshot.data.length > bloc.currentPage
-                                    ? bloc.changePage(1)
-                                    : bloc.saveMeasures();
-                              },
-                              onPrevious: bloc.currentPage > 1
-                                  ? () {
-                                      bloc.changePage(-1);
-                                    }
-                                  : null,
-                              nextTitle: snapshot.data.length > bloc.currentPage
-                                  ? R.string.next
-                                  : R.string.answerPoll,
-                              previousTitle: R.string.previous,
-                            );
-                          },
-                        ),
-                      )
-                    ],
-                  )
-                ],
-              );
-            },
+                        Container(
+                          child: StreamBuilder<int>(
+                            stream: bloc.pageResult,
+                            initialData: bloc.currentPage,
+                            builder: (ctx, snapshotPage) {
+                              return TXButtonPaginateWidget(
+                                page: bloc.currentPage,
+                                total: snapshot.data.length,
+                                onNext: () {
+                                  snapshot.data.length > bloc.currentPage
+                                      ? bloc.changePage(1)
+                                      : bloc.saveMeasures();
+                                },
+                                onPrevious: bloc.currentPage > 1
+                                    ? () {
+                                        bloc.changePage(-1);
+                                      }
+                                    : null,
+                                nextTitle:
+                                    snapshot.data.length > bloc.currentPage
+                                        ? R.string.next
+                                        : R.string.answerPoll,
+                                previousTitle: R.string.previous,
+                              );
+                            },
+                          ),
+                        )
+                      ],
+                    )
+                  ],
+                );
+              },
+            ),
           ),
-        ),
-        TXLoadingWidget(
-          loadingStream: bloc.isLoadingStream,
-        )
-      ],
+          TXLoadingWidget(
+            loadingStream: bloc.isLoadingStream,
+          ),
+          StreamBuilder<bool>(
+              stream: bloc.showFirstTimeResult,
+              initialData: false,
+              builder: (context, snapshotShow) {
+                return snapshotShow.data
+                    ? TXVideoIntroWidget(
+                        title: R.string.planiHelper,
+                        onSeeVideo: () {
+                          bloc.setNotFirstTime();
+                          FileManager.playVideo("plani.mp4");
+                        },
+                        onSkip: () {
+                          bloc.setNotFirstTime();
+                        },
+                      )
+                    : Container();
+              }),
+        ],
+      ),
     );
   }
 
