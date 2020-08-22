@@ -16,8 +16,19 @@ class DishApi extends BaseApi implements IDishApi {
   DishApi(this._networkHandler, this._foodConverter);
 
   @override
-  Future<List<FoodModel>> getFoodModelList() async {
-    final res = await _networkHandler.get(path: Endpoint.dish);
+  Future<List<FoodModel>> getFoodModelList(
+      {String query = "",
+      int tag,
+      int page = 1,
+      int perPage = 100,
+      int harvardFilter}) async {
+    final tagsFilterQuery = tag >= 0 ? "&tags=$tag" : "";
+    final harvardFilterQuery =
+        harvardFilter >= 0 ? "&harvardFilter=$harvardFilter" : "";
+
+    final res = await _networkHandler.get(
+        path:
+            "${Endpoint.dish}?page=$page&perPage=$perPage&search=$query$tagsFilterQuery$harvardFilterQuery");
     if (res.statusCode == RemoteConstants.code_success) {
       Iterable l = jsonDecode(res.body)[RemoteConstants.result];
       return l.map((model) => _foodConverter.fromJsonFoodModel(model)).toList();

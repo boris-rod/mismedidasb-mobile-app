@@ -29,33 +29,16 @@ class FoodAddEditBloC extends BaseBloC
   Stream<bool> get addEditResult => _addEditController.stream;
 
   FoodModel currentFoodModel;
-  List<FoodModel> allFoods = [];
-  List<FoodModel> currentChildren = [];
   bool reload = false;
-  List<FoodModel> compoundFoodModelList = [];
+  List<FoodModel> compoundFoodModelList;
 
-  void init(FoodModel foodModel, List<FoodModel> list) async {
-    compoundFoodModelList = list;
-    final res = await _iDishRepository.getFoodModelList();
-    if (res is ResultSuccess<List<FoodModel>>) {
-      allFoods.addAll(res.value);
-    }
+  void init(FoodModel foodModel, List<FoodModel> compoundFoodModelList) async {
+    this.compoundFoodModelList = compoundFoodModelList ?? [];
     if (foodModel == null) {
-      currentFoodModel = FoodModel(children: [], image: "");
+      currentFoodModel = new FoodModel(children: [], image: "");
     } else {
       currentFoodModel = foodModel;
-      currentChildren.addAll(foodModel.children);
-      foodModel.children.forEach((f) => f.isSelected = true);
-      allFoods.forEach((f) {
-        final sF = foodModel.children.firstWhere((food) => food.id == f.id,
-            orElse: () {
-          return null;
-        });
-        if (sF != null) {
-          f.isSelected = sF.isSelected;
-          f.count = sF.count;
-        }
-      });
+      currentFoodModel.children.forEach((f) => f.isSelected = true);
     }
     _foodController.sinkAddSafe(currentFoodModel);
   }
@@ -73,10 +56,6 @@ class FoodAddEditBloC extends BaseBloC
 
   void remove(FoodModel model) {
     currentFoodModel.children.removeWhere((f) => f.id == model.id);
-    final food = allFoods.firstWhere((f) => f.id == model.id, orElse: () {
-      return null;
-    });
-    if (food != null) food.isSelected = false;
     _foodController.sinkAddSafe(currentFoodModel);
   }
 
@@ -129,9 +108,10 @@ class FoodAddEditBloC extends BaseBloC
         Fluttertoast.showToast(
             msg: "El nombre de este alimento compuesto ya existe.",
             backgroundColor: Colors.red,
-            textColor: Colors.white, toastLength: Toast.LENGTH_LONG);
+            textColor: Colors.white,
+            toastLength: Toast.LENGTH_LONG);
         return;
-      }else{
+      } else {
         isLoading = true;
         try {
           if (isAdding) {

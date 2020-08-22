@@ -3,16 +3,18 @@ import 'package:mismedidasb/domain/dish/dish_model.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/bloc_state.dart';
 import 'package:mismedidasb/ui/_base/navigation_utils.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_gesture_hide_key_board.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_icon_button_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_network_image.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_textfield_widget.dart';
 import 'package:mismedidasb/ui/food_search/food_search_bloc.dart';
 
 class FoodSearchPage extends StatefulWidget {
-  final List<FoodModel> allFoods;
+  final List<FoodModel> selectedItems;
 
-  const FoodSearchPage({Key key, this.allFoods}) : super(key: key);
+  const FoodSearchPage({Key key, this.selectedItems}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _FoodSearchState();
@@ -20,17 +22,18 @@ class FoodSearchPage extends StatefulWidget {
 
 class _FoodSearchState extends StateWithBloC<FoodSearchPage, FoodSearchBloC> {
   TextEditingController searchTextController = TextEditingController();
+  ScrollController _scrollController = new ScrollController();
+  DateTime searchMarkTime = DateTime.now();
 
   void _navBack() async {
-    NavigationUtils.pop(context,
-        result: bloc.allFoods.where((f) => f.isSelected).toList() ?? []);
+    NavigationUtils.pop(context, result: bloc.selectedFoods.values.toList());
   }
 
   @override
   void initState() {
     super.initState();
     searchTextController.text = "";
-    bloc.init(widget.allFoods);
+    bloc.init(widget.selectedItems);
   }
 
   @override
@@ -51,7 +54,7 @@ class _FoodSearchState extends StateWithBloC<FoodSearchPage, FoodSearchBloC> {
                   backgroundColor: Colors.white,
                   title: !searchingSnapshot.data
                       ? TXTextWidget(
-                          text: "Search...",
+                          text: "Buscar...",
                           color: R.color.gray,
                           size: 16,
                         )
@@ -67,10 +70,17 @@ class _FoodSearchState extends StateWithBloC<FoodSearchPage, FoodSearchBloC> {
                           autofocus: true,
                           controller: searchTextController,
                           onChanged: (value) {
-                            bloc.search(value);
+                            bloc.currentQuery = value;
+                            searchMarkTime = DateTime.now();
+                            Future.delayed(Duration(seconds: 2), (){
+                              final dif = DateTime.now().difference(searchMarkTime);
+                              if(dif.inSeconds >= 1)
+                                bloc.loadFoods(true, false);
+                            });
+//                            bloc.search(value);
                           },
                           onFieldSubmitted: (value) {
-                            bloc.search(value);
+//                            bloc.search(value);
                           },
                         ),
                   leading: TXIconButtonWidget(
@@ -91,7 +101,7 @@ class _FoodSearchState extends StateWithBloC<FoodSearchPage, FoodSearchBloC> {
                       onPressed: () {
                         if (searchingSnapshot.data) {
                           searchTextController.text = "";
-                          bloc.search("");
+//                          bloc.search("");
                         }
                         bloc.setSearching = !searchingSnapshot.data;
                       },
@@ -101,45 +111,53 @@ class _FoodSearchState extends StateWithBloC<FoodSearchPage, FoodSearchBloC> {
                 body: Container(
                   child: StreamBuilder<List<FoodModel>>(
                     stream: bloc.searchResult,
-                    initialData: widget.allFoods,
+                    initialData: [],
                     builder: (ctx, searchResultSnapshot) {
-//                      searchResultSnapshot.data.sort((a, b) => a.name
-//                          .trim()
-//                          .toLowerCase()
-//                          .compareTo(b.name.trim().toLowerCase()));
-                      return ListView.builder(
-                          physics: BouncingScrollPhysics(),
-                          padding: EdgeInsets.only(top: 5, bottom: 30),
-                          itemCount: searchResultSnapshot.data.length,
-                          itemBuilder: (context, index) {
-                            final model = searchResultSnapshot.data[index];
-                            return ListTile(
-                              trailing: Checkbox(
-                                checkColor: R.color.primary_color,
-                                onChanged: (value) {
-                                  model.isSelected = !model.isSelected;
-                                  bloc.setSelectedFood(model);
-                                },
-                                value: model.isSelected,
-                              ),
-                              leading: TXNetworkImage(
-                                imageUrl: model.image,
-                                placeholderImage: R.image.logo,
-                                height: 40,
-                                width: 40,
-                              ),
-                              contentPadding: EdgeInsets.symmetric(
-                                  vertical: 0, horizontal: 5),
-                              onTap: () {
-                                model.isSelected = !model.isSelected;
-                                bloc.setSelectedFood(model);
-                              },
-                              title: TXTextWidget(
-                                text: model.name,
-                                color: model.isSelected
-                                    ? R.color.primary_color
-                                    : Colors.black,
-                              ),
+                      return NotificationListener<ScrollNotification>(
+                        onNotification: (notification) {
+                          if (notification.metrics.pixels >
+                              _scrollController.position.maxScrollExtent -
+                                  300) {
+                            if (!bloc.isLoadingMore && bloc.hasMore)
+                              bloc.loadFoods(false, false);
+                          }
+                          return true;
+                        },
+                        child: TXGestureHideKeyBoard(
+                          child: ListView.builder(
+                              controller: _scrollController,
+                              physics: BouncingScrollPhysics(),
+                              padding: EdgeInsets.only(top: 5, bottom: 30),
+                              itemCount: searchResultSnapshot.data.length,
+                              itemBuilder: (context, index) {
+                                final model = searchResultSnapshot.data[index];
+                                return ListTile(
+                                  trailing: Checkbox(
+                                    checkColor: R.color.primary_color,
+                                    onChanged: (value) {
+                                      model.isSelected = !model.isSelected;
+                                      bloc.setSelectedFood(model);
+                                    },
+                                    value: model.isSelected,
+                                  ),
+                                  leading: TXNetworkImage(
+                                    imageUrl: model.image,
+                                    placeholderImage: R.image.logo,
+                                    height: 40,
+                                    width: 40,
+                                  ),
+                                  contentPadding: EdgeInsets.symmetric(
+                                      vertical: 0, horizontal: 5),
+                                  onTap: () {
+                                    model.isSelected = !model.isSelected;
+                                    bloc.setSelectedFood(model);
+                                  },
+                                  title: TXTextWidget(
+                                    text: model.name,
+                                    color: model.isSelected
+                                        ? R.color.primary_color
+                                        : Colors.black,
+                                  ),
 //                                    subtitle: Column(
 //                                      crossAxisAlignment: CrossAxisAlignment.start,
 //                                      children: <Widget>[
@@ -151,14 +169,19 @@ class _FoodSearchState extends StateWithBloC<FoodSearchPage, FoodSearchBloC> {
 //                                        ..._getCategories(model.tags),
 //                                      ],
 //                                    ),
-                            );
-                          });
+                                );
+                              }),
+                        ),
+                      );
                     },
                   ),
                 ),
               );
             },
-          )
+          ),
+          TXLoadingWidget(
+            loadingStream: bloc.isLoadingStream,
+          ),
         ],
       ),
     );

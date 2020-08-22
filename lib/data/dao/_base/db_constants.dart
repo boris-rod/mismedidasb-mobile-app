@@ -1,6 +1,6 @@
 class DBConstants {
-  static final String db_name = 'mismedidas';
-  static final int db_version = 8;
+  static final String db_name = 'mismedidas1';
+  static final int db_version = 9;
 
   ///Common table schema
   static final Map<String, String> table_cols = {
@@ -27,9 +27,9 @@ class DBConstants {
 
   ///table names
   static final String daily_food_activity_table = 'daily_food_activity_table';
-  static final String food_table = 'food_table';
-  static final String food_compound_table = 'food_compound_table';
-  static final String food_tag_table = 'food_tag_table';
+//  static final String food_table = 'food_table';
+//  static final String food_compound_table = 'food_compound_table';
+//  static final String food_tag_table = 'food_tag_table';
 //  static final String measure_health_table = 'measure_health_table';
 //  static final String health_result_table = 'health_result_table';
 }

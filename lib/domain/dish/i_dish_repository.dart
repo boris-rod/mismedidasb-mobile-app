@@ -14,9 +14,10 @@ abstract class IDishRepository {
       DateTime start, DateTime end,
       {bool forceReload: false});
 
-  Future<Result<List<FoodModel>>> getFoodModelList({bool forceReload: false});
+  Future<Result<List<FoodModel>>> getFoodModelList(
+      {String query, int tag, int page, int perPage, int harvardFilter});
 
-  Future<Result<List<FoodModel>>> getFoodCompoundModelList({bool forceReload: false});
+  Future<Result<List<FoodModel>>> getFoodCompoundModelList();
 
   Future<Result<bool>> createFoodCompoundModelList(
       CreateFoodCompoundModel model);
@@ -26,5 +27,5 @@ abstract class IDishRepository {
 
   Future<Result<bool>> deleteFoodCompoundModelList(int id);
 
-  Future<Result<List<TagModel>>> getTagList({bool forceReload: false});
+  Future<Result<List<TagModel>>> getTagList();
 }

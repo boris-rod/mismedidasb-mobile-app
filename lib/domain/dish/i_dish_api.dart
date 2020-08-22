@@ -1,7 +1,7 @@
 import 'package:mismedidasb/domain/dish/dish_model.dart';
 
 abstract class IDishApi {
-  Future<List<FoodModel>> getFoodModelList();
+  Future<List<FoodModel>> getFoodModelList({String query, int tag, int page, int perPage, int harvardFilter});
 
   Future<List<FoodModel>> getFoodCompoundModelList();
 

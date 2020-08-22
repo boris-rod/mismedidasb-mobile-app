@@ -22,8 +22,7 @@ class DishRepository extends BaseRepository implements IDishRepository {
     try {
       List<DailyFoodModel> list = await _iDishDao.getDailyFoodModelList(
           CalendarUtils.getFirstDateOfPreviousMonth(),
-          CalendarUtils.getLastDateOfNextMonth()
-      );
+          CalendarUtils.getLastDateOfNextMonth());
       if (list.length >= 100) {
         await _iDishDao.removeDailyFoodModel(
             CalendarUtils.getTimeIdBasedDay(dateTime: list[0].dateTime));
@@ -121,9 +120,8 @@ class DishRepository extends BaseRepository implements IDishRepository {
   Future<Result<Map<DateTime, DailyFoodModel>>> syncData() async {
     try {
       List<DailyFoodModel> localList = await _iDishDao.getDailyFoodModelList(
-        CalendarUtils.getFirstDateOfPreviousMonth(),
-        CalendarUtils.getLastDateOfNextMonth()
-      );
+          CalendarUtils.getFirstDateOfPreviousMonth(),
+          CalendarUtils.getLastDateOfNextMonth());
       List<DailyFoodModel> notSavedList =
           localList.where((p) => !p.synced).toList();
       List<DailyFoodModel> syncedList = [];
@@ -138,8 +136,7 @@ class DishRepository extends BaseRepository implements IDishRepository {
 
       final newSyncedLocalList = await _iDishDao.getDailyFoodModelList(
           CalendarUtils.getFirstDateOfPreviousMonth(),
-          CalendarUtils.getLastDateOfNextMonth()
-      );
+          CalendarUtils.getLastDateOfNextMonth());
       Map<DateTime, DailyFoodModel> map = {};
       newSyncedLocalList.forEach((d) {
         map[d.dateTime] = d;
@@ -153,19 +150,18 @@ class DishRepository extends BaseRepository implements IDishRepository {
 
   @override
   Future<Result<List<FoodModel>>> getFoodModelList(
-      {bool forceReload: false}) async {
+      {String query,
+      int tag,
+      int page,
+      int perPage,
+      int harvardFilter}) async {
     try {
-      List<FoodModel> list = [];
-      if (!forceReload) {
-        list = await _iDishDao.getFoodModeList();
-      }
-      if (list.isEmpty) {
-        list = await _dishApi.getFoodModelList();
-        if (list?.isNotEmpty == true) {
-          await _iDishDao.clearFoodModelList();
-          await _iDishDao.saveFoodModelList(list ?? []);
-        }
-      }
+      List<FoodModel> list = await _dishApi.getFoodModelList(
+          query: query,
+          tag: tag,
+          page: page,
+          perPage: perPage,
+          harvardFilter: harvardFilter);
       return Result.success(value: list);
     } catch (ex) {
       return resultError(ex);
@@ -173,19 +169,9 @@ class DishRepository extends BaseRepository implements IDishRepository {
   }
 
   @override
-  Future<Result<List<TagModel>>> getTagList({bool forceReload: false}) async {
+  Future<Result<List<TagModel>>> getTagList() async {
     try {
-      List<TagModel> list = [];
-      if (!forceReload) {
-        list = await _iDishDao.getFoodTagList();
-      }
-      if (list.isEmpty) {
-        list = await _dishApi.getTagList();
-        if (list?.isNotEmpty == true) {
-          final rem = await _iDishDao.clearFoodTagList();
-          final saved = await _iDishDao.saveFoodTagList(list);
-        }
-      }
+      List<TagModel> list = await _dishApi.getTagList();
       return Result.success(value: list);
     } catch (ex) {
       return resultError(ex);
@@ -214,19 +200,8 @@ class DishRepository extends BaseRepository implements IDishRepository {
   }
 
   @override
-  Future<Result<List<FoodModel>>> getFoodCompoundModelList(
-      {bool forceReload: false}) async {
+  Future<Result<List<FoodModel>>> getFoodCompoundModelList() async {
     try {
-//      List<FoodModel> list = [];
-//      if (!forceReload) {
-//        list = await _iDishDao.getFoodCompoundModelList();
-//      }
-//      if (list.isEmpty) {
-//        final res = await _dishApi.getFoodCompoundModelList();
-//        await _iDishDao.clearFoodCompoundModelList();
-//        await _iDishDao.saveFoodCompoundModelList(res);
-//        list = res;
-//      }
       final res = await _dishApi.getFoodCompoundModelList();
       return ResultSuccess(value: res);
     } catch (ex) {

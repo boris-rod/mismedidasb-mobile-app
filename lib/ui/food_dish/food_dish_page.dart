@@ -491,6 +491,8 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                                   dailyActivityFoodModel: model,
                                   selectedItems: model.foods,
                                   imc: bloc.imc,
+                                  currentTag: -1,
+                                  currentHarvardFilter: -1,
                                 ));
                             if (resultList is List<FoodModel>) {
                               model.foods = resultList;
@@ -542,8 +544,9 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                                                   imc: bloc.imc,
                                                   foodFilterMode: FoodFilterMode
                                                       .dish_healthy,
-                                                  foodFilterCategoryIndex:
+                                                  currentHarvardFilter:
                                                       index,
+                                                    currentTag : -1
                                                 ));
                                         if (resultList is List<FoodModel>) {
                                           model.foods = resultList;

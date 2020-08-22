@@ -14,9 +14,9 @@ enum PopupActionKey {
 
 enum FoodFilterMode { tags, dish_healthy }
 enum FoodHealthy {
-  fruitVeg,
   proteic,
   caloric,
+  fruitVeg,
 }
 enum PROFILE_OPTION { CHANGE_PASSWORD, LOGOUT, HELP }
 enum NotificationType { GENERAL, REMINDER, POLL, REWARD }

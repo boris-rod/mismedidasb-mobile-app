@@ -45,10 +45,6 @@ class _FoodAddEditState
   final _keyFormFood = new GlobalKey<FormState>();
 
   void _navBack() {
-    if (!bloc.reload && widget.foodModel != null) {
-      bloc.currentFoodModel.children = bloc.currentChildren;
-      bloc.currentFoodModel.children.forEach((f) => f.isSelected = true);
-    }
     NavigationUtils.pop(context, result: bloc.reload);
   }
 
@@ -198,7 +194,7 @@ class _FoodAddEditState
                                                 await NavigationUtils.push(
                                                     context,
                                                     FoodSearchPage(
-                                                      allFoods: bloc.allFoods,
+                                                      selectedItems: snapshot.data.children,
                                                     ));
                                             bloc.syncAddedFoods(res);
                                           },

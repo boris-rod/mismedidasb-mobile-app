@@ -30,7 +30,8 @@ import '../../enums.dart';
 class FoodPage extends StatefulWidget {
   final List<FoodModel> selectedItems;
   final FoodFilterMode foodFilterMode;
-  final int foodFilterCategoryIndex;
+  final int currentHarvardFilter;
+  final int currentTag;
   final DailyActivityFoodModel dailyActivityFoodModel;
   final double imc;
 
@@ -38,9 +39,10 @@ class FoodPage extends StatefulWidget {
       {Key key,
       this.selectedItems,
       this.foodFilterMode = FoodFilterMode.tags,
-      this.foodFilterCategoryIndex = 0,
+      this.currentHarvardFilter,
       this.dailyActivityFoodModel,
-      this.imc})
+      this.imc,
+      this.currentTag})
       : super(key: key);
 
   @override
@@ -49,13 +51,14 @@ class FoodPage extends StatefulWidget {
 
 class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
   PageController _pageController = PageController();
+  ScrollController _scrollController = new ScrollController();
 
   @override
   void initState() {
     super.initState();
     widget.dailyActivityFoodModel.isExpanded = true;
     bloc.loadData(widget.selectedItems, widget.foodFilterMode,
-        widget.foodFilterCategoryIndex);
+        widget.currentTag, widget.currentHarvardFilter);
 
     bloc.pageResult.listen((onData) {
       _pageController.animateToPage(onData,
@@ -67,8 +70,7 @@ class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
   }
 
   void _navBack() async {
-    NavigationUtils.pop(context,
-        result: bloc.foodsAll.where((f) => f.isSelected).toList());
+    NavigationUtils.pop(context, result: bloc.selectedFoods.values.toList());
     widget.dailyActivityFoodModel.isExpanded = true;
   }
 
@@ -102,23 +104,21 @@ class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
                         final res = await NavigationUtils.push(
                             context,
                             FoodSearchPage(
-                              allFoods: bloc.foodsAll,
+                              selectedItems: bloc.selectedFoods.values.toList(),
                             ));
-                        bloc.syncFoods();
+                        if(res is List<FoodModel>){
+                          bloc.syncFoods(res);
+
+                        }
                       } else {
                         final res = await NavigationUtils.push(
-                            context,
-                            FoodAddEditPage(
-                              compoundFoodModelList: bloc.foodsAll
-                                  .where((f) => f.isCompound)
-                                  .toList(),
-                            ));
+                          context,
+                          FoodAddEditPage(
+                            compoundFoodModelList: bloc.compoundsFoods,
+                          ),
+                        );
                         if (res ?? false) {
-                          bloc.loadData(
-                              widget.selectedItems,
-                              widget.foodFilterMode,
-                              widget.foodFilterCategoryIndex,
-                              forceReload: true);
+                          bloc.loadCompoundFoods(true);
                         }
                       }
                     },
@@ -350,14 +350,8 @@ class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
                                                           onPressed: () {
                                                             food.isSelected =
                                                                 false;
-                                                            if (food
-                                                                .isCompound) {
-                                                              bloc.setSelectedFoodCompound(
-                                                                  food);
-                                                            } else {
-                                                              bloc.setSelectedFood(
-                                                                  food);
-                                                            }
+                                                            bloc.setSelectedFood(
+                                                                food);
                                                           },
                                                           icon: Icon(
                                                             Icons.close,
@@ -458,44 +452,53 @@ class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
 
   Widget _getFoodsPage() {
     return StreamBuilder<List<FoodModel>>(
-      stream: bloc.foodsFilteredResult,
+      stream: bloc.foodsResult,
       initialData: [],
       builder: (context, snapshot) {
-        snapshot.data.sort((a, b) =>
-            a.name.trim().toLowerCase().compareTo(b.name.trim().toLowerCase()));
-        return ListView.builder(
-            physics: BouncingScrollPhysics(),
-            padding: EdgeInsets.only(top: 5, bottom: 30),
-            itemCount: snapshot.data.length,
-            itemBuilder: (context, index) {
-              final model = snapshot.data[index];
-              return ListTile(
-                trailing: Checkbox(
-                  checkColor: R.color.primary_color,
-                  onChanged: (value) {
+        return NotificationListener<ScrollNotification>(
+          onNotification: (notification) {
+//            print(_scrollController.position.maxScrollExtent.toString());
+//            print(notification.metrics.pixels.toString());
+            if (notification.metrics.pixels >
+                _scrollController.position.maxScrollExtent - 10) {
+              if (!bloc.isLoadingMore && bloc.hasMore) bloc.loadFoods(false);
+            }
+            return true;
+          },
+          child: ListView.builder(
+              controller: _scrollController,
+              physics: BouncingScrollPhysics(),
+              padding: EdgeInsets.only(top: 5, bottom: 100),
+              itemCount: snapshot.data.length,
+              itemBuilder: (context, index) {
+                final model = snapshot.data[index];
+                return ListTile(
+                  trailing: Checkbox(
+                    checkColor: R.color.primary_color,
+                    onChanged: (value) {
+                      model.isSelected = !model.isSelected;
+                      bloc.setSelectedFood(model);
+                    },
+                    value: model.isSelected,
+                  ),
+                  leading: TXNetworkImage(
+                    imageUrl: model.image,
+                    placeholderImage: R.image.logo,
+                    height: 40,
+                    boxFitImage: BoxFit.cover,
+                    width: 40,
+                  ),
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 0, horizontal: 5),
+                  onTap: () {
                     model.isSelected = !model.isSelected;
                     bloc.setSelectedFood(model);
                   },
-                  value: model.isSelected,
-                ),
-                leading: TXNetworkImage(
-                  imageUrl: model.image,
-                  placeholderImage: R.image.logo,
-                  height: 40,
-                  boxFitImage: BoxFit.cover,
-                  width: 40,
-                ),
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 0, horizontal: 5),
-                onTap: () {
-                  model.isSelected = !model.isSelected;
-                  bloc.setSelectedFood(model);
-                },
-                title: TXTextWidget(
-                  text: model.name,
-                  color:
-                      model.isSelected ? R.color.primary_color : Colors.black,
-                ),
+                  title: TXTextWidget(
+                    text: model.name,
+                    color:
+                        model.isSelected ? R.color.primary_color : Colors.black,
+                  ),
 //                                    subtitle: Column(
 //                                      crossAxisAlignment: CrossAxisAlignment.start,
 //                                      children: <Widget>[
@@ -507,13 +510,15 @@ class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
 //                                        ..._getCategories(model.tags),
 //                                      ],
 //                                    ),
-              );
-            });
+                );
+              }),
+        );
       },
     );
   }
 
   Widget _getMyFoodPage() {
+    bloc.loadCompoundFoods(false);
     return StreamBuilder<List<FoodModel>>(
       stream: bloc.foodsCompoundResult,
       initialData: [],
@@ -544,16 +549,14 @@ class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
                     EdgeInsets.symmetric(vertical: 0, horizontal: 5),
                 onTap: () async {
                   final res = await NavigationUtils.push(
-                      context,
-                      FoodAddEditPage(
-                          foodModel: model,
-                          compoundFoodModelList: bloc.foodsAll
-                              .where((f) => f.isCompound)
-                              .toList()));
+                    context,
+                    FoodAddEditPage(
+                      foodModel: model,
+                      compoundFoodModelList: bloc.compoundsFoods,
+                    ),
+                  );
                   if (res ?? false) {
-                    bloc.loadData(widget.selectedItems, widget.foodFilterMode,
-                        widget.foodFilterCategoryIndex,
-                        forceReload: true);
+                    bloc.loadCompoundFoods(true);
                   }
                 },
                 title: TXTextWidget(
@@ -582,7 +585,7 @@ class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
     return Container(
       height: widget.foodFilterMode == FoodFilterMode.tags
           ? math.min(MediaQuery.of(context).size.height / 2,
-              ((bloc.tagsAll.length + 20) + 1) * 50.0)
+              ((bloc.tagList.length + 20) + 1) * 50.0)
           : 200,
       child: Column(
         children: <Widget>[
@@ -601,7 +604,9 @@ class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
               physics: BouncingScrollPhysics(),
               shrinkWrap: true,
               itemBuilder: (ctx, index) {
-                final filter = bloc.tagsAll[index];
+                final filter = widget.foodFilterMode == FoodFilterMode.tags
+                    ? bloc.tagList[index]
+                    : bloc.harvardFilterList[index];
                 return Column(
                   children: <Widget>[
                     TXCellSelectionOptionWidget(
@@ -618,7 +623,9 @@ class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
                   ],
                 );
               },
-              itemCount: bloc.tagsAll.length,
+              itemCount: widget.foodFilterMode == FoodFilterMode.tags
+                  ? bloc.tagList.length
+                  : bloc.harvardFilterList.length,
             ),
           )
         ],

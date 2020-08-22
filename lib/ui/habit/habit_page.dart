@@ -2,8 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
-import 'package:flutter_html/style.dart';
 import 'package:mismedidasb/domain/habit/habit_model.dart';
 import 'package:mismedidasb/domain/health_concept/health_concept.dart';
 import 'package:mismedidasb/domain/poll_model/poll_model.dart';

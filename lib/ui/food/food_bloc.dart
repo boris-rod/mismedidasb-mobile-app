@@ -1,3 +1,4 @@
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mismedidasb/data/_shared_prefs.dart';
 import 'package:mismedidasb/data/api/remote/result.dart';
 import 'package:mismedidasb/domain/dish/dish_model.dart';
@@ -17,11 +18,9 @@ class FoodBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
   FoodBloC(this._iDishRepository, this._sharedPreferencesManager);
 
-  BehaviorSubject<List<FoodModel>> _foodsFilteredController =
-      new BehaviorSubject();
+  BehaviorSubject<List<FoodModel>> _foodsController = new BehaviorSubject();
 
-  Stream<List<FoodModel>> get foodsFilteredResult =>
-      _foodsFilteredController.stream;
+  Stream<List<FoodModel>> get foodsResult => _foodsController.stream;
 
   BehaviorSubject<List<FoodModel>> _foodsSelectedController =
       new BehaviorSubject();
@@ -49,25 +48,205 @@ class FoodBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
   Stream<bool> get showFirstTimeResult => _showFirstTimeController.stream;
 
+  List<FoodModel> get compoundsFoods => _foodsCompoundController?.value ?? [];
+
+  List<FoodModel> get foods => _foodsController?.value ?? [];
+
 //  double imc = 1;
   bool kCalPercentageHide = false;
 
-  List<FoodModel> foodsAll = [];
-  List<FoodModel> foodsFiltered = [];
-
-  List<FoodModel> foodsCompoundAll = [];
-
-  List<TagModel> tagsAll = [];
-
+  List<TagModel> harvardFilterList = [];
+  List<TagModel> tagList = [];
+  Map<int, FoodModel> selectedFoods = {};
   FoodFilterMode foodFilterMode = FoodFilterMode.tags;
-  int foodFilterCategoryId = -1;
+  int currentHarvardFilter = -1;
+  int currentTag = -1;
+  int currentPage = 0;
+  int currentPerPage = 100;
+  bool isLoadingMore = false;
+  bool hasMore = true;
 
-  bool isSearching = false;
-  String currentQuery = "";
+  void loadData(List<FoodModel> selectedItems, FoodFilterMode foodFilterMode,
+      int currentTag, int currentHarvardFilter) async {
+    isLoading = true;
+    this.currentTag = currentTag;
+    this.currentHarvardFilter = currentHarvardFilter;
+
+    selectedItems.forEach((element) {
+      element.isSelected = true;
+      selectedFoods[element.id] = element;
+    });
+    _foodsSelectedController.sinkAddSafe(selectedItems);
+
+    this.foodFilterMode = foodFilterMode;
+    kCalPercentageHide = await _sharedPreferencesManager
+        .getBoolValue(SharedKey.kCalPercentageHide);
+
+    if (foodFilterMode == FoodFilterMode.tags) {
+      tagList.add(TagModel(isSelected: true, id: -1, name: R.string.filterAll));
+
+      final res = await _iDishRepository.getTagList();
+      if (res is ResultSuccess<List<TagModel>>) {
+        res.value.forEach((t) {
+          t.isSelected = false;
+        });
+        tagList.addAll(res.value);
+      } else {
+        showErrorMessage(res);
+      }
+      _filterController.sinkAddSafe(tagList.firstWhere((f) => f.isSelected));
+    } else {
+      harvardFilterList.add(TagModel(
+          isSelected: currentHarvardFilter == FoodHealthy.proteic.index,
+          id: FoodHealthy.proteic.index,
+          name: R.string.proteic));
+      harvardFilterList.add(TagModel(
+          isSelected: currentHarvardFilter == FoodHealthy.caloric.index,
+          id: FoodHealthy.caloric.index,
+          name: R.string.caloric));
+      harvardFilterList.add(TagModel(
+          isSelected: currentHarvardFilter == FoodHealthy.fruitVeg.index,
+          id: FoodHealthy.fruitVeg.index,
+          name: R.string.fiberAndVegetables));
+      _filterController
+          .sinkAddSafe(harvardFilterList.firstWhere((f) => f.isSelected));
+    }
+
+    loadCompoundFoods(true);
+    loadFoods(true);
+  }
+
+  Future<void> loadFoods(bool replace) async {
+    isLoadingMore = true;
+    if (replace) {
+      currentPage = 0;
+    }
+
+    currentPage += 1;
+
+//    if (!replace)
+//      Fluttertoast.showToast(
+//          msg: "loading more $currentPage",
+//          backgroundColor: R.color.habits_color,
+//          textColor: R.color.white_color);
+
+    List<FoodModel> currentFoodsList = _foodsController.value;
+    final foodsRes = await _iDishRepository.getFoodModelList(
+        page: currentPage,
+        perPage: currentPerPage,
+        query: "",
+        tag: currentTag,
+        harvardFilter: currentHarvardFilter);
+    isLoading = false;
+
+    if (foodsRes is ResultSuccess<List<FoodModel>>) {
+      hasMore = foodsRes.value.length >= currentPerPage;
+
+      if (currentFoodsList == null || currentFoodsList.isEmpty || replace)
+        currentFoodsList = foodsRes.value;
+      else {
+        currentFoodsList.addAll(foodsRes.value);
+      }
+    }
+
+    currentFoodsList.forEach((element) {
+      element.isSelected = selectedFoods[element.id]?.isSelected ?? false;
+    });
+    _foodsController.sinkAddSafe(currentFoodsList);
+    isLoadingMore = false;
+  }
+
+  Future<void> loadCompoundFoods(bool forceLoad) async {
+    if (forceLoad ||
+        _foodsCompoundController.value == null ||
+        _foodsCompoundController.value.isEmpty) {
+      final foodsCompoundRes =
+          await _iDishRepository.getFoodCompoundModelList();
+      if (foodsCompoundRes is ResultSuccess<List<FoodModel>>) {
+        foodsCompoundRes.value.forEach((element) {
+          element.isSelected = selectedFoods[element.id]?.isSelected ?? false;
+        });
+        _foodsCompoundController.sinkAddSafe(foodsCompoundRes.value);
+      }
+    } else {
+      _foodsCompoundController.value.forEach((element) {
+        element.isSelected = selectedFoods[element.id]?.isSelected ?? false;
+      });
+      _foodsCompoundController.sinkAddSafe(_foodsCompoundController.value);
+    }
+  }
+
+  void syncFoods(List<FoodModel> newList) {
+    newList.forEach((element) {
+      selectedFoods[element.id] = element;
+    });
+
+    _foodsSelectedController.sinkAddSafe(selectedFoods.values.toList());
+    final foods = _foodsController.value ?? [];
+    foods.forEach((element) {
+      element.isSelected = selectedFoods[element.id]?.isSelected ?? false;
+    });
+    _foodsController.sinkAddSafe(foods);
+
+//    final compoundFoods = _foodsCompoundController.value ?? [];
+//    compoundFoods.forEach((element) {
+//      element.isSelected = selectedFoods[element.id]?.isSelected ?? false;
+//    });
+//    _foodsCompoundController.sinkAddSafe(compoundFoods);
+  }
+
+  void setSelectedFood(FoodModel foodModel) async {
+    if (foodModel.isCompound) {
+      final compoundsFoods = _foodsCompoundController.value ?? [];
+      final index =
+          compoundsFoods.indexWhere((element) => element.id == foodModel.id);
+      compoundsFoods[index].isSelected = foodModel.isSelected;
+      _foodsCompoundController.sinkAddSafe(compoundsFoods);
+    } else {
+      final foods = _foodsController.value ?? [];
+      final index = foods.indexWhere((element) => element.id == foodModel.id);
+      if (index >= 0) foods[index].isSelected = foodModel.isSelected;
+      _foodsController.sinkAddSafe(foods);
+    }
+    if (foodModel.isSelected)
+      selectedFoods[foodModel.id] = foodModel;
+    else
+      selectedFoods.removeWhere((key, value) => key == foodModel.id);
+    _foodsSelectedController.sinkAddSafe(selectedFoods.values.toList());
+  }
+
+  void changeCategoryFilter(int filterId) {
+    if (this.foodFilterMode == FoodFilterMode.tags) {
+      if (filterId == currentTag) return;
+      currentTag = filterId;
+      tagList.forEach((element) {
+        element.isSelected = element.id == filterId;
+      });
+      _filterController.sinkAddSafe(tagList.firstWhere((f) => f.isSelected));
+    } else {
+      if (filterId == currentHarvardFilter) return;
+      currentHarvardFilter = filterId;
+      harvardFilterList.forEach((element) {
+        element.isSelected = element.id == filterId;
+      });
+      _filterController
+          .sinkAddSafe(harvardFilterList.firstWhere((f) => f.isSelected));
+    }
+
+    isLoading = true;
+    loadFoods(true);
+
+//    tagsAll.forEach((t) => t.isSelected = t.id == filterId);
+//
+//    filterFoodsByTagOrCategory();
+//
+//    syncFoods();
+//    _filterController.sinkAddSafe(tagsAll.firstWhere((f) => f.isSelected));
+  }
 
   void launchFirstTime() async {
-    final value =
-    await _sharedPreferencesManager.getBoolValue(SharedKey.firstTimeInFoodPortions, defValue: true);
+    final value = await _sharedPreferencesManager
+        .getBoolValue(SharedKey.firstTimeInFoodPortions, defValue: true);
     _showFirstTimeController.sinkAddSafe(value);
   }
 
@@ -77,189 +256,10 @@ class FoodBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     _showFirstTimeController.sinkAddSafe(false);
   }
 
-  void setShowSearch() async {
-//    isSearching = !isSearching;
-//    _searchShowController.sinkAddSafe(isSearching);
-//    if (!isSearching) {
-//      currentQuery = "";
-//      queryData();
-//    }
-  }
-
-  void loadData(List<FoodModel> selectedItems, FoodFilterMode foodFilterMode,
-      int foodFilterCategoryIndex, {bool forceReload = false}) async {
-    isLoading = true;
-//    imc = await _sharedPreferencesManager.getIMC();
-    kCalPercentageHide = await _sharedPreferencesManager
-        .getBoolValue(SharedKey.kCalPercentageHide);
-
-    this.foodFilterCategoryId = foodFilterCategoryIndex;
-    this.foodFilterMode = foodFilterMode;
-
-    await _loadCategoryFilter();
-
-    _filterController.sinkAddSafe(tagsAll.firstWhere((f) => f.isSelected));
-
-    final foodsRes = await _iDishRepository.getFoodModelList();
-    if (foodsRes is ResultSuccess<List<FoodModel>>) {
-      foodsAll.clear();
-      foodsAll.addAll(foodsRes.value);
-    }
-
-    final foodsCompoundRes = await _iDishRepository.getFoodCompoundModelList(forceReload:  forceReload);
-    if (foodsCompoundRes is ResultSuccess<List<FoodModel>>) {
-      foodsAll.addAll(foodsCompoundRes.value);
-    }
-
-    selectedItems.forEach((f) => f.isSelected = true);
-    foodsAll.forEach((f) {
-      final sF =
-          selectedItems.firstWhere((food) => food.id == f.id, orElse: () {
-        return null;
-      });
-      if (sF != null) {
-        f.isSelected = sF.isSelected;
-        f.count = sF.count;
-      }
-    });
-
-    syncFoods();
-    isLoading = false;
-  }
-
-  void syncFoods() {
-    getSelectedFoods();
-    getFilteredFoods();
-    getCompoundFoods();
-  }
-
-  void getCompoundFoods() {
-    final list = foodsAll.where((f) => f.isCompound).toList();
-    list.sort((a, b) => a.name.trim().toLowerCase().compareTo(b.name.trim().toLowerCase()));
-    _foodsCompoundController.sinkAddSafe(list);
-  }
-
-  void getSelectedFoods() {
-    final list = foodsAll.where((f) => f.isSelected).toList();
-    _foodsSelectedController.sinkAddSafe(list);
-  }
-
-  void getFilteredFoods() {
-    filterFoodsByTagOrCategory();
-    _foodsFilteredController.sinkAddSafe(foodsFiltered);
-  }
-
-  void filterFoodsByTagOrCategory() {
-    foodsFiltered.clear();
-    if (foodFilterMode == FoodFilterMode.dish_healthy) {
-      if (foodFilterCategoryId == FoodHealthy.proteic.index) {
-        final List<FoodModel> proteics =
-            foodsAll.where((f) => (f?.isProteic == true) ?? false)?.toList() ??
-                [];
-        foodsFiltered.addAll(proteics);
-      } else if (foodFilterCategoryId == FoodHealthy.caloric.index) {
-        final List<FoodModel> calorics =
-            foodsAll.where((f) => (f?.isCaloric == true) ?? false)?.toList() ??
-                [];
-        foodsFiltered.addAll(calorics);
-      } else {
-        final List<FoodModel> fv = foodsAll
-                .where((f) => (f?.isFruitAndVegetables == true) ?? false)
-                ?.toList() ??
-            [];
-        foodsFiltered.addAll(fv);
-      }
-    } else {
-      if (foodFilterCategoryId < 0) {
-        foodsFiltered.addAll(foodsAll);
-      } else {
-        final tag =
-            tagsAll.firstWhere((t) => t.id == foodFilterCategoryId, orElse: () {
-          return null;
-        });
-        if (tag?.id != null) {
-          final res = foodsAll.where((f) => f?.tag?.id == tag.id).toList();
-          foodsFiltered.addAll(res);
-
-          if (foodsFiltered.isEmpty) foodsFiltered.addAll(foodsAll);
-        } else {
-          foodsFiltered.addAll(foodsAll);
-        }
-      }
-    }
-  }
-
-  void setSelectedFoodCompound(FoodModel foodModel) async {
-    syncFoods();
-  }
-
-  void setSelectedFood(FoodModel foodModel) async {
-    syncFoods();
-//    final f = foodsSingleNonSelected.firstWhere((f) => f.id == foodModel.id,
-//        orElse: () {
-//      return null;
-//    });
-//    if (f != null) {
-//      f.isSelected = foodModel.isSelected;
-//    } else {
-//      foodsSingleNonSelected.add(foodModel);
-//    }
-//
-//    if (foodModel.isSelected) {
-//      foodsSelected.add(foodModel);
-//    } else {
-//      foodsSelected.remove(foodModel);
-//    }
-//    _foodsSelectedController.add(foodsSelected);
-//    _foodsFilteredController.sinkAddSafe(foodsSingleNonSelected);
-  }
-
-  Future<void> _loadCategoryFilter() async {
-    List<TagModel> list = [];
-    if (foodFilterMode == FoodFilterMode.tags) {
-      list.add(TagModel(isSelected: true, id: -1, name: R.string.filterAll));
-
-      final res = await _iDishRepository.getTagList();
-      if (res is ResultSuccess<List<TagModel>>) {
-        res.value.forEach((t) {
-          t.isSelected = false;
-        });
-        list.addAll(res.value);
-      } else {
-        showErrorMessage(res);
-      }
-    } else {
-      list.add(TagModel(
-          isSelected: foodFilterCategoryId == FoodHealthy.fruitVeg.index,
-          id: FoodHealthy.fruitVeg.index,
-          name: R.string.fiberAndVegetables));
-      list.add(TagModel(
-          isSelected: foodFilterCategoryId == FoodHealthy.proteic.index,
-          id: FoodHealthy.proteic.index,
-          name: R.string.proteic));
-      list.add(TagModel(
-          isSelected: foodFilterCategoryId == FoodHealthy.caloric.index,
-          id: FoodHealthy.caloric.index,
-          name: R.string.caloric));
-    }
-    tagsAll.addAll(list);
-  }
-
-  void changeCategoryFilter(int filterId) {
-    foodFilterCategoryId = filterId;
-
-    tagsAll.forEach((t) => t.isSelected = t.id == filterId);
-
-    filterFoodsByTagOrCategory();
-
-    syncFoods();
-    _filterController.sinkAddSafe(tagsAll.firstWhere((f) => f.isSelected));
-  }
-
   @override
   void dispose() {
     _foodsCompoundController.close();
-    _foodsFilteredController.close();
+    _foodsController.close();
     _foodsSelectedController.close();
     _filterController.close();
     _showFirstTimeController.close();
