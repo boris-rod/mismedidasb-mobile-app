@@ -58,9 +58,9 @@ class LNM implements ILNM {
         onSelectNotification: (String payload) async {
       if (payload?.isNotEmpty == true) {
         if (payload == pollNotificationId.toString()) {
-          await _sharedPreferencesManager.setBoolValue(
-              SharedKey.launchNotiPoll, true);
-//          onPollNotificationLaunch.sinkAddSafe(true);
+//          await _sharedPreferencesManager.setBoolValue(
+//              SharedKey.launchNotiPoll, true);
+          onPollNotificationLaunch.sinkAddSafe(true);
         }
 //        onNotiTap(payload);
 //        Fluttertoast.showToast(msg: payload);

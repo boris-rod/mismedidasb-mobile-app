@@ -225,9 +225,7 @@ class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
                                                     title: "",
                                                     showPercentageInfo:
                                                         bloc.kCalPercentageHide,
-                                                    percentage: widget
-                                                        .dailyActivityFoodModel
-                                                        .getCurrentCaloriesPercentageByFood,
+                                                    percentage: widget.dailyActivityFoodModel.getCurrentCaloriesPercentageByFood,
                                                     mark1: widget
                                                             .dailyActivityFoodModel
                                                             .activityFoodCalories -
@@ -241,9 +239,7 @@ class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
                                                             .dailyActivityFoodModel
                                                             .activityFoodCaloriesOffSet,
                                                     height: 15,
-                                                    value: widget
-                                                        .dailyActivityFoodModel
-                                                        .activityCalories,
+                                                    value: widget.dailyActivityFoodModel.activityCalories,
                                                   ),
                                                 ),
 //                                                TXIconButtonWidget(

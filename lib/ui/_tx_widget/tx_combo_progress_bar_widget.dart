@@ -44,10 +44,10 @@ class _TXComboProgressBarWidgetState extends State<TXComboProgressBarWidget> {
   @override
   Widget build(BuildContext context) {
     final color = widget.value < widget.mark1
-        ? (widget.imc < 18.5 ? R.color.food_red : R.color.food_yellow)
+        ? R.color.food_yellow
         : widget.value >= widget.mark1 && widget.percentage <= 101
             ? R.color.food_green
-            : (widget.imc < 18.5 ? R.color.food_green : R.color.food_red);
+            : R.color.food_red;
 
     return Stack(
       children: <Widget>[

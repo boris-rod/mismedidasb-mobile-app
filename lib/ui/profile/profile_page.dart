@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mismedidasb/domain/user/user_model.dart';
@@ -41,6 +42,7 @@ import 'package:mismedidasb/utils/file_manager.dart';
 import 'package:mismedidasb/utils/mail_manager.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:share/share.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -261,7 +263,10 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                           TXCellSelectionOptionWidget1(
                             leading: Icons.contacts,
                             optionName: "Invita a tus contactos!",
-                            onOptionTap: () {},
+                            onOptionTap: () {
+                              Share.share(Platform.isIOS ? "https://itunes.apple.com/lookup?bundleId=com.metriri.mismedidas" :
+                              "https://play.google.com/store/apps/details?id=com.metriri.mismedidasb", subject: "Planifive");
+                            },
                           ),
                           TXDividerWidget1(),
                           TXCellSelectionOptionWidget1(

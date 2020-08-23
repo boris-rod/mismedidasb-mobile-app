@@ -57,15 +57,15 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
     Utils.setStatusBarColor(R.color.primary_dark_color);
 
     bloc.loadHomeData();
-    bloc.launchNotiPollResult.listen((onData) {
-      if (onData) {
-        NavigationUtils.push(context, PollNotificationPage());
-      }
-    });
-
-//    onPollNotificationLaunch.listen((value) {
-//      NavigationUtils.push(context, PollNotificationPage());
+//    bloc.launchNotiPollResult.listen((onData) {
+//      if (onData) {
+//        NavigationUtils.push(context, PollNotificationPage());
+//      }
 //    });
+
+    onPollNotificationLaunch.listen((value) {
+      NavigationUtils.push(context, PollNotificationPage());
+    });
   }
 
   @override

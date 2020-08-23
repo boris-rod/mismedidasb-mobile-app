@@ -464,15 +464,13 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                                       imc: bloc.imc,
                                       title: "",
                                       showPercentageInfo: showKCalPercentage,
-                                      percentage: bloc
-                                          .getCurrentCaloriesPercentageByFood(
-                                              model),
+                                      percentage: model.getCurrentCaloriesPercentageByFood,
                                       mark1: model.activityFoodCalories -
                                           model.activityFoodCaloriesOffSet,
                                       mark2: model.activityFoodCalories +
                                           model.activityFoodCaloriesOffSet,
                                       height: 15,
-                                      value: model.caloriesSum,
+                                      value: model.activityCalories,
                                     ),
                                   ),
                                 )

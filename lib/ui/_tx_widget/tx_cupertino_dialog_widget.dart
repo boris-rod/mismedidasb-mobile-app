@@ -8,9 +8,15 @@ class TXCupertinoDialogWidget extends StatelessWidget {
   final Function onCancel;
   final String title;
   final String content;
+  final Widget contentWidget;
 
   const TXCupertinoDialogWidget(
-      {Key key, this.onOK, this.onCancel, this.title, this.content})
+      {Key key,
+      this.onOK,
+      this.onCancel,
+      this.title,
+      this.content,
+      this.contentWidget})
       : super(key: key);
 
   @override
@@ -19,8 +25,7 @@ class TXCupertinoDialogWidget extends StatelessWidget {
       isMaterialAppTheme: true,
       data: ThemeData(
           dialogBackgroundColor: Colors.white,
-          dialogTheme: DialogTheme(backgroundColor: Colors.white)
-      ),
+          dialogTheme: DialogTheme(backgroundColor: Colors.white)),
       child: CupertinoAlertDialog(
         title: TXTextWidget(
           text: title,
@@ -28,7 +33,7 @@ class TXCupertinoDialogWidget extends StatelessWidget {
         ),
         content: Container(
           margin: EdgeInsets.only(top: 10),
-          child: TXTextWidget(
+          child: contentWidget ?? TXTextWidget(
             text: content,
           ),
         ),

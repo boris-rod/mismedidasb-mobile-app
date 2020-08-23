@@ -58,9 +58,9 @@ class DailyFoodModel {
   double get currentCaloriesSum => dailyActivityFoodModelList.isEmpty
       ? 0.0
       : dailyActivityFoodModelList.length == 1
-          ? dailyActivityFoodModelList[0].caloriesSum
+          ? dailyActivityFoodModelList[0].activityCalories
           : dailyActivityFoodModelList
-              .map((d) => d.caloriesSum)
+              .map((d) => d.activityCalories)
               .reduce((v1, v2) => v1 + v2);
 
   double get currentProteinsSum => dailyActivityFoodModelList.isEmpty
@@ -271,8 +271,7 @@ class FoodModel {
 
   TagModel get tag => tags?.isNotEmpty == true ? tags[0] : TagModel();
 
-  double get caloriesFixed =>
-      (carbohydrates * 4 + proteins * 4 + fat * 9) * count;
+  double get caloriesFixed => calories * count;
 
   bool get isCompound =>
       children.isNotEmpty && (children.length > 1 || children[0].count > 1);

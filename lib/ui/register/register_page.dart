@@ -1,8 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/bloc_state.dart';
 import 'package:mismedidasb/ui/_base/navigation_utils.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_button_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_cupertino_dialog_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_gesture_hide_key_board.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_main_app_bar_widget.dart';
@@ -36,7 +38,9 @@ class _RegisterState extends StateWithBloC<RegisterPage, RegisterBloC> {
 
     bloc.registerResult.listen((res) {
       if (res) {
-        NavigationUtils.pop(context,);
+        NavigationUtils.pop(
+          context,
+        );
       }
     });
   }
@@ -117,10 +121,7 @@ class _RegisterState extends StateWithBloC<RegisterPage, RegisterBloC> {
                           title: R.string.register,
                           onPressed: () {
                             if (_keyFormRegister.currentState.validate()) {
-                              bloc.register(
-                                  emailTextController.text,
-                                  passwordTextController.text,
-                                  confirmPasswordTextController.text);
+                              _showRegisterConfirmEmail(context: context);
                             }
                           },
                         ),
@@ -152,6 +153,36 @@ class _RegisterState extends StateWithBloC<RegisterPage, RegisterBloC> {
           loadingStream: bloc.isLoadingStream,
         )
       ],
+    );
+  }
+
+  void _showRegisterConfirmEmail({BuildContext context}) {
+    showCupertinoDialog<String>(
+      context: context,
+      builder: (BuildContext context) => TXCupertinoDialogWidget(
+        title: "Confirmar",
+        contentWidget: RichText(
+          text: TextSpan(
+            style: TextStyle(color: R.color.gray),
+              text:
+                  "El Código de Activación será enviado a: ",
+          children: [
+            TextSpan(
+              style: TextStyle(color: R.color.accent_color, fontWeight: FontWeight.bold, fontSize: 16),
+              text: emailTextController.text
+            )
+          ]),
+        ),
+        content: "",
+        onOK: () {
+          bloc.register(emailTextController.text, passwordTextController.text,
+              confirmPasswordTextController.text);
+          Navigator.pop(context, R.string.logout);
+        },
+        onCancel: () {
+          Navigator.pop(context, R.string.cancel);
+        },
+      ),
     );
   }
 }
