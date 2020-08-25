@@ -9,6 +9,8 @@ abstract class IUserConverter {
 
   ScoreModel fromJsonScore(Map<String, dynamic> json);
 
+  AppVersionModel fromJsonAppVersion(Map<String, dynamic> json);
+
   PersonalRankingModel fromJsonPersonalRanking(Map<String, dynamic> json);
 
   UsernameSuggestionModel fromJsonUsernameSuggestionModel(

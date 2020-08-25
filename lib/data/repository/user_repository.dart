@@ -74,9 +74,20 @@ class UserRepository extends BaseRepository implements IUserRepository {
   }
 
   @override
-  Future<Result<SoloQuestionStatsModel>> getSoloQuestionStats(int daysAgo) async {
+  Future<Result<SoloQuestionStatsModel>> getSoloQuestionStats(
+      int daysAgo) async {
     try {
       final result = await _iUserApi.getSoloQuestionStats(daysAgo);
+      return Result.success(value: result);
+    } catch (ex) {
+      return resultError(ex);
+    }
+  }
+
+  @override
+  Future<Result<AppVersionModel>> getAppVersion() async {
+    try {
+      final result = await _iUserApi.getAppVersion();
       return Result.success(value: result);
     } catch (ex) {
       return resultError(ex);

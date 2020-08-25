@@ -99,4 +99,13 @@ class UserConverter implements IUserConverter {
         mostFrequentEmotionCount: json["mostFrequentEmotionCount"]);
     return model;
   }
+
+  @override
+  AppVersionModel fromJsonAppVersion(Map<String, dynamic> json) {
+    AppVersionModel model = AppVersionModel(
+      version: json["version"],
+      isMandatory: json["isMandatory"]
+    );
+    return model;
+  }
 }

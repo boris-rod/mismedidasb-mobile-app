@@ -23,6 +23,7 @@ import 'package:mismedidasb/ui/_base/bloc_error_handler.dart';
 import 'package:mismedidasb/ui/_base/bloc_loading.dart';
 import 'package:mismedidasb/ui/measure_health/health_result.dart';
 import 'package:mismedidasb/utils/calendar_utils.dart';
+import 'package:package_info/package_info.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:mismedidasb/utils/extensions.dart';
 
@@ -61,12 +62,22 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   bool conceptsLoaded = false;
   bool plansBulk1Loaded = false;
   bool termsAccepted = false;
+  bool needUpdateVersion = false;
+  String nextVersion = "";
+  String currentVersion = "";
 
   void loadHomeData() async {
     isLoading = true;
     profileLoaded = false;
     conceptsLoaded = false;
     plansBulk1Loaded = false;
+//    final res = await _iUserRepository.getAppVersion();
+//    if(res is ResultSuccess<AppVersionModel>){
+//      PackageInfo packageInfo = await PackageInfo.fromPlatform();
+//      currentVersion = packageInfo.version;
+//      nextVersion = res.value.version;
+//      needUpdateVersion = nextVersion != currentVersion && res.value.isMandatory;
+//    }
     loadPlansBulk1();
     loadProfile();
     loadConcepts();

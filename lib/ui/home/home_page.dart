@@ -1,7 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:launch_review/launch_review.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:mismedidasb/data/api/remote/remote_constanst.dart';
 import 'package:mismedidasb/domain/health_concept/health_concept.dart';
@@ -18,6 +20,8 @@ import 'package:mismedidasb/ui/_tx_widget/tx_action_bar_menu_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_bottom_result_info.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_bottom_sheet.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_button_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_checkbox_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_cupertino_dialog_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_custom_action_bar.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_icon_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';
@@ -105,6 +109,8 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
                     if (res ?? false) {
                       bloc.termsAccepted = true;
                     }
+                  } else if (bloc.needUpdateVersion) {
+                    _showUpdateApp(context: context);
                   } else {
                     final res =
                         await NavigationUtils.push(context, ProfilePage());
@@ -282,26 +288,30 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
                       );
                     });
               } else {
-                final res = await NavigationUtils.push(context, page);
-                if (res is PollResponseModel && res.reward.points > 0) {
-                  if (page is MeasureHealthPage) {
-                    _keyHome.currentState.showSnackBar(showSnackBar(
-                        title: "${R.string.congratulations} ${bloc.userName}",
-                        content:
-                            "${R.string.rewardGain} ${res.reward.points} ${R.string.rewardGainPoints}"));
-                  } else if (page is MeasureValuePage) {
-                    _keyHome.currentState.showSnackBar(showSnackBar(
-                        title: "${R.string.congratulations} ${bloc.userName}",
-                        content:
-                            "${R.string.rewardGain} ${res.reward.points} ${R.string.rewardGainPoints}"));
-                  } else if (page is MeasureWellnessPage) {
-                    _keyHome.currentState.showSnackBar(showSnackBar(
-                        title: "${R.string.congratulations} ${bloc.userName}",
-                        content:
-                            "${R.string.rewardGain} ${res.reward.points} ${R.string.rewardGainPoints}"));
+                if(bloc.needUpdateVersion)
+                  _showUpdateApp(context: context);
+                else{
+                  final res = await NavigationUtils.push(context, page);
+                  if (res is PollResponseModel && res.reward.points > 0) {
+                    if (page is MeasureHealthPage) {
+                      _keyHome.currentState.showSnackBar(showSnackBar(
+                          title: "${R.string.congratulations} ${bloc.userName}",
+                          content:
+                          "${R.string.rewardGain} ${res.reward.points} ${R.string.rewardGainPoints}"));
+                    } else if (page is MeasureValuePage) {
+                      _keyHome.currentState.showSnackBar(showSnackBar(
+                          title: "${R.string.congratulations} ${bloc.userName}",
+                          content:
+                          "${R.string.rewardGain} ${res.reward.points} ${R.string.rewardGainPoints}"));
+                    } else if (page is MeasureWellnessPage) {
+                      _keyHome.currentState.showSnackBar(showSnackBar(
+                          title: "${R.string.congratulations} ${bloc.userName}",
+                          content:
+                          "${R.string.rewardGain} ${res.reward.points} ${R.string.rewardGainPoints}"));
+                    }
                   }
+                  Utils.setStatusBarColor(R.color.primary_dark_color);
                 }
-                Utils.setStatusBarColor(R.color.primary_dark_color);
               }
             }
           }
@@ -336,6 +346,47 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  void _showUpdateApp({BuildContext context}) {
+    showCupertinoDialog<String>(
+      context: context,
+      builder: (BuildContext context) => TXCupertinoDialogWidget(
+        title: "Actualización requerida",
+        contentWidget: RichText(
+          text: TextSpan(
+              style: TextStyle(color: R.color.gray),
+              text: "La versión actual que estás usando es ",
+              children: [
+                TextSpan(
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16),
+                    text: "${bloc.currentVersion}. "),
+                TextSpan(
+                    style: TextStyle(color: R.color.gray),
+                    text:
+                        "Para poder seguir usando Planifive necesitas actualizar a la versión "),
+                TextSpan(
+                    style: TextStyle(
+                        color: R.color.accent_color,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16),
+                    text: "${bloc.nextVersion}."),
+              ]),
+        ),
+        okText: "Actualizar",
+        onOK: () {
+          Navigator.pop(context);
+          LaunchReview.launch(
+              androidAppId: "com.metriri.mismedidasb", iOSAppId: "1506658015");
+        },
+        onCancel: () {
+          Navigator.pop(context, R.string.cancel);
+        },
       ),
     );
   }

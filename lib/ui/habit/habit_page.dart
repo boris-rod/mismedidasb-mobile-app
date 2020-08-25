@@ -43,6 +43,7 @@ class _HabitState extends StateWithBloC<HabitPage, HabitBloC> {
     return Stack(
       children: <Widget>[
         TXCustomActionBar(
+          showGifInfo: 1,
           actionBarColor: R.color.habits_color,
           body: Stack(
             children: <Widget>[

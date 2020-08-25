@@ -1,5 +1,5 @@
 class Endpoint {
-  static String apiBaseUrl = "http://ec2-34-244-181-197.eu-west-1.compute.amazonaws.com";
+  static String apiBaseUrl = "https://api-dev.metriri.com";
 
   ///General content
   static const String accept_terms_cond = "/api/general-content/accept-terms-conditions";
@@ -7,6 +7,7 @@ class Endpoint {
   static const String contact_us_send_info = "/api/contact-us";
 
   ///Account
+  static const String app_version = "/api/app";
   static const String register = "/api/account/register";
   static const String login = "/api/account/login";
   static const String logout = "/api/account/logout";

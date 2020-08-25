@@ -39,6 +39,7 @@ class _FoodCravingState
     return Stack(
       children: <Widget>[
         TXCustomActionBar(
+          showGifInfo: 2,
           actionBarColor: R.color.craving_color,
           body: Stack(
             children: <Widget>[

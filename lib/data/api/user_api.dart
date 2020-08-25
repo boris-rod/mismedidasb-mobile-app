@@ -100,10 +100,23 @@ class UserApi extends BaseApi implements IUserApi {
     final userId =
         await _sharedPreferencesManager.getIntValue(SharedKey.userId);
     final res = await _networkHandler.get(
-        path: Endpoint.solo_question_stats, params: "/$userId/extended?lastNDays=$daysAgo");
+        path: Endpoint.solo_question_stats,
+        params: "/$userId/extended?lastNDays=$daysAgo");
     if (res.statusCode == RemoteConstants.code_success)
       return _iUserConverter.fromJsonSoloQuestionStats(
           jsonDecode(res.body)[RemoteConstants.result]);
+    else
+      throw serverException(res);
+  }
+
+  @override
+  Future<AppVersionModel> getAppVersion() async {
+    final res = await _networkHandler.get(
+      path: Endpoint.app_version,
+    );
+    if (res.statusCode == RemoteConstants.code_success)
+      return _iUserConverter
+          .fromJsonAppVersion(jsonDecode(res.body)[RemoteConstants.result]);
     else
       throw serverException(res);
   }

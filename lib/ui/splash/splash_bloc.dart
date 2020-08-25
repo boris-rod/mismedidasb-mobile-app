@@ -47,7 +47,6 @@ class SplashBloC extends BaseBloC {
             refreshToken.isEmpty)
           _navigateController.sinkAddSafe(true);
         else {
-          _navigateController.sinkAddSafe(false);
           final res = await _iSessionRepository.validateToken();
           if (res is ResultSuccess<bool>)
             _navigateController.sink.add(!res.value);

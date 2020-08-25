@@ -56,9 +56,9 @@ class SessionRepository extends BaseRepository implements ISessionRepository {
   @override
   Future<Result<bool>> validateToken() async {
     try {
-//      final result = await _iSessionApi.validateToken();
+      final result = await _iSessionApi.validateToken();
       _fcmFeature.refreshToken();
-      return Result.success(value: true);
+      return Result.success(value: result);
     } catch (ex) {
       return resultError(ex);
     }

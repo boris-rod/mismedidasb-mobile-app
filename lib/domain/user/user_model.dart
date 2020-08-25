@@ -1,3 +1,9 @@
+class AppVersionModel{
+  String version;
+  bool isMandatory;
+  AppVersionModel({this.version, this.isMandatory});
+}
+
 class ScoreModel {
   int id;
   int userId;

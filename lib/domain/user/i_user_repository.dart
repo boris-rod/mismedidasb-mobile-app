@@ -7,6 +7,8 @@ import 'package:mismedidasb/domain/user/user_model.dart';
 abstract class IUserRepository {
   Future<Result<UserModel>> getProfile();
 
+  Future<Result<AppVersionModel>> getAppVersion();
+
   Future<Result<UserModel>> updateProfile(UserModel userModel);
 
   Future<Result<bool>> uploadAvatar(File photo);
