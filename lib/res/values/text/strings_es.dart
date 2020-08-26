@@ -411,5 +411,5 @@ class StringsEs implements StringsBase {
   String get profileSettingsHelper => "Perfil y ajustes";
 
   @override
-  String get planiHelper => "¿Quien es Plani y como te asiste?";
+  String get planiHelper => "¿Quién es Plani y cómo te asiste?";
 }
