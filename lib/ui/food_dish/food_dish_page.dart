@@ -616,7 +616,7 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
           ],
         ),
         title: TXTextWidget(
-          text: "${model.name} - ${model.caloriesFixed}",
+          text: model.name,
           color: Colors.white,
           fontStyle: FontStyle.italic,
           fontWeight: FontWeight.bold,
