@@ -41,8 +41,8 @@ class DishConverter extends IDishConverter {
 //        name: json["name"],
 //        typeId: json["eatTypeId"],
         type: json["eatType"],
-        imc: json["imc"],
-        kCal: json["kCal"],
+        imc: json["imc"] ?? 1,
+        kCal: json["kCal"] ?? 1,
         dateTime: fromAPI
             ? DateTime.parse(json["createdAt"]).toLocal()
             : DateTime.parse(json["dateTime"]),

@@ -54,8 +54,8 @@ class _MeasureHealthState
             context: context,
             content: onData.result,
             title: "${R.string.thanks} ${bloc.userName}",
-            onOk: () {
-              NavigationUtils.pop(context);
+            onOk: () async{
+              await NavigationUtils.pop(context);
               if (bloc.isFirstTime)
                 bloc.launchFirstTime();
               else
@@ -205,12 +205,16 @@ class _MeasureHealthState
                 return snapshotShow.data
                     ? TXVideoIntroWidget(
                         title: R.string.planiHelper,
-                        onSeeVideo: () {
-                          bloc.setNotFirstTime();
+                        onSeeVideo: () async{
+                          await bloc.setNotFirstTime();
                           FileManager.playVideo("plani.mp4");
+                          Future.delayed(Duration(seconds: 2), (){
+                            _navBack();
+                          });
                         },
-                        onSkip: () {
-                          bloc.setNotFirstTime();
+                        onSkip: () async{
+                          await bloc.setNotFirstTime();
+                          _navBack();
                         },
                       )
                     : Container();

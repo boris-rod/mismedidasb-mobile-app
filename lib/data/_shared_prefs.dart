@@ -179,7 +179,7 @@ class SharedPreferencesManager {
     if (value == null) {
       final now = DateTime.now();
       value = now.toIso8601String();
-      setDateTimeValue(key, now);
+      await setDateTimeValue(key, now);
     }
     return DateTime.parse(value);
   }
@@ -195,7 +195,7 @@ class SharedPreferencesManager {
         (await SharedPreferences.getInstance()).getBool(SharedKey.termsCond);
     if (value == null) {
       value = false;
-      setTermsCond(value);
+      await setTermsCond(value);
     }
     return value;
   }
@@ -212,7 +212,7 @@ class SharedPreferencesManager {
     if (value == null) {
       final now = DateTime.now();
       value = now.toIso8601String();
-      setFirstDateHealthResult(now);
+      await setFirstDateHealthResult(now);
     }
     return DateTime.parse(value);
   }
@@ -228,7 +228,7 @@ class SharedPreferencesManager {
         .getBool(SharedKey.saveCredentials);
     if (value == null) {
       value = true;
-      setSaveCredentials(value);
+      await setSaveCredentials(value);
     }
     return value;
   }
@@ -244,7 +244,7 @@ class SharedPreferencesManager {
         (await SharedPreferences.getInstance()).getDouble(SharedKey.dailyKCal);
     if (value == null || value < 1) {
       value = 1;
-      setDailyKCal(value);
+      await setDailyKCal(value);
     }
     return value;
   }
@@ -260,7 +260,7 @@ class SharedPreferencesManager {
         (await SharedPreferences.getInstance()).getDouble(SharedKey.imc);
     if (value == null || value < 1) {
       value = 1;
-      setIMC(value);
+      await setIMC(value);
     }
     return value;
   }
@@ -276,7 +276,7 @@ class SharedPreferencesManager {
         .getBool(SharedKey.showDailyResume);
     if (value == null) {
       value = true;
-      setShowDailyResume(value);
+      await setShowDailyResume(value);
     }
     return value;
   }
@@ -292,7 +292,7 @@ class SharedPreferencesManager {
         (await SharedPreferences.getInstance()).getString(SharedKey.userEmail);
     if (value == null) {
       value = '';
-      setUserEmail(value);
+      await setUserEmail(value);
     }
     return value;
   }
@@ -308,7 +308,7 @@ class SharedPreferencesManager {
         .getString(SharedKey.languageCode);
     if (value == null) {
       value = '';
-      setLanguageCode(value);
+      await setLanguageCode(value);
     }
     return value;
   }
@@ -324,7 +324,7 @@ class SharedPreferencesManager {
         (await SharedPreferences.getInstance()).getString(SharedKey.password);
     if (value == null) {
       value = '';
-      setPassword(value);
+      await setPassword(value);
     }
     return value;
   }
@@ -340,7 +340,7 @@ class SharedPreferencesManager {
         .getString(SharedKey.accessToken);
     if (value == null) {
       value = '';
-      setAccessToken(value);
+      await setAccessToken(value);
     }
     return value;
   }
@@ -356,7 +356,7 @@ class SharedPreferencesManager {
         .getString(SharedKey.refreshToken);
     if (value == null) {
       value = '';
-      setRefreshToken(value);
+      await setRefreshToken(value);
     }
     return value;
   }
@@ -388,7 +388,7 @@ class SharedPreferencesManager {
         .getInt(SharedKey.languageCodeId);
     if (value == null) {
       value = 0;
-      setLanguageCodeId(value);
+      await setLanguageCodeId(value);
     }
     return value;
   }

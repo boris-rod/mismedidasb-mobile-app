@@ -108,7 +108,7 @@ class MeasureHealthBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     _showFirstTimeController.sinkAddSafe(value);
   }
 
-  void setNotFirstTime() async {
+  Future<void> setNotFirstTime() async {
     await _sharedPreferencesManager.setBoolValue(
         SharedKey.firstTimeInMeasureHealth, false);
     _showFirstTimeController.sinkAddSafe(false);

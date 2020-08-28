@@ -288,6 +288,7 @@ class SettingsBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     if (res is ResultSuccess<bool> && res.value) {
       settingAction = SettingAction.removeAccount;
       _removeAccountController.sinkAddSafe(true);
+      await _sharedPreferencesManager.setStringValue(SharedKey.userId, "");
       await _sharedPreferencesManager.init();
       await _ilnm.cancelAll();
     } else {

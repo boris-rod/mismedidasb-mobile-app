@@ -72,12 +72,11 @@ class _FoodSearchState extends StateWithBloC<FoodSearchPage, FoodSearchBloC> {
                           onChanged: (value) {
                             bloc.currentQuery = value;
                             searchMarkTime = DateTime.now();
-                            Future.delayed(Duration(seconds: 2), (){
+                            Future.delayed(Duration(milliseconds: 500), (){
                               final dif = DateTime.now().difference(searchMarkTime);
-                              if(dif.inSeconds >= 1)
+                              if(dif.inMilliseconds > 500)
                                 bloc.loadFoods(true, false);
                             });
-//                            bloc.search(value);
                           },
                           onFieldSubmitted: (value) {
 //                            bloc.search(value);

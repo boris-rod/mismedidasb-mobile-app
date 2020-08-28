@@ -154,6 +154,17 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
           .firstWhere((d) => CalendarUtils.isSameDay(d, selectedDate));
     });
     DailyFoodModel daily = dailyFoodModelMap[key];
+    if(daily.dailyFoodPlanModel.imc <= 1)
+      daily.dailyFoodPlanModel.imc = imc;
+    if(daily.dailyFoodPlanModel.dailyKCal <= 1)
+      daily.dailyFoodPlanModel.dailyKCal = kCal;
+
+    daily.dailyActivityFoodModelList.forEach((activity) {
+      if(activity.imc <= 1)
+        activity.imc = imc;
+      if(activity.kCal <=1)
+        activity.kCal = kCal;
+    });
 
     _calendarOptionsController.sinkAddSafe(daily);
 

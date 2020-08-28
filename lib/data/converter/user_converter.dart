@@ -22,7 +22,7 @@ class UserConverter implements IUserConverter {
         termsAndConditionsAccepted: json[RemoteConstants.terms_cond],
         firstDateHealthResult:
             json[RemoteConstants.first_date_health_result] != null
-                ? DateTime.parse(json[RemoteConstants.first_date_health_result])
+                ? DateTime.parse(json[RemoteConstants.first_date_health_result],)
                     .toLocal()
                 : DateTime.now(),
         imc: json[RemoteConstants.imc],

@@ -66,6 +66,8 @@ class DishRepository extends BaseRepository implements IDishRepository {
       Map<String, DailyFoodModel> dailyMap = {};
       DateTime initial = DateTime(start.year, start.month, start.day);
 
+      double kCalLocal = await _sharedPreferencesManager.getDailyKCal();
+      double imcLocal = await _sharedPreferencesManager.getIMC();
       //Looping over dates from start to end
       while (CalendarUtils.compare(end, initial) >= 0) {
         final dateMapId = CalendarUtils.getTimeIdBasedDay(dateTime: initial);
@@ -90,17 +92,14 @@ class DishRepository extends BaseRepository implements IDishRepository {
                 ..imc = dailyActivityMap[dateMapId][0].imc
                 ..dailyKCal = dailyActivityMap[dateMapId][0].kCal);
         } else {
-          double kCal = await _sharedPreferencesManager.getDailyKCal();
-          double imc = await _sharedPreferencesManager.getIMC();
-
           dailyMap[dateMapId] = DailyFoodModel(
               dateTime: initial,
               synced: true,
               dailyActivityFoodModelList:
                   DailyActivityFoodModel.getDailyActivityFoodModelList(
-                      DailyFoodPlanModel(dailyKCal: kCal, imc: imc), initial),
+                      DailyFoodPlanModel(dailyKCal: kCalLocal, imc: imcLocal), initial),
               dailyFoodPlanModel:
-                  DailyFoodPlanModel(dailyKCal: kCal, imc: imc));
+                  DailyFoodPlanModel(dailyKCal: kCalLocal, imc: imcLocal));
         }
         //Adding daily plan merged
         resultMap[initial] = dailyMap[dateMapId];
