@@ -65,11 +65,14 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
   BehaviorSubject<bool> _showFirstTimePlanController = new BehaviorSubject();
 
-  Stream<bool> get showFirstTimePlanResult => _showFirstTimePlanController.stream;
+  Stream<bool> get showFirstTimePlanResult =>
+      _showFirstTimePlanController.stream;
 
-  BehaviorSubject<bool> _showFirstTimePlanCopyController = new BehaviorSubject();
+  BehaviorSubject<bool> _showFirstTimePlanCopyController =
+      new BehaviorSubject();
 
-  Stream<bool> get showFirstTimePlanCopyResult => _showFirstTimePlanCopyController.stream;
+  Stream<bool> get showFirstTimePlanCopyResult =>
+      _showFirstTimePlanCopyController.stream;
 
 //  bool tagsLoaded = false;
 //  bool foodsLoaded = false;
@@ -79,16 +82,16 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   int currentCalendarPage = 0;
   Map<DateTime, DailyFoodModel> dailyFoodModelMap = {};
   DateTime selectedDate = DateTime.now();
-  DateTime firstDate = DateTime.now();
-  DateTime lastDate = DateTime.now();
+//  DateTime firstDate = DateTime.now();
+//  DateTime lastDate = DateTime.now();
   DateTime firstDateHealthResult = DateTime.now();
   bool isCopying = false;
   double imc = 1;
   double kCal = 1;
 
   void launchFirstTimePlan() async {
-    final value =
-    await _sharedPreferencesManager.getBoolValue(SharedKey.firstTimeInFoodPlan, defValue: true);
+    final value = await _sharedPreferencesManager
+        .getBoolValue(SharedKey.firstTimeInFoodPlan, defValue: true);
     _showFirstTimePlanController.sinkAddSafe(value);
   }
 
@@ -99,8 +102,8 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   }
 
   void launchFirstTimePlanCopy() async {
-    final value =
-    await _sharedPreferencesManager.getBoolValue(SharedKey.firstTimeInCopyPlan, defValue: true);
+    final value = await _sharedPreferencesManager
+        .getBoolValue(SharedKey.firstTimeInCopyPlan, defValue: true);
     _showFirstTimePlanCopyController.sinkAddSafe(value);
   }
 
@@ -113,13 +116,14 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   void loadInitialData() async {
     dailyFoodModelMap = {};
 
-    firstDate = CalendarUtils.getFirstDateOfPreviousMonth();
-    lastDate = CalendarUtils.getLastDateOfNextMonth();
+//    firstDate = CalendarUtils.getFirstDateOfPreviousMonth();
+//    lastDate = CalendarUtils.getLastDateOfNextMonth();
 
 //    tagsLoaded = false;
 //    foodsLoaded = false;
     showResume = await _sharedPreferencesManager.getShowDailyResume();
-    showPlaniSuggest = await _sharedPreferencesManager.getBoolValue(SharedKey.hasPlaniVirtualAssesor);
+    showPlaniSuggest = await _sharedPreferencesManager
+        .getBoolValue(SharedKey.hasPlaniVirtualAssesor);
     imc = await _sharedPreferencesManager.getIMC();
     kCal = await _sharedPreferencesManager.getDailyKCal();
 
@@ -154,154 +158,14 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
           .firstWhere((d) => CalendarUtils.isSameDay(d, selectedDate));
     });
     DailyFoodModel daily = dailyFoodModelMap[key];
-    if(daily.dailyFoodPlanModel.imc <= 1)
-      daily.dailyFoodPlanModel.imc = imc;
-    if(daily.dailyFoodPlanModel.dailyKCal <= 1)
-      daily.dailyFoodPlanModel.dailyKCal = kCal;
-
-    daily.dailyActivityFoodModelList.forEach((activity) {
-      if(activity.imc <= 1)
-        activity.imc = imc;
-      if(activity.kCal <=1)
-        activity.kCal = kCal;
-    });
 
     _calendarOptionsController.sinkAddSafe(daily);
-
-//    daily.currentCaloriesSum = 0;
-//    daily.currentProteinsSum = 0;
-//    daily.currentCarbohydratesSum = 0;
-//    daily.currentFatSum = 0;
-//    daily.currentFiberSum = 0;
-
-//    daily.dailyActivityFoodModelList.forEach((dA) {
-//      dA.proteinsDishCalories = 0;
-//      dA.fiberDishCalories = 0;
-//      dA.carbohydratesDishCalories = 0;
-
-//      final double activityFoodCalories = dA.activityFoodCalories;
-
-//      double car = 0;
-//      double fat = 0;
-//      double fib = 0;
-//      double pro = 0;
-//      dA.foods.forEach((f) {
-//        car += f.carbohydrates * f.count;
-//        fat += f.fat * f.count;
-//        fib += f.fiber * f.count;
-//        pro += f.proteins * f.count;
-
-//        if (f.tag.id == RemoteConstants.proteins_category_code) {
-//          dA.proteinsDishCalories += f.caloriesFixed;
-//        } else if (f.tag.id == RemoteConstants.carbohydrate_fat_category_code ||
-//            f.tag.id == RemoteConstants.milk_category_code ||
-//            f.tag.id == RemoteConstants.soft_drinks_category_code) {
-//          dA.fiberDishCalories += f.caloriesFixed;
-//        } else if (f.tag.id == RemoteConstants.fiber_category_code) {
-//          dA.carbohydratesDishCalories += f.caloriesFixed;
-//        }
-//      });
-
-//      dA.proteins = pro * 4;
-//      dA.carbohydrates = car * 4;
-//      dA.fat = fat * 9;
-//      dA.fiber = fib;
-//      dA.calories = dA.fat + dA.proteins + dA.carbohydrates;
-
-//      dA.foodsProteinsPercentage =
-//          ((dA.proteinsDishCalories > 0 ? dA.proteinsDishCalories : 1) *
-//                  100 ~/
-//                  activityFoodCalories)
-//              .toInt();
-//      dA.foodsCarbohydratesPercentage = ((dA.carbohydratesDishCalories > 0
-//                  ? dA.carbohydratesDishCalories
-//                  : 1) *
-//              100 ~/
-//              activityFoodCalories)
-//          .toInt();
-//      dA.foodsFiberPercentage =
-//          ((dA.fiberDishCalories > 0 ? dA.fiberDishCalories : 1) *
-//                  100 ~/
-//                  activityFoodCalories)
-//              .toInt();
-//
-//      daily.currentCaloriesSum += dA.caloriesSum;
-//      daily.currentProteinsSum += dA.proteinsSum;
-//      daily.currentCarbohydratesSum += dA.carbohydratesSum;
-//      daily.currentFatSum += dA.fatSum;
-//      daily.currentFiberSum += dA.fiberSum;
-//    });
-
-//    CreateDailyPlanModel createPlan = CreateDailyPlanModel.fromDailyFoodModel(daily);
-//    print(createPlan.toString());
-
     _dailyFoodController.sinkAddSafe(daily);
   }
 
   void setFoodList(DailyActivityFoodModel model) async {
     final rootModel = await dailyFoodResult.first;
-
-//    rootModel.currentCaloriesSum =
-//        rootModel.currentCaloriesSum - model.caloriesSum;
-//
-//    rootModel.currentProteinsSum =
-//        rootModel.currentProteinsSum - model.proteinsSum;
-//    rootModel.currentCarbohydratesSum =
-//        rootModel.currentCarbohydratesSum - model.carbohydratesSum;
-//    rootModel.currentFatSum = rootModel.currentFatSum - model.fatSum;
-//    rootModel.currentFiberSum = rootModel.currentFiberSum - model.fiberSum;
-
-//    model.proteinsDishCalories = 0;
-//    model.fiberDishCalories = 0;
-//    model.carbohydratesDishCalories = 0;
-
-//    double car = 0;
-//    double fat = 0;
-//    double fib = 0;
-//    double pro = 0;
-
-//    model.foods.forEach((f) {
-//      car += f.carbohydrates * f.count;
-//      fat += f.fat * f.count;
-//      pro += f.proteins * f.count;
-//      fib += f.fiber * f.count;
-//
-//      if (f.tag.id == RemoteConstants.proteins_category_code) {
-//        model.proteinsDishCalories += f.caloriesFixed;
-//      } else if (f.tag.id == RemoteConstants.carbohydrate_fat_category_code ||
-//          f.tag.id == RemoteConstants.milk_category_code ||
-//          f.tag.id == RemoteConstants.soft_drinks_category_code) {
-//        model.carbohydratesDishCalories += f.caloriesFixed;
-//      } else if (f.tag.id == RemoteConstants.fiber_category_code) {
-//        model.fiberDishCalories += f.caloriesFixed;
-//      }
-//    });
-
-//    model.proteins = pro * 4;
-//    model.carbohydrates = car * 4;
-//    model.fat = fat * 9;
-//    model.fiber = fib;
-//    model.calories = model.fat + model.proteins + model.carbohydrates;
-
-//    final double activityFoodCalories = model.activityFoodCalories;
-//    model.foodsProteinsPercentage =
-//        (model.proteinsDishCalories * 100 ~/ activityFoodCalories).toInt();
-//    model.foodsCarbohydratesPercentage =
-//        (model.carbohydratesDishCalories * 100 ~/ activityFoodCalories).toInt();
-//    model.foodsFiberPercentage =
-//        (model.fiberDishCalories * 100 ~/ activityFoodCalories).toInt();
-
-//    rootModel.currentCaloriesSum += model.caloriesSum;
-//    rootModel.currentProteinsSum += model.proteinsSum;
-//    rootModel.currentCarbohydratesSum += model.carbohydratesSum;
-//    rootModel.currentFatSum += model.fatSum;
-//    rootModel.currentFiberSum += model.fiberSum;
-
     await _iDishRepository.savePlanLocal(rootModel);
-
-//    CreateDailyPlanModel createPlan = CreateDailyPlanModel.fromDailyFoodModel(rootModel);
-//    print(createPlan.toString());
-
     _dailyFoodController.sink.add(rootModel);
   }
 
@@ -313,20 +177,6 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
         return null;
       });
       DailyFoodModel daily = dailyFoodModelMap[key];
-//      if (daily == null) {
-//        final kCalPercentageHide = await _sharedPreferencesManager
-//            .getBoolValue(SharedKey.kCalPercentageHide);
-//
-//        final plan = DailyFoodPlanModel();
-//        final da = DailyFoodModel(
-//            dateTime: newSelectedDate,
-//            dailyActivityFoodModelList:
-//                DailyActivityFoodModel.getDailyActivityFoodModelList(
-//                    plan, newSelectedDate),
-//            dailyFoodPlanModel: plan,
-//            showKCalPercentages: kCalPercentageHide);
-//        daily = da;
-//      }
       if (forceCopy) {
         daily.synced = false;
         daily.dailyActivityFoodModelList[0].foods =
@@ -359,7 +209,6 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
             rootModel.dailyActivityFoodModelList[3].foods;
         daily.dailyActivityFoodModelList[4].foods =
             rootModel.dailyActivityFoodModelList[4].foods;
-
         await _iDishRepository.savePlanLocal(daily);
 
         isCopying = true;
@@ -426,34 +275,6 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
   void changeCalendarPage() async {
     isLoading = true;
-//    final firstDate = currentCalendarPage == 1
-//        ? CalendarUtils.getFirstDateOfNextMonth()
-//        : currentCalendarPage == -1
-//            ? CalendarUtils.getFirstDateOfPreviousMonth()
-//            : CalendarUtils.getFirstDateOfMonth();
-//
-//    final lastDate = currentCalendarPage == 1
-//        ? CalendarUtils.getLastDateOfNextMonth()
-//        : currentCalendarPage == -1
-//            ? CalendarUtils.getLastDateOfPreviousMonth()
-//            : CalendarUtils.getLastDateOfMonth();
-//
-//    final resPlans = await _iDishRepository.getPlansMergedAPI(
-//      firstDate,
-//      lastDate,
-//    );
-//    if (resPlans is ResultSuccess<Map<DateTime, DailyFoodModel>>) {
-//      dailyFoodModelMap.removeWhere(
-//          (key, value) => CalendarUtils.compareByMonth(firstDate, key) == 0);
-//      dailyFoodModelMap.addAll(resPlans.value);
-//      Map<DateTime, List<DailyFoodModel>> map = {};
-//      resPlans.value.forEach((key, value) {
-//        map[key] = [value];
-//      });
-//      _calendarPageController.sinkAddSafe(map);
-//    }
-//
-//    isLoading = false;
     loadPlansBulk1();
     loadPlansBulk2();
     loadPlansBulk3();
@@ -463,7 +284,9 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     final firstD = CalendarUtils.getFirstDateOfMonth();
     final lastD = CalendarUtils.getLastDateOfMonth();
     final resPlans = await _iDishRepository.getPlansMergedAPI(
-        firstD, lastD,);
+      firstD,
+      lastD,
+    );
     plansBulk1Loaded = true;
     if (resPlans is ResultSuccess<Map<DateTime, DailyFoodModel>>) {
       dailyFoodModelMap.removeWhere(
@@ -484,8 +307,9 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     final firstD = CalendarUtils.getFirstDateOfNextMonth();
     final lastD = CalendarUtils.getLastDateOfNextMonth();
     final resPlans = await _iDishRepository.getPlansMergedAPI(
-        firstD,
-        lastD,);
+      firstD,
+      lastD,
+    );
     plansBulk2Loaded = true;
     if (resPlans is ResultSuccess<Map<DateTime, DailyFoodModel>>) {
       dailyFoodModelMap.removeWhere(
@@ -504,8 +328,9 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     final firstD = CalendarUtils.getFirstDateOfPreviousMonth();
     final lastD = CalendarUtils.getLastDateOfPreviousMonth();
     final resPlans = await _iDishRepository.getPlansMergedAPI(
-        firstD,
-        lastD,);
+      firstD,
+      lastD,
+    );
     plansBulk3Loaded = true;
     if (resPlans is ResultSuccess<Map<DateTime, DailyFoodModel>>) {
       dailyFoodModelMap.removeWhere(

@@ -81,6 +81,21 @@ class DishRepository extends BaseRepository implements IDishRepository {
         });
 
         if (localObj != null) {
+          if(localObj.dailyFoodPlanModel.imc <= 1)
+            localObj.dailyFoodPlanModel.imc = imcLocal;
+          if(localObj.dailyFoodPlanModel.dailyKCal <= 1)
+            localObj.dailyFoodPlanModel.dailyKCal = kCalLocal;
+          localObj.dailyActivityFoodModelList.forEach((activity) {
+            if(activity.imc <= 1)
+              activity.imc = imcLocal;
+            if(activity.kCal <= 1)
+              activity.kCal = kCalLocal;
+            if(activity.plan.imc <= 1)
+              activity.plan.imc = imcLocal;
+            if(activity.plan.dailyKCal <= 1)
+              activity.plan.dailyKCal = kCalLocal;
+          });
+
           dailyMap[dateMapId] = localObj;
         } else if (dailyActivityMap.containsKey(dateMapId) &&
             dailyActivityMap[dateMapId]?.isNotEmpty == true) {

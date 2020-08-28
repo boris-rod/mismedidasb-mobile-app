@@ -238,15 +238,15 @@ class DailyActivityFoodModel {
       DailyFoodPlanModel dailyFoodPlanModel, DateTime dateTime) {
     return [
       DailyActivityFoodModel(
-          id: 0, foods: [], plan: dailyFoodPlanModel, dateTime: dateTime),
+          id: 0, foods: [], plan: dailyFoodPlanModel, dateTime: dateTime, imc: dailyFoodPlanModel.imc, kCal: dailyFoodPlanModel.dailyKCal),
       DailyActivityFoodModel(
-          id: 1, foods: [], plan: dailyFoodPlanModel, dateTime: dateTime),
+          id: 1, foods: [], plan: dailyFoodPlanModel, dateTime: dateTime, imc: dailyFoodPlanModel.imc, kCal: dailyFoodPlanModel.dailyKCal),
       DailyActivityFoodModel(
-          id: 2, foods: [], plan: dailyFoodPlanModel, dateTime: dateTime),
+          id: 2, foods: [], plan: dailyFoodPlanModel, dateTime: dateTime, imc: dailyFoodPlanModel.imc, kCal: dailyFoodPlanModel.dailyKCal),
       DailyActivityFoodModel(
-          id: 3, foods: [], plan: dailyFoodPlanModel, dateTime: dateTime),
+          id: 3, foods: [], plan: dailyFoodPlanModel, dateTime: dateTime, imc: dailyFoodPlanModel.imc, kCal: dailyFoodPlanModel.dailyKCal),
       DailyActivityFoodModel(
-          id: 4, foods: [], plan: dailyFoodPlanModel, dateTime: dateTime),
+          id: 4, foods: [], plan: dailyFoodPlanModel, dateTime: dateTime, imc: dailyFoodPlanModel.imc, kCal: dailyFoodPlanModel.dailyKCal),
     ];
   }
 }
