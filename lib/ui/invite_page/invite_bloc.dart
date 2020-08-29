@@ -35,12 +35,14 @@ class InvitePeopleBloC extends BaseBloC
   }
 
   void invite() async {
+    isLoading = true;
     final emails = await emailsResult.first;
     final res = await _iUserRepository.invite(emails);
     if (res is ResultSuccess<bool>) {
       invited = true;
     }
     _inviteController.sinkAddSafe(1);
+    isLoading = true;
   }
 
   void addEmail(String email) async {

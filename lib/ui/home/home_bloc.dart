@@ -71,13 +71,13 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     profileLoaded = false;
     conceptsLoaded = false;
     plansBulk1Loaded = false;
-//    final res = await _iUserRepository.getAppVersion();
-//    if(res is ResultSuccess<AppVersionModel>){
-//      PackageInfo packageInfo = await PackageInfo.fromPlatform();
-//      currentVersion = packageInfo.version;
-//      nextVersion = res.value.version;
-//      needUpdateVersion = nextVersion != currentVersion && res.value.isMandatory;
-//    }
+    final res = await _iUserRepository.getAppVersion();
+    if(res is ResultSuccess<AppVersionModel>){
+      PackageInfo packageInfo = await PackageInfo.fromPlatform();
+      currentVersion = packageInfo.version;
+      nextVersion = res.value.version;
+      needUpdateVersion = nextVersion != currentVersion && res.value.isMandatory;
+    }
     loadPlansBulk1();
     loadProfile();
     loadConcepts();
