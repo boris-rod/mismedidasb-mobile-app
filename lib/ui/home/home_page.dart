@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -46,6 +48,7 @@ import 'package:mismedidasb/ui/profile/profile_page.dart';
 import 'package:mismedidasb/ui/settings/settings_page.dart';
 import 'package:mismedidasb/utils/file_manager.dart';
 import 'package:mismedidasb/utils/utils.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -379,10 +382,12 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
               ]),
         ),
         okText: "Actualizar",
-        onOK: () {
+        onOK: () async{
           Navigator.pop(context);
-          LaunchReview.launch(
-              androidAppId: "com.metriri.mismedidasb", iOSAppId: "1506658015");
+//          LaunchReview.launch(
+//              androidAppId: "com.metriri.mismedidasb", iOSAppId: "1506658015");
+          await launch(Platform.isIOS ? "https://itunes.apple.com/us/app/sutiawbapp/id1506658015?ls=1&mt=8" :
+          "https://play.google.com/store/apps/details?id=com.metriri.mismedidasb");
         },
         onCancel: () {
           Navigator.pop(context, R.string.cancel);

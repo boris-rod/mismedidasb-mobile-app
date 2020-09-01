@@ -264,7 +264,7 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                             leading: Icons.contacts,
                             optionName: "Invita a tus contactos!",
                             onOptionTap: () {
-                              Share.share(Platform.isIOS ? "https://itunes.apple.com/lookup?bundleId=com.metriri.mismedidas" :
+                              Share.share(Platform.isIOS ? "https://itunes.apple.com/us/app/sutiawbapp/id1506658015?ls=1&mt=8" :
                               "https://play.google.com/store/apps/details?id=com.metriri.mismedidasb", subject: "Planifive");
                             },
                           ),
