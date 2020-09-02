@@ -264,8 +264,9 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                             leading: Icons.contacts,
                             optionName: "Invita a tus contactos!",
                             onOptionTap: () {
-                              Share.share(Platform.isIOS ? "https://itunes.apple.com/us/app/sutiawbapp/id1506658015?ls=1&mt=8" :
-                              "https://play.google.com/store/apps/details?id=com.metriri.mismedidasb", subject: "Planifive");
+                              final shareContent =
+                                  "PlaniFive - GooglePlay: https://play.google.com/store/apps/details?id=com.metriri.mismedidasb \n\n PlaniFive - AppleStore: https://itunes.apple.com/us/app/sutiawbapp/id1506658015?ls=1&mt=8";
+                              Share.share(shareContent, subject: "PlaniFive");
                             },
                           ),
                           TXDividerWidget1(),
@@ -285,7 +286,9 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                             },
                           ),
                           TXDividerWidget1(),
-                          SizedBox(height: 10,),
+                          SizedBox(
+                            height: 10,
+                          ),
                           StreamBuilder<String>(
                             stream: bloc.appVersionResult,
                             initialData: "",
@@ -536,18 +539,19 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
               stream: bloc.showFirstTimeResult,
               initialData: false,
               builder: (context, snapshotShow) {
-                return snapshotShow.data ? TXVideoIntroWidget(
-                  title: R.string.profileSettingsHelper,
-                  onSeeVideo: () {
-                    bloc.setNotFirstTime();
-                    FileManager.playVideo("profile_settings.mp4");
-                  },
-                  onSkip: () {
-                    bloc.setNotFirstTime();
-                  },
-                ) : Container();
-              }
-          ),
+                return snapshotShow.data
+                    ? TXVideoIntroWidget(
+                        title: R.string.profileSettingsHelper,
+                        onSeeVideo: () {
+                          bloc.setNotFirstTime();
+                          FileManager.playVideo("profile_settings.mp4");
+                        },
+                        onSkip: () {
+                          bloc.setNotFirstTime();
+                        },
+                      )
+                    : Container();
+              }),
         ],
       ),
     );
