@@ -50,9 +50,8 @@ class ProfileBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 //    String appName = packageInfo.appName;
 //    String packageName = packageInfo.packageName;
     String version = packageInfo.version;
-    String buildNumber = packageInfo.buildNumber;
 
-    _appVersionController.sinkAddSafe("Planifive => $version+$buildNumber");
+    _appVersionController.sinkAddSafe("Planifive => $version");
   }
 
   void getProfile() async {

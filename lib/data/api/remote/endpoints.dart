@@ -1,6 +1,6 @@
 class Endpoint {
-//  static String apiBaseUrl = "https://api-dev.metriri.com";
-  static String apiBaseUrl = "https://api.metriri.com";
+  static String apiBaseUrl = "https://api-dev.metriri.com";
+//  static String apiBaseUrl = "https://api.metriri.com";
 
   ///General content
   static const String accept_terms_cond = "/api/general-content/accept-terms-conditions";

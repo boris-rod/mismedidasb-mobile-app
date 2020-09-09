@@ -109,7 +109,7 @@ class LNM implements ILNM {
     final String userName =
         await _sharedPreferencesManager.getStringValue(SharedKey.userName);
     String title = 'Hola $userName';
-    String content = 'Gana puntos y déjame saber que tal te va?';
+    String content = 'Gana puntos y déjame saber qué tal te va.';
     var androidPlatformChannelSpecifics = _getCommonAndroidNotificationDetail(
         channelId: '$pollNotificationId',
         title: title,

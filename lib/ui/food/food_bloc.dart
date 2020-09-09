@@ -149,10 +149,12 @@ class FoodBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
       }
     }
 
-    currentFoodsList.forEach((element) {
-      element.isSelected = selectedFoods[element.id]?.isSelected ?? false;
-    });
-    _foodsController.sinkAddSafe(currentFoodsList);
+    if(currentFoodsList != null){
+      currentFoodsList.forEach((element) {
+        element.isSelected = selectedFoods[element.id]?.isSelected ?? false;
+      });
+      _foodsController.sinkAddSafe(currentFoodsList);
+    }
     isLoadingMore = false;
   }
 
