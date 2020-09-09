@@ -78,6 +78,7 @@ import 'package:mismedidasb/domain/session/i_session_repository.dart';
 import 'package:mismedidasb/domain/user/i_user_api.dart';
 import 'package:mismedidasb/domain/user/i_user_converter.dart';
 import 'package:mismedidasb/domain/user/i_user_repository.dart';
+import 'package:mismedidasb/enums.dart';
 import 'package:mismedidasb/fcm/fcm_feature.dart';
 import 'package:mismedidasb/fcm/i_fcm_feature.dart';
 import 'package:mismedidasb/lnm/i_lnm.dart';
@@ -119,6 +120,9 @@ class Injector {
   static Injector instance;
   bool darkTheme = false;
   int planiId = 1;
+  static EnvironmentApp _environment = EnvironmentApp.Prod;
+
+  EnvironmentApp get env => _environment;
 
   Container container = Container();
 
@@ -142,12 +146,24 @@ class Injector {
   T getDependency<T>() => container.resolve();
 
   static initProd() {
+    _environment = EnvironmentApp.Prod;
     if (instance == null) {
       instance = Injector._startProd();
     }
   }
 
   Injector._startProd() {
+    _initialize();
+  }
+
+  static initDev() {
+    _environment = EnvironmentApp.Dev;
+    if (instance == null) {
+      instance = Injector._startDev();
+    }
+  }
+
+  Injector._startDev() {
     _initialize();
   }
 

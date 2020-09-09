@@ -1,3 +1,5 @@
+enum EnvironmentApp {Prod, Dev}
+
 enum PopupActionKey {
   profile_settings,
   contact_us,

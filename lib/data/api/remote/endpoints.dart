@@ -1,9 +1,14 @@
+import 'package:mismedidasb/di/injector.dart';
+import 'package:mismedidasb/enums.dart';
+
 class Endpoint {
-  static String apiBaseUrl = "https://api-dev.metriri.com";
-//  static String apiBaseUrl = "https://api.metriri.com";
+  static String apiBaseUrl = Injector.instance.env == EnvironmentApp.Dev
+      ? "https://api-dev.metriri.com"
+      : "https://api.metriri.com";
 
   ///General content
-  static const String accept_terms_cond = "/api/general-content/accept-terms-conditions";
+  static const String accept_terms_cond =
+      "/api/general-content/accept-terms-conditions";
   static const String legacy_content_by_type = "/api/general-content/by-type";
   static const String contact_us_send_info = "/api/contact-us";
 
@@ -34,7 +39,6 @@ class Endpoint {
 
   static const String answer = "/api/answer"; //questionId
 
-
   static const String personal_data_current_data =
       "/api/personal-data/current-datas";
 
@@ -42,7 +46,6 @@ class Endpoint {
   static const String invite = "/api/user-referral";
   static const String scores = "/api/user-statistics/by-user-id";
   static const String solo_question_stats = "/api/solo-question";
-
 
   static const String dish = "/api/dish";
   static const String dish_tags = "/api/tag";
