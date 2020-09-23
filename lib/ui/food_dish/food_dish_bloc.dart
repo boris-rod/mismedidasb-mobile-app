@@ -116,18 +116,13 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   void loadInitialData() async {
     dailyFoodModelMap = {};
 
-//    firstDate = CalendarUtils.getFirstDateOfPreviousMonth();
-//    lastDate = CalendarUtils.getLastDateOfNextMonth();
-
-//    tagsLoaded = false;
-//    foodsLoaded = false;
+    isLoading = true;
     showResume = await _sharedPreferencesManager.getShowDailyResume();
     showPlaniSuggest = await _sharedPreferencesManager
         .getBoolValue(SharedKey.hasPlaniVirtualAssesor);
     imc = await _sharedPreferencesManager.getIMC();
     kCal = await _sharedPreferencesManager.getDailyKCal();
 
-    isLoading = true;
     firstDateHealthResult =
         await _sharedPreferencesManager.getFirstDateHealthResult();
 
@@ -139,14 +134,12 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
         .getBoolValue(SharedKey.kCalPercentageHide);
     _kCalPercentageHideController.sinkAddSafe(kCalPercentageHide);
 
-    await Future.delayed(Duration(milliseconds: 200), () async {
-      final now = DateTime.now();
-      final resPlans = await _iDishRepository.getPlansMergedAPI(now, now);
-      if (resPlans is ResultSuccess<Map<DateTime, DailyFoodModel>>) {
-        dailyFoodModelMap.addAll(resPlans.value);
-      }
-      loadDailyPlanData();
-    });
+    final now = DateTime.now();
+    final resPlans = await _iDishRepository.getPlansMergedAPI(now, now);
+    if (resPlans is ResultSuccess<Map<DateTime, DailyFoodModel>>) {
+      dailyFoodModelMap.addAll(resPlans.value);
+    }
+    loadDailyPlanData();
     isLoading = false;
   }
 

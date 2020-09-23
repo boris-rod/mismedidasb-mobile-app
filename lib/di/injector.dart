@@ -319,7 +319,6 @@ class Injector {
         container.resolve(),
         container.resolve(),
         container.resolve(),
-        container.resolve(),
         container.resolve()));
     container.registerFactory((c) => HabitBloC(container.resolve()));
     container.registerFactory((c) => FoodCravingBloC(container.resolve()));

@@ -1,3 +1,4 @@
+import 'package:mismedidasb/data/_shared_prefs.dart';
 import 'package:mismedidasb/data/api/remote/result.dart';
 import 'package:mismedidasb/domain/habit/habit_model.dart';
 import 'package:mismedidasb/domain/poll_model/i_poll_repository.dart';
@@ -11,22 +12,41 @@ import 'package:rxdart/subjects.dart';
 import 'package:mismedidasb/utils/extensions.dart';
 
 class HabitBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
-  final IPollRepository _iPollRepository;
+  final SharedPreferencesManager _sharedPreferencesManager;
 
-  HabitBloC(this._iPollRepository);
+  HabitBloC(this._sharedPreferencesManager);
+
+  @override
+  void dispose() {
+    _pollsController.close();
+    _showFirstTimeController.close();
+  }
 
   BehaviorSubject<List<TitleSubTitlesModel>> _pollsController =
       new BehaviorSubject();
 
   Stream<List<TitleSubTitlesModel>> get pollsResult => _pollsController.stream;
 
+  BehaviorSubject<bool> _showFirstTimeController = new BehaviorSubject();
+
+  Stream<bool> get showFirstTimeResult => _showFirstTimeController.stream;
+
   void loadData(int conceptId) async {
     List<TitleSubTitlesModel> list = TitleSubTitlesModel.getHabitsLiterals();
+    launchFirstTime();
     _pollsController.sinkAddSafe(list);
   }
 
-  @override
-  void dispose() {
-    _pollsController.close();
+  void launchFirstTime() async {
+    final value =
+    await _sharedPreferencesManager.getBoolValue(SharedKey.firstTimeInHabits, defValue: true);
+    _showFirstTimeController.sinkAddSafe(value);
   }
+
+  void setNotFirstTime() async {
+    await _sharedPreferencesManager.setBoolValue(
+        SharedKey.firstTimeInHabits, false);
+    _showFirstTimeController.sinkAddSafe(false);
+  }
+
 }

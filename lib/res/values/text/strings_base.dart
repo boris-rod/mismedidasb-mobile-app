@@ -261,4 +261,8 @@ abstract class StringsBase implements WidgetsLocalizations {
   String get profileSettingsHelper;
 
   String get planiHelper;
+
+  String get habitsHelper;
+
+  String get cravingHelper;
 }

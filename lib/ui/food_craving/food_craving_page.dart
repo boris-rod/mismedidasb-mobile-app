@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:mismedidasb/data/api/remote/endpoints.dart';
 import 'package:mismedidasb/domain/health_concept/health_concept.dart';
 import 'package:mismedidasb/domain/poll_model/poll_model.dart';
 import 'package:mismedidasb/domain/single_selection_model.dart';
@@ -13,7 +14,9 @@ import 'package:mismedidasb/ui/_tx_widget/tx_icon_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_main_app_bar_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_video_intro_widet.dart';
 import 'package:mismedidasb/ui/food_craving/food_craving_bloc.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class FoodCravingPage extends StatefulWidget {
   final HealthConceptModel conceptModel;
@@ -148,7 +151,25 @@ class _FoodCravingState
         ),
         TXLoadingWidget(
           loadingStream: bloc.isLoadingStream,
-        )
+        ),
+        StreamBuilder<bool>(
+            stream: bloc.showFirstTimeResult,
+            initialData: false,
+            builder: (context, snapshotShow) {
+              return snapshotShow.data
+                  ? TXVideoIntroWidget(
+                title: R.string.cravingHelper,
+                onSeeVideo: () {
+                  bloc.setNotFirstTime();
+                  launch(Endpoint.planiCravingVideo);
+//                          FileManager.playVideo("profile_settings.mp4");
+                },
+                onSkip: () {
+                  bloc.setNotFirstTime();
+                },
+              )
+                  : Container();
+            })
       ],
     );
   }

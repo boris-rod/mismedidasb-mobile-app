@@ -7,6 +7,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:mismedidasb/data/api/remote/endpoints.dart';
 import 'package:mismedidasb/data/api/remote/remote_constanst.dart';
 import 'package:mismedidasb/domain/health_concept/health_concept.dart';
 import 'package:mismedidasb/domain/poll_model/poll_model.dart';
@@ -219,7 +220,8 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
                         title: R.string.planiIntroHelper,
                         onSeeVideo: () {
                           bloc.setNotFirstTime();
-                          FileManager.playVideo("main_menu.mp4");
+                          launch(Endpoint.planiIntroVideo);
+//                          FileManager.playVideo("main_menu.mp4");
                         },
                         onSkip: () {
                           bloc.setNotFirstTime();

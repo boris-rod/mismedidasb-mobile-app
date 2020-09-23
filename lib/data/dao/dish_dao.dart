@@ -38,14 +38,14 @@ class DishDao extends IDishDao {
   Future<bool> saveDailyFoodModelList(List<DailyFoodModel> list) async {
     try {
       Database db = await _appDatabase.db;
-      list.forEach((model) async {
+      await Future.forEach(list, (model) async{
         final map = {
           DBConstants.id_key:
-              CalendarUtils.getTimeIdBasedDay(dateTime: model.dateTime),
+          CalendarUtils.getTimeIdBasedDay(dateTime: model.dateTime),
           DBConstants.data_key:
-              jsonEncode(_foodConverter.toJsonDailyFoodModel(model)),
+          jsonEncode(_foodConverter.toJsonDailyFoodModel(model)),
           DBConstants.parent_key:
-              CalendarUtils.getTimeIdBasedDay(dateTime: model.dateTime),
+          CalendarUtils.getTimeIdBasedDay(dateTime: model.dateTime),
         };
         await db.insert(DBConstants.daily_food_activity_table, map,
             conflictAlgorithm: ConflictAlgorithm.replace);

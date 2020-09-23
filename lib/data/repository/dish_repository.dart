@@ -27,7 +27,98 @@ class DishRepository extends BaseRepository implements IDishRepository {
         await _iDishDao.removeDailyFoodModel(
             CalendarUtils.getTimeIdBasedDay(dateTime: list[0].dateTime));
       }
-      dailyFoodModel.synced = false;
+      final objLocal = list.firstWhere(
+          (element) => CalendarUtils.isSameDay(
+              element.dateTime, dailyFoodModel.dateTime), orElse: () {
+        return null;
+      });
+      bool synced = false;
+//      if (objLocal != null && objLocal.synced) {
+//        if (!synced) {
+//          final actBreakfastFoods =
+//              dailyFoodModel.dailyActivityFoodModelList[0].foods;
+//          final objBreakfastFoods =
+//              objLocal.dailyActivityFoodModelList[0].foods;
+//          final diffACTBreakFastList = actBreakfastFoods
+//              .map((e) => e.id)
+//              .where((value) =>
+//                  !objBreakfastFoods.map((e) => e.id).contains(value))
+//              .toList();
+//          final diffOBJBreakFastList = objBreakfastFoods
+//              .map((e) => e.id)
+//              .where((value) =>
+//                  !actBreakfastFoods.map((e) => e.id).contains(value))
+//              .toList();
+//          synced = diffACTBreakFastList.isEmpty && diffOBJBreakFastList.isEmpty;
+//        }
+//
+//        if (synced) {
+//          final actSnack1Foods =
+//              dailyFoodModel.dailyActivityFoodModelList[1].foods;
+//          final objSnack1Foods = objLocal.dailyActivityFoodModelList[1].foods;
+//          final diffACTSnack1List = actSnack1Foods
+//              .map((e) => e.id)
+//              .where(
+//                  (value) => !objSnack1Foods.map((e) => e.id).contains(value))
+//              .toList();
+//          final diffOBJSnack1List = objSnack1Foods
+//              .map((e) => e.id)
+//              .where(
+//                  (value) => !actSnack1Foods.map((e) => e.id).contains(value))
+//              .toList();
+//          synced = diffACTSnack1List.isEmpty && diffOBJSnack1List.isEmpty;
+//        }
+//
+//        if (synced) {
+//          final actLunchFoods =
+//              dailyFoodModel.dailyActivityFoodModelList[2].foods;
+//          final objLunchFoods = objLocal.dailyActivityFoodModelList[2].foods;
+//          final diffACTLunchList = actLunchFoods
+//              .map((e) => e.id)
+//              .where((value) => !objLunchFoods.map((e) => e.id).contains(value))
+//              .toList();
+//          final diffOBJLunchList = objLunchFoods
+//              .map((e) => e.id)
+//              .where((value) => !actLunchFoods.map((e) => e.id).contains(value))
+//              .toList();
+//          synced = diffACTLunchList.isEmpty && diffOBJLunchList.isEmpty;
+//        }
+//
+//        if (synced) {
+//          final actSnack2Foods =
+//              dailyFoodModel.dailyActivityFoodModelList[3].foods;
+//          final objSnack2Foods = objLocal.dailyActivityFoodModelList[3].foods;
+//          final diffACTSnack2List = actSnack2Foods
+//              .map((e) => e.id)
+//              .where(
+//                  (value) => !objSnack2Foods.map((e) => e.id).contains(value))
+//              .toList();
+//          final diffOBJSnack2List = objSnack2Foods
+//              .map((e) => e.id)
+//              .where(
+//                  (value) => !actSnack2Foods.map((e) => e.id).contains(value))
+//              .toList();
+//          synced = diffACTSnack2List.isEmpty && diffOBJSnack2List.isEmpty;
+//        }
+//
+//        if (synced) {
+//          final actDinnerFoods =
+//              dailyFoodModel.dailyActivityFoodModelList[4].foods;
+//          final objDinnerFoods = objLocal.dailyActivityFoodModelList[4].foods;
+//          final diffACTDinnerList = actDinnerFoods
+//              .map((e) => e.id)
+//              .where(
+//                  (value) => !objDinnerFoods.map((e) => e.id).contains(value))
+//              .toList();
+//          final diffOBJDinnerList = objDinnerFoods
+//              .map((e) => e.id)
+//              .where(
+//                  (value) => !actDinnerFoods.map((e) => e.id).contains(value))
+//              .toList();
+//          synced = diffACTDinnerList.isEmpty && diffOBJDinnerList.isEmpty;
+//        }
+//      }
+      dailyFoodModel.synced = synced;
       await _iDishDao.saveDailyFoodModel(dailyFoodModel);
       return true;
     } catch (ex) {
@@ -37,37 +128,42 @@ class DishRepository extends BaseRepository implements IDishRepository {
 
   @override
   Future<Result<Map<DateTime, DailyFoodModel>>> getPlansMergedAPI(
-      DateTime start, DateTime end,
-      {bool forceReload: false}) async {
+      DateTime start, DateTime end) async {
     try {
-      Map<String, List<DailyActivityFoodModel>> dailyActivityMap = {};
+//      Map<String, List<DailyActivityFoodModel>> dailyActivityMap = {};
+
+      //Get list of daily food from Local
       final List<DailyFoodModel> localList =
           await _iDishDao.getDailyFoodModelList(start, end);
-      if (forceReload || localList.isEmpty) {
-        //Get list of daily activities from API
-        List<DailyActivityFoodModel> apiList =
-            await _dishApi.getPlansMergedAPI(start.toUtc(), end.toUtc());
-        //Converting from UTC to Local time
-        apiList.map((f) => f.dateTime = f.dateTime.toLocal()).toList();
-        //Grouping daily activities by datetime
-        apiList.forEach((ac) {
-          final dateMapId =
-              CalendarUtils.getTimeIdBasedDay(dateTime: ac.dateTime);
 
-          if (dailyActivityMap[dateMapId]?.isNotEmpty == true) {
-            dailyActivityMap[dateMapId].insert(ac.id, ac);
-          } else {
-            dailyActivityMap[dateMapId] = [ac];
-          }
-        });
-      }
+      //Get list of daily food from API
+      List<DailyFoodModel> apiList =
+          await _dishApi.getPlansMergedAPI(start.toUtc(), end.toUtc());
 
+      //Converting from UTC to Local time
+//      apiList.map((f) => f.dateTime = f.dateTime.toLocal()).toList();
+
+      //Grouping daily activities by datetime
+//      apiList.forEach((ac) {
+//        final dateMapId =
+//            CalendarUtils.getTimeIdBasedDay(dateTime: ac.dateTime);
+//
+//        if (dailyActivityMap[dateMapId]?.isNotEmpty == true) {
+//          dailyActivityMap[dateMapId].insert(ac.id, ac);
+//        } else {
+//          dailyActivityMap[dateMapId] = [ac];
+//        }
+//      });
+
+      //Getting initial parameters
+      double kCalLocal = await _sharedPreferencesManager.getDailyKCal();
+      double imcLocal = await _sharedPreferencesManager.getIMC();
+      DailyFoodPlanModel dailyFoodPlanModel =
+          await _dishApi.planDailyParameters();
       Map<DateTime, DailyFoodModel> resultMap = {};
       Map<String, DailyFoodModel> dailyMap = {};
       DateTime initial = DateTime(start.year, start.month, start.day);
 
-      double kCalLocal = await _sharedPreferencesManager.getDailyKCal();
-      double imcLocal = await _sharedPreferencesManager.getIMC();
       //Looping over dates from start to end
       while (CalendarUtils.compare(end, initial) >= 0) {
         final dateMapId = CalendarUtils.getTimeIdBasedDay(dateTime: initial);
@@ -80,41 +176,53 @@ class DishRepository extends BaseRepository implements IDishRepository {
           return null;
         });
 
+        final apiObj = apiList.firstWhere(
+            (element) => CalendarUtils.isSameDay(element.dateTime, initial),
+            orElse: () {
+          return null;
+        });
+
         if (localObj != null) {
-          if(localObj.dailyFoodPlanModel.imc <= 1)
-            localObj.dailyFoodPlanModel.imc = imcLocal;
-          if(localObj.dailyFoodPlanModel.dailyKCal <= 1)
-            localObj.dailyFoodPlanModel.dailyKCal = kCalLocal;
-          localObj.dailyActivityFoodModelList.forEach((activity) {
-            if(activity.imc <= 1)
-              activity.imc = imcLocal;
-            if(activity.kCal <= 1)
-              activity.kCal = kCalLocal;
-            if(activity.plan.imc <= 1)
-              activity.plan.imc = imcLocal;
-            if(activity.plan.dailyKCal <= 1)
-              activity.plan.dailyKCal = kCalLocal;
-          });
+//          if (localObj.dailyFoodPlanModel.imc <= 1)
+//            localObj.dailyFoodPlanModel.imc = imcLocal;
+//          if (localObj.dailyFoodPlanModel.dailyKCal <= 1)
+//            localObj.dailyFoodPlanModel.dailyKCal = kCalLocal;
+//          localObj.dailyActivityFoodModelList.forEach((activity) {
+//            if (activity.imc <= 1) activity.imc = imcLocal;
+//            if (activity.kCal <= 1) activity.kCal = kCalLocal;
+//            if (activity.plan.imc <= 1) activity.plan.imc = imcLocal;
+//            if (activity.plan.dailyKCal <= 1)
+//              activity.plan.dailyKCal = kCalLocal;
+//          });
+          if (apiObj != null) {
+            localObj.dailyActivityFoodModelList.forEach((element) {
+              element.plan = apiObj.dailyFoodPlanModel;
+            });
+          }
 
           dailyMap[dateMapId] = localObj;
-        } else if (dailyActivityMap.containsKey(dateMapId) &&
-            dailyActivityMap[dateMapId]?.isNotEmpty == true) {
-          dailyMap[dateMapId] = DailyFoodModel(
-              dateTime: initial,
-              synced: true,
-              dailyActivityFoodModelList: dailyActivityMap[dateMapId],
-              dailyFoodPlanModel: dailyActivityMap[dateMapId][0].plan
-                ..imc = dailyActivityMap[dateMapId][0].imc
-                ..dailyKCal = dailyActivityMap[dateMapId][0].kCal);
+        } else if (apiObj != null) {
+          apiObj.dailyActivityFoodModelList.forEach((element) {
+            if(element.plan == null){
+              element.plan = dailyFoodPlanModel;
+            }
+          });
+          dailyMap[dateMapId] = apiObj;
+//          dailyMap[dateMapId] = DailyFoodModel(
+//              dateTime: initial,
+//              synced: true,
+//              dailyActivityFoodModelList: apiObj.dailyActivityFoodModelList,
+//              dailyFoodPlanModel: apiObj.dailyFoodPlanModel,
+//              planFoodParameterModel: apiObj.planFoodParameterModel);
         } else {
+//          final plan = dailyFoodPlanModel;
           dailyMap[dateMapId] = DailyFoodModel(
-              dateTime: initial,
-              synced: true,
-              dailyActivityFoodModelList:
-                  DailyActivityFoodModel.getDailyActivityFoodModelList(
-                      DailyFoodPlanModel(dailyKCal: kCalLocal, imc: imcLocal), initial),
-              dailyFoodPlanModel:
-                  DailyFoodPlanModel(dailyKCal: kCalLocal, imc: imcLocal));
+            dateTime: initial,
+            dailyActivityFoodModelList:
+                DailyActivityFoodModel.getDailyActivityFoodModelList(
+                    dailyFoodPlanModel, initial),
+            dailyFoodPlanModel: dailyFoodPlanModel,
+          );
         }
         //Adding daily plan merged
         resultMap[initial] = dailyMap[dateMapId];
@@ -164,11 +272,7 @@ class DishRepository extends BaseRepository implements IDishRepository {
 
   @override
   Future<Result<List<FoodModel>>> getFoodModelList(
-      {String query,
-      int tag,
-      int page,
-      int perPage,
-      int harvardFilter}) async {
+      {String query, int tag, int page, int perPage, int harvardFilter}) async {
     try {
       List<FoodModel> list = await _dishApi.getFoodModelList(
           query: query,
@@ -229,6 +333,16 @@ class DishRepository extends BaseRepository implements IDishRepository {
     try {
       final res = await _dishApi.updateFoodCompoundModelList(id, model);
       return Result.success(value: res);
+    } catch (ex) {
+      return resultError(ex);
+    }
+  }
+
+  @override
+  Future<Result<DailyFoodPlanModel>> planDailyParameters() async {
+    try {
+      final res = await _dishApi.planDailyParameters();
+      return ResultSuccess(value: res);
     } catch (ex) {
       return resultError(ex);
     }

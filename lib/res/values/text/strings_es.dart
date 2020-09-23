@@ -412,4 +412,10 @@ class StringsEs implements StringsBase {
 
   @override
   String get planiHelper => "¿Quién es Plani y cómo te asiste?";
+
+  @override
+  String get cravingHelper => "Autocontrol del deseo de comer";
+
+  @override
+  String get habitsHelper => "10 Hábitos Saludables que potencian el bienestar";
 }

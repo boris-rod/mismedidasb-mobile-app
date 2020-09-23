@@ -1,3 +1,4 @@
+import 'package:mismedidasb/data/_shared_prefs.dart';
 import 'package:mismedidasb/data/api/remote/result.dart';
 import 'package:mismedidasb/domain/poll_model/i_poll_repository.dart';
 import 'package:mismedidasb/domain/poll_model/poll_model.dart';
@@ -9,26 +10,38 @@ import 'package:rxdart/subjects.dart';
 import 'package:mismedidasb/utils/extensions.dart';
 
 class FoodCravingBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
-  final IPollRepository _iPollRepository;
-  FoodCravingBloC(this._iPollRepository);
+  final SharedPreferencesManager _sharedPreferencesManager;
+  FoodCravingBloC(this._sharedPreferencesManager);
+
+  @override
+  void dispose() {
+    _pollsController.close();
+    _showFirstTimeController.close();
+  }
 
   BehaviorSubject<List<TitleSubTitlesModel>> _pollsController = new BehaviorSubject();
 
   Stream<List<TitleSubTitlesModel>> get pollsResult => _pollsController.stream;
 
+  BehaviorSubject<bool> _showFirstTimeController = new BehaviorSubject();
+
+  Stream<bool> get showFirstTimeResult => _showFirstTimeController.stream;
+
   void loadData(int conceptId) async {
     final cravings = TitleSubTitlesModel.getCravingLiterals();
+    launchFirstTime();
     _pollsController.sinkAddSafe(cravings);
-//    isLoading = true;
-//    final res = await _iPollRepository.getPollsByConcept(conceptId);
-//    if(res is ResultSuccess<List<PollModel>>){
-//      _pollsController.sinkAddSafe(res.value);
-//    }
-//    isLoading = false;
   }
 
-  @override
-  void dispose() {
-    _pollsController.close();
+  void launchFirstTime() async {
+    final value =
+    await _sharedPreferencesManager.getBoolValue(SharedKey.firstTimeInCraving, defValue: true);
+    _showFirstTimeController.sinkAddSafe(value);
+  }
+
+  void setNotFirstTime() async {
+    await _sharedPreferencesManager.setBoolValue(
+        SharedKey.firstTimeInCraving, false);
+    _showFirstTimeController.sinkAddSafe(false);
   }
 }

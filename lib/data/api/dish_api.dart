@@ -8,6 +8,7 @@ import 'package:mismedidasb/data/api/remote/remote_constanst.dart';
 import 'package:mismedidasb/domain/dish/dish_model.dart';
 import 'package:mismedidasb/domain/dish/i_dish_api.dart';
 import 'package:mismedidasb/domain/dish/i_dish_converter.dart';
+import 'package:mismedidasb/utils/calendar_utils.dart';
 
 class DishApi extends BaseApi implements IDishApi {
   final NetworkHandler _networkHandler;
@@ -49,17 +50,37 @@ class DishApi extends BaseApi implements IDishApi {
   }
 
   @override
-  Future<List<DailyActivityFoodModel>> getPlansMergedAPI(
+  Future<List<DailyFoodModel>> getPlansMergedAPI(
       DateTime start, DateTime end) async {
     final res = await _networkHandler.get(
         path: Endpoint.eat_by_date_range,
         params:
             "?date=${start.toIso8601String()}&endDate=${end.toIso8601String()}");
     if (res.statusCode == RemoteConstants.code_success) {
-      Iterable l = jsonDecode(res.body)[RemoteConstants.result];
-      return l
-          .map((model) => _foodConverter.fromJsonDailyActivityFoodModel(model))
-          .toList();
+      final json = jsonDecode(res.body);
+      final DailyActivityFoodModelAPI model =
+          _foodConverter.fromJsonDailyActivityFoodModelAPI(json);
+      List<DailyFoodModel> result = [];
+
+      model.planSummaries.forEach((planSummary) {
+        //Getting 5 activities associated to planSummary
+        final activities = model.dailyActivitiesFoodModels
+            .where((activity) => CalendarUtils.isSameDay(
+                activity.dateTime, planSummary.dateTime))
+            .toList();
+        activities.forEach((element) {
+          element.dateTime = element.dateTime.toLocal();
+        });
+
+        final dailyFoodModel = DailyFoodModel(
+          dateTime: planSummary.dateTime.toLocal(),
+          dailyActivityFoodModelList: activities,
+          dailyFoodPlanModel: planSummary.dailyFoodPlanModel,
+        );
+
+        result.add(dailyFoodModel);
+      });
+      return result;
     } else
       throw serverException(res);
   }
@@ -124,5 +145,23 @@ class DishApi extends BaseApi implements IDishApi {
         file: model.image.isNotEmpty ? File(model.image) : null);
     if (res == RemoteConstants.code_success) return true;
     throw serverException(Response("", res));
+  }
+
+  @override
+  Future<bool> planDailyFullInfo(DateTime dateTime) async {
+    // TODO: implement planDailyFullInfo
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<DailyFoodPlanModel> planDailyParameters() async {
+    final res = await _networkHandler.get(
+      path: Endpoint.plan_daily_parameters,
+    );
+    if (res.statusCode == RemoteConstants.code_success) {
+      final json = jsonDecode(res.body)[RemoteConstants.result];
+      return _foodConverter.fromJsonDailyFoodPlan(json);
+    } else
+      throw serverException(res);
   }
 }

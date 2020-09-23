@@ -4,41 +4,159 @@ import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/measure_health/health_result.dart';
 import 'package:mismedidasb/utils/calendar_utils.dart';
 
+class PlanFoodInfoModel {}
+
+//class PlanFoodParameterModel {
+//  double imc;
+//  double kCal;
+//  double kCalOffSetVal;
+//  double kCalMin;
+//  double kCalMax;
+//  double breakFastCalVal;
+//  double breakFastCalValExtra;
+//  double snack1CalVal;
+//  double snack1CalValExtra;
+//  double lunchCalVal;
+//  double lunchCalValExtra;
+//  double snack2CalVal;
+//  double snack2CalValExtra;
+//  double dinnerCalVal;
+//  double dinnerCalValExtra;
+//  double minProteinsPercent;
+//  double maxProteinsPercent;
+//  double minFatPercent;
+//  double maxFatPercent;
+//  double minCarbohydratesPercent;
+//  double maxCarbohydratesPercent;
+//  double minFiberPercent;
+//  double maxFiberPercent;
+//
+//  PlanFoodParameterModel(
+//      {this.kCalOffSetVal,
+//      this.kCalMin,
+//      this.kCalMax,
+//      this.breakFastCalVal,
+//      this.breakFastCalValExtra,
+//      this.snack1CalVal,
+//      this.snack1CalValExtra,
+//      this.lunchCalVal,
+//      this.lunchCalValExtra,
+//      this.snack2CalVal,
+//      this.snack2CalValExtra,
+//      this.dinnerCalVal,
+//      this.dinnerCalValExtra,
+//      this.imc,
+//      this.kCal,
+//      this.minProteinsPercent,
+//      this.maxProteinsPercent,
+//      this.minCarbohydratesPercent,
+//      this.maxCarbohydratesPercent,
+//      this.minFatPercent,
+//      this.maxFatPercent,
+//      this.minFiberPercent,
+//      this.maxFiberPercent});
+//}
+
 class DailyFoodPlanModel {
-  double dailyKCal;
+  double kCal;
   double imc;
+  double minProteinsPercent;
+  double maxProteinsPercent;
+  double minFatPercent;
+  double maxFatPercent;
+  double minCarbohydratesPercent;
+  double maxCarbohydratesPercent;
+  double minFiberPercent;
+  double maxFiberPercent;
+  double kCalMin;
+  double kCalMax;
+  double kCalOffSetVal;
+  double breakFastCalVal;
+  double breakFastCalValExtra;
+  double snack1CalVal;
+  double snack1CalValExtra;
+  double lunchCalVal;
+  double lunchCalValExtra;
+  double snack2CalVal;
+  double snack2CalValExtra;
+  double dinnerCalVal;
+  double dinnerCalValExtra;
 
-  DailyFoodPlanModel({this.dailyKCal = 1, this.imc = 1});
+  DailyFoodPlanModel(
+      {this.imc = 1,
+      this.kCal = 1,
+      this.minProteinsPercent,
+      this.maxProteinsPercent,
+      this.minCarbohydratesPercent,
+      this.maxCarbohydratesPercent,
+      this.minFatPercent,
+      this.maxFatPercent,
+      this.minFiberPercent,
+      this.maxFiberPercent,
+      this.kCalOffSetVal,
+      this.kCalMax,
+      this.kCalMin,
+      this.breakFastCalVal,
+      this.breakFastCalValExtra,
+      this.snack1CalVal,
+      this.snack1CalValExtra,
+      this.lunchCalVal,
+      this.lunchCalValExtra,
+      this.snack2CalVal,
+      this.snack2CalValExtra,
+      this.dinnerCalVal,
+      this.dinnerCalValExtra});
 
-  double get kCalOffSetVal => (imc > 18.5 && imc < 25) ? 100 : 500;
+//  static DailyFoodPlanModel fromUserParameters(double imc, double dailyKCal,
+//      PlanFoodParameterModel planFoodParameterModel) {
+//    DailyFoodPlanModel model = DailyFoodPlanModel(
+//        dailyKCal: dailyKCal,
+//        imc: imc,
+//        kCalMax: planFoodParameterModel.kCalMax,
+//        kCalMin: planFoodParameterModel.kCalMin,
+//        kCalOffSetVal: planFoodParameterModel.kCalOffSetVal,
+//        breakFastCalVal: planFoodParameterModel.breakFastCalVal,
+//        breakFastCalValExtra: planFoodParameterModel.breakFastCalValExtra,
+//        snack1CalVal: planFoodParameterModel.snack1CalVal,
+//        snack1CalValExtra: planFoodParameterModel.snack1CalValExtra,
+//        lunchCalVal: planFoodParameterModel.lunchCalVal,
+//        lunchCalValExtra: planFoodParameterModel.lunchCalValExtra,
+//        snack2CalVal: planFoodParameterModel.snack2CalVal,
+//        snack2CalValExtra: planFoodParameterModel.snack2CalValExtra,
+//        dinnerCalVal: planFoodParameterModel.dinnerCalVal,
+//        dinnerCalValExtra: planFoodParameterModel.dinnerCalValExtra);
+//    return model;
+//  }
 
-  double get breakFastCalVal => dailyKCal * 20 / 100;
-
-  double get breakFastCalValExtra => kCalOffSetVal * 20 / 100;
-
-  double get snack1CalVal => dailyKCal * 10 / 100;
-
-  double get snack1CalValExtra => kCalOffSetVal * 10 / 100;
-
-  double get lunchCalVal => dailyKCal * 35 / 100;
-
-  double get lunchCalValExtra => kCalOffSetVal * 35 / 100;
-
-  double get snack2CalVal => dailyKCal * 10 / 100;
-
-  double get snack2CalValExtra => kCalOffSetVal * 10 / 100;
-
-  double get dinnerCalVal => dailyKCal * 25 / 100;
-
-  double get dinnerCalValExtra => kCalOffSetVal * 25 / 100;
-
-  double get kCalMin => imc <= 18.5
-      ? dailyKCal
-      : (imc > 18.5 && imc < 25 ? dailyKCal - 100 : dailyKCal - 500);
-
-  double get kCalMax => imc <= 18.5
-      ? dailyKCal + 500
-      : (imc > 18.5 && imc < 25 ? dailyKCal + 100 : dailyKCal);
+//  double get kCalOffSetVal => (imc > 18.5 && imc < 25) ? 100 : 500;
+//
+//  double get breakFastCalVal => dailyKCal * 20 / 100;
+//
+//  double get breakFastCalValExtra => kCalOffSetVal * 20 / 100;
+//
+//  double get snack1CalVal => dailyKCal * 10 / 100;
+//
+//  double get snack1CalValExtra => kCalOffSetVal * 10 / 100;
+//
+//  double get lunchCalVal => dailyKCal * 35 / 100;
+//
+//  double get lunchCalValExtra => kCalOffSetVal * 35 / 100;
+//
+//  double get snack2CalVal => dailyKCal * 10 / 100;
+//
+//  double get snack2CalValExtra => kCalOffSetVal * 10 / 100;
+//
+//  double get dinnerCalVal => dailyKCal * 25 / 100;
+//
+//  double get dinnerCalValExtra => kCalOffSetVal * 25 / 100;
+//
+//  double get kCalMin => imc <= 18.5
+//      ? dailyKCal
+//      : (imc > 18.5 && imc < 25 ? dailyKCal - 100 : dailyKCal - 500);
+//
+//  double get kCalMax => imc <= 18.5
+//      ? dailyKCal + 500
+//      : (imc > 18.5 && imc < 25 ? dailyKCal + 100 : dailyKCal);
 }
 
 class DailyFoodModel {
@@ -48,12 +166,6 @@ class DailyFoodModel {
   bool synced;
   bool headerExpanded;
   bool showKCalPercentages;
-
-//  double currentCaloriesSum;
-//  double currentProteinsSum;
-//  double currentCarbohydratesSum;
-//  double currentFatSum;
-//  double currentFiberSum;
 
   double get currentCaloriesSum => dailyActivityFoodModelList.isEmpty
       ? 0.0
@@ -105,13 +217,23 @@ class DailyFoodModel {
       this.synced = true,
       this.dailyActivityFoodModelList,
       this.dailyFoodPlanModel,
-//      this.currentCaloriesSum = 0,
-//      this.currentCarbohydratesSum = 0,
-//      this.currentFatSum = 0,
-//      this.currentFiberSum = 0,
-//      this.currentProteinsSum = 0,
       this.headerExpanded = true,
       this.showKCalPercentages = false});
+}
+
+class DailyActivityFoodModelAPI {
+  List<DailyActivityFoodModel> dailyActivitiesFoodModels;
+  List<PlanSummariesAPI> planSummaries;
+
+  DailyActivityFoodModelAPI(
+      {this.dailyActivitiesFoodModels, this.planSummaries});
+}
+
+class PlanSummariesAPI {
+  DateTime dateTime;
+  DailyFoodPlanModel dailyFoodPlanModel;
+
+  PlanSummariesAPI({this.dateTime, this.dailyFoodPlanModel});
 }
 
 class DailyActivityFoodModel {
@@ -121,8 +243,9 @@ class DailyActivityFoodModel {
   DailyFoodPlanModel plan;
   DateTime dateTime;
   bool isExpanded;
-  double imc;
-  double kCal;
+
+//  double imc;
+//  double kCal;
 
 //  double calories;
 //  double carbohydrates;
@@ -225,8 +348,8 @@ class DailyActivityFoodModel {
       this.foods,
 //      this.calories = 0,
 //      this.carbohydrates = 0,
-      this.imc = 1,
-      this.kCal = 1,
+//      this.imc = 1,
+//      this.kCal = 1,
 //      this.proteins = 0,
 //      this.fat = 0,
 //      this.fiber = 0,
@@ -238,15 +361,45 @@ class DailyActivityFoodModel {
       DailyFoodPlanModel dailyFoodPlanModel, DateTime dateTime) {
     return [
       DailyActivityFoodModel(
-          id: 0, foods: [], plan: dailyFoodPlanModel, dateTime: dateTime, imc: dailyFoodPlanModel.imc, kCal: dailyFoodPlanModel.dailyKCal),
+        id: 0,
+        foods: [],
+        plan: dailyFoodPlanModel,
+        dateTime: dateTime,
+//          imc: dailyFoodPlanModel.imc,
+//          kCal: dailyFoodPlanModel.dailyKCal
+      ),
       DailyActivityFoodModel(
-          id: 1, foods: [], plan: dailyFoodPlanModel, dateTime: dateTime, imc: dailyFoodPlanModel.imc, kCal: dailyFoodPlanModel.dailyKCal),
+        id: 1,
+        foods: [],
+        plan: dailyFoodPlanModel,
+        dateTime: dateTime,
+//          imc: dailyFoodPlanModel.imc,
+//          kCal: dailyFoodPlanModel.dailyKCal
+      ),
       DailyActivityFoodModel(
-          id: 2, foods: [], plan: dailyFoodPlanModel, dateTime: dateTime, imc: dailyFoodPlanModel.imc, kCal: dailyFoodPlanModel.dailyKCal),
+        id: 2,
+        foods: [],
+        plan: dailyFoodPlanModel,
+        dateTime: dateTime,
+//          imc: dailyFoodPlanModel.imc,
+//          kCal: dailyFoodPlanModel.dailyKCal
+      ),
       DailyActivityFoodModel(
-          id: 3, foods: [], plan: dailyFoodPlanModel, dateTime: dateTime, imc: dailyFoodPlanModel.imc, kCal: dailyFoodPlanModel.dailyKCal),
+        id: 3,
+        foods: [],
+        plan: dailyFoodPlanModel,
+        dateTime: dateTime,
+//          imc: dailyFoodPlanModel.imc,
+//          kCal: dailyFoodPlanModel.dailyKCal
+      ),
       DailyActivityFoodModel(
-          id: 4, foods: [], plan: dailyFoodPlanModel, dateTime: dateTime, imc: dailyFoodPlanModel.imc, kCal: dailyFoodPlanModel.dailyKCal),
+        id: 4,
+        foods: [],
+        plan: dailyFoodPlanModel,
+        dateTime: dateTime,
+//          imc: dailyFoodPlanModel.imc,
+//          kCal: dailyFoodPlanModel.dailyKCal
+      ),
     ];
   }
 }
@@ -376,22 +529,44 @@ class CreateDailyPlanModel {
 
     double proteinPer = model.currentProteinsSum *
         100 /
-        (model.dailyFoodPlanModel.kCalMax * 25 / 100);
-    bool proteins = proteinPer <= 100 && proteinPer > (12 * 100 / 25);
+        (model.dailyFoodPlanModel.kCalMax *
+            model.dailyFoodPlanModel.maxProteinsPercent /
+            100);
+    bool proteins = proteinPer <= 100 &&
+        proteinPer >
+            (model.dailyFoodPlanModel.minProteinsPercent *
+                100 /
+                model.dailyFoodPlanModel.maxProteinsPercent);
 
     double carbohydratesPer = model.currentCarbohydratesSum *
         100 /
-        (model.dailyFoodPlanModel.kCalMax * 55 / 100);
-    bool carbohydrates =
-        carbohydratesPer <= 100 && carbohydratesPer > 35 * 100 / 55;
+        (model.dailyFoodPlanModel.kCalMax *
+            model.dailyFoodPlanModel.maxCarbohydratesPercent /
+            100);
+    bool carbohydrates = carbohydratesPer <= 100 &&
+        carbohydratesPer >
+            model.dailyFoodPlanModel.minCarbohydratesPercent *
+                100 /
+                model.dailyFoodPlanModel.maxCarbohydratesPercent;
 
     double fatPer = model.currentFatSum *
         100 /
-        (model.dailyFoodPlanModel.kCalMax * 35 / 100);
-    bool fat = fatPer <= 100 && fatPer > 20 * 100 / 35;
+        (model.dailyFoodPlanModel.kCalMax *
+            model.dailyFoodPlanModel.maxFatPercent /
+            100);
+    bool fat = fatPer <= 100 &&
+        fatPer >
+            model.dailyFoodPlanModel.minFatPercent *
+                100 /
+                model.dailyFoodPlanModel.maxFatPercent;
 
-    double fiberPer = model.currentFiberSum * 100 / 50;
-    bool fiber = fiberPer <= 100 && fiberPer > 30 * 100 / 50;
+    double fiberPer =
+        model.currentFiberSum * 100 / model.dailyFoodPlanModel.maxFiberPercent;
+    bool fiber = fiberPer <= 100 &&
+        fiberPer >
+            model.dailyFoodPlanModel.minFiberPercent *
+                100 /
+                model.dailyFoodPlanModel.maxFiberPercent;
 
     double breakfastKcalPer = model.dailyActivityFoodModelList[0].caloriesSum *
         100 /

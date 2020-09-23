@@ -10,8 +10,7 @@ class DishConverter extends IDishConverter {
     return DailyFoodModel(
         dateTime: DateTime.parse(json["dateTime"]),
         synced: json["synced"],
-        dailyFoodPlanModel: DailyFoodPlanModel(
-            dailyKCal: json["dailyKCal"] ?? 1, imc: json["imc"] ?? 1),
+        dailyFoodPlanModel: fromJsonDailyFoodPlan(json["dailyFoodPlanModel"]),
         dailyActivityFoodModelList:
             (json['dailyActivityFoodModelList'] as List<dynamic>)
                 .map((model) =>
@@ -24,11 +23,10 @@ class DishConverter extends IDishConverter {
     return {
       "dateTime": model.dateTime.toIso8601String(),
       "synced": model.synced,
-      "dailyKCal": model.dailyFoodPlanModel.dailyKCal,
-      "imc": model.dailyFoodPlanModel.imc,
+      "dailyFoodPlanModel": toJsonDailyFoodPlan(model.dailyFoodPlanModel),
       "dailyActivityFoodModelList": model.dailyActivityFoodModelList
           .map((d) => toJsonDailyActivityFoodModel(d))
-          .toList()
+          .toList(),
     };
   }
 
@@ -37,18 +35,16 @@ class DishConverter extends IDishConverter {
       Map<String, dynamic> json,
       {bool fromAPI = true}) {
     return DailyActivityFoodModel(
-        id: json[fromAPI ? "eatTypeId" : "id"],
+        id: json["eatTypeId"],
 //        name: json["name"],
 //        typeId: json["eatTypeId"],
         type: json["eatType"],
-        imc: json["imc"] ?? 1,
-        kCal: json["kCal"] ?? 1,
+//        imc: json["imc"] ?? 1,
+//        kCal: json["kCal"] ?? 1,
         dateTime: fromAPI
             ? DateTime.parse(json["createdAt"]).toLocal()
             : DateTime.parse(json["dateTime"]),
-        plan: DailyFoodPlanModel(
-            dailyKCal: json[fromAPI ? "kCal" : "dailyKCal"] ?? 1,
-            imc: json["imc"] ?? 1),
+        plan: !fromAPI ? fromJsonDailyFoodPlan(json["plan"]) : null,
         foods: fromAPI
             ? _getFoodsFromApi(json["eatDishResponse"] as List<dynamic>,
                 json["eatCompoundDishResponse"] as List<dynamic>)
@@ -86,13 +82,14 @@ class DishConverter extends IDishConverter {
   Map<String, dynamic> toJsonDailyActivityFoodModel(
       DailyActivityFoodModel model) {
     return {
-      "id": model.id,
+      "eatTypeId": model.id,
 //      "name": model.name,
       "eatType": model.type,
 //      "eatTypeId": model.typeId,
       "dateTime": model.dateTime.toIso8601String(),
-      "dailyKCal": model.plan.dailyKCal,
-      "imc": model.plan.imc,
+      "plan": toJsonDailyFoodPlan(model.plan),
+//      "kCal": model.plan.kCal,
+//      "imc": model.plan.imc,
       "foods": model.foods.map((f) => toJsonFoodModel(f)).toList()
     };
   }
@@ -148,7 +145,8 @@ class DishConverter extends IDishConverter {
       "fat": model.fat,
       "fiber": model.fiber,
       "count": model.count,
-      "children": model?.children?.map((f) => toJsonFoodModel(f))?.toList() ?? [],
+      "children":
+          model?.children?.map((f) => toJsonFoodModel(f))?.toList() ?? [],
       "tags":
           model?.tags?.map((model) => toJsonFoodModelTag(model))?.toList() ?? []
     };
@@ -222,5 +220,146 @@ class DishConverter extends IDishConverter {
       "dishes":
           jsonEncode(model.foods.map((f) => toJsonCreateFoodModel(f)).toList())
     };
+  }
+
+//  @override
+//  PlanFoodParameterModel fromJsonPlanFoodParameter(Map<String, dynamic> json) {
+//    PlanFoodParameterModel model = PlanFoodParameterModel(
+//        kCalOffSetVal: json["kCalOffSetVal"],
+//        kCalMin: json["kCalMin"],
+//        kCalMax: json["kCalMax"],
+//        breakFastCalVal: json["breakFastCalVal"],
+//        breakFastCalValExtra: json["breakFastCalValExtra"],
+//        snack1CalVal: json["snack1CalVal"],
+//        snack1CalValExtra: json["snack1CalValExtra"],
+//        lunchCalVal: json["lunchCalVal"],
+//        lunchCalValExtra: json["lunchCalValExtra"],
+//        snack2CalVal: json["snack2CalVal"],
+//        snack2CalValExtra: json["snack2CalValExtra"],
+//        dinnerCalVal: json["dinnerCalVal"],
+//        dinnerCalValExtra: json["dinnerCalValExtra"],
+//        imc: json["imc"],
+//        kCal: json["kcal"],
+//        minProteinsPercent: json["minProteinsPercent"],
+//        maxProteinsPercent: json["maxProteinsPercent"],
+//        minCarbohydratesPercent: json["minCarbohydratesPercent"],
+//        maxCarbohydratesPercent: json["maxCarbohydratesPercent"],
+//        minFatPercent: json["minFatPercent"],
+//        maxFatPercent: json["maxFatPercent"],
+//        minFiberPercent: json["minFiberPercent"],
+//        maxFiberPercent: json["maxFiberPercent"]);
+//    return model;
+//  }
+
+//  @override
+//  Map<String, dynamic> toJsonPlanFoodParameter(PlanFoodParameterModel model) {
+//    final map = {
+//      "imc": model.imc,
+//      "kcal": model.kCal,
+//      "minProteinsPercent": model.minProteinsPercent,
+//      "maxProteinsPercent": model.maxProteinsPercent,
+//      "minCarbohydratesPercent": model.minCarbohydratesPercent,
+//      "maxCarbohydratesPercent": model.maxCarbohydratesPercent,
+//      "minFatPercent": model.minFatPercent,
+//      "maxFatPercent": model.maxFatPercent,
+//      "minFiberPercent": model.minFiberPercent,
+//      "maxFiberPercent": model.maxFiberPercent,
+//      "kCalOffSetVal": model.kCalOffSetVal,
+//      "kCalMin": model.kCalMin,
+//      "kCalMax": model.kCalMax,
+//      "breakFastCalVal": model.breakFastCalVal,
+//      "breakFastCalValExtra": model.breakFastCalValExtra,
+//      "snack1CalVal": model.snack1CalVal,
+//      "snack1CalValExtra": model.snack1CalValExtra,
+//      "lunchCalVal": model.lunchCalVal,
+//      "lunchCalValExtra": model.lunchCalValExtra,
+//      "snack2CalVal": model.snack2CalVal,
+//      "snack2CalValExtra": model.snack2CalValExtra,
+//      "dinnerCalVal": model.dinnerCalVal,
+//      "dinnerCalValExtra": model.dinnerCalValExtra
+//    };
+//    return map;
+//  }
+
+  @override
+  DailyActivityFoodModelAPI fromJsonDailyActivityFoodModelAPI(
+      Map<String, dynamic> json) {
+    DailyActivityFoodModelAPI model = DailyActivityFoodModelAPI(
+      dailyActivitiesFoodModels: (json['result'] as List<dynamic>)
+          .map((model) => fromJsonDailyActivityFoodModel(model))
+          .toList(),
+      planSummaries: (json['planSummaries'] as List<dynamic>)
+          .map((model) => fromJsonPlanSummariesAPI(model))
+          .toList(),
+    );
+    return model;
+  }
+
+  @override
+  PlanSummariesAPI fromJsonPlanSummariesAPI(Map<String, dynamic> json) {
+    PlanSummariesAPI model = PlanSummariesAPI(
+        dateTime: DateTime.parse(json["planDateTime"]).toLocal(),
+        dailyFoodPlanModel:
+        fromJsonDailyFoodPlan(json["userEatHealtParameters"]));
+    return model;
+  }
+
+  @override
+  DailyFoodPlanModel fromJsonDailyFoodPlan(Map<String, dynamic> json) {
+    DailyFoodPlanModel model = DailyFoodPlanModel(
+        kCalOffSetVal: json["kCalOffSetVal"],
+        kCalMin: json["kCalMin"],
+        kCalMax: json["kCalMax"],
+        breakFastCalVal: json["breakFastCalVal"],
+        breakFastCalValExtra: json["breakFastCalValExtra"],
+        snack1CalVal: json["snack1CalVal"],
+        snack1CalValExtra: json["snack1CalValExtra"],
+        lunchCalVal: json["lunchCalVal"],
+        lunchCalValExtra: json["lunchCalValExtra"],
+        snack2CalVal: json["snack2CalVal"],
+        snack2CalValExtra: json["snack2CalValExtra"],
+        dinnerCalVal: json["dinnerCalVal"],
+        dinnerCalValExtra: json["dinnerCalValExtra"],
+        imc: json["imc"],
+        kCal: json["kcal"],
+        minProteinsPercent: json["minProteinsPercent"],
+        maxProteinsPercent: json["maxProteinsPercent"],
+        minCarbohydratesPercent: json["minCarbohydratesPercent"],
+        maxCarbohydratesPercent: json["maxCarbohydratesPercent"],
+        minFatPercent: json["minFatPercent"],
+        maxFatPercent: json["maxFatPercent"],
+        minFiberPercent: json["minFiberPercent"],
+        maxFiberPercent: json["maxFiberPercent"]);
+    return model;
+  }
+
+  @override
+  Map<String, dynamic> toJsonDailyFoodPlan(DailyFoodPlanModel model) {
+    final map = {
+      "imc": model.imc,
+      "kcal": model.kCal,
+      "minProteinsPercent": model.minProteinsPercent,
+      "maxProteinsPercent": model.maxProteinsPercent,
+      "minCarbohydratesPercent": model.minCarbohydratesPercent,
+      "maxCarbohydratesPercent": model.maxCarbohydratesPercent,
+      "minFatPercent": model.minFatPercent,
+      "maxFatPercent": model.maxFatPercent,
+      "minFiberPercent": model.minFiberPercent,
+      "maxFiberPercent": model.maxFiberPercent,
+      "kCalOffSetVal": model.kCalOffSetVal,
+      "kCalMin": model.kCalMin,
+      "kCalMax": model.kCalMax,
+      "breakFastCalVal": model.breakFastCalVal,
+      "breakFastCalValExtra": model.breakFastCalValExtra,
+      "snack1CalVal": model.snack1CalVal,
+      "snack1CalValExtra": model.snack1CalValExtra,
+      "lunchCalVal": model.lunchCalVal,
+      "lunchCalValExtra": model.lunchCalValExtra,
+      "snack2CalVal": model.snack2CalVal,
+      "snack2CalValExtra": model.snack2CalValExtra,
+      "dinnerCalVal": model.dinnerCalVal,
+      "dinnerCalValExtra": model.dinnerCalValExtra
+    };
+    return map;
   }
 }

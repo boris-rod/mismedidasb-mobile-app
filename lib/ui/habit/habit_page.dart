@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mismedidasb/data/api/remote/endpoints.dart';
 import 'package:mismedidasb/domain/habit/habit_model.dart';
 import 'package:mismedidasb/domain/health_concept/health_concept.dart';
 import 'package:mismedidasb/domain/poll_model/poll_model.dart';
@@ -16,6 +17,7 @@ import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_main_app_bar_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_textlink_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_video_intro_widet.dart';
 import 'package:mismedidasb/ui/habit/habit_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -108,7 +110,25 @@ class _HabitState extends StateWithBloC<HabitPage, HabitBloC> {
         ),
         TXLoadingWidget(
           loadingStream: bloc.isLoadingStream,
-        )
+        ),
+        StreamBuilder<bool>(
+            stream: bloc.showFirstTimeResult,
+            initialData: false,
+            builder: (context, snapshotShow) {
+              return snapshotShow.data
+                  ? TXVideoIntroWidget(
+                title: R.string.habitsHelper,
+                onSeeVideo: () {
+                  bloc.setNotFirstTime();
+                  launch(Endpoint.planiHabitsVideo);
+//                          FileManager.playVideo("profile_settings.mp4");
+                },
+                onSkip: () {
+                  bloc.setNotFirstTime();
+                },
+              )
+                  : Container();
+            })
       ],
     );
   }

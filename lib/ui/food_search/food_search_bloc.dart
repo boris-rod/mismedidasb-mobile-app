@@ -45,6 +45,8 @@ class FoodSearchBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     isLoadingMore = true;
     currentPage = replace ? 0 : currentPage + 1;
 
+    String query = currentQuery;
+
     final foodsRes = await _iDishRepository.getFoodModelList(
         page: currentPage + 1,
         perPage: currentPerPage,
@@ -52,7 +54,7 @@ class FoodSearchBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
         tag: -1,
         harvardFilter: -1);
 
-    if (foodsRes is ResultSuccess<List<FoodModel>>) {
+    if (foodsRes is ResultSuccess<List<FoodModel>> && query == currentQuery) {
       hasMore = foodsRes.value.length >= currentPerPage;
 
       List<FoodModel> currentList = _searchController.value ?? [];

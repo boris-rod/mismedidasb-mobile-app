@@ -55,4 +55,17 @@ class Endpoint {
 
   static const String eat_by_date_range = "/api/eat/by-date";
   static const String save_daily_food_plan = "/api/eat/bulk-eats";
+//  static const String save_daily_activity = "/api/eat/add-or-update";
+  static const String plan_daily_parameters = "/api/user/eat-health-parameters";
+  static const String plan_daily_info = "api/eat/is-balanced-plan";
+
+  static const String planiIntroVideo = "https://youtu.be/flhvp9Zp-ak";
+  static const String foodPlanVideo = "https://youtu.be/O5BrcOFpP5g";
+  static const String copyPlanVideo = "https://youtu.be/csyl8IhRvjo";
+  static const String foodPortionsVideo = "https://youtu.be/Qpq9r-HelYU";
+  static const String profileSettingsVideo = "https://youtu.be/A32xyoLiJjY";
+  static const String whoIsPlaniVideo = "https://youtu.be/8q2bI-GY8s4";
+  static const String planiHabitsVideo = "https://youtu.be/8q2bI-GY8s4";
+  static const String planiCravingVideo = "https://youtu.be/KrY3ZW8G95w";
+
 }

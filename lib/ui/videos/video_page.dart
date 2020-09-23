@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mismedidasb/data/api/remote/endpoints.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/bloc_state.dart';
 import 'package:mismedidasb/ui/_base/navigation_utils.dart';
@@ -8,6 +9,7 @@ import 'package:mismedidasb/ui/_tx_widget/tx_main_app_bar_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
 import 'package:mismedidasb/ui/videos/video_bloc.dart';
 import 'package:mismedidasb/utils/file_manager.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class VideoPage extends StatefulWidget{
 
@@ -40,7 +42,8 @@ class _VideoState extends StateWithBloC<VideoPage, VideoBloC>{
               contentPadding:
               EdgeInsets.only(right: 10, left: 10),
               onTap: () {
-                FileManager.playVideo("main_menu.mp4");
+                launch(Endpoint.planiIntroVideo);
+//                FileManager.playVideo("main_menu.mp4");
               },
             ),
             TXDividerWidget(),
@@ -52,7 +55,8 @@ class _VideoState extends StateWithBloC<VideoPage, VideoBloC>{
               contentPadding:
               EdgeInsets.only(right: 10, left: 10),
               onTap: () {
-                FileManager.playVideo("my_food_plan.mp4");
+                launch(Endpoint.foodPlanVideo);
+//                FileManager.playVideo("my_food_plan.mp4");
               },
             ),
             TXDividerWidget(),
@@ -64,7 +68,8 @@ class _VideoState extends StateWithBloC<VideoPage, VideoBloC>{
               contentPadding:
               EdgeInsets.only(right: 10, left: 10),
               onTap: () {
-                FileManager.playVideo("copy_food_plan.mp4");
+                launch(Endpoint.copyPlanVideo);
+//                FileManager.playVideo("copy_food_plan.mp4");
               },
             ),
             TXDividerWidget(),
@@ -76,7 +81,8 @@ class _VideoState extends StateWithBloC<VideoPage, VideoBloC>{
               contentPadding:
               EdgeInsets.only(right: 10, left: 10),
               onTap: () {
-                FileManager.playVideo("portions_food_sizes.mp4");
+                launch(Endpoint.foodPortionsVideo);
+//                FileManager.playVideo("portions_food_sizes.mp4");
               },
             ),
             TXDividerWidget(),
@@ -88,7 +94,8 @@ class _VideoState extends StateWithBloC<VideoPage, VideoBloC>{
               contentPadding:
               EdgeInsets.only(right: 10, left: 10),
               onTap: () {
-                FileManager.playVideo("profile_settings.mp4");
+                launch(Endpoint.profileSettingsVideo);
+//                FileManager.playVideo("profile_settings.mp4");
               },
             ),
             TXDividerWidget(),
@@ -100,7 +107,8 @@ class _VideoState extends StateWithBloC<VideoPage, VideoBloC>{
               contentPadding:
               EdgeInsets.only(right: 10, left: 10),
               onTap: () {
-                FileManager.playVideo("plani.mp4");
+                launch(Endpoint.whoIsPlaniVideo);
+//                FileManager.playVideo("plani.mp4");
               },
             ),
             TXDividerWidget()

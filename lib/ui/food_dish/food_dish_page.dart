@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:mismedidasb/data/api/remote/endpoints.dart';
 import 'package:mismedidasb/domain/dish/dish_model.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/res/values/config.dart';
@@ -32,6 +33,7 @@ import 'package:mismedidasb/utils/calendar_utils.dart';
 import 'package:mismedidasb/utils/file_manager.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:mismedidasb/utils/extensions.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../enums.dart';
 
@@ -261,7 +263,8 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                         title: R.string.foodPlanHelper,
                         onSeeVideo: () {
                           bloc.setNotFirstTimePlan();
-                          FileManager.playVideo("my_food_plan.mp4");
+                          launch(Endpoint.foodPlanVideo);
+//                          FileManager.playVideo("my_food_plan.mp4");
                         },
                         onSkip: () {
                           bloc.setNotFirstTimePlan();
@@ -278,7 +281,8 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                         title: R.string.copyPlanHelper,
                         onSeeVideo: () {
                           bloc.setNotFirstTimePlanCopy();
-                          FileManager.playVideo("copy_food_plan.mp4");
+                          launch(Endpoint.copyPlanVideo);
+//                          FileManager.playVideo("copy_food_plan.mp4");
                         },
                         onSkip: () {
                           bloc.setNotFirstTimePlanCopy();

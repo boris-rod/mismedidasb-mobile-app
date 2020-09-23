@@ -128,12 +128,12 @@ class FileManager {
     return tempFile;
   }
 
-  static playVideo(String videoName) async {
-    Directory tempDir = await getTemporaryDirectory();
-    File tempFile = File('${tempDir.path}/$videoName');
-    final filePath = 'lib/res/assets/$videoName';
-    ByteData bd = await rootBundle.load(filePath);
-    await tempFile.writeAsBytes(bd.buffer.asUint8List(), flush: true);
-    OpenFile.open(tempFile.path);
-  }
+//  static playVideo(String videoName) async {
+//    Directory tempDir = await getTemporaryDirectory();
+//    File tempFile = File('${tempDir.path}/$videoName');
+//    final filePath = 'lib/res/assets/$videoName';
+//    ByteData bd = await rootBundle.load(filePath);
+//    await tempFile.writeAsBytes(bd.buffer.asUint8List(), flush: true);
+//    OpenFile.open(tempFile.path);
+//  }
 }

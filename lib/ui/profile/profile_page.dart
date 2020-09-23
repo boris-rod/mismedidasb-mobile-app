@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mismedidasb/data/api/remote/endpoints.dart';
 import 'package:mismedidasb/domain/user/user_model.dart';
 import 'package:mismedidasb/enums.dart';
 import 'package:mismedidasb/res/R.dart';
@@ -544,7 +545,8 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                         title: R.string.profileSettingsHelper,
                         onSeeVideo: () {
                           bloc.setNotFirstTime();
-                          FileManager.playVideo("profile_settings.mp4");
+                          launch(Endpoint.profileSettingsVideo);
+//                          FileManager.playVideo("profile_settings.mp4");
                         },
                         onSkip: () {
                           bloc.setNotFirstTime();

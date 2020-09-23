@@ -33,15 +33,13 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   final SharedPreferencesManager _sharedPreferencesManager;
   final ILNM lnm;
   final IRealTimeContainer _iRealTimeContainer;
-  final IDishRepository _iDishRepository;
 
   HomeBloC(
       this._iHealthConceptRepository,
       this._iUserRepository,
       this._sharedPreferencesManager,
       this.lnm,
-      this._iRealTimeContainer,
-      this._iDishRepository);
+      this._iRealTimeContainer);
 
   BehaviorSubject<List<HealthConceptModel>> _conceptController =
       new BehaviorSubject();
@@ -60,7 +58,6 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   String userName = "";
   bool profileLoaded = false;
   bool conceptsLoaded = false;
-  bool plansBulk1Loaded = false;
   bool termsAccepted = false;
   bool needUpdateVersion = false;
   String nextVersion = "";
@@ -70,7 +67,6 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     isLoading = true;
     profileLoaded = false;
     conceptsLoaded = false;
-    plansBulk1Loaded = false;
     final res = await _iUserRepository.getAppVersion();
     if(res is ResultSuccess<AppVersionModel>){
       PackageInfo packageInfo = await PackageInfo.fromPlatform();
@@ -78,25 +74,14 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
       nextVersion = res.value.version;
       needUpdateVersion = nextVersion != currentVersion && res.value.isMandatory;
     }
-    loadPlansBulk1();
     loadProfile();
     loadConcepts();
-  }
-
-  void loadPlansBulk1() async {
-    final now = DateTime.now();
-    await _iDishRepository.getPlansMergedAPI(now, now, forceReload: true);
-    plansBulk1Loaded = true;
-    if (conceptsLoaded && profileLoaded) {
-      isLoading = false;
-      launchFirstTime();
-    }
   }
 
   void loadProfile() async {
     final profileRes = await _iUserRepository.getProfile();
     profileLoaded = true;
-    if (conceptsLoaded && plansBulk1Loaded) {
+    if (conceptsLoaded) {
       isLoading = false;
       launchFirstTime();
     }
@@ -136,7 +121,7 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   void loadConcepts() async {
     final res = await _iHealthConceptRepository.getHealthConceptList();
     conceptsLoaded = true;
-    if (profileLoaded && plansBulk1Loaded) {
+    if (profileLoaded) {
       isLoading = false;
       launchFirstTime();
     }

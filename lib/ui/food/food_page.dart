@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:mismedidasb/data/api/remote/endpoints.dart';
 import 'package:mismedidasb/domain/dish/dish_model.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/bloc_state.dart';
@@ -24,6 +25,7 @@ import 'package:mismedidasb/ui/food_add_edit/food_add_edit_page.dart';
 import 'package:mismedidasb/ui/food_search/food_search_page.dart';
 import 'package:mismedidasb/ui/profile/tx_cell_selection_option_widget.dart';
 import 'package:mismedidasb/utils/file_manager.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'dart:math' as math;
 import '../../enums.dart';
 
@@ -106,9 +108,8 @@ class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
                             FoodSearchPage(
                               selectedItems: bloc.selectedFoods.values.toList(),
                             ));
-                        if(res is List<FoodModel>){
+                        if (res is List<FoodModel>) {
                           bloc.syncFoods(res);
-
                         }
                       } else {
                         final res = await NavigationUtils.push(
@@ -225,7 +226,9 @@ class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
                                                     title: "",
                                                     showPercentageInfo:
                                                         bloc.kCalPercentageHide,
-                                                    percentage: widget.dailyActivityFoodModel.getCurrentCaloriesPercentageByFood,
+                                                    percentage: widget
+                                                        .dailyActivityFoodModel
+                                                        .getCurrentCaloriesPercentageByFood,
                                                     mark1: widget
                                                             .dailyActivityFoodModel
                                                             .activityFoodCalories -
@@ -239,7 +242,9 @@ class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
                                                             .dailyActivityFoodModel
                                                             .activityFoodCaloriesOffSet,
                                                     height: 15,
-                                                    value: widget.dailyActivityFoodModel.activityCalories,
+                                                    value: widget
+                                                        .dailyActivityFoodModel
+                                                        .activityCalories,
                                                   ),
                                                 ),
 //                                                TXIconButtonWidget(
@@ -433,7 +438,8 @@ class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
                         title: R.string.portionFoodHelper,
                         onSeeVideo: () {
                           bloc.setNotFirstTime();
-                          FileManager.playVideo("portions_food_sizes.mp4");
+                          launch(Endpoint.foodPortionsVideo);
+//                          FileManager.playVideo("portions_food_sizes.mp4");
                         },
                         onSkip: () {
                           bloc.setNotFirstTime();

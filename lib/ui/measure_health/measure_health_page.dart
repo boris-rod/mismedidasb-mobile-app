@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mismedidasb/data/api/remote/endpoints.dart';
 import 'dart:math' as math;
 import 'package:mismedidasb/domain/answer/answer_model.dart';
 import 'package:mismedidasb/domain/health_concept/health_concept.dart';
@@ -20,6 +21,7 @@ import 'package:mismedidasb/ui/_tx_widget/tx_video_intro_widet.dart';
 import 'package:mismedidasb/ui/measure_health/measure_health_bloc.dart';
 import 'package:mismedidasb/utils/file_manager.dart';
 import 'package:mismedidasb/utils/utils.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MeasureHealthPage extends StatefulWidget {
   final HealthConceptModel conceptModel;
@@ -207,7 +209,8 @@ class _MeasureHealthState
                         title: R.string.planiHelper,
                         onSeeVideo: () async{
                           await bloc.setNotFirstTime();
-                          FileManager.playVideo("plani.mp4");
+                          launch(Endpoint.whoIsPlaniVideo);
+//                          FileManager.playVideo("plani.mp4");
                           Future.delayed(Duration(seconds: 2), (){
                             _navBack();
                           });

@@ -11,8 +11,7 @@ abstract class IDishRepository {
 
   //Gets plans from API merge with local plans not saved and save local bulk
   Future<Result<Map<DateTime, DailyFoodModel>>> getPlansMergedAPI(
-      DateTime start, DateTime end,
-      {bool forceReload: false});
+      DateTime start, DateTime end);
 
   Future<Result<List<FoodModel>>> getFoodModelList(
       {String query, int tag, int page, int perPage, int harvardFilter});
@@ -28,4 +27,7 @@ abstract class IDishRepository {
   Future<Result<bool>> deleteFoodCompoundModelList(int id);
 
   Future<Result<List<TagModel>>> getTagList();
+
+  Future<Result<DailyFoodPlanModel>> planDailyParameters();
+
 }
