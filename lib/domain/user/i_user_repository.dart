@@ -17,6 +17,8 @@ abstract class IUserRepository {
 
   Future<Result<ScoreModel>> getScores();
 
+  Future<Result<bool>> stripePaymentAction();
+
   Future<Result<SoloQuestionStatsModel>> getSoloQuestionStats(int daysAgo);
 
   Future<Result<UsernameSuggestionModel>> usernameValidation(

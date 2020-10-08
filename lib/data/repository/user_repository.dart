@@ -62,6 +62,16 @@ class UserRepository extends BaseRepository implements IUserRepository {
   }
 
   @override
+  Future<Result<bool>> stripePaymentAction() async {
+    try {
+      final result = await _iUserApi.stripePaymentAction();
+      return Result.success(value: result);
+    } catch (ex) {
+      return resultError(ex);
+    }
+  }
+
+  @override
   Future<Result<UsernameSuggestionModel>> usernameValidation(
       int userId, String email, String username, String fullName) async {
     try {

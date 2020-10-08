@@ -11,6 +11,7 @@ class Endpoint {
       "/api/general-content/accept-terms-conditions";
   static const String legacy_content_by_type = "/api/general-content/by-type";
   static const String contact_us_send_info = "/api/contact-us";
+  static const String stripe_payment_action = "/api/payment/create-stripe-payment-intent";
 
   ///Account
   static const String app_version = "/api/app";

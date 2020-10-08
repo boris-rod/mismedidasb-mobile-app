@@ -16,6 +16,8 @@ abstract class IUserApi {
 
   Future<ScoreModel> getScores();
 
+  Future<bool> stripePaymentAction();
+
   Future<SoloQuestionStatsModel> getSoloQuestionStats(int daysAgo);
 
   Future<UsernameSuggestionModel> usernameValidation(

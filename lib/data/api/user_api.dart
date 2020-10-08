@@ -120,4 +120,15 @@ class UserApi extends BaseApi implements IUserApi {
     else
       throw serverException(res);
   }
+
+  @override
+  Future<bool> stripePaymentAction() async {
+    final res = await _networkHandler.post(
+      path: Endpoint.stripe_payment_action,
+    );
+    if (res.statusCode == RemoteConstants.code_success)
+      return true;
+    else
+      throw serverException(res);
+  }
 }
