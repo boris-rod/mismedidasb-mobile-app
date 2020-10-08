@@ -100,6 +100,8 @@ class DishConverter extends IDishConverter {
     return FoodModel(
         id: json["id"],
         name: json["name"],
+        isFavorite: json["isFavorite"],
+        isLackSelfControlDish: json["isLackSelfControlDish"],
         isProteic: json.containsKey("isProteic") ? json["isProteic"] : false,
         isCaloric: json.containsKey("isCaloric") ? json["isCaloric"] : false,
         isFruitAndVegetables: json.containsKey("isFruitAndVegetables")
@@ -145,6 +147,8 @@ class DishConverter extends IDishConverter {
       "fat": model.fat,
       "fiber": model.fiber,
       "count": model.count,
+      "isFavorite": model.isFavorite,
+      "isLackSelfControlDish": model.isLackSelfControlDish,
       "children":
           model?.children?.map((f) => toJsonFoodModel(f))?.toList() ?? [],
       "tags":

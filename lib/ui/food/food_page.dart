@@ -474,45 +474,7 @@ class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
               itemCount: snapshot.data.length,
               itemBuilder: (context, index) {
                 final model = snapshot.data[index];
-                return ListTile(
-                  trailing: Checkbox(
-                    checkColor: R.color.primary_color,
-                    onChanged: (value) {
-                      model.isSelected = !model.isSelected;
-                      bloc.setSelectedFood(model);
-                    },
-                    value: model.isSelected,
-                  ),
-                  leading: TXNetworkImage(
-                    imageUrl: model.image,
-                    placeholderImage: R.image.logo,
-                    height: 40,
-                    boxFitImage: BoxFit.cover,
-                    width: 40,
-                  ),
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 0, horizontal: 5),
-                  onTap: () {
-                    model.isSelected = !model.isSelected;
-                    bloc.setSelectedFood(model);
-                  },
-                  title: TXTextWidget(
-                    text: model.name,
-                    color:
-                        model.isSelected ? R.color.primary_color : Colors.black,
-                  ),
-//                                    subtitle: Column(
-//                                      crossAxisAlignment: CrossAxisAlignment.start,
-//                                      children: <Widget>[
-//                                        TXTextWidget(
-//                                          text: "Calorias: ${model.calories}",
-//                                          color: R.color.gray,
-//                                          size: 10,
-//                                        ),
-//                                        ..._getCategories(model.tags),
-//                                      ],
-//                                    ),
-                );
+                return _getFoodItem(model);
               }),
         );
       },
@@ -531,55 +493,122 @@ class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
             itemCount: snapshot.data.length,
             itemBuilder: (context, index) {
               final model = snapshot.data[index];
-              return ListTile(
-                trailing: Checkbox(
-                  checkColor: R.color.primary_color,
-                  onChanged: (value) {
-                    model.isSelected = !model.isSelected;
-                    bloc.setSelectedFood(model);
-                  },
-                  value: model.isSelected,
-                ),
-                leading: TXNetworkImage(
-                  imageUrl: model.image,
-                  placeholderImage: R.image.logo,
-                  boxFitImage: BoxFit.cover,
-                  height: 40,
-                  width: 40,
-                ),
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 0, horizontal: 5),
-                onTap: () async {
-                  final res = await NavigationUtils.push(
-                    context,
-                    FoodAddEditPage(
-                      foodModel: model,
-                      compoundFoodModelList: bloc.compoundsFoods,
-                    ),
-                  );
-                  if (res ?? false) {
-                    bloc.loadCompoundFoods(true);
-                  }
-                },
-                title: TXTextWidget(
-                  text: model.name,
-                  color:
-                      model.isSelected ? R.color.primary_color : Colors.black,
-                ),
-//                                    subtitle: Column(
-//                                      crossAxisAlignment: CrossAxisAlignment.start,
-//                                      children: <Widget>[
-//                                        TXTextWidget(
-//                                          text: "Calorias: ${model.calories}",
-//                                          color: R.color.gray,
-//                                          size: 10,
-//                                        ),
-//                                        ..._getCategories(model.tags),
-//                                      ],
-//                                    ),
-              );
+              return _getFoodItem(model);
             });
       },
+    );
+  }
+
+  Widget _getFoodItem(FoodModel model) {
+    return ListTile(
+      trailing: Checkbox(
+        checkColor: R.color.primary_color,
+        onChanged: (value) {
+          model.isSelected = !model.isSelected;
+          bloc.setSelectedFood(model);
+        },
+        value: model.isSelected,
+      ),
+      leading: TXNetworkImage(
+        imageUrl: model.image,
+        placeholderImage: R.image.logo,
+        boxFitImage: BoxFit.cover,
+        height: 40,
+        width: 40,
+      ),
+      contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
+      onTap: () async {
+        if (model.isCompound) {
+          final res = await NavigationUtils.push(
+            context,
+            FoodAddEditPage(
+              foodModel: model,
+              compoundFoodModelList: bloc.compoundsFoods,
+            ),
+          );
+          if (res ?? false) {
+            bloc.loadCompoundFoods(true);
+          }
+        } else {
+          model.isSelected = !model.isSelected;
+          bloc.setSelectedFood(model);
+        }
+      },
+      title: Column(
+        children: [
+          TXTextWidget(
+            text: model.name,
+            color: model.isSelected ? R.color.primary_color : Colors.black,
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                flex: 1,
+                child: InkWell(
+                  onTap: () {
+                    bloc.markUnMarkFood(
+                        model.id, FoodsTypeMark.favorites, !model.isFavorite);
+                  },
+                  child: Container(
+                    padding: EdgeInsets.only(top: 3, bottom: 5),
+                    child: Row(
+                      children: [
+                        Icon(
+                          model.isFavorite ? Icons.star : Icons.star_border,
+                          color: model.isFavorite
+                              ? Colors.orangeAccent
+                              : R.color.gray,
+                          size: 20,
+                        ),
+                        Expanded(
+                          child: TXTextWidget(
+                            size: 12,
+                            color: R.color.gray_darkest,
+                            text: "Favorito",
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: InkWell(
+                  onTap: () {
+                    bloc.markUnMarkFood(model.id, FoodsTypeMark.lackSelfControl,
+                        !model.isLackSelfControlDish);
+                  },
+                  child: Container(
+                    padding: EdgeInsets.only(top: 3, bottom: 5),
+                    child: Row(
+                      children: [
+                        Icon(
+                          model.isLackSelfControlDish
+                              ? Icons.remove_circle_outline
+                              : Icons.remove_circle_outline,
+                          color: model.isLackSelfControlDish
+                              ? Colors.redAccent
+                              : R.color.gray,
+                          size: 20,
+                        ),
+                        Expanded(
+                          child: TXTextWidget(
+                            size: 12,
+                            color: R.color.gray_darkest,
+                            text: "Compulsivo",
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              )
+            ],
+          )
+        ],
+      ),
     );
   }
 

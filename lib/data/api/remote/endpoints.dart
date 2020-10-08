@@ -48,6 +48,8 @@ class Endpoint {
   static const String solo_question_stats = "/api/solo-question";
 
   static const String dish = "/api/dish";
+  static const String dish_favorites = "/api/dish/favorites";
+  static const String dish_lack_self_control = "/api/dish/favorites";
   static const String dish_tags = "/api/tag";
 
   static const String dish_compound = "/api/compound-dish";
@@ -58,6 +60,10 @@ class Endpoint {
 //  static const String save_daily_activity = "/api/eat/add-or-update";
   static const String plan_daily_parameters = "/api/user/eat-health-parameters";
   static const String plan_daily_info = "api/eat/is-balanced-plan";
+  static const String add_food_to_favorites = "/api/dish/favorite/create";
+  static const String remove_food_from_favorites = "/api/dish/favorite/delete";
+  static const String add_lack_self_control = "/api/dish/lack-self-control/create";
+  static const String remove_lack_self_control = "/api/dish/lack-self-control/delete";
 
   static const String planiIntroVideo = "https://youtu.be/flhvp9Zp-ak";
   static const String foodPlanVideo = "https://youtu.be/O5BrcOFpP5g";

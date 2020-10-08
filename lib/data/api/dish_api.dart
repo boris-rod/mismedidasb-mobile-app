@@ -8,6 +8,7 @@ import 'package:mismedidasb/data/api/remote/remote_constanst.dart';
 import 'package:mismedidasb/domain/dish/dish_model.dart';
 import 'package:mismedidasb/domain/dish/i_dish_api.dart';
 import 'package:mismedidasb/domain/dish/i_dish_converter.dart';
+import 'package:mismedidasb/enums.dart';
 import 'package:mismedidasb/utils/calendar_utils.dart';
 
 class DishApi extends BaseApi implements IDishApi {
@@ -22,14 +23,15 @@ class DishApi extends BaseApi implements IDishApi {
       int tag,
       int page = 1,
       int perPage = 100,
-      int harvardFilter}) async {
+      int harvardFilter,
+        FoodsTypeMark foodsType = FoodsTypeMark.all}) async {
     final tagsFilterQuery = tag >= 0 ? "&tags=$tag" : "";
     final harvardFilterQuery =
         harvardFilter >= 0 ? "&harvardFilter=$harvardFilter" : "";
 
     final res = await _networkHandler.get(
         path:
-            "${Endpoint.dish}?page=$page&perPage=$perPage&search=$query$tagsFilterQuery$harvardFilterQuery");
+            "${foodsType == FoodsTypeMark.lackSelfControl ? Endpoint.add_lack_self_control : foodsType == FoodsTypeMark.favorites ? Endpoint.dish_favorites : Endpoint.dish}?page=$page&perPage=$perPage&search=$query$tagsFilterQuery$harvardFilterQuery");
     if (res.statusCode == RemoteConstants.code_success) {
       Iterable l = jsonDecode(res.body)[RemoteConstants.result];
       return l.map((model) => _foodConverter.fromJsonFoodModel(model)).toList();
@@ -161,6 +163,48 @@ class DishApi extends BaseApi implements IDishApi {
     if (res.statusCode == RemoteConstants.code_success) {
       final json = jsonDecode(res.body)[RemoteConstants.result];
       return _foodConverter.fromJsonDailyFoodPlan(json);
+    } else
+      throw serverException(res);
+  }
+
+  @override
+  Future<bool> addFoodToFavorites(int foodId) async {
+    final res = await _networkHandler.post(
+        path: Endpoint.add_food_to_favorites, params: "?dishId=$foodId");
+    if (res.statusCode == RemoteConstants.code_success_created) {
+      return true;
+    } else
+      throw serverException(res);
+  }
+
+  @override
+  Future<bool> removeFoodFromFavorites(int foodId) async {
+    final res = await _networkHandler.delete(
+        path: Endpoint.remove_food_from_favorites, params: "?dishId=$foodId");
+    if (res.statusCode == RemoteConstants.code_success) {
+      return true;
+    } else
+      throw serverException(res);
+  }
+
+  @override
+  Future<bool> addLackSelfControl(int foodId) async {
+    final res = await _networkHandler.post(
+        path: Endpoint.add_lack_self_control,
+        params: "?DishId=$foodId&Intensity=1");
+    if (res.statusCode == RemoteConstants.code_success_created) {
+      return true;
+    } else
+      throw serverException(res);
+  }
+
+  @override
+  Future<bool> removeLackSelfControl(int foodId) async {
+    final res = await _networkHandler.delete(
+        path: Endpoint.remove_lack_self_control,
+        params: "?DishId=$foodId&Intensity=1");
+    if (res.statusCode == RemoteConstants.code_success) {
+      return true;
     } else
       throw serverException(res);
   }

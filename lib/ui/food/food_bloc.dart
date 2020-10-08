@@ -149,7 +149,7 @@ class FoodBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
       }
     }
 
-    if(currentFoodsList != null){
+    if (currentFoodsList != null) {
       currentFoodsList.forEach((element) {
         element.isSelected = selectedFoods[element.id]?.isSelected ?? false;
       });
@@ -256,6 +256,52 @@ class FoodBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     await _sharedPreferencesManager.setBoolValue(
         SharedKey.firstTimeInFoodPortions, false);
     _showFirstTimeController.sinkAddSafe(false);
+  }
+
+  void markUnMarkFood(
+      int foodId, FoodsTypeMark foodsTypeMark, bool mark) async {
+    if (_pageController.value == 1) {
+      final compoundsList = _foodsCompoundController.value ?? [];
+      int compoundIndex =
+          compoundsList.indexWhere((element) => element.id == foodId);
+      if (compoundIndex >= 0) {
+        if (foodsTypeMark == FoodsTypeMark.lackSelfControl) {
+          if (mark)
+            _iDishRepository.addLackSelfControl(foodId);
+          else
+            _iDishRepository.removeLackSelfControl(foodId);
+          compoundsList[compoundIndex].isLackSelfControlDish = mark;
+        } else {
+          if (mark)
+            _iDishRepository.addFoodToFavorites(foodId);
+          else
+            _iDishRepository.removeFoodFromFavorites(foodId);
+
+          compoundsList[compoundIndex].isFavorite = mark;
+        }
+        _foodsCompoundController.sinkAddSafe(compoundsList);
+      }
+    } else {
+      final foodList = _foodsController.value ?? [];
+      int foodIndex = foodList.indexWhere((element) => element.id == foodId);
+      if (foodIndex >= 0) {
+        if (foodsTypeMark == FoodsTypeMark.lackSelfControl) {
+          if (mark)
+            _iDishRepository.addLackSelfControl(foodId);
+          else
+            _iDishRepository.removeLackSelfControl(foodId);
+          foodList[foodIndex].isLackSelfControlDish = mark;
+        } else {
+          if (mark)
+            _iDishRepository.addFoodToFavorites(foodId);
+          else
+            _iDishRepository.removeFoodFromFavorites(foodId);
+
+          foodList[foodIndex].isFavorite = mark;
+        }
+        _foodsController.sinkAddSafe(foodList);
+      }
+    }
   }
 
   @override

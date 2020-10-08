@@ -6,6 +6,7 @@ import 'package:mismedidasb/domain/dish/i_dish_api.dart';
 import 'package:mismedidasb/domain/dish/i_dish_dao.dart';
 import 'package:mismedidasb/domain/dish/i_dish_repository.dart';
 import 'package:mismedidasb/domain/personal_data/i_personal_data_dao.dart';
+import 'package:mismedidasb/enums.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/measure_health/health_result.dart';
 import 'package:mismedidasb/utils/calendar_utils.dart';
@@ -203,7 +204,7 @@ class DishRepository extends BaseRepository implements IDishRepository {
           dailyMap[dateMapId] = localObj;
         } else if (apiObj != null) {
           apiObj.dailyActivityFoodModelList.forEach((element) {
-            if(element.plan == null){
+            if (element.plan == null) {
               element.plan = dailyFoodPlanModel;
             }
           });
@@ -272,14 +273,20 @@ class DishRepository extends BaseRepository implements IDishRepository {
 
   @override
   Future<Result<List<FoodModel>>> getFoodModelList(
-      {String query, int tag, int page, int perPage, int harvardFilter}) async {
+      {String query,
+      int tag,
+      int page,
+      int perPage,
+      int harvardFilter,
+        FoodsTypeMark foodsType}) async {
     try {
       List<FoodModel> list = await _dishApi.getFoodModelList(
           query: query,
           tag: tag,
           page: page,
           perPage: perPage,
-          harvardFilter: harvardFilter);
+          harvardFilter: harvardFilter,
+          foodsType: foodsType);
       return Result.success(value: list);
     } catch (ex) {
       return resultError(ex);
@@ -342,6 +349,46 @@ class DishRepository extends BaseRepository implements IDishRepository {
   Future<Result<DailyFoodPlanModel>> planDailyParameters() async {
     try {
       final res = await _dishApi.planDailyParameters();
+      return ResultSuccess(value: res);
+    } catch (ex) {
+      return resultError(ex);
+    }
+  }
+
+  @override
+  Future<Result<bool>> addFoodToFavorites(int foodId) async {
+    try {
+      final res = await _dishApi.addFoodToFavorites(foodId);
+      return ResultSuccess(value: res);
+    } catch (ex) {
+      return resultError(ex);
+    }
+  }
+
+  @override
+  Future<Result<bool>> removeFoodFromFavorites(int foodId) async {
+    try {
+      final res = await _dishApi.removeFoodFromFavorites(foodId);
+      return ResultSuccess(value: res);
+    } catch (ex) {
+      return resultError(ex);
+    }
+  }
+
+  @override
+  Future<Result<bool>> addLackSelfControl(int foodId) async {
+    try {
+      final res = await _dishApi.addLackSelfControl(foodId);
+      return ResultSuccess(value: res);
+    } catch (ex) {
+      return resultError(ex);
+    }
+  }
+
+  @override
+  Future<Result<bool>> removeLackSelfControl(int foodId) async {
+    try {
+      final res = await _dishApi.removeLackSelfControl(foodId);
       return ResultSuccess(value: res);
     } catch (ex) {
       return resultError(ex);

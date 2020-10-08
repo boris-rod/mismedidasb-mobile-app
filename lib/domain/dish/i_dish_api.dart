@@ -1,8 +1,9 @@
 import 'package:mismedidasb/domain/dish/dish_model.dart';
+import 'package:mismedidasb/enums.dart';
 
 abstract class IDishApi {
   Future<List<FoodModel>> getFoodModelList(
-      {String query, int tag, int page, int perPage, int harvardFilter});
+      {String query, int tag, int page, int perPage, int harvardFilter, FoodsTypeMark foodsType});
 
   Future<List<FoodModel>> getFoodCompoundModelList();
 
@@ -23,4 +24,12 @@ abstract class IDishApi {
   Future<DailyFoodPlanModel> planDailyParameters();
 
   Future<bool> planDailyFullInfo(DateTime dateTime);
+
+  Future<bool> addFoodToFavorites(int foodId);
+
+  Future<bool> removeFoodFromFavorites(int foodId);
+
+  Future<bool> addLackSelfControl(int foodId);
+
+  Future<bool> removeLackSelfControl(int foodId);
 }
