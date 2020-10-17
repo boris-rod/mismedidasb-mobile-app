@@ -226,6 +226,14 @@ abstract class StringsBase implements WidgetsLocalizations {
 
   String get filterAll;
 
+  String get filterFavorites;
+
+  String get filterLackSelfControl;
+
+  String get favorite;
+
+  String get lackSelfControl;
+
   String get congratulations;
 
   String get rewardGain;

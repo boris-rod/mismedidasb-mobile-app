@@ -360,6 +360,18 @@ class StringsEs implements StringsBase {
   String get filterAll => "Todos";
 
   @override
+  String get filterFavorites => "Favoritos";
+
+  @override
+  String get filterLackSelfControl => "Compulsivos";
+
+  @override
+  String get favorite => "Favorito";
+
+  @override
+  String get lackSelfControl => "Compulsivo";
+
+  @override
   String get congratulations => "Enhorabuena";
 
   @override

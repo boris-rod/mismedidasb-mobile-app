@@ -31,7 +31,7 @@ class DishApi extends BaseApi implements IDishApi {
 
     final res = await _networkHandler.get(
         path:
-            "${foodsType == FoodsTypeMark.lackSelfControl ? Endpoint.add_lack_self_control : foodsType == FoodsTypeMark.favorites ? Endpoint.dish_favorites : Endpoint.dish}?page=$page&perPage=$perPage&search=$query$tagsFilterQuery$harvardFilterQuery");
+            "${foodsType == FoodsTypeMark.lackSelfControl ? Endpoint.dish_lack_self_control : foodsType == FoodsTypeMark.favorites ? Endpoint.dish_favorites : Endpoint.dish}?page=$page&perPage=$perPage&search=$query$tagsFilterQuery$harvardFilterQuery");
     if (res.statusCode == RemoteConstants.code_success) {
       Iterable l = jsonDecode(res.body)[RemoteConstants.result];
       return l.map((model) => _foodConverter.fromJsonFoodModel(model)).toList();

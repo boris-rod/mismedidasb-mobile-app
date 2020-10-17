@@ -65,6 +65,7 @@ class FoodBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   int currentPerPage = 100;
   bool isLoadingMore = false;
   bool hasMore = true;
+  FoodsTypeMark foodsType = FoodsTypeMark.all;
 
   void loadData(List<FoodModel> selectedItems, FoodFilterMode foodFilterMode,
       int currentTag, int currentHarvardFilter) async {
@@ -84,6 +85,10 @@ class FoodBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
     if (foodFilterMode == FoodFilterMode.tags) {
       tagList.add(TagModel(isSelected: true, id: -1, name: R.string.filterAll));
+      tagList.add(
+          TagModel(isSelected: false, id: -2, name: R.string.filterFavorites));
+      tagList.add(TagModel(
+          isSelected: false, id: -3, name: R.string.filterLackSelfControl));
 
       final res = await _iDishRepository.getTagList();
       if (res is ResultSuccess<List<TagModel>>) {
@@ -96,6 +101,10 @@ class FoodBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
       }
       _filterController.sinkAddSafe(tagList.firstWhere((f) => f.isSelected));
     } else {
+      harvardFilterList.add(
+          TagModel(isSelected: false, id: -2, name: R.string.filterFavorites));
+      harvardFilterList.add(TagModel(
+          isSelected: false, id: -3, name: R.string.filterLackSelfControl));
       harvardFilterList.add(TagModel(
           isSelected: currentHarvardFilter == FoodHealthy.proteic.index,
           id: FoodHealthy.proteic.index,
@@ -136,7 +145,8 @@ class FoodBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
         perPage: currentPerPage,
         query: "",
         tag: currentTag,
-        harvardFilter: currentHarvardFilter);
+        harvardFilter: currentHarvardFilter,
+        foodsType: foodsType);
     isLoading = false;
 
     if (foodsRes is ResultSuccess<List<FoodModel>>) {
@@ -236,6 +246,11 @@ class FoodBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     }
 
     isLoading = true;
+    foodsType = filterId == -2
+        ? FoodsTypeMark.favorites
+        : filterId == -3
+            ? FoodsTypeMark.lackSelfControl
+            : FoodsTypeMark.all;
     loadFoods(true);
 
 //    tagsAll.forEach((t) => t.isSelected = t.id == filterId);

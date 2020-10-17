@@ -535,6 +535,7 @@ class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
         }
       },
       title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TXTextWidget(
             text: model.name,
@@ -565,7 +566,7 @@ class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
                           child: TXTextWidget(
                             size: 12,
                             color: R.color.gray_darkest,
-                            text: "Favorito",
+                            text: R.string.favorite,
                           ),
                         )
                       ],
@@ -597,7 +598,7 @@ class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
                           child: TXTextWidget(
                             size: 12,
                             color: R.color.gray_darkest,
-                            text: "Compulsivo",
+                            text: R.string.lackSelfControl,
                           ),
                         )
                       ],
@@ -617,7 +618,7 @@ class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
       height: widget.foodFilterMode == FoodFilterMode.tags
           ? math.min(MediaQuery.of(context).size.height / 2,
               ((bloc.tagList.length + 20) + 1) * 50.0)
-          : 200,
+          : 320,
       child: Column(
         children: <Widget>[
           Container(
