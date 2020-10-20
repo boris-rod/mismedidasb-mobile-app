@@ -408,6 +408,8 @@ class FoodModel {
   int id;
   String name;
   bool isProteic;
+  bool isFavorite;
+  bool isLackSelfControlDish;
   bool isCaloric;
   bool isFruitAndVegetables;
   double calories;
@@ -489,6 +491,8 @@ class FoodModel {
   FoodModel(
       {this.id,
       this.name = "",
+      this.isFavorite = false,
+      this.isLackSelfControlDish = false,
       this.isProteic,
       this.isCaloric,
       this.isFruitAndVegetables,

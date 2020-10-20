@@ -65,6 +65,7 @@ class FoodBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   int currentPerPage = 100;
   bool isLoadingMore = false;
   bool hasMore = true;
+  FoodsTypeMark foodsType = FoodsTypeMark.all;
 
   void loadData(List<FoodModel> selectedItems, FoodFilterMode foodFilterMode,
       int currentTag, int currentHarvardFilter) async {
@@ -84,6 +85,10 @@ class FoodBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
     if (foodFilterMode == FoodFilterMode.tags) {
       tagList.add(TagModel(isSelected: true, id: -1, name: R.string.filterAll));
+      tagList.add(
+          TagModel(isSelected: false, id: -2, name: R.string.filterFavorites));
+      tagList.add(TagModel(
+          isSelected: false, id: -3, name: R.string.filterLackSelfControl));
 
       final res = await _iDishRepository.getTagList();
       if (res is ResultSuccess<List<TagModel>>) {
@@ -96,6 +101,10 @@ class FoodBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
       }
       _filterController.sinkAddSafe(tagList.firstWhere((f) => f.isSelected));
     } else {
+      harvardFilterList.add(
+          TagModel(isSelected: false, id: -2, name: R.string.filterFavorites));
+      harvardFilterList.add(TagModel(
+          isSelected: false, id: -3, name: R.string.filterLackSelfControl));
       harvardFilterList.add(TagModel(
           isSelected: currentHarvardFilter == FoodHealthy.proteic.index,
           id: FoodHealthy.proteic.index,
@@ -136,7 +145,8 @@ class FoodBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
         perPage: currentPerPage,
         query: "",
         tag: currentTag,
-        harvardFilter: currentHarvardFilter);
+        harvardFilter: currentHarvardFilter,
+        foodsType: foodsType);
     isLoading = false;
 
     if (foodsRes is ResultSuccess<List<FoodModel>>) {
@@ -149,7 +159,7 @@ class FoodBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
       }
     }
 
-    if(currentFoodsList != null){
+    if (currentFoodsList != null) {
       currentFoodsList.forEach((element) {
         element.isSelected = selectedFoods[element.id]?.isSelected ?? false;
       });
@@ -236,6 +246,11 @@ class FoodBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     }
 
     isLoading = true;
+    foodsType = filterId == -2
+        ? FoodsTypeMark.favorites
+        : filterId == -3
+            ? FoodsTypeMark.lackSelfControl
+            : FoodsTypeMark.all;
     loadFoods(true);
 
 //    tagsAll.forEach((t) => t.isSelected = t.id == filterId);
@@ -256,6 +271,52 @@ class FoodBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     await _sharedPreferencesManager.setBoolValue(
         SharedKey.firstTimeInFoodPortions, false);
     _showFirstTimeController.sinkAddSafe(false);
+  }
+
+  void markUnMarkFood(
+      int foodId, FoodsTypeMark foodsTypeMark, bool mark) async {
+    if (_pageController.value == 1) {
+      final compoundsList = _foodsCompoundController.value ?? [];
+      int compoundIndex =
+          compoundsList.indexWhere((element) => element.id == foodId);
+      if (compoundIndex >= 0) {
+        if (foodsTypeMark == FoodsTypeMark.lackSelfControl) {
+          if (mark)
+            _iDishRepository.addLackSelfControl(foodId);
+          else
+            _iDishRepository.removeLackSelfControl(foodId);
+          compoundsList[compoundIndex].isLackSelfControlDish = mark;
+        } else {
+          if (mark)
+            _iDishRepository.addFoodToFavorites(foodId);
+          else
+            _iDishRepository.removeFoodFromFavorites(foodId);
+
+          compoundsList[compoundIndex].isFavorite = mark;
+        }
+        _foodsCompoundController.sinkAddSafe(compoundsList);
+      }
+    } else {
+      final foodList = _foodsController.value ?? [];
+      int foodIndex = foodList.indexWhere((element) => element.id == foodId);
+      if (foodIndex >= 0) {
+        if (foodsTypeMark == FoodsTypeMark.lackSelfControl) {
+          if (mark)
+            _iDishRepository.addLackSelfControl(foodId);
+          else
+            _iDishRepository.removeLackSelfControl(foodId);
+          foodList[foodIndex].isLackSelfControlDish = mark;
+        } else {
+          if (mark)
+            _iDishRepository.addFoodToFavorites(foodId);
+          else
+            _iDishRepository.removeFoodFromFavorites(foodId);
+
+          foodList[foodIndex].isFavorite = mark;
+        }
+        _foodsController.sinkAddSafe(foodList);
+      }
+    }
   }
 
   @override

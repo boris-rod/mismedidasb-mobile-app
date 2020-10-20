@@ -1,5 +1,6 @@
 import 'package:mismedidasb/data/api/remote/result.dart';
 import 'package:mismedidasb/domain/dish/dish_model.dart';
+import 'package:mismedidasb/enums.dart';
 import 'package:mismedidasb/ui/measure_health/health_result.dart';
 
 abstract class IDishRepository {
@@ -14,7 +15,7 @@ abstract class IDishRepository {
       DateTime start, DateTime end);
 
   Future<Result<List<FoodModel>>> getFoodModelList(
-      {String query, int tag, int page, int perPage, int harvardFilter});
+      {String query, int tag, int page, int perPage, int harvardFilter, FoodsTypeMark foodsType});
 
   Future<Result<List<FoodModel>>> getFoodCompoundModelList();
 
@@ -29,5 +30,13 @@ abstract class IDishRepository {
   Future<Result<List<TagModel>>> getTagList();
 
   Future<Result<DailyFoodPlanModel>> planDailyParameters();
+
+  Future<Result<bool>> addFoodToFavorites(int foodId);
+
+  Future<Result<bool>> removeFoodFromFavorites(int foodId);
+
+  Future<Result<bool>> addLackSelfControl(int foodId);
+
+  Future<Result<bool>> removeLackSelfControl(int foodId);
 
 }

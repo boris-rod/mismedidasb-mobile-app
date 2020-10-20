@@ -24,3 +24,4 @@ enum PROFILE_OPTION { CHANGE_PASSWORD, LOGOUT, HELP }
 enum NotificationType { GENERAL, REMINDER, POLL, REWARD }
 enum Reminder { NONE, DRINK_WATER, PLAN_FOOD, MAKE_EXERCISE }
 enum SettingAction { logout, languageCodeChanged, removeAccount }
+enum FoodsTypeMark { favorites, lackSelfControl, all }

@@ -111,7 +111,34 @@ class _VideoState extends StateWithBloC<VideoPage, VideoBloC>{
 //                FileManager.playVideo("plani.mp4");
               },
             ),
+            TXDividerWidget(),
+            ListTile(
+              title: TXTextWidget(
+                text: R.string.habitsHelper,
+              ),
+              trailing: Icon(Icons.play_circle_filled, color: R.color.button_color,),
+              contentPadding:
+              EdgeInsets.only(right: 10, left: 10),
+              onTap: () {
+                launch(Endpoint.planiHabitsVideo);
+//                FileManager.playVideo("plani.mp4");
+              },
+            ),
+            TXDividerWidget(),
+            ListTile(
+              title: TXTextWidget(
+                text: R.string.cravingHelper,
+              ),
+              trailing: Icon(Icons.play_circle_filled, color: R.color.button_color,),
+              contentPadding:
+              EdgeInsets.only(right: 10, left: 10),
+              onTap: () {
+                launch(Endpoint.planiCravingVideo);
+//                FileManager.playVideo("plani.mp4");
+              },
+            ),
             TXDividerWidget()
+
           ],
         ),
       ),
