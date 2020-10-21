@@ -148,7 +148,7 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
         (d) => CalendarUtils.isSameDay(d, selectedDate), orElse: () {
       selectedDate = DateTime.now();
       return dailyFoodModelMap.keys
-          .firstWhere((d) => CalendarUtils.isSameDay(d, selectedDate));
+          ?.firstWhere((d) => CalendarUtils.isSameDay(d, selectedDate), orElse: (){return null;});
     });
     DailyFoodModel daily = dailyFoodModelMap[key];
 
