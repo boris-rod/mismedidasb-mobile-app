@@ -430,4 +430,16 @@ class StringsEs implements StringsBase {
 
   @override
   String get habitsHelper => "10 Hábitos Saludables que potencian el bienestar";
+
+  @override
+  String get references => "Referencias";
+
+  @override
+  String get referencesLink1 => "Gil, Á., Ruiz López, M. D., Sánchez de Medina Contreras, F., Maldonado Lozano, J., Martínez de Victoria Muñoz, E., Planas Vilá, M., & Sociedad Española de Nutrición Parenteral y Enteral (Eds.). (2010). Tratado de nutrición (2a ed). Médica Panamericana.";
+
+  @override
+  String get referencesLink2 => "Rodríguez-Martín, B. C., Gómez-Quintana, A., Díaz-Martínez, G., & Molerio-Pérez, O. (2013). Bibliotherapy and food cravings control. Appetite, 65.";
+
+  @override
+  String get referencesLink3 => "Rodríguez-Martín, B. C., & Meule, A. (2015). Food craving: New contributions on its assessment, moderators, and consequences. Frontiers in Psychology, 6(JAN).";
 }

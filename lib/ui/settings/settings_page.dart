@@ -21,6 +21,7 @@ import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_textlink_widget.dart';
 import 'package:mismedidasb/ui/legacy/legacy_page.dart';
 import 'package:mismedidasb/ui/profile/profile_page.dart';
+import 'package:mismedidasb/ui/references/references_page.dart';
 import 'package:mismedidasb/ui/settings/settings_bloc.dart';
 import 'package:mismedidasb/ui/settings/tx_reminder_setting_cell_widget.dart';
 
@@ -89,6 +90,12 @@ class _SettingsState extends StateWithBloC<SettingsPage, SettingsBloC> {
                                       context,
                                       LegacyPage(
                                         contentType: 0,
+                                      ));
+                                }else if (key ==
+                                    PopupActionKey.references) {
+                                  NavigationUtils.push(
+                                      context,
+                                      ReferencesPage(
                                       ));
                                 } else if (key == PopupActionKey.logout) {
                                   _showDemoDialogLogout(context: context);
@@ -427,6 +434,29 @@ class _SettingsState extends StateWithBloC<SettingsPage, SettingsBloC> {
         ),
       ),
     );
+    final references = PopupMenuItem(
+      value: PopupActionKey.references,
+      child: Container(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Icon(
+              Icons.link,
+              size: 20,
+              color: R.color.primary_color,
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            TXTextWidget(
+              text: R.string.references,
+              color: Colors.black,
+            )
+          ],
+        ),
+      ),
+    );
     final logout = PopupMenuItem(
       value: PopupActionKey.logout,
       child: Container(
@@ -475,6 +505,7 @@ class _SettingsState extends StateWithBloC<SettingsPage, SettingsBloC> {
     );
     list.add(temrsCond);
     list.add(privPoliciy);
+    list.add(references);
     list.add(logout);
     list.add(removeAccount);
     return list;

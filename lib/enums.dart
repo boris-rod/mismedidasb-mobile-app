@@ -7,6 +7,7 @@ enum PopupActionKey {
   faq,
   terms_cond,
   privacy_policies,
+  references,
   logout,
   remove_account,
   remove_compound_food,
