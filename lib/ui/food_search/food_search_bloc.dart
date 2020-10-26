@@ -1,6 +1,7 @@
 import 'package:mismedidasb/data/api/remote/result.dart';
 import 'package:mismedidasb/domain/dish/dish_model.dart';
 import 'package:mismedidasb/domain/dish/i_dish_repository.dart';
+import 'package:mismedidasb/enums.dart';
 import 'package:mismedidasb/ui/_base/bloc_base.dart';
 import 'package:mismedidasb/ui/_base/bloc_error_handler.dart';
 import 'package:mismedidasb/ui/_base/bloc_loading.dart';
@@ -114,6 +115,29 @@ class FoodSearchBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     else
       selectedFoods.removeWhere((key, value) => key == foodModel.id);
 
+  }
+
+  void markUnMarkFood(
+      int foodId, FoodsTypeMark foodsTypeMark, bool mark) async {
+    final foodList = _searchController.value ?? [];
+    int foodIndex = foodList.indexWhere((element) => element.id == foodId);
+    if (foodIndex >= 0) {
+      if (foodsTypeMark == FoodsTypeMark.lackSelfControl) {
+        if (mark)
+          _iDishRepository.addLackSelfControl(foodId);
+        else
+          _iDishRepository.removeLackSelfControl(foodId);
+        foodList[foodIndex].isLackSelfControlDish = mark;
+      } else {
+        if (mark)
+          _iDishRepository.addFoodToFavorites(foodId);
+        else
+          _iDishRepository.removeFoodFromFavorites(foodId);
+
+        foodList[foodIndex].isFavorite = mark;
+      }
+      _searchController.sinkAddSafe(foodList);
+    }
   }
 
   @override
