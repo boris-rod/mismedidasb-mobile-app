@@ -32,114 +32,116 @@ class _VideoState extends StateWithBloC<VideoPage, VideoBloC>{
         ),
       ),
       body: Container(
-        child: Column(
-          children: <Widget>[
-            ListTile(
-              title: TXTextWidget(
-                text: R.string.planiIntroHelper,
-              ),
-              trailing: Icon(Icons.play_circle_filled, color: R.color.button_color),
-              contentPadding:
-              EdgeInsets.only(right: 10, left: 10),
-              onTap: () {
-                launch(Endpoint.planiIntroVideo);
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              ListTile(
+                title: TXTextWidget(
+                  text: R.string.planiIntroHelper,
+                ),
+                trailing: Icon(Icons.play_circle_filled, color: R.color.button_color),
+                contentPadding:
+                EdgeInsets.only(right: 10, left: 10),
+                onTap: () {
+                  launch(Endpoint.planiIntroVideo);
 //                FileManager.playVideo("main_menu.mp4");
-              },
-            ),
-            TXDividerWidget(),
-            ListTile(
-              title: TXTextWidget(
-                text: R.string.foodPlanHelper,
+                },
               ),
-              trailing: Icon(Icons.play_circle_filled, color: R.color.button_color),
-              contentPadding:
-              EdgeInsets.only(right: 10, left: 10),
-              onTap: () {
-                launch(Endpoint.foodPlanVideo);
+              TXDividerWidget(),
+              ListTile(
+                title: TXTextWidget(
+                  text: R.string.foodPlanHelper,
+                ),
+                trailing: Icon(Icons.play_circle_filled, color: R.color.button_color),
+                contentPadding:
+                EdgeInsets.only(right: 10, left: 10),
+                onTap: () {
+                  launch(Endpoint.foodPlanVideo);
 //                FileManager.playVideo("my_food_plan.mp4");
-              },
-            ),
-            TXDividerWidget(),
-            ListTile(
-              title: TXTextWidget(
-                text: R.string.copyPlanHelper,
+                },
               ),
-              trailing: Icon(Icons.play_circle_filled, color: R.color.button_color),
-              contentPadding:
-              EdgeInsets.only(right: 10, left: 10),
-              onTap: () {
-                launch(Endpoint.copyPlanVideo);
+              TXDividerWidget(),
+              ListTile(
+                title: TXTextWidget(
+                  text: R.string.copyPlanHelper,
+                ),
+                trailing: Icon(Icons.play_circle_filled, color: R.color.button_color),
+                contentPadding:
+                EdgeInsets.only(right: 10, left: 10),
+                onTap: () {
+                  launch(Endpoint.copyPlanVideo);
 //                FileManager.playVideo("copy_food_plan.mp4");
-              },
-            ),
-            TXDividerWidget(),
-            ListTile(
-              title: TXTextWidget(
-                text: R.string.portionFoodHelper,
+                },
               ),
-              trailing: Icon(Icons.play_circle_filled, color: R.color.button_color),
-              contentPadding:
-              EdgeInsets.only(right: 10, left: 10),
-              onTap: () {
-                launch(Endpoint.foodPortionsVideo);
+              TXDividerWidget(),
+              ListTile(
+                title: TXTextWidget(
+                  text: R.string.portionFoodHelper,
+                ),
+                trailing: Icon(Icons.play_circle_filled, color: R.color.button_color),
+                contentPadding:
+                EdgeInsets.only(right: 10, left: 10),
+                onTap: () {
+                  launch(Endpoint.foodPortionsVideo);
 //                FileManager.playVideo("portions_food_sizes.mp4");
-              },
-            ),
-            TXDividerWidget(),
-            ListTile(
-              title: TXTextWidget(
-                text: R.string.profileSettingsHelper,
+                },
               ),
-              trailing: Icon(Icons.play_circle_filled, color: R.color.button_color,),
-              contentPadding:
-              EdgeInsets.only(right: 10, left: 10),
-              onTap: () {
-                launch(Endpoint.profileSettingsVideo);
+              TXDividerWidget(),
+              ListTile(
+                title: TXTextWidget(
+                  text: R.string.profileSettingsHelper,
+                ),
+                trailing: Icon(Icons.play_circle_filled, color: R.color.button_color,),
+                contentPadding:
+                EdgeInsets.only(right: 10, left: 10),
+                onTap: () {
+                  launch(Endpoint.profileSettingsVideo);
 //                FileManager.playVideo("profile_settings.mp4");
-              },
-            ),
-            TXDividerWidget(),
-            ListTile(
-              title: TXTextWidget(
-                text: R.string.planiHelper,
+                },
               ),
-              trailing: Icon(Icons.play_circle_filled, color: R.color.button_color,),
-              contentPadding:
-              EdgeInsets.only(right: 10, left: 10),
-              onTap: () {
-                launch(Endpoint.whoIsPlaniVideo);
+              TXDividerWidget(),
+              ListTile(
+                title: TXTextWidget(
+                  text: R.string.planiHelper,
+                ),
+                trailing: Icon(Icons.play_circle_filled, color: R.color.button_color,),
+                contentPadding:
+                EdgeInsets.only(right: 10, left: 10),
+                onTap: () {
+                  launch(Endpoint.whoIsPlaniVideo);
 //                FileManager.playVideo("plani.mp4");
-              },
-            ),
-            TXDividerWidget(),
-            ListTile(
-              title: TXTextWidget(
-                text: R.string.habitsHelper,
+                },
               ),
-              trailing: Icon(Icons.play_circle_filled, color: R.color.button_color,),
-              contentPadding:
-              EdgeInsets.only(right: 10, left: 10),
-              onTap: () {
-                launch(Endpoint.planiHabitsVideo);
+              TXDividerWidget(),
+              ListTile(
+                title: TXTextWidget(
+                  text: R.string.habitsHelper,
+                ),
+                trailing: Icon(Icons.play_circle_filled, color: R.color.button_color,),
+                contentPadding:
+                EdgeInsets.only(right: 10, left: 10),
+                onTap: () {
+                  launch(Endpoint.planiHabitsVideo);
 //                FileManager.playVideo("plani.mp4");
-              },
-            ),
-            TXDividerWidget(),
-            ListTile(
-              title: TXTextWidget(
-                text: R.string.cravingHelper,
+                },
               ),
-              trailing: Icon(Icons.play_circle_filled, color: R.color.button_color,),
-              contentPadding:
-              EdgeInsets.only(right: 10, left: 10),
-              onTap: () {
-                launch(Endpoint.planiCravingVideo);
+              TXDividerWidget(),
+              ListTile(
+                title: TXTextWidget(
+                  text: R.string.cravingHelper,
+                ),
+                trailing: Icon(Icons.play_circle_filled, color: R.color.button_color,),
+                contentPadding:
+                EdgeInsets.only(right: 10, left: 10),
+                onTap: () {
+                  launch(Endpoint.planiCravingVideo);
 //                FileManager.playVideo("plani.mp4");
-              },
-            ),
-            TXDividerWidget()
+                },
+              ),
+              TXDividerWidget()
 
-          ],
+            ],
+          ),
         ),
       ),
     );

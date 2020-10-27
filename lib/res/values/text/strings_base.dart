@@ -273,4 +273,12 @@ abstract class StringsBase implements WidgetsLocalizations {
   String get habitsHelper;
 
   String get cravingHelper;
+
+  String get references;
+
+  String get referencesLink1;
+
+  String get referencesLink2;
+
+  String get referencesLink3;
 }

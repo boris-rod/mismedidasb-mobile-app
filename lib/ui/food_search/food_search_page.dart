@@ -11,6 +11,8 @@ import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_textfield_widget.dart';
 import 'package:mismedidasb/ui/food_search/food_search_bloc.dart';
 
+import '../../enums.dart';
+
 class FoodSearchPage extends StatefulWidget {
   final List<FoodModel> selectedItems;
 
@@ -151,23 +153,84 @@ class _FoodSearchState extends StateWithBloC<FoodSearchPage, FoodSearchBloC> {
                                     model.isSelected = !model.isSelected;
                                     bloc.setSelectedFood(model);
                                   },
-                                  title: TXTextWidget(
-                                    text: model.name,
-                                    color: model.isSelected
-                                        ? R.color.primary_color
-                                        : Colors.black,
+                                  title: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      TXTextWidget(
+                                        text: model.name,
+                                        color: model.isSelected
+                                            ? R.color.primary_color
+                                            : Colors.black,
+                                      ),
+                                      Row(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          Expanded(
+                                            flex: 1,
+                                            child: InkWell(
+                                              onTap: () {
+                                                bloc.markUnMarkFood(
+                                                    model.id, FoodsTypeMark.favorites, !model.isFavorite);
+                                              },
+                                              child: Container(
+                                                padding: EdgeInsets.only(top: 3, bottom: 5),
+                                                child: Row(
+                                                  children: [
+                                                    Icon(
+                                                      model.isFavorite ? Icons.star : Icons.star_border,
+                                                      color: model.isFavorite
+                                                          ? Colors.orangeAccent
+                                                          : R.color.gray,
+                                                      size: 20,
+                                                    ),
+                                                    Expanded(
+                                                      child: TXTextWidget(
+                                                        size: 12,
+                                                        color: R.color.gray_darkest,
+                                                        text: R.string.favorite,
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            flex: 1,
+                                            child: InkWell(
+                                              onTap: () {
+                                                bloc.markUnMarkFood(model.id, FoodsTypeMark.lackSelfControl,
+                                                    !model.isLackSelfControlDish);
+                                              },
+                                              child: Container(
+                                                padding: EdgeInsets.only(top: 3, bottom: 5),
+                                                child: Row(
+                                                  children: [
+                                                    Icon(
+                                                      model.isLackSelfControlDish
+                                                          ? Icons.remove_circle_outline
+                                                          : Icons.remove_circle_outline,
+                                                      color: model.isLackSelfControlDish
+                                                          ? Colors.redAccent
+                                                          : R.color.gray,
+                                                      size: 20,
+                                                    ),
+                                                    Expanded(
+                                                      child: TXTextWidget(
+                                                        size: 12,
+                                                        color: R.color.gray_darkest,
+                                                        text: R.string.lackSelfControl,
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      )
+                                    ],
                                   ),
-//                                    subtitle: Column(
-//                                      crossAxisAlignment: CrossAxisAlignment.start,
-//                                      children: <Widget>[
-//                                        TXTextWidget(
-//                                          text: "Calorias: ${model.calories}",
-//                                          color: R.color.gray,
-//                                          size: 10,
-//                                        ),
-//                                        ..._getCategories(model.tags),
-//                                      ],
-//                                    ),
                                 );
                               }),
                         ),
