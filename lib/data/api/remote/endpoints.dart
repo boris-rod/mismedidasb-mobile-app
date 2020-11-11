@@ -11,7 +11,11 @@ class Endpoint {
       "/api/general-content/accept-terms-conditions";
   static const String legacy_content_by_type = "/api/general-content/by-type";
   static const String contact_us_send_info = "/api/contact-us";
-  static const String stripe_payment_action = "/api/payment/create-stripe-payment-intent";
+  static const String stripe_payment_action =
+      "/api/payment/create-stripe-payment-intent";
+  static const String planifive_products = "/api/product";
+  static const String stripe_payment_methods =
+      "/api/payment/stripe-payment-methods";
 
   ///Account
   static const String app_version = "/api/app";
@@ -50,7 +54,8 @@ class Endpoint {
 
   static const String dish = "/api/dish";
   static const String dish_favorites = "/api/dish/favorites";
-  static const String dish_lack_self_control = "/api/dish/lack-self-control-dishes";
+  static const String dish_lack_self_control =
+      "/api/dish/lack-self-control-dishes";
   static const String dish_tags = "/api/tag";
 
   static const String dish_compound = "/api/compound-dish";
@@ -58,13 +63,16 @@ class Endpoint {
 
   static const String eat_by_date_range = "/api/eat/by-date";
   static const String save_daily_food_plan = "/api/eat/bulk-eats";
+
 //  static const String save_daily_activity = "/api/eat/add-or-update";
   static const String plan_daily_parameters = "/api/user/eat-health-parameters";
   static const String plan_daily_info = "api/eat/is-balanced-plan";
   static const String add_food_to_favorites = "/api/dish/favorite/create";
   static const String remove_food_from_favorites = "/api/dish/favorite/delete";
-  static const String add_lack_self_control = "/api/dish/lack-self-control/create";
-  static const String remove_lack_self_control = "/api/dish/lack-self-control/delete";
+  static const String add_lack_self_control =
+      "/api/dish/lack-self-control/create";
+  static const String remove_lack_self_control =
+      "/api/dish/lack-self-control/delete";
 
   static const String planiIntroVideo = "https://youtu.be/flhvp9Zp-ak";
   static const String foodPlanVideo = "https://youtu.be/O5BrcOFpP5g";
@@ -74,5 +82,4 @@ class Endpoint {
   static const String whoIsPlaniVideo = "https://youtu.be/8q2bI-GY8s4";
   static const String planiHabitsVideo = "https://youtu.be/Fk7Ol4b-V6M";
   static const String planiCravingVideo = "https://youtu.be/KrY3ZW8G95w";
-
 }

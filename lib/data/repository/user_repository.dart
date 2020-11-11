@@ -62,9 +62,29 @@ class UserRepository extends BaseRepository implements IUserRepository {
   }
 
   @override
-  Future<Result<bool>> stripePaymentAction() async {
+  Future<Result<String>> stripePaymentAction(int productId, bool savePM) async {
     try {
-      final result = await _iUserApi.stripePaymentAction();
+      final result = await _iUserApi.stripePaymentAction(productId, savePM);
+      return Result.success(value: result);
+    } catch (ex) {
+      return resultError(ex);
+    }
+  }
+
+  @override
+  Future<Result<List<PlanifiveProductsModel>>> getPlanifiveProducts() async {
+    try {
+      final result = await _iUserApi.getPlanifiveProducts();
+      return Result.success(value: result);
+    } catch (ex) {
+      return resultError(ex);
+    }
+  }
+
+  @override
+  Future<Result<List<CreditCardModel>>> getPaymentMethods() async {
+    try {
+      final result = await _iUserApi.getPaymentMethods();
       return Result.success(value: result);
     } catch (ex) {
       return resultError(ex);
@@ -98,6 +118,16 @@ class UserRepository extends BaseRepository implements IUserRepository {
   Future<Result<AppVersionModel>> getAppVersion() async {
     try {
       final result = await _iUserApi.getAppVersion();
+      return Result.success(value: result);
+    } catch (ex) {
+      return resultError(ex);
+    }
+  }
+
+  @override
+  Future<Result<bool>> deletePaymentMethod(String paymentMethodId) async{
+    try {
+      final result = await _iUserApi.deletePaymentMethod(paymentMethodId);
       return Result.success(value: result);
     } catch (ex) {
       return resultError(ex);

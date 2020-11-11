@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:mismedidasb/data/api/remote/endpoints.dart';
 import 'package:mismedidasb/domain/health_concept/health_concept.dart';
 import 'package:mismedidasb/domain/poll_model/poll_model.dart';

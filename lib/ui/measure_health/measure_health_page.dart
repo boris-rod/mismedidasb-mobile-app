@@ -2,6 +2,8 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_html/style.dart';
 import 'package:mismedidasb/data/api/remote/endpoints.dart';
 import 'dart:math' as math;
 import 'package:mismedidasb/domain/answer/answer_model.dart';
@@ -19,6 +21,7 @@ import 'package:mismedidasb/ui/_tx_widget/tx_show_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_video_intro_widet.dart';
 import 'package:mismedidasb/ui/measure_health/measure_health_bloc.dart';
+import 'package:mismedidasb/ui/references/references_page.dart';
 import 'package:mismedidasb/utils/file_manager.dart';
 import 'package:mismedidasb/utils/utils.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -56,7 +59,7 @@ class _MeasureHealthState
             context: context,
             content: onData.result,
             title: "${R.string.thanks} ${bloc.userName}",
-            onOk: () async{
+            onOk: () async {
               await NavigationUtils.pop(context);
               if (bloc.isFirstTime)
                 bloc.launchFirstTime();
@@ -151,17 +154,41 @@ class _MeasureHealthState
                                 constraints: BoxConstraints(
                                     maxWidth:
                                         math.min(300, screenWidth * 90 / 100)),
-                                child: TXTextWidget(
-                                  textAlign: TextAlign.center,
-                                  text: snapshot.data.isNotEmpty
-                                      ? snapshot.data[bloc.currentPage - 1]
-                                          .bottomTip()
-                                      : "",
-                                  color: Colors.white,
-                                ),
+                                child: snapshot.data.isNotEmpty
+                                    ? Html(
+                                        data:
+                                            "<div>${snapshot.data[bloc.currentPage - 1].bottomTip()} <a href='#'><b>Referencias</b></a></div>",
+                                        onLinkTap: (link) {
+                                          NavigationUtils.push(
+                                              context, ReferencesPage());
+                                        },
+                                        style: {
+                                          "div": Style(
+                                              color: Colors.white,
+                                              textAlign: TextAlign.center,
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: FontSize(15)),
+                                          "a": Style(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w500)
+                                        },
+                                      )
+                                    : Container(),
+
+                                // TXTextWidget(
+                                //   textAlign: TextAlign.center,
+                                //   text: snapshot.data.isNotEmpty
+                                //       ? snapshot.data[bloc.currentPage - 1]
+                                //           .bottomTip()
+                                //       : "",
+                                //   color: Colors.white,
+                                // ),
                               )
                             ],
                           ),
+                        ),
+                        SizedBox(
+                          height: 15,
                         ),
                         Container(
                           child: StreamBuilder<int>(
@@ -207,15 +234,15 @@ class _MeasureHealthState
                 return snapshotShow.data
                     ? TXVideoIntroWidget(
                         title: R.string.planiHelper,
-                        onSeeVideo: () async{
+                        onSeeVideo: () async {
                           await bloc.setNotFirstTime();
                           launch(Endpoint.whoIsPlaniVideo);
 //                          FileManager.playVideo("plani.mp4");
-                          Future.delayed(Duration(seconds: 2), (){
+                          Future.delayed(Duration(seconds: 2), () {
                             _navBack();
                           });
                         },
-                        onSkip: () async{
+                        onSkip: () async {
                           await bloc.setNotFirstTime();
                           _navBack();
                         },

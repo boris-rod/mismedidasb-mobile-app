@@ -119,9 +119,9 @@ PODS:
   - libwebp/mux (1.1.0):
     - libwebp/demux
   - libwebp/webp (1.1.0)
-  - Mantle (2.1.1):
-    - Mantle/extobjc (= 2.1.1)
-  - Mantle/extobjc (2.1.1)
+  - Mantle (2.1.6):
+    - Mantle/extobjc (= 2.1.6)
+  - Mantle/extobjc (2.1.6)
   - nanopb (1.30905.0):
     - nanopb/decode (= 1.30905.0)
     - nanopb/encode (= 1.30905.0)
@@ -135,11 +135,11 @@ PODS:
     - Flutter
   - "permission_handler (5.0.1+1)":
     - Flutter
-  - PromisesObjC (1.2.10)
+  - PromisesObjC (1.2.11)
   - Protobuf (3.13.0)
   - screen (0.0.1):
     - Flutter
-  - SDWebImage/Core (5.8.4)
+  - SDWebImage/Core (5.9.4)
   - SDWebImageWebPCoder (0.6.1):
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.7)
@@ -150,6 +150,10 @@ PODS:
   - sqflite (0.0.1):
     - Flutter
     - FMDB (~> 2.7.2)
+  - Stripe (20.1.1)
+  - stripe_payment (1.0.0):
+    - Flutter
+    - Stripe (>= 19.0.1)
   - url_launcher (0.0.1):
     - Flutter
   - video_player (0.0.1):
@@ -179,6 +183,7 @@ DEPENDENCIES:
   - share (from `.symlinks/plugins/share/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
+  - stripe_payment (from `.symlinks/plugins/stripe_payment/ios`)
   - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
   - video_player (from `.symlinks/plugins/video_player/ios`)
   - wakelock (from `.symlinks/plugins/wakelock/ios`)
@@ -208,6 +213,7 @@ SPEC REPOS:
     - Protobuf
     - SDWebImage
     - SDWebImageWebPCoder
+    - Stripe
 
 EXTERNAL SOURCES:
   firebase_core:
@@ -248,6 +254,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/shared_preferences/ios"
   sqflite:
     :path: ".symlinks/plugins/sqflite/ios"
+  stripe_payment:
+    :path: ".symlinks/plugins/stripe_payment/ios"
   url_launcher:
     :path: ".symlinks/plugins/url_launcher/ios"
   video_player:
@@ -285,20 +293,22 @@ SPEC CHECKSUMS:
   image_picker: 9c3312491f862b28d21ecd8fdf0ee14e601b3f09
   launch_review: 75d5a956ba8eaa493e9c9d4bf4c05e505e8d5ed0
   libwebp: 946cb3063cea9236285f7e9a8505d806d30e07f3
-  Mantle: 35238ae6f2e2b2d474fa7b67fee82a59fea71915
+  Mantle: 4c0ed6ce47c96eccc4dc3bb071deb3def0e2c3be
   nanopb: c43f40fadfe79e8b8db116583945847910cbabc9
   open_file: 02eb5cb6b21264bd3a696876f5afbfb7ca4f4b7d
   package_info: 873975fc26034f0b863a300ad47e7f1ac6c7ec62
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
   permission_handler: eac8e15b4a1a3fba55b761d19f3f4e6b005d15b6
-  PromisesObjC: b14b1c6b68e306650688599de8a45e49fae81151
+  PromisesObjC: 8c196f5a328c2cba3e74624585467a557dcb482f
   Protobuf: 3dac39b34a08151c6d949560efe3f86134a3f748
   screen: abd91ca7bf3426e1cc3646d27e9b2358d6bf07b0
-  SDWebImage: cf6922231e95550934da2ada0f20f2becf2ceba9
+  SDWebImage: b69257f4ab14e9b6a2ef53e910fdf914d8f757c1
   SDWebImageWebPCoder: d0dac55073088d24b2ac1b191a71a8f8d0adac21
   share: 0b2c3e82132f5888bccca3351c504d0003b3b410
   shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
   sqflite: 4001a31ff81d210346b500c55b17f4d6c7589dd0
+  Stripe: 2cb10595133247a96ece092eb0614786c604382f
+  stripe_payment: ad86f099179edb7b9fe12b9b62ac3746d5e56802
   url_launcher: 6fef411d543ceb26efce54b05a0a40bfd74cbbef
   video_player: 9cc823b1d9da7e8427ee591e8438bfbcde500e6e
   wakelock: 0d4a70faf8950410735e3f61fb15d517c8a6efc4
@@ -306,4 +316,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
 
-COCOAPODS: 1.9.3
+COCOAPODS: 1.10.0

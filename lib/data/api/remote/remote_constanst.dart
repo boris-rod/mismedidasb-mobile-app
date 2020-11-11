@@ -1,5 +1,7 @@
 class RemoteConstants {
+  static const stripe_public_key = "pk_test_51HJEmrFpBSlbbAfExTyz71Sl40jagAWs2t2AR6Hp57IdaxhB3qZDTx6fUrw1cvvxKcvSvPSikVdtOcHWzy09loCJ00ck6SqiBq";
   static const code_success = 200;
+  static const code_success_no_content = 204;
   static const code_success_created = 201;
 
   static const code_bad_request = 400;

@@ -7,7 +7,6 @@ abstract class IUserApi {
 
   Future<AppVersionModel> getAppVersion();
 
-
   Future<UserModel> updateProfile(UserModel userModel);
 
   Future<bool> uploadAvatar(File photo);
@@ -16,7 +15,13 @@ abstract class IUserApi {
 
   Future<ScoreModel> getScores();
 
-  Future<bool> stripePaymentAction();
+  Future<String> stripePaymentAction(int productId, bool savePM);
+
+  Future<List<PlanifiveProductsModel>> getPlanifiveProducts();
+
+  Future<List<CreditCardModel>> getPaymentMethods();
+
+  Future<bool> deletePaymentMethod(String paymentMethodId);
 
   Future<SoloQuestionStatsModel> getSoloQuestionStats(int daysAgo);
 

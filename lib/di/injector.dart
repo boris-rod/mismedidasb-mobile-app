@@ -101,6 +101,7 @@ import 'package:mismedidasb/ui/login/login_bloc.dart';
 import 'package:mismedidasb/ui/measure_health/measure_health_bloc.dart';
 import 'package:mismedidasb/ui/measure_value/measure_value_bloc.dart';
 import 'package:mismedidasb/ui/measure_wellness/measure_wellness_bloc.dart';
+import 'package:mismedidasb/ui/planifive_payment/planifive_payment_bloc.dart';
 import 'package:mismedidasb/ui/poll_notification/poll_notification_bloc.dart';
 import 'package:mismedidasb/ui/profile/profile_bloc.dart';
 import 'package:mismedidasb/ui/profile_edit/profile_edit_bloc.dart';
@@ -221,8 +222,8 @@ class Injector {
         container.resolve(),
         container.resolve()));
 
-    container.registerSingleton<IUserApi, UserApi>(
-        (c) => UserApi(container.resolve(), container.resolve(), container.resolve()));
+    container.registerSingleton<IUserApi, UserApi>((c) =>
+        UserApi(container.resolve(), container.resolve(), container.resolve()));
 
     container.registerSingleton<IAnswerApi, AnswerApi>(
         (c) => AnswerApi(container.resolve(), container.resolve()));
@@ -324,25 +325,29 @@ class Injector {
     container.registerFactory((c) => FoodCravingBloC(container.resolve()));
     container.registerFactory((c) => MeasureHealthBloC(
         container.resolve(), container.resolve(), container.resolve()));
-    container.registerFactory((c) => MeasureValueBloC(container.resolve(), container.resolve()));
-    container.registerFactory((c) => MeasureWellnessBloC(container.resolve(), container.resolve()));
+    container.registerFactory(
+        (c) => MeasureValueBloC(container.resolve(), container.resolve()));
+    container.registerFactory(
+        (c) => MeasureWellnessBloC(container.resolve(), container.resolve()));
     container.registerFactory((c) => FoodDishBloC(c.resolve(), c.resolve()));
     container.registerFactory((c) => FoodBloC(c.resolve(), c.resolve()));
     container.registerFactory((c) => FoodSearchBloC(c.resolve()));
     container.registerFactory((c) => FoodAddEditBloC(c.resolve()));
     container.registerFactory(
         (c) => ChangePasswordBloC(container.resolve(), container.resolve()));
-    container.registerFactory(
-        (c) => ProfileBloC(container.resolve(), container.resolve(), container.resolve()));
-    container.registerFactory(
-        (c) => SettingsBloC(c.resolve(), c.resolve(), c.resolve(), c.resolve()));
+    container.registerFactory((c) => ProfileBloC(
+        container.resolve(), container.resolve(), container.resolve()));
+    container.registerFactory((c) =>
+        SettingsBloC(c.resolve(), c.resolve(), c.resolve(), c.resolve()));
     container.registerFactory((c) => LegacyBloC(c.resolve()));
     container.registerFactory((c) => ContactUsBloC(c.resolve()));
-    container.registerFactory((c) => ProfileEditBloC(c.resolve(), c.resolve(), c.resolve()));
+    container.registerFactory(
+        (c) => ProfileEditBloC(c.resolve(), c.resolve(), c.resolve()));
     container.registerFactory((c) => InvitePeopleBloC(c.resolve()));
-    container
-        .registerFactory((c) => PollNotificationBloC(c.resolve(), c.resolve(), c.resolve()));
+    container.registerFactory(
+        (c) => PollNotificationBloC(c.resolve(), c.resolve(), c.resolve()));
     container.registerFactory((c) => ScoreBloC(c.resolve()));
+    container.registerFactory((c) => PlanifivePaymentBloC(c.resolve()));
     container.registerFactory((c) => VideoBloC());
   }
 

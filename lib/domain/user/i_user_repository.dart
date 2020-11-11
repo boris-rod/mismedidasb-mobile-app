@@ -17,7 +17,13 @@ abstract class IUserRepository {
 
   Future<Result<ScoreModel>> getScores();
 
-  Future<Result<bool>> stripePaymentAction();
+  Future<Result<String>> stripePaymentAction(int productId, bool savePM);
+
+  Future<Result<List<PlanifiveProductsModel>>> getPlanifiveProducts();
+
+  Future<Result<List<CreditCardModel>>> getPaymentMethods();
+
+  Future<Result<bool>> deletePaymentMethod(String paymentMethodId);
 
   Future<Result<SoloQuestionStatsModel>> getSoloQuestionStats(int daysAgo);
 

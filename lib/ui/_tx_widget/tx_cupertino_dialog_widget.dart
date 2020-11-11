@@ -10,6 +10,8 @@ class TXCupertinoDialogWidget extends StatelessWidget {
   final String content;
   final Widget contentWidget;
   final String okText;
+  final String cancelText;
+
 
   const TXCupertinoDialogWidget(
       {Key key,
@@ -17,7 +19,7 @@ class TXCupertinoDialogWidget extends StatelessWidget {
       this.onCancel,
       this.title,
       this.content,
-      this.contentWidget, this.okText})
+      this.contentWidget, this.okText, this.cancelText})
       : super(key: key);
 
   @override
@@ -42,7 +44,7 @@ class TXCupertinoDialogWidget extends StatelessWidget {
           if (onCancel != null)
             CupertinoDialogAction(
               child: TXTextWidget(
-                text: R.string.cancel,
+                text: cancelText ?? R.string.cancel,
               ),
               onPressed: onCancel,
             ),

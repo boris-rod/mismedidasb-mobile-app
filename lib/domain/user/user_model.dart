@@ -1,6 +1,7 @@
-class AppVersionModel{
+class AppVersionModel {
   String version;
   bool isMandatory;
+
   AppVersionModel({this.version, this.isMandatory});
 }
 
@@ -105,6 +106,56 @@ class UserCredentialsModel {
 
   UserCredentialsModel(
       {this.email = "", this.password = "", this.saveCredentials = false});
+}
+
+class PlanifiveProductsModel {
+  int id;
+  int typeId;
+  String type;
+  String name;
+  String nameEN;
+  String nameIT;
+  String description;
+  String descriptionEN;
+  String descriptionIT;
+  int value;
+  double price;
+  DateTime createdAt;
+  DateTime modifiedAt;
+
+  PlanifiveProductsModel(
+      {this.id,
+      this.typeId,
+      this.type,
+      this.name,
+      this.nameEN,
+      this.nameIT,
+      this.description,
+      this.descriptionEN,
+      this.descriptionIT,
+      this.value,
+      this.price,
+      this.createdAt,
+      this.modifiedAt});
+}
+
+class CreditCardModel {
+  String paymentMethodId;
+  String country;
+  String description;
+  int expMonth;
+  int expYear;
+  String funding;
+  String last4;
+
+  CreditCardModel(
+      {this.paymentMethodId,
+      this.country,
+      this.description,
+      this.expMonth,
+      this.expYear,
+      this.funding,
+      this.last4});
 }
 
 class UserUpdateModel {

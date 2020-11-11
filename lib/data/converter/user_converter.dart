@@ -22,8 +22,9 @@ class UserConverter implements IUserConverter {
         termsAndConditionsAccepted: json[RemoteConstants.terms_cond],
         firstDateHealthResult:
             json[RemoteConstants.first_date_health_result] != null
-                ? DateTime.parse(json[RemoteConstants.first_date_health_result],)
-                    .toLocal()
+                ? DateTime.parse(
+                    json[RemoteConstants.first_date_health_result],
+                  ).toLocal()
                 : DateTime.now(),
         imc: json[RemoteConstants.imc],
         subscriptions: json.containsKey("subscriptions")
@@ -103,9 +104,40 @@ class UserConverter implements IUserConverter {
   @override
   AppVersionModel fromJsonAppVersion(Map<String, dynamic> json) {
     AppVersionModel model = AppVersionModel(
-      version: json["version"],
-      isMandatory: json["isMandatory"]
-    );
+        version: json["version"], isMandatory: json["isMandatory"]);
+    return model;
+  }
+
+  @override
+  PlanifiveProductsModel fromJsonPlanifiveProductsModel(
+      Map<String, dynamic> json) {
+    PlanifiveProductsModel model = PlanifiveProductsModel(
+        id: json["id"],
+        typeId: json["typeId"],
+        type: json["type"],
+        name: json["name"],
+        nameEN: json["nameEN"],
+        nameIT: json["nameIT"],
+        description: json["description"],
+        descriptionEN: json["descriptionEN"],
+        descriptionIT: json["descriptionIT"],
+        value: json["value"],
+        price: json["price"],
+        createdAt: DateTime.parse(json["createdAt"]).toLocal(),
+        modifiedAt: DateTime.parse(json["modifiedAt"]).toLocal());
+    return model;
+  }
+
+  @override
+  CreditCardModel fromJsonCreditCardModel(Map<String, dynamic> json) {
+    CreditCardModel model = CreditCardModel(
+        paymentMethodId: json["paymentMethodId"],
+        country: json["country"],
+        description: json["description"],
+        expMonth: json["expMonth"],
+        expYear: json["expYear"],
+        funding: json["funding"],
+        last4: json["last4"]);
     return model;
   }
 }

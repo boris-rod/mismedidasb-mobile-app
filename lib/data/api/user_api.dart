@@ -122,13 +122,50 @@ class UserApi extends BaseApi implements IUserApi {
   }
 
   @override
-  Future<bool> stripePaymentAction() async {
+  Future<String> stripePaymentAction(int productId, bool savePM) async {
     final res = await _networkHandler.post(
       path: Endpoint.stripe_payment_action,
+      params: "?productId=$productId&setupFutureUsage=$savePM",
     );
-    if (res.statusCode == RemoteConstants.code_success)
-      return true;
+    if (res.statusCode == RemoteConstants.code_success_created)
+      return jsonDecode(res.body)["result"]["clientSecret"];
     else
       throw serverException(res);
+  }
+
+  @override
+  Future<List<PlanifiveProductsModel>> getPlanifiveProducts() async {
+    final res = await _networkHandler.get(path: Endpoint.planifive_products);
+    if (res.statusCode == RemoteConstants.code_success) {
+      Iterable l = jsonDecode(res.body)[RemoteConstants.result];
+      return l
+          .map((model) => _iUserConverter.fromJsonPlanifiveProductsModel(model))
+          .toList();
+    }
+    throw serverException(res);
+  }
+
+  @override
+  Future<List<CreditCardModel>> getPaymentMethods() async {
+    final res =
+        await _networkHandler.get(path: Endpoint.stripe_payment_methods);
+    if (res.statusCode == RemoteConstants.code_success) {
+      Iterable l = jsonDecode(res.body)[RemoteConstants.result];
+      return l
+          .map((model) => _iUserConverter.fromJsonCreditCardModel(model))
+          .toList();
+    }
+    throw serverException(res);
+  }
+
+  @override
+  Future<bool> deletePaymentMethod(String paymentMethodId) async {
+    final res = await _networkHandler.delete(
+        path: Endpoint.stripe_payment_methods,
+        params: "?paymentMethodId=$paymentMethodId");
+    if (res.statusCode == RemoteConstants.code_success_no_content) {
+      return true;
+    }
+    throw serverException(res);
   }
 }

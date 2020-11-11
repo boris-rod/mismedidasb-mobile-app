@@ -13,7 +13,7 @@ class ErrorHandlerBloC {
   Stream<String> get errorMessageStream => _errorMessageController.stream;
 
   void showErrorMessage(Result res) {
-    String errorMessage = (res as ResultError).error;
+    String errorMessage = (res as ResultError)?.error ?? "";
     Fluttertoast.showToast(
       msg: errorMessage,
       toastLength: Toast.LENGTH_LONG,

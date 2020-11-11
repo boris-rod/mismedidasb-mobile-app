@@ -5,6 +5,10 @@ abstract class IUserConverter {
 
   Subscription fromJsonSubscription(Map<String, dynamic> json);
 
+  PlanifiveProductsModel fromJsonPlanifiveProductsModel(Map<String, dynamic> json);
+
+  CreditCardModel fromJsonCreditCardModel(Map<String, dynamic> json);
+
   Map<String, dynamic> toJson(UserModel userModel);
 
   ScoreModel fromJsonScore(Map<String, dynamic> json);

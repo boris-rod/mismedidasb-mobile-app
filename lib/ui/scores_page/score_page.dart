@@ -12,6 +12,7 @@ import 'package:mismedidasb/ui/_tx_widget/tx_main_app_bar_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_network_image.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_textlink_widget.dart';
+import 'package:mismedidasb/ui/planifive_payment/planifive_payment_page.dart';
 import 'package:mismedidasb/ui/profile/tx_stat_widget.dart';
 import 'package:mismedidasb/ui/scores_page/score_bloc.dart';
 import 'package:mismedidasb/ui/scores_page/tx_score_position_widget.dart';
@@ -153,8 +154,17 @@ class _ScoreState extends StateWithBloC<ScorePage, ScoreBloC> {
                                             TXTextLinkWidget(
                                               textColor: R.color.accent_color,
                                               fontSize: 12,
-                                              title: "",
-                                              onTap: () {},
+                                              title: "comprar",
+                                              onTap: () async {
+                                                final res =
+                                                    await NavigationUtils.push(
+                                                        context,
+                                                        PlanifivePaymentPage());
+                                                if (res ?? false) {
+                                                  bloc.loadData();
+                                                }
+                                                // bloc.addPayment();
+                                              },
                                             )
                                           ],
                                         ),
@@ -334,7 +344,8 @@ class _ScoreState extends StateWithBloC<ScorePage, ScoreBloC> {
                                   vertical: 10, horizontal: 10),
                               child: Row(
                                 children: <Widget>[
-                                  ..._getFeelingFaces(model.mostFrequentEmotions,
+                                  ..._getFeelingFaces(
+                                      model.mostFrequentEmotions,
                                       model.mostFrequentEmotionCount)
                                 ],
                               ),
