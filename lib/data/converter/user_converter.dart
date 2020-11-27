@@ -44,14 +44,15 @@ class UserConverter implements IUserConverter {
   }
 
   @override
-  Subscription fromJsonSubscription(Map<String, dynamic> json) {
-    final Subscription model = Subscription(
+  SubscriptionModel fromJsonSubscription(Map<String, dynamic> json) {
+    final SubscriptionModel model = SubscriptionModel(
         id: json["id"],
         userId: json["userId"],
         userSubscriptionId: json["userSubscriptionId"],
         productId: json["productId"],
         product: json["product"],
         name: json["name"],
+        valueCoins: json["valueCoins"],
         isActive: json["isActive"],
         validAt: DateTime.parse(json["validAt"]).toLocal());
     return model;

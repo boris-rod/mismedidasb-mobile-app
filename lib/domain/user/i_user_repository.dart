@@ -29,4 +29,11 @@ abstract class IUserRepository {
 
   Future<Result<UsernameSuggestionModel>> usernameValidation(
       int userId, String email, String username, String fullName);
+
+  Future<Result<bool>> buySubscription(int subscriptionId);
+
+  Future<Result<bool>> buySubscriptionsOffer1();
+
+  Future<Result<List<SubscriptionModel>>> getSubscriptions();
+
 }

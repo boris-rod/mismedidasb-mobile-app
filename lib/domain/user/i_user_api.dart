@@ -27,4 +27,12 @@ abstract class IUserApi {
 
   Future<UsernameSuggestionModel> usernameValidation(
       int userId, String email, String username, String fullName);
+
+
+  Future<bool> buySubscription(int subscriptionId);
+
+  Future<bool> buySubscriptionsOffer1();
+
+  Future<List<SubscriptionModel>> getSubscriptions();
+
 }

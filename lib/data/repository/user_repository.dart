@@ -125,9 +125,39 @@ class UserRepository extends BaseRepository implements IUserRepository {
   }
 
   @override
-  Future<Result<bool>> deletePaymentMethod(String paymentMethodId) async{
+  Future<Result<bool>> deletePaymentMethod(String paymentMethodId) async {
     try {
       final result = await _iUserApi.deletePaymentMethod(paymentMethodId);
+      return Result.success(value: result);
+    } catch (ex) {
+      return resultError(ex);
+    }
+  }
+
+  @override
+  Future<Result<bool>> buySubscription(int subscriptionId) async {
+    try {
+      final result = await _iUserApi.buySubscription(subscriptionId);
+      return Result.success(value: result);
+    } catch (ex) {
+      return resultError(ex);
+    }
+  }
+
+  @override
+  Future<Result<bool>> buySubscriptionsOffer1() async {
+    try {
+      final result = await _iUserApi.buySubscriptionsOffer1();
+      return Result.success(value: result);
+    } catch (ex) {
+      return resultError(ex);
+    }
+  }
+
+  @override
+  Future<Result<List<SubscriptionModel>>> getSubscriptions() async {
+    try {
+      final result = await _iUserApi.getSubscriptions();
       return Result.success(value: result);
     } catch (ex) {
       return resultError(ex);

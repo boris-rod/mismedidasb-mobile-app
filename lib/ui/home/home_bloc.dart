@@ -91,7 +91,7 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
       bool hasPlani = false;
 
       final plani = profileRes.value.subscriptions.firstWhere(
-          (element) => element.product == 'VIRTUAL_ASESSOR', orElse: () {
+          (element) => element.product == RemoteConstants.subscription_virtual_assessor, orElse: () {
         return null;
       });
       if (plani != null) {

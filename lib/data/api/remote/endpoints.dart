@@ -74,6 +74,11 @@ class Endpoint {
   static const String remove_lack_self_control =
       "/api/dish/lack-self-control/delete";
 
+  static const String plani_services_bulk_offer1_buy = "/api/subscriptions/buy-offer-one";
+  static const String plani_service_buy = "/api/subscriptions";
+  static const String plani_services = "/api/subscriptions";
+
+
   static const String planiIntroVideo = "https://youtu.be/flhvp9Zp-ak";
   static const String foodPlanVideo = "https://youtu.be/O5BrcOFpP5g";
   static const String copyPlanVideo = "https://youtu.be/csyl8IhRvjo";

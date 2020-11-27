@@ -168,4 +168,36 @@ class UserApi extends BaseApi implements IUserApi {
     }
     throw serverException(res);
   }
+
+  @override
+  Future<bool> buySubscription(int subscriptionId) async {
+    final res = await _networkHandler.post(
+        path: "${Endpoint.plani_service_buy}/$subscriptionId/buy");
+    if (res.statusCode == RemoteConstants.code_success_created)
+      return true;
+    else
+      throw serverException(res);
+  }
+
+  @override
+  Future<bool> buySubscriptionsOffer1() async {
+    final res = await _networkHandler.post(
+        path: "${Endpoint.plani_services_bulk_offer1_buy}");
+    if (res.statusCode == RemoteConstants.code_success)
+      return true;
+    else
+      throw serverException(res);
+  }
+
+  @override
+  Future<List<SubscriptionModel>> getSubscriptions() async {
+    final res = await _networkHandler.get(path: Endpoint.plani_services);
+    if (res.statusCode == RemoteConstants.code_success) {
+      Iterable l = jsonDecode(res.body)[RemoteConstants.result];
+      return l
+          .map((model) => _iUserConverter.fromJsonSubscription(model))
+          .toList();
+    }
+    throw serverException(res);
+  }
 }

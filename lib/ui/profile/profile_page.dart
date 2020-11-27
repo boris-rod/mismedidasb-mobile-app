@@ -29,6 +29,7 @@ import 'package:mismedidasb/ui/change_password/change_password_page.dart';
 import 'package:mismedidasb/ui/contact_us/contact_us_page.dart';
 import 'package:mismedidasb/ui/invite_page/invite_page.dart';
 import 'package:mismedidasb/ui/legacy/legacy_page.dart';
+import 'package:mismedidasb/ui/plani_service/plani_service_page.dart';
 import 'package:mismedidasb/ui/profile/profile_bloc.dart';
 import 'package:mismedidasb/ui/profile/tx_cell_selection_option_widget.dart';
 import 'package:mismedidasb/ui/profile/tx_cell_selection_option_widget1.dart';
@@ -275,6 +276,18 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                             optionName: "Ver puntuaciones",
                             onOptionTap: () {
                               NavigationUtils.push(context, ScorePage());
+                            },
+                          ),
+                          TXDividerWidget1(),
+                          TXCellSelectionOptionWidget1(
+                            leading: Icons.cloud_done,
+                            optionName: "Servicios de Planifive",
+                            onOptionTap: () async {
+                              final res = await NavigationUtils.push(
+                                  context,
+                                  PlaniServicePage(
+                                    userModel: snapshot.data,
+                                  ));
                             },
                           ),
                           TXDividerWidget1(),

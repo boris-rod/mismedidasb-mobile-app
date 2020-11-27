@@ -56,7 +56,7 @@ class UserModel {
   DateTime firstDateHealthResult;
   String language;
   bool termsAndConditionsAccepted;
-  List<Subscription> subscriptions;
+  List<SubscriptionModel> subscriptions;
 
   UserModel(
       {this.id,
@@ -78,23 +78,27 @@ class UserModel {
       this.subscriptions});
 }
 
-class Subscription {
+class SubscriptionModel {
   int id;
   int userId;
   int userSubscriptionId;
   int productId;
   String product;
   String name;
+  String description;
+  int valueCoins;
   bool isActive;
   DateTime validAt;
 
-  Subscription(
+  SubscriptionModel(
       {this.id,
       this.userId,
       this.userSubscriptionId,
       this.productId,
+        this.description,
+      this.valueCoins,
       this.product,
-      this.name,
+      this.name = "",
       this.isActive,
       this.validAt});
 }

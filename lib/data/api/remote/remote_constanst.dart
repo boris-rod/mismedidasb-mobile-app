@@ -25,6 +25,9 @@ class RemoteConstants {
   static const concept_dishes = 'dishes';
   static const concept_habits = 'habits';
   static const concept_craving = 'craving';
+  static const subscription_virtual_assessor = 'VIRTUAL_ASESSOR';
+  static const subscription_report_food = 'FOOD_REPORT';
+  static const subscription_report_nutrition = 'NUTRITION_REPORT';
 
 
   static const result = 'result';

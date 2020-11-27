@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:mismedidasb/data/_shared_prefs.dart';
+import 'package:mismedidasb/data/api/remote/remote_constanst.dart';
 import 'package:mismedidasb/data/api/remote/result.dart';
 import 'package:mismedidasb/domain/account/i_account_repository.dart';
 import 'package:mismedidasb/domain/common_db/i_common_repository.dart';
@@ -61,7 +62,7 @@ class ProfileBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     if (res is ResultSuccess<UserModel>) {
       bool hasPlani = false;
       final plani = res.value.subscriptions.firstWhere(
-          (element) => element.product == 'VIRTUAL_ASESSOR', orElse: () {
+          (element) => element.product == RemoteConstants.subscription_virtual_assessor, orElse: () {
         return null;
       });
       if (plani != null) {
