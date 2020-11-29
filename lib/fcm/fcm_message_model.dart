@@ -13,8 +13,7 @@ class FCMMessageModel {
     this.title,
   });
 
-  factory FCMMessageModel.fromString(String body) {
-    final bodyJson = json.decode(body);
+  factory FCMMessageModel.fromString(Map<String, dynamic> bodyJson) {
     return FCMMessageModel(
       userId: bodyJson['userId'],
       type: bodyJson['type'],

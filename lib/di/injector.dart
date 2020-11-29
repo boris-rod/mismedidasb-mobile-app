@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:mismedidasb/app_bloc.dart';
@@ -127,6 +128,11 @@ class Injector {
   EnvironmentApp get env => _environment;
 
   Container container = Container();
+
+  static final FlutterLocalNotificationsPlugin
+  flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  static final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
+
 
   ///Is the app in debug mode?
   bool isInDebugMode() {
@@ -363,13 +369,11 @@ class Injector {
       (c) => FCMFeature(
         c.resolve(),
         c.resolve(),
-        c.resolve(),
       ),
     );
 
-    container.registerSingleton((c) => FlutterLocalNotificationsPlugin());
     container.registerSingleton<ILNM, LNM>(
-        (c) => LNM(container.resolve(), container.resolve()));
+        (c) => LNM(container.resolve()));
     container.registerSingleton<IRealTimeContainer, RealTimeContainer>(
         (c) => RealTimeContainer(container.resolve()));
   }

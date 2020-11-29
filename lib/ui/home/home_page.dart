@@ -2,21 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:launch_review/launch_review.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:mismedidasb/data/api/remote/endpoints.dart';
 import 'package:mismedidasb/data/api/remote/remote_constanst.dart';
 import 'package:mismedidasb/domain/health_concept/health_concept.dart';
 import 'package:mismedidasb/domain/poll_model/poll_model.dart';
 import 'package:mismedidasb/enums.dart';
-import 'package:mismedidasb/fcm/fcm_background_notification_aware_widget.dart';
-import 'package:mismedidasb/lnm/i_lnm.dart';
 import 'package:mismedidasb/lnm/lnm.dart';
 import 'package:mismedidasb/res/R.dart';
-import 'package:mismedidasb/rt/real_time_container.dart';
 import 'package:mismedidasb/ui/_base/bloc_state.dart';
 import 'package:mismedidasb/ui/_base/navigation_utils.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_action_bar_menu_widget.dart';
@@ -87,79 +79,78 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
   Widget buildWidget(BuildContext context) {
     final screenW = MediaQuery.of(context).size.width;
     final totalRowCount = bloc.getHomeCountPerRow(screenW);
-    return FCMAwareBody(
-      child: Stack(
-        children: <Widget>[
-          TXCustomActionBar(
-            scaffoldKey: _keyHome,
-            showLeading: false,
-            actionBarColor: R.color.home_color,
-            actions: [
-              TXActionBarMenuWidget(
-                icon: Image.asset(
-                  R.image.settings,
-                  height: 35,
-                  width: 35,
-                ),
-                onTap: () async {
+    return Stack(
+      children: <Widget>[
+        TXCustomActionBar(
+          scaffoldKey: _keyHome,
+          showLeading: false,
+          actionBarColor: R.color.home_color,
+          actions: [
+            TXActionBarMenuWidget(
+              icon: Image.asset(
+                R.image.settings,
+                height: 35,
+                width: 35,
+              ),
+              onTap: () async {
 //                  NavigationUtils.push(context, PollNotificationPage());
-                  if (!bloc.termsAccepted) {
-                    final res = await NavigationUtils.push(
-                        context,
-                        LegacyPage(
-                          contentType: 1,
-                          termsCondAccepted: false,
-                        ));
-                    if (res ?? false) {
-                      bloc.termsAccepted = true;
-                    }
-                  } else if (bloc.needUpdateVersion) {
-                    _showUpdateApp(context: context);
-                  } else {
-                    final res =
-                        await NavigationUtils.push(context, ProfilePage());
-                    if (res is SettingAction) {
-                      if (res == SettingAction.logout ||
-                          res == SettingAction.removeAccount) {
-                        NavigationUtils.pushReplacement(context, LoginPage());
-                      } else if (res == SettingAction.languageCodeChanged) {
-                        bloc.loadHomeData();
-                      }
+                if (!bloc.termsAccepted) {
+                  final res = await NavigationUtils.push(
+                      context,
+                      LegacyPage(
+                        contentType: 1,
+                        termsCondAccepted: false,
+                      ));
+                  if (res ?? false) {
+                    bloc.termsAccepted = true;
+                  }
+                } else if (bloc.needUpdateVersion) {
+                  _showUpdateApp(context: context);
+                } else {
+                  final res =
+                  await NavigationUtils.push(context, ProfilePage());
+                  if (res is SettingAction) {
+                    if (res == SettingAction.logout ||
+                        res == SettingAction.removeAccount) {
+                      NavigationUtils.pushReplacement(context, LoginPage());
+                    } else if (res == SettingAction.languageCodeChanged) {
+                      bloc.loadHomeData();
                     }
                   }
-                },
-              )
-            ],
-            body: Container(
-              color: R.color.home_color,
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    child: Image.asset(
-                      R.image.logo_planifive,
-                      height: 120,
+                }
+              },
+            )
+          ],
+          body: Container(
+            color: R.color.home_color,
+            child: Column(
+              children: <Widget>[
+                Container(
+                  child: Image.asset(
+                    R.image.logo_planifive,
+                    height: 120,
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    child: StreamBuilder<List<HealthConceptModel>>(
+                      stream: bloc.conceptResult,
+                      initialData: [],
+                      builder: (ctx, snapshot) {
+                        return GridView.count(
+                          physics: BouncingScrollPhysics(),
+                          crossAxisCount: totalRowCount,
+                          children: _getHomeWidgets(
+                              snapshot.data, screenW, totalRowCount),
+                        );
+                      },
                     ),
                   ),
-                  Expanded(
-                    child: Container(
-                      child: StreamBuilder<List<HealthConceptModel>>(
-                        stream: bloc.conceptResult,
-                        initialData: [],
-                        builder: (ctx, snapshot) {
-                          return GridView.count(
-                            physics: BouncingScrollPhysics(),
-                            crossAxisCount: totalRowCount,
-                            children: _getHomeWidgets(
-                                snapshot.data, screenW, totalRowCount),
-                          );
-                        },
-                      ),
-                    ),
-                  )
-                ],
-              ),
+                )
+              ],
             ),
           ),
+        ),
 //          Container(child: HolePuncher()),
 //          Positioned(
 //            bottom: 0,
@@ -208,32 +199,31 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
 //              ],
 //            ),
 //          ),
-          TXLoadingWidget(
-            loadingStream: bloc.isLoadingStream,
-          ),
-          StreamBuilder<bool>(
-              stream: bloc.showFirstTimeResult,
-              initialData: false,
-              builder: (context, snapshotShow) {
-                return snapshotShow.data
-                    ? TXVideoIntroWidget(
-                        title: R.string.planiIntroHelper,
-                        onSeeVideo: () {
-                          bloc.setNotFirstTime();
-                          launch(Endpoint.planiIntroVideo);
+        TXLoadingWidget(
+          loadingStream: bloc.isLoadingStream,
+        ),
+        StreamBuilder<bool>(
+            stream: bloc.showFirstTimeResult,
+            initialData: false,
+            builder: (context, snapshotShow) {
+              return snapshotShow.data
+                  ? TXVideoIntroWidget(
+                title: R.string.planiIntroHelper,
+                onSeeVideo: () {
+                  bloc.setNotFirstTime();
+                  launch(Endpoint.planiIntroVideo);
 //                          FileManager.playVideo("main_menu.mp4");
-                        },
-                        onSkip: () {
-                          bloc.setNotFirstTime();
-                        },
-                      )
-                    : Container();
-              }),
+                },
+                onSkip: () {
+                  bloc.setNotFirstTime();
+                },
+              )
+                  : Container();
+            }),
 //          Container(
 //            color: R.color.discover_background,
 //          ),
-        ],
-      ),
+      ],
     );
   }
 

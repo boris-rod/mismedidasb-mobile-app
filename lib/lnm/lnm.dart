@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mismedidasb/data/_shared_prefs.dart';
+import 'package:mismedidasb/di/injector.dart';
 import 'package:mismedidasb/enums.dart';
 import 'package:mismedidasb/lnm/i_lnm.dart';
 import 'package:mismedidasb/lnm/local_notification_model.dart';
@@ -19,7 +20,6 @@ import 'package:mismedidasb/utils/extensions.dart';
 final BehaviorSubject<bool> onPollNotificationLaunch = BehaviorSubject<bool>();
 
 class LNM implements ILNM {
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   final SharedPreferencesManager _sharedPreferencesManager;
 
   static int breakFastIdReminderId = 111;
@@ -35,39 +35,29 @@ class LNM implements ILNM {
   static int localCommonNoti = 11;
   static int fcmNoti = 22;
 
-  LNM(this.flutterLocalNotificationsPlugin, this._sharedPreferencesManager);
+  LNM(this._sharedPreferencesManager);
 
   @override
-  void setup() async {
+  Future<void> setup() async {
     var initializationSettingsAndroid = AndroidInitializationSettings('logo');
 
     var initializationSettingsIOS = IOSInitializationSettings(
         requestAlertPermission: false,
         requestBadgePermission: false,
-        requestSoundPermission: false,
-        onDidReceiveLocalNotification:
-            (int id, String title, String body, String payload) async {
-//          didReceiveLocalNotificationSubject.add(ReceivedNotification(
-//              id: id, title: title, body: body, payload: payload));
-        });
+        requestSoundPermission: false,);
 
     var initializationSettings = InitializationSettings(
-        initializationSettingsAndroid, initializationSettingsIOS);
-    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: (String payload) async {
+        android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
+    await Injector.flutterLocalNotificationsPlugin.initialize(
+        initializationSettings, onSelectNotification: (String payload) async {
       if (payload?.isNotEmpty == true) {
         if (payload == pollNotificationId.toString()) {
-//          await _sharedPreferencesManager.setBoolValue(
-//              SharedKey.launchNotiPoll, true);
           onPollNotificationLaunch.sinkAddSafe(true);
         }
-//        onNotiTap(payload);
-//        Fluttertoast.showToast(msg: payload);
-//        selectNotificationSubject.add(payload);
       }
     });
 
-    flutterLocalNotificationsPlugin
+    Injector.flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
             IOSFlutterLocalNotificationsPlugin>()
         ?.requestPermissions(
@@ -92,18 +82,12 @@ class LNM implements ILNM {
 
   @override
   Future<void> cancel(int id) async {
-//    List<PendingNotificationRequest> list =
-//        await flutterLocalNotificationsPlugin.pendingNotificationRequests();
-    await flutterLocalNotificationsPlugin.cancel(id);
-//    List<PendingNotificationRequest> list1 =
-//        await flutterLocalNotificationsPlugin.pendingNotificationRequests();
-//    print(list1.length.toString());
+    await Injector.flutterLocalNotificationsPlugin.cancel(id);
   }
 
   @override
   Future<void> initPollNotificationReminders() async {
     final exist = await checkIfPendingNotificationExist(pollNotificationId);
-//    final hasPlaniVirtualAssesor = await _sharedPreferencesManager.getBoolValue(SharedKey.hasPlaniVirtualAssesor);
     if (exist) return;
     final String userName =
         await _sharedPreferencesManager.getStringValue(SharedKey.userName);
@@ -116,10 +100,15 @@ class LNM implements ILNM {
         notificationType: NotificationType.POLL);
     var iOSPlatformChannelSpecifics = IOSNotificationDetails();
     var platformChannelSpecifics = NotificationDetails(
-        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+        android: androidPlatformChannelSpecifics,
+        iOS: iOSPlatformChannelSpecifics);
 
-    await flutterLocalNotificationsPlugin.showDailyAtTime(pollNotificationId,
-        title, content, Time(22, 30, 0), platformChannelSpecifics,
+    await Injector.flutterLocalNotificationsPlugin.showDailyAtTime(
+        pollNotificationId,
+        title,
+        content,
+        Time(22, 30, 0),
+        platformChannelSpecifics,
         payload: '$pollNotificationId');
   }
 
@@ -143,9 +132,10 @@ class LNM implements ILNM {
           notificationType: NotificationType.REMINDER);
       var iOSPlatformChannelSpecifics = IOSNotificationDetails();
       var platformChannelSpecifics = NotificationDetails(
-          androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+          android: androidPlatformChannelSpecifics,
+          iOS: iOSPlatformChannelSpecifics);
 
-      await flutterLocalNotificationsPlugin.showDailyAtTime(
+      await Injector.flutterLocalNotificationsPlugin.showDailyAtTime(
           breakFastIdReminderId,
           title,
           content,
@@ -175,9 +165,10 @@ class LNM implements ILNM {
           notificationType: NotificationType.REMINDER);
       var iOSPlatformChannelSpecifics = IOSNotificationDetails();
       var platformChannelSpecifics = NotificationDetails(
-          androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+          android: androidPlatformChannelSpecifics,
+          iOS: iOSPlatformChannelSpecifics);
 
-      await flutterLocalNotificationsPlugin.showDailyAtTime(
+      await Injector.flutterLocalNotificationsPlugin.showDailyAtTime(
           dinnerIdReminderId,
           title,
           content,
@@ -208,9 +199,10 @@ class LNM implements ILNM {
           notificationType: NotificationType.REMINDER);
       var iOSPlatformChannelSpecifics = IOSNotificationDetails();
       var platformChannelSpecifics = NotificationDetails(
-          androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+          android: androidPlatformChannelSpecifics,
+          iOS: iOSPlatformChannelSpecifics);
 
-      await flutterLocalNotificationsPlugin.showDailyAtTime(
+      await Injector.flutterLocalNotificationsPlugin.showDailyAtTime(
           drinkWater1Id,
           title,
           content,
@@ -241,9 +233,10 @@ class LNM implements ILNM {
           notificationType: NotificationType.REMINDER);
       var iOSPlatformChannelSpecifics = IOSNotificationDetails();
       var platformChannelSpecifics = NotificationDetails(
-          androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+          android: androidPlatformChannelSpecifics,
+          iOS: iOSPlatformChannelSpecifics);
 
-      await flutterLocalNotificationsPlugin.showDailyAtTime(
+      await Injector.flutterLocalNotificationsPlugin.showDailyAtTime(
           drinkWater2Id,
           title,
           content,
@@ -273,9 +266,10 @@ class LNM implements ILNM {
           notificationType: NotificationType.REMINDER);
       var iOSPlatformChannelSpecifics = IOSNotificationDetails();
       var platformChannelSpecifics = NotificationDetails(
-          androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+          android: androidPlatformChannelSpecifics,
+          iOS: iOSPlatformChannelSpecifics);
 
-      await flutterLocalNotificationsPlugin.showDailyAtTime(
+      await Injector.flutterLocalNotificationsPlugin.showDailyAtTime(
           lunchIdReminderId,
           title,
           content,
@@ -305,9 +299,10 @@ class LNM implements ILNM {
           notificationType: NotificationType.REMINDER);
       var iOSPlatformChannelSpecifics = IOSNotificationDetails();
       var platformChannelSpecifics = NotificationDetails(
-          androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+          android: androidPlatformChannelSpecifics,
+          iOS: iOSPlatformChannelSpecifics);
 
-      await flutterLocalNotificationsPlugin.showDailyAtTime(
+      await Injector.flutterLocalNotificationsPlugin.showDailyAtTime(
           makeExerciseId,
           title,
           content,
@@ -337,10 +332,15 @@ class LNM implements ILNM {
           notificationType: NotificationType.REMINDER);
       var iOSPlatformChannelSpecifics = IOSNotificationDetails();
       var platformChannelSpecifics = NotificationDetails(
-          androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+          android: androidPlatformChannelSpecifics,
+          iOS: iOSPlatformChannelSpecifics);
 
-      await flutterLocalNotificationsPlugin.showDailyAtTime(planFoodsId, title,
-          content, Time(time.hour, time.minute, time.second), platformChannelSpecifics,
+      await Injector.flutterLocalNotificationsPlugin.showDailyAtTime(
+          planFoodsId,
+          title,
+          content,
+          Time(time.hour, time.minute, time.second),
+          platformChannelSpecifics,
           payload: '$planFoodsId');
     }
   }
@@ -366,9 +366,10 @@ class LNM implements ILNM {
           notificationType: NotificationType.REMINDER);
       var iOSPlatformChannelSpecifics = IOSNotificationDetails();
       var platformChannelSpecifics = NotificationDetails(
-          androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+          android: androidPlatformChannelSpecifics,
+          iOS: iOSPlatformChannelSpecifics);
 
-      await flutterLocalNotificationsPlugin.showDailyAtTime(
+      await Injector.flutterLocalNotificationsPlugin.showDailyAtTime(
           snack1IdReminderId,
           title,
           content,
@@ -398,9 +399,10 @@ class LNM implements ILNM {
           notificationType: NotificationType.REMINDER);
       var iOSPlatformChannelSpecifics = IOSNotificationDetails();
       var platformChannelSpecifics = NotificationDetails(
-          androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+          android: androidPlatformChannelSpecifics,
+          iOS: iOSPlatformChannelSpecifics);
 
-      await flutterLocalNotificationsPlugin.showDailyAtTime(
+      await Injector.flutterLocalNotificationsPlugin.showDailyAtTime(
           snack2IdReminderId,
           title,
           content,
@@ -423,25 +425,26 @@ class LNM implements ILNM {
         notificationType: notificationType);
     var iOSPlatformChannelSpecifics = IOSNotificationDetails();
     var platformChannelSpecifics = NotificationDetails(
-        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+        android: androidPlatformChannelSpecifics,
+        iOS: iOSPlatformChannelSpecifics);
 
-    await flutterLocalNotificationsPlugin.show(
+    await Injector.flutterLocalNotificationsPlugin.show(
         channelId, title, content, platformChannelSpecifics,
         payload: channelId.toString());
   }
 
   @override
   Future<void> cancelAll() async {
-    await flutterLocalNotificationsPlugin.cancelAll();
+    await Injector.flutterLocalNotificationsPlugin.cancelAll();
   }
 
   Future<bool> checkIfPendingNotificationExist(int notiId) async {
-    List<PendingNotificationRequest> list =
-        await flutterLocalNotificationsPlugin.pendingNotificationRequests();
+    List<PendingNotificationRequest> list = await Injector
+        .flutterLocalNotificationsPlugin
+        .pendingNotificationRequests();
     final noti = list.firstWhere((element) => element.id == notiId, orElse: () {
       return null;
     });
-
 
     return noti != null;
   }
@@ -474,8 +477,8 @@ class LNM implements ILNM {
     );
     return AndroidNotificationDetails(
         channelId, 'your channel name', 'your channel description',
-        importance: Importance.Max,
-        priority: Priority.High,
+        importance: Importance.max,
+        priority: Priority.high,
         styleInformation: bigTextStyleInformation,
         largeIcon: DrawableResourceAndroidBitmap('logo'));
   }

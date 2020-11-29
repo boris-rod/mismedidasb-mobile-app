@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../enums.dart';
 
 abstract class ILNM {
-  void setup();
+  Future<void> setup();
 
   Future<void> showCommonNotification(
       {int channelId,

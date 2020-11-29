@@ -1,25 +1,23 @@
-import 'dart:convert';
+import 'dart:io';
 
-import 'package:flutter/material.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mismedidasb/data/_shared_prefs.dart';
-import 'package:mismedidasb/domain/setting/setting_model.dart';
+import 'package:mismedidasb/di/injector.dart';
+import 'package:mismedidasb/enums.dart';
+import 'package:mismedidasb/fcm/fcm_message_model.dart';
 import 'package:mismedidasb/lnm/i_lnm.dart';
-import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/bloc_base.dart';
-import 'package:mismedidasb/ui/_base/bloc_global.dart';
-import 'package:mismedidasb/ui/_base/navigation_utils.dart';
-import 'package:mismedidasb/ui/profile/profile_page.dart';
+import 'package:rxdart/subjects.dart';
 import 'package:mismedidasb/utils/extensions.dart';
 
-import 'lnm/lnm.dart';
-import 'lnm/local_notification_model.dart';
+final BehaviorSubject<String> selectNotificationSubject =
+    BehaviorSubject<String>();
 
 class AppBloC extends BaseBloC {
-  final SharedPreferencesManager _sharedPreferencesManager;
+  final ILNM _ilnm;
 
-  AppBloC(this._sharedPreferencesManager);
+  AppBloC(this._ilnm);
 
 //  void resolveInitialSettings(SettingModel settingModel) async {
 //    String locale = await _sharedPreferencesManager.getLanguageCode();
@@ -35,4 +33,120 @@ class AppBloC extends BaseBloC {
 
   @override
   void dispose() {}
+
+  void configureNotificationSystem() async {
+    await _initLocalNotifications();
+    await _initFirebaseMessaging();
+  }
+
+  Future<void> _initLocalNotifications() async{
+    var initializationSettingsAndroid =
+        new AndroidInitializationSettings('@mipmap/logo');
+    var initializationSettingsIOS = new IOSInitializationSettings();
+    var initializationSettings = new InitializationSettings(
+        android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
+    Injector.flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: (payload) async {
+      if (selectNotificationSubject != null)
+        selectNotificationSubject.sinkAddSafe(payload);
+    });
+    Injector.flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            IOSFlutterLocalNotificationsPlugin>()
+        ?.requestPermissions(
+          alert: true,
+          badge: true,
+          sound: true,
+        );
+  }
+
+  Future<void> _initFirebaseMessaging() async{
+    Injector.firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) {
+        _showNotification(message);
+        return;
+      },
+      onBackgroundMessage: Platform.isIOS ? null : myBackgroundMessageHandler,
+      onResume: (Map<String, dynamic> message) {
+        if (Platform.isIOS) {
+          final Map<String, dynamic> data = Map<String, dynamic>.from(message);
+          FCMMessageModel model = FCMMessageModel.fromString(data);
+          final payload = "";
+          if (selectNotificationSubject != null)
+            selectNotificationSubject.sinkAddSafe(payload);
+        }
+        return;
+      },
+      onLaunch: (Map<String, dynamic> message) {
+        if (Platform.isIOS) {
+          final Map<String, dynamic> data = Map<String, dynamic>.from(message);
+          FCMMessageModel model = FCMMessageModel.fromString(data);
+          final payload = "";
+          if (selectNotificationSubject != null)
+            selectNotificationSubject.sinkAddSafe(payload);
+        }
+        return;
+      },
+    );
+    Injector.firebaseMessaging.requestNotificationPermissions(
+        const IosNotificationSettings(sound: true, badge: true, alert: true));
+  }
+
+  // TOP-LEVEL or STATIC function to handle background messages
+  static Future<dynamic> myBackgroundMessageHandler(
+      Map<String, dynamic> message) {
+    _showNotificationInBackground(message);
+    return Future<void>.value();
+  }
+
+  static Future _showNotification(Map<String, dynamic> fcmMessage) async {
+    final Map<String, dynamic> data = Platform.isIOS
+        ? fcmMessage
+        : Map<String, dynamic>.from(fcmMessage["data"]);
+    FCMMessageModel model = FCMMessageModel.fromString(data);
+
+    await _showCommonNotification(model);
+  }
+
+  static Future _showNotificationInBackground(
+      Map<String, dynamic> fcmMessage) async {
+    final Map<String, dynamic> data = Platform.isIOS
+        ? fcmMessage
+        : Map<String, dynamic>.from(fcmMessage["data"]);
+    FCMMessageModel model = FCMMessageModel.fromString(data);
+
+    await _showCommonNotification(model);
+  }
+
+  static Future _showCommonNotification(FCMMessageModel model) async {
+    String title = "";
+    String message = "message";
+
+    var bigTextStyleInformation = BigTextStyleInformation(message,
+        htmlFormatBigText: true,
+        contentTitle: title,
+        htmlFormatContentTitle: true,
+        summaryText: "name",
+        htmlFormatSummaryText: true);
+    var platformChannelSpecificsAndroid =
+        new AndroidNotificationDetails("21", "name", '',
+            // playSound: true,
+            // enableVibration: true,
+            importance: Importance.max,
+            priority: Priority.high,
+            styleInformation: bigTextStyleInformation);
+    // @formatter:on
+    var platformChannelSpecificsIos = new IOSNotificationDetails();
+    var platformChannelSpecifics = new NotificationDetails(
+        android: platformChannelSpecificsAndroid,
+        iOS: platformChannelSpecificsIos);
+
+    Injector.flutterLocalNotificationsPlugin.show(
+      1,
+      title,
+      "",
+      platformChannelSpecifics,
+      payload: "",
+    );
+  }
 }

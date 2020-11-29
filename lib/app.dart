@@ -24,10 +24,10 @@ import 'package:mismedidasb/ui/profile/profile_page.dart';
 class MyMeasuresBApp extends StatefulWidget {
   final Widget initPage;
   final IFCMFeature fcmFeature;
-  final ILNM lnm;
+  // final ILNM lnm;
 
   const MyMeasuresBApp(
-      {Key key, this.initPage, this.fcmFeature, this.lnm})
+      {Key key, this.initPage, this.fcmFeature})
       : super(key: key);
 
   @override
@@ -42,8 +42,9 @@ class _MyMeasuresBState extends StateWithBloC<MyMeasuresBApp, AppBloC> {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
-    widget.fcmFeature.setUp();
-    widget.lnm.setup();
+    // widget.fcmFeature.setUp();
+    // widget.lnm.setup();
+    bloc.configureNotificationSystem();
   }
 
 //  @override
