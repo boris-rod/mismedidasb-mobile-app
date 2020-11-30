@@ -84,7 +84,7 @@ class PlaniServiceBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
       if (element.product == RemoteConstants.subscription_virtual_assessor) {
         element.name = "Plani";
         element.description =
-            "Recordatoris y sugenrencias de planificación de comidas.";
+            "Recordatorios y sugenrencias de planificación de comidas.";
         element.isActive = userModel.subscriptions.firstWhere(
                 (subs) =>
                     subs.product ==

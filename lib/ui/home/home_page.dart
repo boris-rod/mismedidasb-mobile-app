@@ -352,7 +352,7 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
         title: "Actualización requerida",
         contentWidget: RichText(
           text: TextSpan(
-              style: TextStyle(color: R.color.gray),
+              style: TextStyle(color: R.color.gray_darkest),
               text: "La versión actual que estás usando es ",
               children: [
                 TextSpan(
@@ -362,7 +362,7 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
                         fontSize: 16),
                     text: "${bloc.currentVersion}. "),
                 TextSpan(
-                    style: TextStyle(color: R.color.gray),
+                    style: TextStyle(color: R.color.gray_darkest),
                     text:
                         "Para poder seguir usando Planifive necesitas actualizar a la versión "),
                 TextSpan(

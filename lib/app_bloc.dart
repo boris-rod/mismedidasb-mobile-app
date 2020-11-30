@@ -7,12 +7,16 @@ import 'package:mismedidasb/di/injector.dart';
 import 'package:mismedidasb/enums.dart';
 import 'package:mismedidasb/fcm/fcm_message_model.dart';
 import 'package:mismedidasb/lnm/i_lnm.dart';
+import 'package:mismedidasb/lnm/lnm.dart';
 import 'package:mismedidasb/ui/_base/bloc_base.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:mismedidasb/utils/extensions.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 final BehaviorSubject<String> selectNotificationSubject =
     BehaviorSubject<String>();
+
+final BehaviorSubject<bool> onPollNotificationLaunch = BehaviorSubject<bool>();
 
 class AppBloC extends BaseBloC {
   final ILNM _ilnm;
@@ -39,7 +43,7 @@ class AppBloC extends BaseBloC {
     await _initFirebaseMessaging();
   }
 
-  Future<void> _initLocalNotifications() async{
+  Future<void> _initLocalNotifications() async {
     var initializationSettingsAndroid =
         new AndroidInitializationSettings('@mipmap/logo');
     var initializationSettingsIOS = new IOSInitializationSettings();
@@ -47,8 +51,12 @@ class AppBloC extends BaseBloC {
         android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
     Injector.flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onSelectNotification: (payload) async {
-      if (selectNotificationSubject != null)
+      if (payload == LNM.pollNotificationId.toString()) {
+        onPollNotificationLaunch.sinkAddSafe(true);
+      }else{
         selectNotificationSubject.sinkAddSafe(payload);
+
+      }
     });
     Injector.flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
@@ -60,7 +68,7 @@ class AppBloC extends BaseBloC {
         );
   }
 
-  Future<void> _initFirebaseMessaging() async{
+  Future<void> _initFirebaseMessaging() async {
     Injector.firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) {
         _showNotification(message);
@@ -71,9 +79,9 @@ class AppBloC extends BaseBloC {
         if (Platform.isIOS) {
           final Map<String, dynamic> data = Map<String, dynamic>.from(message);
           FCMMessageModel model = FCMMessageModel.fromString(data);
-          final payload = "";
-          if (selectNotificationSubject != null)
-            selectNotificationSubject.sinkAddSafe(payload);
+          final payload = model?.externalUrl ?? "";
+          if(payload?.isNotEmpty == true)
+            launch(payload);
         }
         return;
       },
@@ -81,9 +89,9 @@ class AppBloC extends BaseBloC {
         if (Platform.isIOS) {
           final Map<String, dynamic> data = Map<String, dynamic>.from(message);
           FCMMessageModel model = FCMMessageModel.fromString(data);
-          final payload = "";
-          if (selectNotificationSubject != null)
-            selectNotificationSubject.sinkAddSafe(payload);
+          final payload = model?.externalUrl ?? "";
+          if(payload?.isNotEmpty == true)
+            launch(payload);
         }
         return;
       },
@@ -126,23 +134,22 @@ class AppBloC extends BaseBloC {
         htmlFormatBigText: true,
         contentTitle: title,
         htmlFormatContentTitle: true,
-        summaryText: "name",
+        summaryText: "",
         htmlFormatSummaryText: true);
     var platformChannelSpecificsAndroid =
-        new AndroidNotificationDetails("21", "name", '',
-            // playSound: true,
-            // enableVibration: true,
+        new AndroidNotificationDetails(LNM.fcmNoti.toString(), "", "",
+            playSound: true,
+            enableVibration: true,
             importance: Importance.max,
             priority: Priority.high,
             styleInformation: bigTextStyleInformation);
-    // @formatter:on
     var platformChannelSpecificsIos = new IOSNotificationDetails();
     var platformChannelSpecifics = new NotificationDetails(
         android: platformChannelSpecificsAndroid,
         iOS: platformChannelSpecificsIos);
 
     Injector.flutterLocalNotificationsPlugin.show(
-      1,
+      LNM.fcmNoti,
       title,
       "",
       platformChannelSpecifics,

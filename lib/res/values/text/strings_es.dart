@@ -399,7 +399,8 @@ class StringsEs implements StringsBase {
   String get atLeastOneFood => "Debe adicionar al menos un alimento.";
 
   @override
-  String get foodPortionMajorThan1 => "El número de porciones debe ser mayor que 1.";
+  String get foodPortionMajorThan1 =>
+      "El número de porciones debe ser mayor que 1.";
 
   @override
   String get add => "Adicionar";
@@ -408,7 +409,8 @@ class StringsEs implements StringsBase {
   String get edit => "Editar";
 
   @override
-  String get copyPlanHelper => "¿Cómo copiar Mi Plan de Comidas de un día para otro?";
+  String get copyPlanHelper =>
+      "¿Cómo copiar Mi Plan de Comidas de un día para otro?";
 
   @override
   String get foodPlanHelper => "¿Cómo realizar Mi Plan de Comidas?";
@@ -417,7 +419,8 @@ class StringsEs implements StringsBase {
   String get planiIntroHelper => "Introducción a PlaniFive";
 
   @override
-  String get portionFoodHelper => "¿Cómo saber el tamaño de cada porción que elijo?";
+  String get portionFoodHelper =>
+      "¿Cómo saber el tamaño de cada porción que elijo?";
 
   @override
   String get profileSettingsHelper => "Perfil y ajustes";
@@ -435,11 +438,45 @@ class StringsEs implements StringsBase {
   String get references => "Referencias";
 
   @override
-  String get referencesLink1 => "Gil, Á., Ruiz López, M. D., Sánchez de Medina Contreras, F., Maldonado Lozano, J., Martínez de Victoria Muñoz, E., Planas Vilá, M., & Sociedad Española de Nutrición Parenteral y Enteral (Eds.). (2010). Tratado de nutrición (2a ed). Médica Panamericana.";
+  String get referencesLink1 =>
+      "Gil, Á., Ruiz López, M. D., Sánchez de Medina Contreras, F., Maldonado Lozano, J., Martínez de Victoria Muñoz, E., Planas Vilá, M., & Sociedad Española de Nutrición Parenteral y Enteral (Eds.). (2010). Tratado de nutrición (2a ed). Médica Panamericana.";
 
   @override
-  String get referencesLink2 => "Rodríguez-Martín, B. C., Gómez-Quintana, A., Díaz-Martínez, G., & Molerio-Pérez, O. (2013). Bibliotherapy and food cravings control. Appetite, 65.";
+  String get referencesLink2 =>
+      "Rodríguez-Martín, B. C., Gómez-Quintana, A., Díaz-Martínez, G., & Molerio-Pérez, O. (2013). Bibliotherapy and food cravings control. Appetite, 65.";
 
   @override
-  String get referencesLink3 => "Rodríguez-Martín, B. C., & Meule, A. (2015). Food craving: New contributions on its assessment, moderators, and consequences. Frontiers in Psychology, 6(JAN).";
+  String get referencesLink3 =>
+      "Rodríguez-Martín, B. C., & Meule, A. (2015). Food craving: New contributions on its assessment, moderators, and consequences. Frontiers in Psychology, 6(JAN).";
+
+  @override
+  String get referencesLink4 => "The Eatwell Guide";
+
+  @override
+  String get referencesLink5 =>
+      "The Healthy Eating Plate. Harvard School of Public Health";
+
+  @override
+  String get referencesLink6 =>
+      "Healthy Eating Pyramid. Harvard School of Public Health ";
+
+  @override
+  String get referencesLink7 =>
+      "Government Dietary Recommendations Government recommendations for energy and nutrients for males and females aged 1 – 18 years and 19+ years. Public Health England Wellington House 133-155 Waterloo Road London SE1 8UG Tel: 020 7654 8000 www.gov.uk/phe Prepared by: Nutrition Science Team, Public Health England © Crown copyright 2016. Published August, 2016 PHE publications gateway number: 2016202";
+
+  @override
+  String get referencesLink8 =>
+      "The Eatwell Guide How does it differ to the eatwell plate and why? Public Health England Wellington House 133-155 Waterloo Road London SE1 8UG Tel: 020 7654 8000 www.gov.uk/phe . Published March 2016 PHE publications gateway number: 2015588. Public Health England (2014) The eatwell plate: external reference group review.";
+
+  @override
+  String get referencesLink9 =>
+      "Healthier and More Sustainable Catering. A toolkit for serving food to adults. Public Health England (2014).";
+
+  @override
+  String get referencesLink10 =>
+      "Composition of foods integrated dataset. Public Health England (2015).";
+
+  @override
+  String get referencesLink11 =>
+      "Platos, pirámides y planeta. Novedades en el desarrollo de guías alimentarias nacionales para una alimentación saludable y sostenible: evaluación del estado de la situación. Carlos Gonzalez Fischer y Tara Garnett. 2018. Roma, FAO. Número de páginas (94). Licencia: CC BY-NC-SA 3.0 IGO . ISBN 978-92-5-131017-5 © FAO, 2018 Dietas saludables a partir de sistemas alimentarios sostenibles La Comisión EAT-Lancet Copresidida por el Prof. Walter Willett y el Prof. Johan Rockström, la Comisión EAT-Lancet ha reunido a 19 Comisarios y 18 coautores de 16 países en diversos campos como la salud humana, la agricultura, la ciencia política y sostenibilidad ambienta Cartera de alimentación correcta y actividad física. NUTRIMSS";
 }

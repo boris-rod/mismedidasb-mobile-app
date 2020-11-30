@@ -1,31 +1,15 @@
 import 'dart:convert';
 
-class FCMMessageModel {
-  final String userId;
-  final String type;
-  final String todoId;
-  final String title;
+class   FCMMessageModel {
+  final String externalUrl;
 
   FCMMessageModel({
-    this.userId,
-    this.type,
-    this.todoId,
-    this.title,
+    this.externalUrl
   });
 
   factory FCMMessageModel.fromString(Map<String, dynamic> bodyJson) {
     return FCMMessageModel(
-      userId: bodyJson['userId'],
-      type: bodyJson['type'],
-      todoId: bodyJson['todoId'],
-      title: bodyJson['title'],
+      externalUrl: bodyJson['externalUrl'],
     );
   }
-
-  String toJson() => jsonEncode({
-    'userId':userId,
-    'type':type,
-    'todoId':todoId,
-    'title':title,
-  });
 }

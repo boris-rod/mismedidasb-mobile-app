@@ -281,4 +281,20 @@ abstract class StringsBase implements WidgetsLocalizations {
   String get referencesLink2;
 
   String get referencesLink3;
+
+  String get referencesLink4;
+
+  String get referencesLink5;
+
+  String get referencesLink6;
+
+  String get referencesLink7;
+
+  String get referencesLink8;
+
+  String get referencesLink9;
+
+  String get referencesLink10;
+
+  String get referencesLink11;
 }
