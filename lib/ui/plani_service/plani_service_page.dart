@@ -109,7 +109,7 @@ class _PlaniServiceState
                                         color: Colors.white,
                                       ),
                                       Icon(
-                                        Icons.verified,
+                                        Icons.verified_rounded,
                                         size: 14,
                                         color: Colors.white,
                                       )
@@ -197,7 +197,7 @@ class _PlaniServiceState
                                         text: model.valueCoins.toString(),
                                       ),
                                       Icon(
-                                        Icons.verified,
+                                        Icons.verified_rounded,
                                         size: 14,
                                       )
                                     ],
