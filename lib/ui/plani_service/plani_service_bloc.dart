@@ -93,7 +93,7 @@ class PlaniServiceBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
             })?.isActive ??
             false;
       } else if (element.product == RemoteConstants.subscription_report_food) {
-        element.name = "Reporte alimenticio";
+        element.name = "Reporte de alimentación";
         element.description = "Reporte semanal sobre los alimentos ingeridos.";
         element.isActive = userModel.subscriptions.firstWhere(
                 (subs) =>

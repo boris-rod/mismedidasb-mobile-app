@@ -69,7 +69,7 @@ class _PlaniServiceState
                                   _showBuyResume(
                                       context: context,
                                       serviceTitle:
-                                          "Plani + Reporte alimenticio + Reporte nutricional",
+                                          "Plani + Reporte alimentario + Reporte nutricional",
                                       coins: 2500,
                                       onOK: () {
                                         bloc.buyOffer1();
@@ -86,7 +86,7 @@ class _PlaniServiceState
                                         children: [
                                           TXTextWidget(
                                             text:
-                                                "Plani + Reporte alimenticio + Reporte nutricional",
+                                                "Plani + Reporte de alimentación + Reporte nutricional",
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold,
                                             size: 16,
