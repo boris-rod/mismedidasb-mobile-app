@@ -479,4 +479,64 @@ class StringsEs implements StringsBase {
   @override
   String get referencesLink11 =>
       "Platos, pirámides y planeta. Novedades en el desarrollo de guías alimentarias nacionales para una alimentación saludable y sostenible: evaluación del estado de la situación. Carlos Gonzalez Fischer y Tara Garnett. 2018. Roma, FAO. Número de páginas (94). Licencia: CC BY-NC-SA 3.0 IGO . ISBN 978-92-5-131017-5 © FAO, 2018 Dietas saludables a partir de sistemas alimentarios sostenibles La Comisión EAT-Lancet Copresidida por el Prof. Walter Willett y el Prof. Johan Rockström, la Comisión EAT-Lancet ha reunido a 19 Comisarios y 18 coautores de 16 países en diversos campos como la salud humana, la agricultura, la ciencia política y sostenibilidad ambienta Cartera de alimentación correcta y actividad física. NUTRIMSS";
+
+  @override
+  String get dateFormat1 => "dd/MMM/yy";
+
+  @override
+  String get active => "Activo";
+
+  @override
+  String get inactive => "Inactivo";
+
+  @override
+  String get activateService => "Activar servicio(s)";
+
+  @override
+  String get continueAction => "Continuar";
+
+  @override
+  String get offert1Description => "Todos los servicios de Planifive";
+
+  @override
+  String get offert1Title => "Asistente virtual + Reporte de alimentación + Reporte nutricional";
+
+  @override
+  String get offerts => "Ofertas";
+
+  @override
+  String get planifiveServices => "Servicios de Planifive";
+
+  @override
+  String get activateServiceWarning1 => "Estás a punto de adquirir: ";
+
+  @override
+  String get activateServiceWarning2 => " por el plazo de 1 mes. Se descontarán ";
+
+  @override
+  String get activateServiceWarning3 => "monedas.";
+
+  @override
+  String get foodReport => "Reporte de alimentación";
+
+  @override
+  String get foodReportDescription => "Reporte semanal sobre los alimentos ingeridos.";
+
+  @override
+  String get nutritionalReport => "Reporte nutricional";
+
+  @override
+  String get nutritionalReportDescription => "Reporte semanal sobre la información nutricional de los alimentos ingeridos.";
+
+  @override
+  String get plani => "Plani, tu asistente virtual";
+
+  @override
+  String get planiDescription => "Recordatorios y sugerencias de planificación de comidas.";
+
+  @override
+  String get noEnoughCoinsToActivateService => "No tienes suficientes monedas para activar este servicio.";
+
+  @override
+  String get coins => "Monedas";
 }

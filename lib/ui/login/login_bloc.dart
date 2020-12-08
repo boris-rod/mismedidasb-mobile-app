@@ -10,6 +10,7 @@ import 'package:mismedidasb/domain/session/i_session_repository.dart';
 import 'package:mismedidasb/domain/session/session_model.dart';
 import 'package:mismedidasb/domain/user/i_user_repository.dart';
 import 'package:mismedidasb/domain/user/user_model.dart';
+import 'package:mismedidasb/lnm/i_lnm.dart';
 import 'package:mismedidasb/ui/_base/bloc_base.dart';
 import 'package:mismedidasb/ui/_base/bloc_error_handler.dart';
 import 'package:mismedidasb/ui/_base/bloc_form_validator.dart';
@@ -26,9 +27,10 @@ class LoginBloC extends BaseBloC
   final SharedPreferencesManager _sharedPreferencesManager;
   final ISessionRepository _iSessionRepository;
   final ICommonRepository _iCommonRepository;
+  final ILNM _ilnm;
 
   LoginBloC(this._iDishRepository, this._sharedPreferencesManager,
-      this._iSessionRepository, this._iCommonRepository);
+      this._iSessionRepository, this._iCommonRepository, this._ilnm);
 
   BehaviorSubject<LOGIN_RESULT> _loginController = new BehaviorSubject();
 
@@ -84,6 +86,8 @@ class LoginBloC extends BaseBloC
             userTimeZoneOffset: DateTime.now().timeZoneOffset.inHours),
         saveCredentials);
     if (res is ResultSuccess<UserModel>) {
+      await _ilnm.cancelAll();
+      await _ilnm.initReminders();
       //Cleaning DB in case of different user login
       if (previousUserId != res.value.id) {
         await _iCommonRepository.cleanDB();

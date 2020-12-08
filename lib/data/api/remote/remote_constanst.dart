@@ -8,6 +8,7 @@ class RemoteConstants {
   static const code_un_authorized = 401;
   static const code_forbidden = 403;
   static const code_not_found = 404;
+  static const code_unprocessable = 422;
 
   static const code_host_unable = 500;
 

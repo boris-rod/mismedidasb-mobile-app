@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mismedidasb/data/_shared_prefs.dart';
 import 'package:mismedidasb/di/injector.dart';
@@ -10,6 +11,8 @@ import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/navigation_utils.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:mismedidasb/utils/extensions.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 //final BehaviorSubject<ReceivedNotification> didReceiveLocalNotificationSubject =
 //    BehaviorSubject<ReceivedNotification>();
@@ -42,9 +45,10 @@ class LNM implements ILNM {
     var initializationSettingsAndroid = AndroidInitializationSettings('logo');
 
     var initializationSettingsIOS = IOSInitializationSettings(
-        requestAlertPermission: false,
-        requestBadgePermission: false,
-        requestSoundPermission: false,);
+      requestAlertPermission: false,
+      requestBadgePermission: false,
+      requestSoundPermission: false,
+    );
 
     var initializationSettings = InitializationSettings(
         android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
@@ -67,7 +71,13 @@ class LNM implements ILNM {
         );
   }
 
+  String _currentTimeZone = "";
+
   Future<void> initReminders() async {
+    tz.initializeTimeZones();
+    _currentTimeZone = await FlutterNativeTimezone.getLocalTimezone();
+    tz.setLocalLocation(tz.getLocation(_currentTimeZone));
+
     await initBreakFastReminder();
     await initSnack1Reminder();
     await initDrinkWater1Reminder();
@@ -102,14 +112,29 @@ class LNM implements ILNM {
     var platformChannelSpecifics = NotificationDetails(
         android: androidPlatformChannelSpecifics,
         iOS: iOSPlatformChannelSpecifics);
+    tz.initializeTimeZones();
+    tz.setLocalLocation(tz.getLocation(_currentTimeZone));
 
-    await Injector.flutterLocalNotificationsPlugin.showDailyAtTime(
-        pollNotificationId,
-        title,
-        content,
-        Time(22, 30, 0),
-        platformChannelSpecifics,
-        payload: '$pollNotificationId');
+    await _setScheduleNotification(
+        id: pollNotificationId,
+        title: title,
+        content: content,
+        time: Time(22, 30, 0),
+        notificationDetails: platformChannelSpecifics);
+
+    // final nowDate = DateTime.now();
+    // await Injector.flutterLocalNotificationsPlugin.zonedSchedule(
+    //     pollNotificationId,
+    //     title,
+    //     content,
+    //     tz.TZDateTime.local(nowDate.year, nowDate.month, nowDate.day, 20, 00, 0)
+    //         .add(Duration(days: 1)),
+    //     platformChannelSpecifics,
+    //     androidAllowWhileIdle: true,
+    //     uiLocalNotificationDateInterpretation:
+    //         UILocalNotificationDateInterpretation.absoluteTime,
+    //     matchDateTimeComponents: DateTimeComponents.time,
+    //     payload: '$pollNotificationId');
   }
 
   @override
@@ -135,13 +160,27 @@ class LNM implements ILNM {
           android: androidPlatformChannelSpecifics,
           iOS: iOSPlatformChannelSpecifics);
 
-      await Injector.flutterLocalNotificationsPlugin.showDailyAtTime(
-          breakFastIdReminderId,
-          title,
-          content,
-          Time(time.hour, time.minute, time.second),
-          platformChannelSpecifics,
-          payload: '$breakFastIdReminderId');
+      await _setScheduleNotification(
+          id: breakFastIdReminderId,
+          title: title,
+          content: content,
+          time: Time(time.hour, time.minute, time.second),
+          notificationDetails: platformChannelSpecifics);
+
+      // final nowDate = DateTime.now();
+      // await Injector.flutterLocalNotificationsPlugin.zonedSchedule(
+      //     breakFastIdReminderId,
+      //     title,
+      //     content,
+      //     tz.TZDateTime.local(nowDate.year, nowDate.month, nowDate.day,
+      //             time.hour, time.minute, time.second)
+      //         .add(Duration(days: 1)),
+      //     platformChannelSpecifics,
+      //     androidAllowWhileIdle: true,
+      //     uiLocalNotificationDateInterpretation:
+      //         UILocalNotificationDateInterpretation.absoluteTime,
+      //     matchDateTimeComponents: DateTimeComponents.time,
+      //     payload: '$breakFastIdReminderId');
     }
   }
 
@@ -168,13 +207,27 @@ class LNM implements ILNM {
           android: androidPlatformChannelSpecifics,
           iOS: iOSPlatformChannelSpecifics);
 
-      await Injector.flutterLocalNotificationsPlugin.showDailyAtTime(
-          dinnerIdReminderId,
-          title,
-          content,
-          Time(time.hour, time.minute, time.second),
-          platformChannelSpecifics,
-          payload: '$dinnerIdReminderId');
+      await _setScheduleNotification(
+          id: dinnerIdReminderId,
+          title: title,
+          content: content,
+          time: Time(time.hour, time.minute, time.second),
+          notificationDetails: platformChannelSpecifics);
+
+      // final nowDate = DateTime.now();
+      // await Injector.flutterLocalNotificationsPlugin.zonedSchedule(
+      //     dinnerIdReminderId,
+      //     title,
+      //     content,
+      //     tz.TZDateTime.local(nowDate.year, nowDate.month, nowDate.day,
+      //             time.hour, time.minute, time.second)
+      //         .add(Duration(days: 1)),
+      //     platformChannelSpecifics,
+      //     androidAllowWhileIdle: true,
+      //     uiLocalNotificationDateInterpretation:
+      //         UILocalNotificationDateInterpretation.absoluteTime,
+      //     matchDateTimeComponents: DateTimeComponents.time,
+      //     payload: '$dinnerIdReminderId');
     }
   }
 
@@ -202,13 +255,27 @@ class LNM implements ILNM {
           android: androidPlatformChannelSpecifics,
           iOS: iOSPlatformChannelSpecifics);
 
-      await Injector.flutterLocalNotificationsPlugin.showDailyAtTime(
-          drinkWater1Id,
-          title,
-          content,
-          Time(time.hour, time.minute, time.second),
-          platformChannelSpecifics,
-          payload: '$drinkWater1Id');
+      await _setScheduleNotification(
+          id: drinkWater1Id,
+          title: title,
+          content: content,
+          time: Time(time.hour, time.minute, time.second),
+          notificationDetails: platformChannelSpecifics);
+
+      // final nowDate = DateTime.now();
+      // await Injector.flutterLocalNotificationsPlugin.zonedSchedule(
+      //     drinkWater1Id,
+      //     title,
+      //     content,
+      //     tz.TZDateTime.local(nowDate.year, nowDate.month, nowDate.day,
+      //             time.hour, time.minute, time.second)
+      //         .add(Duration(days: 1)),
+      //     platformChannelSpecifics,
+      //     androidAllowWhileIdle: true,
+      //     uiLocalNotificationDateInterpretation:
+      //         UILocalNotificationDateInterpretation.absoluteTime,
+      //     matchDateTimeComponents: DateTimeComponents.time,
+      //     payload: '$drinkWater1Id');
     }
   }
 
@@ -236,13 +303,27 @@ class LNM implements ILNM {
           android: androidPlatformChannelSpecifics,
           iOS: iOSPlatformChannelSpecifics);
 
-      await Injector.flutterLocalNotificationsPlugin.showDailyAtTime(
-          drinkWater2Id,
-          title,
-          content,
-          Time(time.hour, time.minute, time.second),
-          platformChannelSpecifics,
-          payload: '$drinkWater2Id');
+      await _setScheduleNotification(
+          id: drinkWater2Id,
+          title: title,
+          content: content,
+          time: Time(time.hour, time.minute, time.second),
+          notificationDetails: platformChannelSpecifics);
+
+      // final nowDate = DateTime.now();
+      // await Injector.flutterLocalNotificationsPlugin.zonedSchedule(
+      //     drinkWater2Id,
+      //     title,
+      //     content,
+      //     tz.TZDateTime.local(nowDate.year, nowDate.month, nowDate.day,
+      //             time.hour, time.minute, time.second)
+      //         .add(Duration(days: 1)),
+      //     platformChannelSpecifics,
+      //     androidAllowWhileIdle: true,
+      //     uiLocalNotificationDateInterpretation:
+      //         UILocalNotificationDateInterpretation.absoluteTime,
+      //     matchDateTimeComponents: DateTimeComponents.time,
+      //     payload: '$drinkWater2Id');
     }
   }
 
@@ -269,13 +350,27 @@ class LNM implements ILNM {
           android: androidPlatformChannelSpecifics,
           iOS: iOSPlatformChannelSpecifics);
 
-      await Injector.flutterLocalNotificationsPlugin.showDailyAtTime(
-          lunchIdReminderId,
-          title,
-          content,
-          Time(time.hour, time.minute, time.second),
-          platformChannelSpecifics,
-          payload: '$lunchIdReminderId');
+      await _setScheduleNotification(
+          id: lunchIdReminderId,
+          title: title,
+          content: content,
+          time: Time(time.hour, time.minute, time.second),
+          notificationDetails: platformChannelSpecifics);
+
+      // final nowDate = DateTime.now();
+      // await Injector.flutterLocalNotificationsPlugin.zonedSchedule(
+      //     lunchIdReminderId,
+      //     title,
+      //     content,
+      //     tz.TZDateTime.local(nowDate.year, nowDate.month, nowDate.day,
+      //             time.hour, time.minute, time.second)
+      //         .add(Duration(days: 1)),
+      //     platformChannelSpecifics,
+      //     androidAllowWhileIdle: true,
+      //     uiLocalNotificationDateInterpretation:
+      //         UILocalNotificationDateInterpretation.absoluteTime,
+      //     matchDateTimeComponents: DateTimeComponents.time,
+      //     payload: '$lunchIdReminderId');
     }
   }
 
@@ -302,13 +397,27 @@ class LNM implements ILNM {
           android: androidPlatformChannelSpecifics,
           iOS: iOSPlatformChannelSpecifics);
 
-      await Injector.flutterLocalNotificationsPlugin.showDailyAtTime(
-          makeExerciseId,
-          title,
-          content,
-          Time(time.hour, time.minute, time.second),
-          platformChannelSpecifics,
-          payload: '$makeExerciseId');
+      await _setScheduleNotification(
+          id: makeExerciseId,
+          title: title,
+          content: content,
+          time: Time(time.hour, time.minute, time.second),
+          notificationDetails: platformChannelSpecifics);
+
+      // final nowDate = DateTime.now();
+      // await Injector.flutterLocalNotificationsPlugin.zonedSchedule(
+      //     makeExerciseId,
+      //     title,
+      //     content,
+      //     tz.TZDateTime.local(nowDate.year, nowDate.month, nowDate.day,
+      //             time.hour, time.minute, time.second)
+      //         .add(Duration(days: 1)),
+      //     platformChannelSpecifics,
+      //     androidAllowWhileIdle: true,
+      //     uiLocalNotificationDateInterpretation:
+      //         UILocalNotificationDateInterpretation.absoluteTime,
+      //     matchDateTimeComponents: DateTimeComponents.time,
+      //     payload: '$makeExerciseId');
     }
   }
 
@@ -335,13 +444,27 @@ class LNM implements ILNM {
           android: androidPlatformChannelSpecifics,
           iOS: iOSPlatformChannelSpecifics);
 
-      await Injector.flutterLocalNotificationsPlugin.showDailyAtTime(
-          planFoodsId,
-          title,
-          content,
-          Time(time.hour, time.minute, time.second),
-          platformChannelSpecifics,
-          payload: '$planFoodsId');
+      await _setScheduleNotification(
+          id: planFoodsId,
+          title: title,
+          content: content,
+          time: Time(time.hour, time.minute, time.second),
+          notificationDetails: platformChannelSpecifics);
+
+      // final nowDate = DateTime.now();
+      // await Injector.flutterLocalNotificationsPlugin.zonedSchedule(
+      //     planFoodsId,
+      //     title,
+      //     content,
+      //     tz.TZDateTime.local(nowDate.year, nowDate.month, nowDate.day,
+      //             time.hour, time.minute, time.second)
+      //         .add(Duration(days: 1)),
+      //     platformChannelSpecifics,
+      //     androidAllowWhileIdle: true,
+      //     uiLocalNotificationDateInterpretation:
+      //         UILocalNotificationDateInterpretation.absoluteTime,
+      //     matchDateTimeComponents: DateTimeComponents.time,
+      //     payload: '$planFoodsId');
     }
   }
 
@@ -369,13 +492,27 @@ class LNM implements ILNM {
           android: androidPlatformChannelSpecifics,
           iOS: iOSPlatformChannelSpecifics);
 
-      await Injector.flutterLocalNotificationsPlugin.showDailyAtTime(
-          snack1IdReminderId,
-          title,
-          content,
-          Time(time.hour, time.minute, time.second),
-          platformChannelSpecifics,
-          payload: '$snack1IdReminderId');
+      await _setScheduleNotification(
+          id: snack1IdReminderId,
+          title: title,
+          content: content,
+          time: Time(time.hour, time.minute, time.second),
+          notificationDetails: platformChannelSpecifics);
+
+      // final nowDate = DateTime.now();
+      // await Injector.flutterLocalNotificationsPlugin.zonedSchedule(
+      //     snack1IdReminderId,
+      //     title,
+      //     content,
+      //     tz.TZDateTime.local(nowDate.year, nowDate.month, nowDate.day,
+      //             time.hour, time.minute, time.second)
+      //         .add(Duration(days: 1)),
+      //     platformChannelSpecifics,
+      //     androidAllowWhileIdle: true,
+      //     uiLocalNotificationDateInterpretation:
+      //         UILocalNotificationDateInterpretation.absoluteTime,
+      //     matchDateTimeComponents: DateTimeComponents.time,
+      //     payload: '$snack1IdReminderId');
     }
   }
 
@@ -402,13 +539,27 @@ class LNM implements ILNM {
           android: androidPlatformChannelSpecifics,
           iOS: iOSPlatformChannelSpecifics);
 
-      await Injector.flutterLocalNotificationsPlugin.showDailyAtTime(
-          snack2IdReminderId,
-          title,
-          content,
-          Time(time.hour, time.minute, time.second),
-          platformChannelSpecifics,
-          payload: '$snack2IdReminderId');
+      await _setScheduleNotification(
+          id: snack2IdReminderId,
+          title: title,
+          content: content,
+          time: Time(time.hour, time.minute, time.second),
+          notificationDetails: platformChannelSpecifics);
+
+      // final nowDate = DateTime.now();
+      // await Injector.flutterLocalNotificationsPlugin.zonedSchedule(
+      //     snack2IdReminderId,
+      //     title,
+      //     content,
+      //     tz.TZDateTime.local(nowDate.year, nowDate.month, nowDate.day,
+      //             time.hour, time.minute, time.second)
+      //         .add(Duration(days: 1)),
+      //     platformChannelSpecifics,
+      //     androidAllowWhileIdle: true,
+      //     uiLocalNotificationDateInterpretation:
+      //         UILocalNotificationDateInterpretation.absoluteTime,
+      //     matchDateTimeComponents: DateTimeComponents.time,
+      //     payload: '$snack2IdReminderId');
     }
   }
 
@@ -483,228 +634,25 @@ class LNM implements ILNM {
         largeIcon: DrawableResourceAndroidBitmap('logo'));
   }
 
-//  Future<void> showNotification(
-//      String channelId, String title, String content) async {
-//    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-//      channelId,
-//      'your channel name',
-//      'your channel description',
-//      importance: Importance.Max,
-//      priority: Priority.High,
-//      ticker: 'ticker',
-//      largeIcon: DrawableResourceAndroidBitmap('logo'),
-//    );
-//    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
-//    var platformChannelSpecifics = NotificationDetails(
-//        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
-//
-//    await _flutterLocalNotificationsPlugin
-//        .show(0, title, content, platformChannelSpecifics, payload: channelId);
-//  }
-//
-//  Future<void> showInboxNotification() async {
-//    var lines = List<String>();
-//    lines.add('line <b>1</b>');
-//    lines.add('line <i>2</i>');
-//    var inboxStyleInformation = InboxStyleInformation(lines,
-//        htmlFormatLines: true,
-//        contentTitle: 'overridden <b>inbox</b> context title',
-//        htmlFormatContentTitle: true,
-//        summaryText: 'summary <i>text</i>',
-//        htmlFormatSummaryText: true);
-//    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-//        'inbox channel id', 'inboxchannel name', 'inbox channel description',
-//        styleInformation: inboxStyleInformation);
-//    var platformChannelSpecifics =
-//    NotificationDetails(androidPlatformChannelSpecifics, null);
-//    await _flutterLocalNotificationsPlugin.show(
-//        0, 'inbox title', 'inbox body', platformChannelSpecifics);
-//  }
-//
-//  Future<void> showMessagingNotification() async {
-//    // use a platform channel to resolve an Android drawable resource to a URI.
-//    // This is NOT part of the notifications plugin. Calls made over this channel is handled by the app
-//    var messages = List<Message>();
-//    // First two person objects will use icons that part of the Android app's drawable resources
-//    var me = Person(
-//        name: 'Me',
-//        key: '1',
-//        uri: 'tel:1234567890',
-//        icon: FlutterBitmapAssetAndroidIcon(R.image.logo));
-//    messages.add(Message(
-//        '<p><span style="color: #3F51B5;">Responder</span></p>',
-//        DateTime.now(),
-//        null));
-//    var messagingStyle = MessagingStyleInformation(me,
-//        groupConversation: true,
-//        conversationTitle: 'Recordatorio',
-//        htmlFormatContent: true,
-//        htmlFormatTitle: true,
-//        messages: messages);
-//    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-//        'message channel id',
-//        'message channel name',
-//        'message channel description',
-//        category: 'msg',
-//        styleInformation: messagingStyle);
-//    var platformChannelSpecifics =
-//    NotificationDetails(androidPlatformChannelSpecifics, null);
-//    await _flutterLocalNotificationsPlugin.show(
-//        0, 'message title', 'message body', platformChannelSpecifics);
-//  }
-//
-//  Future<void> repeatNotification(String channelId) async {
-//    final userName =
-//    await _sharedPreferencesManager.getStringValue(SharedKey.userName);
-//
-////    var lunchBot = Person(
-////      name: 'Plani',
-////      key: 'bot',
-////      bot: true,
-////      icon: FlutterBitmapAssetAndroidIcon(R.image.logo),
-////    );
-////
-////    List<Message> messages = [
-////      Message('What\'s up?', DateTime.now().add(Duration(minutes: 5)), lunchBot)
-////    ];
-//    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-//      channelId, 'repeating channel name', 'repeating description',
-//      importance: Importance.Max,
-//      priority: Priority.High,
-//      ticker: 'ticker',
-//      channelAction: AndroidNotificationChannelAction.Update,
-////        styleInformation:
-////            MessagingStyleInformation(lunchBot, messages: messages)
-//    );
-//    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
-//    var platformChannelSpecifics = NotificationDetails(
-//        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
-//
-//    await _flutterLocalNotificationsPlugin.showDailyAtTime(
-//        100,
-//        'Hola $userName',
-//        'Recuerda beber suficiente agua, se recomienda 2L diarios.',
-//        Time(16, 57, 0),
-//        platformChannelSpecifics);
-//
-////    await _flutterLocalNotificationsPlugin.showDailyAtTime(
-////        101,
-////        'Hola $userName',
-////        'Recuerda beber suficiente agua, se recomienda 2L diarios.',
-////        Time(16, 33, 0),
-////        platformChannelSpecifics);
-////
-////    await _flutterLocalNotificationsPlugin.showDailyAtTime(
-////        102,
-////        'Hola $userName',
-////        'Recuerda beber suficiente agua, se recomienda 2L diarios.',
-////        Time(16, 34, 0),
-////        platformChannelSpecifics);
-////
-////    await _flutterLocalNotificationsPlugin.showDailyAtTime(
-////        103,
-////        'Hola $userName',
-////        'Recuerda planificar su comida de mañana',
-////        Time(20, 30, 0),
-////        platformChannelSpecifics);
-//  }
-//
-//  Future<void> showDailyAtTime() async {
-//    var time = Time(11, 49, 00);
-//    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-//        'repeatDailyAtTime channel id',
-//        'repeatDailyAtTime channel name',
-//        'repeatDailyAtTime description');
-//    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
-//    var platformChannelSpecifics = NotificationDetails(
-//        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
-//    await _flutterLocalNotificationsPlugin.showDailyAtTime(
-//        0,
-//        'Recordatorio',
-//        'Recuerda planificar su comida',
-//        Time(11, 50, 00),
-//        platformChannelSpecifics);
-//
-//    await _flutterLocalNotificationsPlugin.showDailyAtTime(
-//        0,
-//        'Recordatorio',
-//        'Recuerda planificar su comida',
-//        Time(11, 51, 00),
-//        platformChannelSpecifics);
-//  }
-//
-//  Future<void> scheduleNotification() async {
-//    var scheduledNotificationDateTime =
-//    DateTime.now().add(Duration(seconds: 30));
-////    var vibrationPattern = Int64List(4);
-////    vibrationPattern[0] = 0;
-////    vibrationPattern[1] = 1000;
-////    vibrationPattern[2] = 5000;
-////    vibrationPattern[3] = 2000;
-//
-//    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-//        'your other channel id',
-//        'your other channel name',
-//        'your other channel description',
-//        icon: 'logo',
-////        sound: RawResourceAndroidNotificationSound('slow_spring_board'),
-//        largeIcon: DrawableResourceAndroidBitmap('logo'),
-////        vibrationPattern: vibrationPattern,
-//        enableLights: true,
-//        color: R.color.primary_color,
-//        ledColor: R.color.primary_dark_color,
-//        ledOnMs: 1000,
-//        ledOffMs: 500);
-//    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
-//    var platformChannelSpecifics = NotificationDetails(
-//        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
-//    await _flutterLocalNotificationsPlugin.schedule(
-//      0,
-//      'scheduled title',
-//      'scheduled body',
-//      scheduledNotificationDateTime,
-//      platformChannelSpecifics,
-//    );
-//  }
-//
-//  Future<void> showBigTextNotification() async {
-//    String answer = '<pre>Has planificado tus comidas de ma&ntilde;na?</pre>' +
-//        '<h1><span style="color: #3f51b5;">Responder</span></h1>';
-//
-//    var bigTextStyleInformation = BigTextStyleInformation(answer,
-//        htmlFormatBigText: true,
-//        contentTitle: "Hola Kiki",
-//        htmlFormatContentTitle: true,
-//        summaryText: '<b>Recordatorio</b>',
-//        htmlFormatSummaryText: true);
-//    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-//        'big text channel id',
-//        'big text channel name',
-//        'big text channel description',
-//        styleInformation: bigTextStyleInformation,
-//        largeIcon: DrawableResourceAndroidBitmap('logo'));
-//    var platformChannelSpecifics =
-//    NotificationDetails(androidPlatformChannelSpecifics, null);
-//    await _flutterLocalNotificationsPlugin.show(
-//        0, "Hola Kiki", 'silent body', platformChannelSpecifics);
-//  }
-//
-//  Future<void> showNotificationWithUpdatedChannelDescription() async {
-//    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-//        'your channel id',
-//        'your channel name',
-//        'your updated channel description',
-//        importance: Importance.Max,
-//        priority: Priority.High,
-//        channelAction: AndroidNotificationChannelAction.Update);
-//    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
-//    var platformChannelSpecifics = NotificationDetails(
-//        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
-//    await _flutterLocalNotificationsPlugin.show(
-//        0,
-//        'updated notification channel',
-//        'check settings to see updated channel description',
-//        platformChannelSpecifics,
-//        payload: 'item x');
-//  }
+  Future<void> _setScheduleNotification(
+      {int id,
+      String title,
+      String content,
+      Time time,
+      NotificationDetails notificationDetails}) async {
+    final nowDate = DateTime.now();
+    await Injector.flutterLocalNotificationsPlugin.zonedSchedule(
+        id,
+        title,
+        content,
+        tz.TZDateTime.local(nowDate.year, nowDate.month, nowDate.day, time.hour,
+                time.minute, time.second)
+            .add(Duration(days: 1)),
+        notificationDetails,
+        androidAllowWhileIdle: true,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+        matchDateTimeComponents: DateTimeComponents.time,
+        payload: '$id');
+  }
 }

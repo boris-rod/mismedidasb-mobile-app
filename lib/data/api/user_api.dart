@@ -183,7 +183,7 @@ class UserApi extends BaseApi implements IUserApi {
   Future<bool> buySubscriptionsOffer1() async {
     final res = await _networkHandler.post(
         path: "${Endpoint.plani_services_bulk_offer1_buy}");
-    if (res.statusCode == RemoteConstants.code_success)
+    if (res.statusCode == RemoteConstants.code_success_created)
       return true;
     else
       throw serverException(res);

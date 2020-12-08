@@ -54,8 +54,8 @@ class AppBloC extends BaseBloC {
       if (payload == LNM.pollNotificationId.toString()) {
         onPollNotificationLaunch.sinkAddSafe(true);
       }else{
-        selectNotificationSubject.sinkAddSafe(payload);
-
+        if(payload?.isNotEmpty == true)
+          launch(payload);
       }
     });
     Injector.flutterLocalNotificationsPlugin
@@ -127,8 +127,8 @@ class AppBloC extends BaseBloC {
   }
 
   static Future _showCommonNotification(FCMMessageModel model) async {
-    String title = "";
-    String message = "message";
+    String title = model.title;
+    String message = model.content;
 
     var bigTextStyleInformation = BigTextStyleInformation(message,
         htmlFormatBigText: true,
@@ -151,9 +151,9 @@ class AppBloC extends BaseBloC {
     Injector.flutterLocalNotificationsPlugin.show(
       LNM.fcmNoti,
       title,
-      "",
+      message,
       platformChannelSpecifics,
-      payload: "",
+      payload: model.externalUrl,
     );
   }
 }

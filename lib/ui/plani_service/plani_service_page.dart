@@ -29,6 +29,7 @@ class _PlaniServiceState
   void initState() {
     super.initState();
     bloc.loadData(widget.userModel);
+    bloc.loadCoins();
   }
 
   @override
@@ -36,7 +37,7 @@ class _PlaniServiceState
     return Stack(
       children: [
         TXMainAppBarWidget(
-          title: "Servicios de Planifive",
+          title: R.string.planifiveServices,
           leading: TXIconButtonWidget(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
@@ -52,6 +53,33 @@ class _PlaniServiceState
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      StreamBuilder<int>(
+                        builder: (ctx, snapshotCoins) {
+                          return Container(
+                            width: double.infinity,
+                            margin: EdgeInsets.only(right: 20),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                TXTextWidget(
+                                  text:snapshotCoins.data.toString(),
+                                  color: R.color.food_blue_dark,
+                                  fontWeight: FontWeight.bold,
+                                  size: 20,
+                                ),
+                                Icon(
+                                  Icons.ac_unit,
+                                  size: 14,
+                                  color: Colors.black,
+                                )
+                              ],
+                            ),
+                          );
+                        },
+                        stream: bloc.coinsResult,
+                        initialData: 0,
+                      ),
                       Container(
                         padding: EdgeInsets.symmetric(horizontal: 10),
                         child: Column(
@@ -60,7 +88,7 @@ class _PlaniServiceState
                             SizedBox(
                               height: 10,
                             ),
-                            TXTextWidget(text: "Ofertas"),
+                            TXTextWidget(text: R.string.offerts),
                             Card(
                               elevation: 2,
                               color: R.color.food_green,
@@ -68,8 +96,7 @@ class _PlaniServiceState
                                 onTap: () {
                                   _showBuyResume(
                                       context: context,
-                                      serviceTitle:
-                                          "Plani + Reporte alimentario + Reporte nutricional",
+                                      serviceTitle: R.string.offert1Title,
                                       coins: 2500,
                                       onOK: () {
                                         bloc.buyOffer1();
@@ -85,15 +112,13 @@ class _PlaniServiceState
                                           child: Column(
                                         children: [
                                           TXTextWidget(
-                                            text:
-                                                "Plani + Reporte de alimentación + Reporte nutricional",
+                                            text: R.string.offert1Title,
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold,
                                             size: 16,
                                           ),
                                           TXTextWidget(
-                                            text:
-                                                "Todos los servicios de Planifive",
+                                            text: R.string.offert1Description,
                                             color: R.color.gray_light,
                                             size: 14,
                                           ),
@@ -173,16 +198,16 @@ class _PlaniServiceState
                                                               : R.color
                                                                   .food_red,
                                                           fontWeight:
-                                                              FontWeight.normal,
+                                                              FontWeight.bold,
                                                           fontSize: 14),
                                                       text: model.isActive
-                                                          ? " activo"
-                                                          : " inactivo"),
+                                                          ? " (${R.string.active} - ${model.validAt != null ? CalendarUtils.showInFormat("MMMd/yyyy", model.validAt) : ""})."
+                                                          : " ${R.string.inactive}."),
                                                 ]),
                                           ),
                                           TXTextWidget(
                                             text: model.description,
-                                            color: R.color.gray,
+                                            color: R.color.gray_darkest,
                                             textAlign: TextAlign.justify,
                                             size: 14,
                                           ),
@@ -191,7 +216,7 @@ class _PlaniServiceState
                                             CrossAxisAlignment.start,
                                       )),
                                       SizedBox(
-                                        width: 5,
+                                        width: 10,
                                       ),
                                       TXTextWidget(
                                         text: model.valueCoins.toString(),
@@ -225,11 +250,11 @@ class _PlaniServiceState
     showCupertinoDialog<String>(
       context: context,
       builder: (BuildContext context) => TXCupertinoDialogWidget(
-        title: "Activar servicio(s)",
+        title: R.string.activateService,
         contentWidget: RichText(
           text: TextSpan(
               style: TextStyle(color: R.color.gray_darkest),
-              text: "Está a punto de adquirir: ",
+              text: R.string.activateServiceWarning1,
               children: [
                 TextSpan(
                     style: TextStyle(
@@ -239,7 +264,7 @@ class _PlaniServiceState
                     text: serviceTitle),
                 TextSpan(
                     style: TextStyle(color: R.color.gray_darkest),
-                    text: " por el plazo de 1 mes. Se descontarán "),
+                    text: R.string.activateServiceWarning2),
                 TextSpan(
                     style: TextStyle(
                         color: R.color.accent_color,
@@ -248,10 +273,10 @@ class _PlaniServiceState
                     text: "$coins "),
                 TextSpan(
                     style: TextStyle(color: R.color.gray_darkest),
-                    text: "monedas."),
+                    text: R.string.activateServiceWarning3),
               ]),
         ),
-        okText: "Continuar",
+        okText: R.string.continueAction,
         onOK: () {
           Navigator.pop(context);
           onOK();

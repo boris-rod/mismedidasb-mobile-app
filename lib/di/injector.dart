@@ -129,10 +129,9 @@ class Injector {
 
   Container container = Container();
 
-  static final FlutterLocalNotificationsPlugin
-  flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  static final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
   static final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
-
 
   ///Is the app in debug mode?
   bool isInDebugMode() {
@@ -317,8 +316,12 @@ class Injector {
     container.registerFactory((c) => AppBloC(container.resolve()));
     container.registerFactory(
         (c) => SplashBloC(container.resolve(), container.resolve()));
-    container.registerFactory((c) => LoginBloC(container.resolve(),
-        container.resolve(), container.resolve(), container.resolve()));
+    container.registerFactory((c) => LoginBloC(
+        container.resolve(),
+        container.resolve(),
+        container.resolve(),
+        container.resolve(),
+        container.resolve()));
     container.registerFactory((c) => RecoverPasswordBloC(container.resolve()));
     container.registerFactory((c) => RegisterBloC(
         container.resolve(), container.resolve(), container.resolve()));
@@ -355,7 +358,8 @@ class Injector {
         (c) => PollNotificationBloC(c.resolve(), c.resolve(), c.resolve()));
     container.registerFactory((c) => ScoreBloC(c.resolve()));
     container.registerFactory((c) => PlanifivePaymentBloC(c.resolve()));
-    container.registerFactory((c) => PlaniServiceBloC(c.resolve(), c.resolve()));
+    container
+        .registerFactory((c) => PlaniServiceBloC(c.resolve(), c.resolve()));
     container.registerFactory((c) => VideoBloC());
   }
 
@@ -372,8 +376,7 @@ class Injector {
       ),
     );
 
-    container.registerSingleton<ILNM, LNM>(
-        (c) => LNM(container.resolve()));
+    container.registerSingleton<ILNM, LNM>((c) => LNM(container.resolve()));
     container.registerSingleton<IRealTimeContainer, RealTimeContainer>(
         (c) => RealTimeContainer(container.resolve()));
   }

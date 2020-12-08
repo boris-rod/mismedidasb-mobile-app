@@ -297,4 +297,44 @@ abstract class StringsBase implements WidgetsLocalizations {
   String get referencesLink10;
 
   String get referencesLink11;
+
+  String get dateFormat1;
+
+  String get active;
+
+  String get inactive;
+
+  String get planifiveServices;
+
+  String get offerts;
+
+  String get offert1Title;
+
+  String get offert1Description;
+
+  String get activateService;
+
+  String get continueAction;
+
+  String get activateServiceWarning1;
+
+  String get activateServiceWarning2;
+
+  String get activateServiceWarning3;
+
+  String get nutritionalReport;
+
+  String get nutritionalReportDescription;
+
+  String get foodReport;
+
+  String get foodReportDescription;
+
+  String get plani;
+
+  String get planiDescription;
+
+  String get noEnoughCoinsToActivateService;
+
+  String get coins;
 }

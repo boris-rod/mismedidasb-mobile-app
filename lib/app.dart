@@ -24,10 +24,10 @@ import 'package:mismedidasb/ui/profile/profile_page.dart';
 class MyMeasuresBApp extends StatefulWidget {
   final Widget initPage;
   final IFCMFeature fcmFeature;
-  // final ILNM lnm;
+  final ILNM lnm;
 
   const MyMeasuresBApp(
-      {Key key, this.initPage, this.fcmFeature})
+      {Key key, this.initPage, this.fcmFeature, this.lnm})
       : super(key: key);
 
   @override

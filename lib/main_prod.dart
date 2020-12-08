@@ -15,7 +15,7 @@ void main() {
     runApp(MyMeasuresBApp(
       initPage: SplashPage(),
       fcmFeature: Injector.instance.getDependency(),
-      // lnm: Injector.instance.getDependency(),
+      lnm: Injector.instance.getDependency(),
     ));
   }, (error, stackTrace) async {
     // Whenever an error occurs, call the `reportCrash` function. This will send
