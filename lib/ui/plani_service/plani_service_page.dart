@@ -62,17 +62,14 @@ class _PlaniServiceState
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
+                                TXTextWidget(text: "${R.string.coins}: "),
                                 TXTextWidget(
                                   text:snapshotCoins.data.toString(),
                                   color: R.color.food_blue_dark,
                                   fontWeight: FontWeight.bold,
                                   size: 20,
                                 ),
-                                Icon(
-                                  Icons.ac_unit,
-                                  size: 14,
-                                  color: Colors.black,
-                                )
+                                Image.asset(R.image.coins, width: 20, height: 20,)
                               ],
                             ),
                           );
@@ -133,11 +130,7 @@ class _PlaniServiceState
                                         text: "2500",
                                         color: Colors.white,
                                       ),
-                                      Icon(
-                                        Icons.ac_unit,
-                                        size: 14,
-                                        color: Colors.white,
-                                      )
+                                      Image.asset(R.image.coins, width: 20, height: 20,)
                                     ],
                                   ),
                                 ),
@@ -221,10 +214,7 @@ class _PlaniServiceState
                                       TXTextWidget(
                                         text: model.valueCoins.toString(),
                                       ),
-                                      Icon(
-                                        Icons.ac_unit,
-                                        size: 14,
-                                      )
+                                      Image.asset(R.image.coins, width: 20, height: 20,)
                                     ],
                                   ),
                                 ),

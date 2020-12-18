@@ -139,17 +139,23 @@ class _ScoreState extends StateWithBloC<ScorePage, ScoreBloC> {
                                               MainAxisAlignment.spaceEvenly,
                                           children: <Widget>[
                                             TXTextWidget(
-                                              text: "Monedas",
+                                              text: R.string.coins,
                                               fontWeight: FontWeight.bold,
                                               size: 10,
                                             ),
                                             SizedBox(
                                               height: 20,
                                             ),
-                                            TXTextWidget(
-                                              text: model.coins.toString(),
-                                              size: 20,
-                                              textAlign: TextAlign.center,
+                                            Row(
+                                              children: [
+                                                TXTextWidget(
+                                                  text: model.coins.toString(),
+                                                  size: 20,
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                                Image.asset(R.image.coins, width: 20, height: 20,)
+                                              ],
+                                              mainAxisAlignment: MainAxisAlignment.center,
                                             ),
                                             TXTextLinkWidget(
                                               textColor: R.color.accent_color,

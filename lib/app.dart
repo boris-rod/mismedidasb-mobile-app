@@ -1,11 +1,16 @@
+import 'dart:io';
+
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mismedidasb/app_bloc.dart';
 import 'package:mismedidasb/di/injector.dart';
 import 'package:mismedidasb/domain/setting/setting_model.dart';
+import 'package:mismedidasb/fcm/fcm_message_model.dart';
 import 'package:mismedidasb/fcm/i_fcm_feature.dart';
 import 'package:mismedidasb/lnm/i_lnm.dart';
 import 'package:mismedidasb/lnm/lnm.dart';
@@ -20,6 +25,11 @@ import 'dart:ui' as ui;
 import 'package:mismedidasb/ui/_tx_widget/tx_button_widget.dart';
 import 'package:mismedidasb/ui/poll_notification/poll_notification_page.dart';
 import 'package:mismedidasb/ui/profile/profile_page.dart';
+import 'package:rxdart/subjects.dart';
+import 'package:mismedidasb/utils/extensions.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+final BehaviorSubject<bool> onPollNotificationLaunch = BehaviorSubject<bool>();
 
 class MyMeasuresBApp extends StatefulWidget {
   final Widget initPage;
@@ -35,6 +45,10 @@ class MyMeasuresBApp extends StatefulWidget {
 }
 
 class _MyMeasuresBState extends StateWithBloC<MyMeasuresBApp, AppBloC> {
+
+  final localizationDelegate = CustomLocalizationsDelegate();
+
+
   @override
   void initState() {
     super.initState();
@@ -44,7 +58,8 @@ class _MyMeasuresBState extends StateWithBloC<MyMeasuresBApp, AppBloC> {
     ]);
     // widget.fcmFeature.setUp();
     // widget.lnm.setup();
-    bloc.configureNotificationSystem();
+    _initLocalNotifications();
+    _initFirebaseMessaging();
   }
 
 //  @override
@@ -63,7 +78,6 @@ class _MyMeasuresBState extends StateWithBloC<MyMeasuresBApp, AppBloC> {
 
   @override
   Widget buildWidget(BuildContext context) {
-    final localizationDelegate = CustomLocalizationsDelegate();
     return StreamBuilder<SettingModel>(
       stream: languageCodeResult,
       initialData: SettingModel(
@@ -117,5 +131,140 @@ class _MyMeasuresBState extends StateWithBloC<MyMeasuresBApp, AppBloC> {
         );
       },
     );
+  }
+
+
+   _initLocalNotifications() async {
+    var initializationSettingsAndroid =
+    new AndroidInitializationSettings('@drawable/logo',);
+    var initializationSettingsIOS = new IOSInitializationSettings();
+    var initializationSettings = new InitializationSettings(
+        android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
+    Injector.instance.localNotificationInstance.initialize(initializationSettings,
+        onSelectNotification: (payload) async {
+          if (payload == LNM.pollNotificationId.toString()) {
+            onPollNotificationLaunch.sinkAddSafe(true);
+          }else{
+            if(payload?.isNotEmpty == true)
+              launch(payload);
+          }
+        });
+    Injector.instance.localNotificationInstance
+        .resolvePlatformSpecificImplementation<
+        IOSFlutterLocalNotificationsPlugin>()
+        ?.requestPermissions(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+
+    // await _createNotificationChannel(LNM.fcmNoti.toString(), "Planifive", "Planifive");
+  }
+
+  Future<void> _initFirebaseMessaging() async {
+    Injector.instance.fcmNotificationInstance.configure(
+      onMessage: (Map<String, dynamic> message) {
+        // print(message);
+        _showNotification(message);
+        return;
+      },
+      onBackgroundMessage: Platform.isIOS ? null : myBackgroundMessageHandler,
+      onResume: (Map<String, dynamic> message) {
+        print(message);
+        if (Platform.isIOS) {
+          final Map<String, dynamic> data = Map<String, dynamic>.from(message);
+          FCMMessageModel model = FCMMessageModel.fromString(data);
+          final payload = model?.externalUrl ?? "";
+          if(payload?.isNotEmpty == true)
+            launch(payload);
+        }
+        return;
+      },
+      onLaunch: (Map<String, dynamic> message) {
+        print(message);
+        if (Platform.isIOS) {
+          final Map<String, dynamic> data = Map<String, dynamic>.from(message);
+          FCMMessageModel model = FCMMessageModel.fromString(data);
+          final payload = model?.externalUrl ?? "";
+          if(payload?.isNotEmpty == true)
+            launch(payload);
+        }
+        return;
+      },
+    );
+    Injector.instance.fcmNotificationInstance.requestNotificationPermissions(
+        const IosNotificationSettings(sound: true, badge: true, alert: true));
+  }
+
+  // TOP-LEVEL or STATIC function to handle background messages
+  static Future<dynamic> myBackgroundMessageHandler(
+      Map<String, dynamic> message) {
+    print(message);
+    _showNotificationInBackground(message);
+    return Future<void>.value();
+  }
+
+  static Future _showNotification(Map<String, dynamic> fcmMessage) async {
+    final Map<String, dynamic> data = Platform.isIOS
+        ? fcmMessage
+        : Map<String, dynamic>.from(fcmMessage["data"]);
+    FCMMessageModel model = FCMMessageModel.fromString(data);
+
+    await _showCommonNotification(model);
+  }
+
+  static Future _showNotificationInBackground(
+      Map<String, dynamic> fcmMessage) async {
+    final Map<String, dynamic> data = Platform.isIOS
+        ? fcmMessage
+        : Map<String, dynamic>.from(fcmMessage["data"]);
+    FCMMessageModel model = FCMMessageModel.fromString(data);
+
+    await _showCommonNotification(model);
+  }
+
+  static Future _showCommonNotification(FCMMessageModel model) async {
+    String title = model.title;
+    String message = model.content;
+
+    var bigTextStyleInformation = BigTextStyleInformation(message,
+        htmlFormatBigText: true,
+        contentTitle: title,
+        htmlFormatContentTitle: true,
+        summaryText: "Planifive",
+        htmlFormatSummaryText: true);
+    var platformChannelSpecificsAndroid =
+    new AndroidNotificationDetails(LNM.fcmNoti.toString(), "Planifive", "Planifive",
+        playSound: true,
+        enableVibration: true,
+        importance: Importance.max,
+        priority: Priority.high,
+        styleInformation: bigTextStyleInformation);
+    var platformChannelSpecificsIos = new IOSNotificationDetails();
+    var platformChannelSpecifics = new NotificationDetails(
+        android: platformChannelSpecificsAndroid,
+        iOS: platformChannelSpecificsIos);
+
+    await Injector.instance.localNotificationInstance.show(
+      LNM.fcmNoti,
+      title,
+      message,
+      platformChannelSpecifics,
+      payload: model.externalUrl,
+    );
+  }
+
+  static Future<void> _createNotificationChannel(String id, String name,
+      String description) async {
+    final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    var androidNotificationChannel = AndroidNotificationChannel(
+      id,
+      name,
+      description,
+    );
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(androidNotificationChannel);
   }
 }

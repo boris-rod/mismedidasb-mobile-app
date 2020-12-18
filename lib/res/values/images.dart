@@ -54,4 +54,5 @@ class AppImage {
   final under_limit_icon = 'lib/res/assets/img/under_limit_icon.png';
   final bar_scroll_icon = 'lib/res/assets/img/bar_scroll_icon.png';
   final divider_icon_yellow = 'lib/res/assets/img/divider_icon_yellow.jpeg';
+  final coins = 'lib/res/assets/img/coins.png';
 }

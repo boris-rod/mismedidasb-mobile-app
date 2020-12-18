@@ -20,8 +20,6 @@ import 'package:timezone/timezone.dart' as tz;
 //final BehaviorSubject<String> selectNotificationSubject =
 //    BehaviorSubject<String>();
 
-final BehaviorSubject<bool> onPollNotificationLaunch = BehaviorSubject<bool>();
-
 class LNM implements ILNM {
   final SharedPreferencesManager _sharedPreferencesManager;
 
@@ -52,16 +50,16 @@ class LNM implements ILNM {
 
     var initializationSettings = InitializationSettings(
         android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
-    await Injector.flutterLocalNotificationsPlugin.initialize(
+    await Injector.instance.localNotificationInstance.initialize(
         initializationSettings, onSelectNotification: (String payload) async {
       if (payload?.isNotEmpty == true) {
         if (payload == pollNotificationId.toString()) {
-          onPollNotificationLaunch.sinkAddSafe(true);
+          // onPollNotificationLaunch.sinkAddSafe(true);
         }
       }
     });
 
-    Injector.flutterLocalNotificationsPlugin
+    Injector.instance.localNotificationInstance
         .resolvePlatformSpecificImplementation<
             IOSFlutterLocalNotificationsPlugin>()
         ?.requestPermissions(
@@ -92,7 +90,7 @@ class LNM implements ILNM {
 
   @override
   Future<void> cancel(int id) async {
-    await Injector.flutterLocalNotificationsPlugin.cancel(id);
+    await Injector.instance.localNotificationInstance.cancel(id);
   }
 
   @override
@@ -121,20 +119,6 @@ class LNM implements ILNM {
         content: content,
         time: Time(22, 30, 0),
         notificationDetails: platformChannelSpecifics);
-
-    // final nowDate = DateTime.now();
-    // await Injector.flutterLocalNotificationsPlugin.zonedSchedule(
-    //     pollNotificationId,
-    //     title,
-    //     content,
-    //     tz.TZDateTime.local(nowDate.year, nowDate.month, nowDate.day, 20, 00, 0)
-    //         .add(Duration(days: 1)),
-    //     platformChannelSpecifics,
-    //     androidAllowWhileIdle: true,
-    //     uiLocalNotificationDateInterpretation:
-    //         UILocalNotificationDateInterpretation.absoluteTime,
-    //     matchDateTimeComponents: DateTimeComponents.time,
-    //     payload: '$pollNotificationId');
   }
 
   @override
@@ -166,21 +150,6 @@ class LNM implements ILNM {
           content: content,
           time: Time(time.hour, time.minute, time.second),
           notificationDetails: platformChannelSpecifics);
-
-      // final nowDate = DateTime.now();
-      // await Injector.flutterLocalNotificationsPlugin.zonedSchedule(
-      //     breakFastIdReminderId,
-      //     title,
-      //     content,
-      //     tz.TZDateTime.local(nowDate.year, nowDate.month, nowDate.day,
-      //             time.hour, time.minute, time.second)
-      //         .add(Duration(days: 1)),
-      //     platformChannelSpecifics,
-      //     androidAllowWhileIdle: true,
-      //     uiLocalNotificationDateInterpretation:
-      //         UILocalNotificationDateInterpretation.absoluteTime,
-      //     matchDateTimeComponents: DateTimeComponents.time,
-      //     payload: '$breakFastIdReminderId');
     }
   }
 
@@ -213,21 +182,6 @@ class LNM implements ILNM {
           content: content,
           time: Time(time.hour, time.minute, time.second),
           notificationDetails: platformChannelSpecifics);
-
-      // final nowDate = DateTime.now();
-      // await Injector.flutterLocalNotificationsPlugin.zonedSchedule(
-      //     dinnerIdReminderId,
-      //     title,
-      //     content,
-      //     tz.TZDateTime.local(nowDate.year, nowDate.month, nowDate.day,
-      //             time.hour, time.minute, time.second)
-      //         .add(Duration(days: 1)),
-      //     platformChannelSpecifics,
-      //     androidAllowWhileIdle: true,
-      //     uiLocalNotificationDateInterpretation:
-      //         UILocalNotificationDateInterpretation.absoluteTime,
-      //     matchDateTimeComponents: DateTimeComponents.time,
-      //     payload: '$dinnerIdReminderId');
     }
   }
 
@@ -261,21 +215,6 @@ class LNM implements ILNM {
           content: content,
           time: Time(time.hour, time.minute, time.second),
           notificationDetails: platformChannelSpecifics);
-
-      // final nowDate = DateTime.now();
-      // await Injector.flutterLocalNotificationsPlugin.zonedSchedule(
-      //     drinkWater1Id,
-      //     title,
-      //     content,
-      //     tz.TZDateTime.local(nowDate.year, nowDate.month, nowDate.day,
-      //             time.hour, time.minute, time.second)
-      //         .add(Duration(days: 1)),
-      //     platformChannelSpecifics,
-      //     androidAllowWhileIdle: true,
-      //     uiLocalNotificationDateInterpretation:
-      //         UILocalNotificationDateInterpretation.absoluteTime,
-      //     matchDateTimeComponents: DateTimeComponents.time,
-      //     payload: '$drinkWater1Id');
     }
   }
 
@@ -309,21 +248,6 @@ class LNM implements ILNM {
           content: content,
           time: Time(time.hour, time.minute, time.second),
           notificationDetails: platformChannelSpecifics);
-
-      // final nowDate = DateTime.now();
-      // await Injector.flutterLocalNotificationsPlugin.zonedSchedule(
-      //     drinkWater2Id,
-      //     title,
-      //     content,
-      //     tz.TZDateTime.local(nowDate.year, nowDate.month, nowDate.day,
-      //             time.hour, time.minute, time.second)
-      //         .add(Duration(days: 1)),
-      //     platformChannelSpecifics,
-      //     androidAllowWhileIdle: true,
-      //     uiLocalNotificationDateInterpretation:
-      //         UILocalNotificationDateInterpretation.absoluteTime,
-      //     matchDateTimeComponents: DateTimeComponents.time,
-      //     payload: '$drinkWater2Id');
     }
   }
 
@@ -356,21 +280,6 @@ class LNM implements ILNM {
           content: content,
           time: Time(time.hour, time.minute, time.second),
           notificationDetails: platformChannelSpecifics);
-
-      // final nowDate = DateTime.now();
-      // await Injector.flutterLocalNotificationsPlugin.zonedSchedule(
-      //     lunchIdReminderId,
-      //     title,
-      //     content,
-      //     tz.TZDateTime.local(nowDate.year, nowDate.month, nowDate.day,
-      //             time.hour, time.minute, time.second)
-      //         .add(Duration(days: 1)),
-      //     platformChannelSpecifics,
-      //     androidAllowWhileIdle: true,
-      //     uiLocalNotificationDateInterpretation:
-      //         UILocalNotificationDateInterpretation.absoluteTime,
-      //     matchDateTimeComponents: DateTimeComponents.time,
-      //     payload: '$lunchIdReminderId');
     }
   }
 
@@ -403,21 +312,6 @@ class LNM implements ILNM {
           content: content,
           time: Time(time.hour, time.minute, time.second),
           notificationDetails: platformChannelSpecifics);
-
-      // final nowDate = DateTime.now();
-      // await Injector.flutterLocalNotificationsPlugin.zonedSchedule(
-      //     makeExerciseId,
-      //     title,
-      //     content,
-      //     tz.TZDateTime.local(nowDate.year, nowDate.month, nowDate.day,
-      //             time.hour, time.minute, time.second)
-      //         .add(Duration(days: 1)),
-      //     platformChannelSpecifics,
-      //     androidAllowWhileIdle: true,
-      //     uiLocalNotificationDateInterpretation:
-      //         UILocalNotificationDateInterpretation.absoluteTime,
-      //     matchDateTimeComponents: DateTimeComponents.time,
-      //     payload: '$makeExerciseId');
     }
   }
 
@@ -450,21 +344,6 @@ class LNM implements ILNM {
           content: content,
           time: Time(time.hour, time.minute, time.second),
           notificationDetails: platformChannelSpecifics);
-
-      // final nowDate = DateTime.now();
-      // await Injector.flutterLocalNotificationsPlugin.zonedSchedule(
-      //     planFoodsId,
-      //     title,
-      //     content,
-      //     tz.TZDateTime.local(nowDate.year, nowDate.month, nowDate.day,
-      //             time.hour, time.minute, time.second)
-      //         .add(Duration(days: 1)),
-      //     platformChannelSpecifics,
-      //     androidAllowWhileIdle: true,
-      //     uiLocalNotificationDateInterpretation:
-      //         UILocalNotificationDateInterpretation.absoluteTime,
-      //     matchDateTimeComponents: DateTimeComponents.time,
-      //     payload: '$planFoodsId');
     }
   }
 
@@ -498,21 +377,6 @@ class LNM implements ILNM {
           content: content,
           time: Time(time.hour, time.minute, time.second),
           notificationDetails: platformChannelSpecifics);
-
-      // final nowDate = DateTime.now();
-      // await Injector.flutterLocalNotificationsPlugin.zonedSchedule(
-      //     snack1IdReminderId,
-      //     title,
-      //     content,
-      //     tz.TZDateTime.local(nowDate.year, nowDate.month, nowDate.day,
-      //             time.hour, time.minute, time.second)
-      //         .add(Duration(days: 1)),
-      //     platformChannelSpecifics,
-      //     androidAllowWhileIdle: true,
-      //     uiLocalNotificationDateInterpretation:
-      //         UILocalNotificationDateInterpretation.absoluteTime,
-      //     matchDateTimeComponents: DateTimeComponents.time,
-      //     payload: '$snack1IdReminderId');
     }
   }
 
@@ -545,21 +409,6 @@ class LNM implements ILNM {
           content: content,
           time: Time(time.hour, time.minute, time.second),
           notificationDetails: platformChannelSpecifics);
-
-      // final nowDate = DateTime.now();
-      // await Injector.flutterLocalNotificationsPlugin.zonedSchedule(
-      //     snack2IdReminderId,
-      //     title,
-      //     content,
-      //     tz.TZDateTime.local(nowDate.year, nowDate.month, nowDate.day,
-      //             time.hour, time.minute, time.second)
-      //         .add(Duration(days: 1)),
-      //     platformChannelSpecifics,
-      //     androidAllowWhileIdle: true,
-      //     uiLocalNotificationDateInterpretation:
-      //         UILocalNotificationDateInterpretation.absoluteTime,
-      //     matchDateTimeComponents: DateTimeComponents.time,
-      //     payload: '$snack2IdReminderId');
     }
   }
 
@@ -579,19 +428,18 @@ class LNM implements ILNM {
         android: androidPlatformChannelSpecifics,
         iOS: iOSPlatformChannelSpecifics);
 
-    await Injector.flutterLocalNotificationsPlugin.show(
+    await Injector.instance.localNotificationInstance.show(
         channelId, title, content, platformChannelSpecifics,
         payload: channelId.toString());
   }
 
   @override
   Future<void> cancelAll() async {
-    await Injector.flutterLocalNotificationsPlugin.cancelAll();
+    await Injector.instance.localNotificationInstance.cancelAll();
   }
 
   Future<bool> checkIfPendingNotificationExist(int notiId) async {
-    List<PendingNotificationRequest> list = await Injector
-        .flutterLocalNotificationsPlugin
+    List<PendingNotificationRequest> list = await Injector.instance.localNotificationInstance
         .pendingNotificationRequests();
     final noti = list.firstWhere((element) => element.id == notiId, orElse: () {
       return null;
@@ -641,18 +489,18 @@ class LNM implements ILNM {
       Time time,
       NotificationDetails notificationDetails}) async {
     final nowDate = DateTime.now();
-    await Injector.flutterLocalNotificationsPlugin.zonedSchedule(
-        id,
-        title,
-        content,
-        tz.TZDateTime.local(nowDate.year, nowDate.month, nowDate.day, time.hour,
-                time.minute, time.second)
-            .add(Duration(days: 1)),
-        notificationDetails,
-        androidAllowWhileIdle: true,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime,
-        matchDateTimeComponents: DateTimeComponents.time,
-        payload: '$id');
+    // await _flutterLocalNotificationsPlugin.zonedSchedule(
+    //     id,
+    //     title,
+    //     content,
+    //     tz.TZDateTime.local(nowDate.year, nowDate.month, nowDate.day, time.hour,
+    //             time.minute, time.second)
+    //         .add(Duration(days: 1)),
+    //     notificationDetails,
+    //     androidAllowWhileIdle: true,
+    //     uiLocalNotificationDateInterpretation:
+    //         UILocalNotificationDateInterpretation.absoluteTime,
+    //     matchDateTimeComponents: DateTimeComponents.time,
+    //     payload: '$id');
   }
 }

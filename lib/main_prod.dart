@@ -8,6 +8,7 @@ import 'app.dart';
 import 'di/injector.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   Injector.initProd();
   Crashlytics.instance.enableInDevMode = false;
   FlutterError.onError = Crashlytics.instance.recordFlutterError;

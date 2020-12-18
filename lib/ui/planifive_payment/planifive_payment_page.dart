@@ -94,8 +94,15 @@ class _PlanifivePaymentState
                                   ],
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                 )),
-                                TXTextWidget(
-                                  text: "\$${model.price.toString()}",
+                                Row(
+                                  children: [
+                                    TXTextWidget(
+                                      text: "${model.price.toString()}",
+                                      fontWeight: FontWeight.bold,
+                                      size: 18,
+                                    ),
+                                    Icon(Icons.euro, size: 15,)
+                                  ],
                                 )
                               ],
                             ),

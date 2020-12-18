@@ -7,6 +7,7 @@ import 'package:mismedidasb/di/injector.dart';
 import 'package:mismedidasb/ui/splash/splash_page.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   Injector.initDev();
   Crashlytics.instance.enableInDevMode = false;
   FlutterError.onError = Crashlytics.instance.recordFlutterError;

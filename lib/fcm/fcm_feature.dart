@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mismedidasb/data/api/remote/network_handler.dart';
 import 'package:mismedidasb/di/injector.dart';
 import 'package:mismedidasb/fcm/i_fcm_feature.dart';
@@ -16,7 +18,7 @@ class FCMFeature extends IFCMFeature {
   @override
   void deactivateToken() async {
     try {
-      final token = await Injector.firebaseMessaging.getToken();
+      final token = await Injector.instance.fcmNotificationInstance.getToken();
       print(token);
       final deviceType = Platform.isAndroid ? 0 : (Platform.isIOS ? 1 : -1);
       await networkHandler.post(
@@ -32,7 +34,7 @@ class FCMFeature extends IFCMFeature {
   @override
   Future<void> refreshToken() async {
     try {
-      final token = await Injector.firebaseMessaging.getToken();
+      final token = await Injector.instance.fcmNotificationInstance.getToken();
       logger.log('FCM TOKEN');
       logger.log(token);
       final deviceType = Platform.isAndroid ? 0 : (Platform.isIOS ? 1 : -1);
