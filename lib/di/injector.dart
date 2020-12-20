@@ -130,7 +130,7 @@ class Injector {
   Container container = Container();
 
   FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin;
-  FirebaseMessaging _firebaseMessaging;
+  // FirebaseMessaging _firebaseMessaging;
 
   FlutterLocalNotificationsPlugin get localNotificationInstance {
     if(_flutterLocalNotificationsPlugin == null)
@@ -138,11 +138,11 @@ class Injector {
     return _flutterLocalNotificationsPlugin;
   }
 
-  FirebaseMessaging get fcmNotificationInstance {
-    if(_firebaseMessaging == null)
-      _firebaseMessaging = FirebaseMessaging();
-    return _firebaseMessaging;
-  }
+  // FirebaseMessaging get fcmNotificationInstance {
+  //   if(_firebaseMessaging == null)
+  //     _firebaseMessaging = FirebaseMessaging();
+  //   return _firebaseMessaging;
+  // }
   ///Is the app in debug mode?
   bool isInDebugMode() {
     var debugMode = false;

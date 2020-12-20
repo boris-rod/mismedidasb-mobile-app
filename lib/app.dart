@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -44,15 +46,16 @@ class MyMeasuresBApp extends StatefulWidget {
   State<StatefulWidget> createState() => _MyMeasuresBState();
 }
 
-class _MyMeasuresBState extends StateWithBloC<MyMeasuresBApp, AppBloC> {
+class _MyMeasuresBState extends StateWithBloC<MyMeasuresBApp, AppBloC> with WidgetsBindingObserver{
 
   final localizationDelegate = CustomLocalizationsDelegate();
-
+  FirebaseAnalytics analytics = FirebaseAnalytics();
+  FirebaseMessaging _fireBaseMessaging = FirebaseMessaging();
 
   @override
   void initState() {
     super.initState();
-//    WidgetsBinding.instance.addObserver(this);
+   WidgetsBinding.instance.addObserver(this);
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
@@ -62,11 +65,11 @@ class _MyMeasuresBState extends StateWithBloC<MyMeasuresBApp, AppBloC> {
     _initFirebaseMessaging();
   }
 
-//  @override
-//  void dispose() {
-//    WidgetsBinding.instance.removeObserver(this);
-//    super.dispose();
-//  }
+ @override
+ void dispose() {
+   WidgetsBinding.instance.removeObserver(this);
+   super.dispose();
+ }
 
 //  @override
 //  void didChangePlatformBrightness() {
@@ -85,6 +88,9 @@ class _MyMeasuresBState extends StateWithBloC<MyMeasuresBApp, AppBloC> {
       builder: (ctx, snapshot) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
+          navigatorObservers: [
+            FirebaseAnalyticsObserver(analytics: analytics),
+          ],
           builder: (BuildContext context, Widget child) {
             return MediaQuery(
               data: MediaQuery.of(context).copyWith(textScaleFactor: 1),
@@ -158,41 +164,43 @@ class _MyMeasuresBState extends StateWithBloC<MyMeasuresBApp, AppBloC> {
       sound: true,
     );
 
-    // await _createNotificationChannel(LNM.fcmNoti.toString(), "Planifive", "Planifive");
+    // await _createNotificationChannel(LNM.fcmNoti.toString(), "planifive_channel", "planifive_channel");
   }
 
-  Future<void> _initFirebaseMessaging() async {
-    Injector.instance.fcmNotificationInstance.configure(
+  _initFirebaseMessaging() async {
+    _fireBaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) {
-        // print(message);
+        print(message);
         _showNotification(message);
         return;
       },
       onBackgroundMessage: Platform.isIOS ? null : myBackgroundMessageHandler,
-      onResume: (Map<String, dynamic> message) {
-        print(message);
-        if (Platform.isIOS) {
-          final Map<String, dynamic> data = Map<String, dynamic>.from(message);
-          FCMMessageModel model = FCMMessageModel.fromString(data);
-          final payload = model?.externalUrl ?? "";
-          if(payload?.isNotEmpty == true)
-            launch(payload);
-        }
+      onResume: (Map<String, dynamic> fcmMessage) {
+        print("onResume FCM NOTI");
+        print(fcmMessage);
+        final Map<String, dynamic> data = Platform.isIOS
+            ? fcmMessage
+            : Map<String, dynamic>.from(fcmMessage["data"]);
+        FCMMessageModel model = FCMMessageModel.fromString(data);
+        final payload = model?.externalUrl ?? "";
+        if(payload?.isNotEmpty == true)
+          launch(payload);
         return;
       },
-      onLaunch: (Map<String, dynamic> message) {
-        print(message);
-        if (Platform.isIOS) {
-          final Map<String, dynamic> data = Map<String, dynamic>.from(message);
-          FCMMessageModel model = FCMMessageModel.fromString(data);
-          final payload = model?.externalUrl ?? "";
-          if(payload?.isNotEmpty == true)
-            launch(payload);
-        }
+      onLaunch: (Map<String, dynamic> fcmMessage) {
+        print("onLaunch FCM NOTI");
+        print(fcmMessage);
+        final Map<String, dynamic> data = Platform.isIOS
+            ? fcmMessage
+            : Map<String, dynamic>.from(fcmMessage["data"]);
+        FCMMessageModel model = FCMMessageModel.fromString(data);
+        final payload = model?.externalUrl ?? "";
+        if(payload?.isNotEmpty == true)
+          launch(payload);
         return;
       },
     );
-    Injector.instance.fcmNotificationInstance.requestNotificationPermissions(
+    _fireBaseMessaging.requestNotificationPermissions(
         const IosNotificationSettings(sound: true, badge: true, alert: true));
   }
 
@@ -234,7 +242,7 @@ class _MyMeasuresBState extends StateWithBloC<MyMeasuresBApp, AppBloC> {
         summaryText: "Planifive",
         htmlFormatSummaryText: true);
     var platformChannelSpecificsAndroid =
-    new AndroidNotificationDetails(LNM.fcmNoti.toString(), "Planifive", "Planifive",
+    new AndroidNotificationDetails(LNM.fcmNoti.toString(), "planifive_channel", "planifive_channel",
         playSound: true,
         enableVibration: true,
         importance: Importance.max,
@@ -258,7 +266,7 @@ class _MyMeasuresBState extends StateWithBloC<MyMeasuresBApp, AppBloC> {
       String description) async {
     final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     var androidNotificationChannel = AndroidNotificationChannel(
-      id,
+      "android_channel_id",
       name,
       description,
     );

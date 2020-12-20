@@ -6,10 +6,13 @@ import 'package:mismedidasb/ui/_base/bloc_state.dart';
 import 'package:mismedidasb/ui/_base/navigation_utils.dart';
 import 'package:mismedidasb/ui/home/home_page.dart';
 import 'package:mismedidasb/ui/login/login_page.dart';
+import 'package:mismedidasb/ui/poll_notification/poll_notification_page.dart';
 import 'package:mismedidasb/ui/splash/splash_bloc.dart';
 import 'dart:ui' as ui;
 
 import 'package:mismedidasb/utils/utils.dart';
+
+import '../../app.dart';
 
 class SplashPage extends StatefulWidget {
   @override
@@ -32,6 +35,9 @@ class _SplashState extends StateWithBloC<SplashPage, SplashBloC> {
           context, (result ?? true) ? LoginPage() : HomePage());
     });
     bloc.shouldNavigateToLogin();
+    // onPollNotificationLaunch.listen((value) {
+    //   NavigationUtils.push(context, PollNotificationPage());
+    // });
   }
 
   @override

@@ -12,13 +12,14 @@ import 'package:mismedidasb/utils/logger.dart';
 class FCMFeature extends IFCMFeature {
   final NetworkHandler networkHandler;
   final Logger logger;
+  final firebaseMessaging = FirebaseMessaging();
 
   FCMFeature(this.networkHandler, this.logger);
 
   @override
   void deactivateToken() async {
     try {
-      final token = await Injector.instance.fcmNotificationInstance.getToken();
+      final token = await firebaseMessaging.getToken();
       print(token);
       final deviceType = Platform.isAndroid ? 0 : (Platform.isIOS ? 1 : -1);
       await networkHandler.post(
@@ -34,7 +35,7 @@ class FCMFeature extends IFCMFeature {
   @override
   Future<void> refreshToken() async {
     try {
-      final token = await Injector.instance.fcmNotificationInstance.getToken();
+      final token = await firebaseMessaging.getToken();
       logger.log('FCM TOKEN');
       logger.log(token);
       final deviceType = Platform.isAndroid ? 0 : (Platform.isIOS ? 1 : -1);

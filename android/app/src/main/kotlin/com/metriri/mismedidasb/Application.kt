@@ -17,7 +17,7 @@ import android.os.Build
 class Application : FlutterApplication(), PluginRegistrantCallback {
     override fun onCreate() {
         super.onCreate()
-//        this.createChannel();
+        this.createChannel();
         FlutterFirebaseMessagingService.setPluginRegistrant(this)
     }
 
@@ -25,13 +25,13 @@ class Application : FlutterApplication(), PluginRegistrantCallback {
         FirebaseCloudMessagingPluginRegistrant.registerWith(registry)
     }
 
-//    private fun createChannel() {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            // Create the NotificationChannel
-//            val name: String = getString(R.string.default_notification_channel_id)
-//            val channel = NotificationChannel(name, "default", NotificationManager.IMPORTANCE_HIGH)
-//            val notificationManager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-//            notificationManager.createNotificationChannel(channel)
-//        }
-//    }
+    private fun createChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // Create the NotificationChannel
+            val name: String = getString(R.string.default_notification_channel_id)
+            val channel = NotificationChannel(name, "default", NotificationManager.IMPORTANCE_HIGH)
+            val notificationManager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
 }
