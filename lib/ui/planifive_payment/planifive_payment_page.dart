@@ -101,7 +101,7 @@ class _PlanifivePaymentState
                                       fontWeight: FontWeight.bold,
                                       size: 18,
                                     ),
-                                    Icon(Icons.euro, size: 15,)
+                                    Icon(Icons.euro_symbol, size: 15,)
                                   ],
                                 )
                               ],
