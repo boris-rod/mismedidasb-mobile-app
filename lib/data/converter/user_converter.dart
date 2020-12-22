@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:mismedidasb/data/api/remote/remote_constanst.dart';
 import 'package:mismedidasb/domain/user/i_user_converter.dart';
 import 'package:mismedidasb/domain/user/user_model.dart';
@@ -105,7 +107,12 @@ class UserConverter implements IUserConverter {
   @override
   AppVersionModel fromJsonAppVersion(Map<String, dynamic> json) {
     AppVersionModel model = AppVersionModel(
-        version: json["version"], isMandatory: json["isMandatory"]);
+        version: (Platform.isIOS && json.containsKey("versionIOS"))
+            ? json["versionIOS"]
+            : json["version"],
+        isMandatory: (Platform.isIOS && json.containsKey("isMandatoryIOS"))
+            ? json["isMandatoryIOS"]
+            : json["isMandatory"]);
     return model;
   }
 
