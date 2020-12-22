@@ -136,7 +136,7 @@ class _ScoreState extends StateWithBloC<ScorePage, ScoreBloC> {
                                       ),
                                       Expanded(
                                         flex: 1,
-                                        child: Column(
+                                        child: Platform.isIOS ? Container() : Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceEvenly,
                                           children: <Widget>[
@@ -159,7 +159,6 @@ class _ScoreState extends StateWithBloC<ScorePage, ScoreBloC> {
                                               ],
                                               mainAxisAlignment: MainAxisAlignment.center,
                                             ),
-                                            Platform.isIOS ? Container() :
                                             TXTextLinkWidget(
                                               textColor: R.color.accent_color,
                                               fontSize: 12,
