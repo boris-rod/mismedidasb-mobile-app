@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_html/style.dart';
@@ -157,6 +159,7 @@ class _ScoreState extends StateWithBloC<ScorePage, ScoreBloC> {
                                               ],
                                               mainAxisAlignment: MainAxisAlignment.center,
                                             ),
+                                            Platform.isIOS ? Container() :
                                             TXTextLinkWidget(
                                               textColor: R.color.accent_color,
                                               fontSize: 12,
