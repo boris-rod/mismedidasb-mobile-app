@@ -154,10 +154,6 @@ PODS:
   - sqflite (0.0.1):
     - Flutter
     - FMDB (~> 2.7.2)
-  - Stripe (19.4.0)
-  - stripe_payment (1.0.0):
-    - Flutter
-    - Stripe (~> 19.4.0)
   - Toast (4.0.0)
   - url_launcher (0.0.1):
     - Flutter
@@ -189,7 +185,6 @@ DEPENDENCIES:
   - share (from `.symlinks/plugins/share/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
-  - stripe_payment (from `.symlinks/plugins/stripe_payment/ios`)
   - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
   - video_player (from `.symlinks/plugins/video_player/ios`)
   - wakelock (from `.symlinks/plugins/wakelock/ios`)
@@ -217,7 +212,6 @@ SPEC REPOS:
     - Protobuf
     - SDWebImage
     - SDWebImageWebPCoder
-    - Stripe
     - Toast
 
 EXTERNAL SOURCES:
@@ -261,8 +255,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/shared_preferences/ios"
   sqflite:
     :path: ".symlinks/plugins/sqflite/ios"
-  stripe_payment:
-    :path: ".symlinks/plugins/stripe_payment/ios"
   url_launcher:
     :path: ".symlinks/plugins/url_launcher/ios"
   video_player:
@@ -313,8 +305,6 @@ SPEC CHECKSUMS:
   share: 0b2c3e82132f5888bccca3351c504d0003b3b410
   shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
   sqflite: 4001a31ff81d210346b500c55b17f4d6c7589dd0
-  Stripe: 92f1c73a9dbd3c54277ed06a1fea6e08f20414c6
-  stripe_payment: 1cbe9c339c21b5ecf01035e80eea351067c67c56
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
   url_launcher: 6fef411d543ceb26efce54b05a0a40bfd74cbbef
   video_player: 9cc823b1d9da7e8427ee591e8438bfbcde500e6e

@@ -7,7 +7,7 @@ import 'package:mismedidasb/ui/_base/bloc_error_handler.dart';
 import 'package:mismedidasb/ui/_base/bloc_loading.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:mismedidasb/utils/extensions.dart';
-import 'package:stripe_payment/stripe_payment.dart';
+// import 'package:stripe_payment/stripe_payment.dart';
 
 class PlanifivePaymentBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   final IUserRepository _iUserRepository;
@@ -75,13 +75,13 @@ class PlanifivePaymentBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
   String _clientSecret = "";
   int productId;
-  PaymentMethod _paymentMethod;
-  PaymentIntentResult _paymentIntent;
+  // PaymentMethod _paymentMethod;
+  // PaymentIntentResult _paymentIntent;
 
   void initPayment() async {
-    StripePayment.setOptions(StripeOptions(
-      publishableKey: RemoteConstants.stripe_public_key,
-    ));
+    // StripePayment.setOptions(StripeOptions(
+    //   publishableKey: RemoteConstants.stripe_public_key,
+    // ));
   }
 
   void addPayment(int productId) async {
@@ -96,14 +96,14 @@ class PlanifivePaymentBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
   void payWithCardFormRequest() async {
     isLoading = true;
-    StripePayment.paymentRequestWithCardForm(CardFormPaymentRequest())
-        .then((paymentMethod) async {
-      _paymentMethod = paymentMethod;
-      _showSaveCardController.sinkAddSafe(true);
-    }).catchError((err) {
-      isLoading = false;
-      print(err.toString());
-    });
+    // StripePayment.paymentRequestWithCardForm(CardFormPaymentRequest())
+    //     .then((paymentMethod) async {
+    //   _paymentMethod = paymentMethod;
+    //   _showSaveCardController.sinkAddSafe(true);
+    // }).catchError((err) {
+    //   isLoading = false;
+    //   print(err.toString());
+    // });
   }
 
   void confirmPayment(bool saveCard, {String paymentMethodId}) async {
@@ -112,20 +112,20 @@ class PlanifivePaymentBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     if (res is ResultSuccess<String>) {
       _clientSecret = res.value;
 
-      PaymentIntent pi = PaymentIntent(
-        clientSecret: _clientSecret,
-        paymentMethodId: paymentMethodId ?? _paymentMethod.id,
-      );
-      await StripePayment.confirmPaymentIntent(
-        pi,
-      ).then((paymentIntent) async {
-        _paymentIntent = paymentIntent;
-        _paymentController.sinkAddSafe(true);
-        isLoading = false;
-      }).catchError((err) {
-        print(err.toString());
-        isLoading = false;
-      });
+      // PaymentIntent pi = PaymentIntent(
+      //   clientSecret: _clientSecret,
+      //   paymentMethodId: paymentMethodId ?? _paymentMethod.id,
+      // );
+      // await StripePayment.confirmPaymentIntent(
+      //   pi,
+      // ).then((paymentIntent) async {
+      //   _paymentIntent = paymentIntent;
+      //   _paymentController.sinkAddSafe(true);
+      //   isLoading = false;
+      // }).catchError((err) {
+      //   print(err.toString());
+      //   isLoading = false;
+      // });
     } else
       showErrorMessage(res);
   }
@@ -145,11 +145,11 @@ class PlanifivePaymentBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   }
 
   void nativePay() async {
-    StripePayment.canMakeNativePayPayments([]);
-    StripePayment.paymentRequestWithNativePay(
-        androidPayOptions:
-            AndroidPayPaymentRequest(currencyCode: null, totalPrice: null),
-        applePayOptions: ApplePayPaymentOptions());
+    // StripePayment.canMakeNativePayPayments([]);
+    // StripePayment.paymentRequestWithNativePay(
+    //     androidPayOptions:
+    //         AndroidPayPaymentRequest(currencyCode: null, totalPrice: null),
+    //     applePayOptions: ApplePayPaymentOptions());
   }
 
 // void payWithCardRequest(CreditCardModel creditCardModel) async {
