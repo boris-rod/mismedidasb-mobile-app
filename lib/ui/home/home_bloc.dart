@@ -34,12 +34,8 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   final ILNM lnm;
   final IRealTimeContainer _iRealTimeContainer;
 
-  HomeBloC(
-      this._iHealthConceptRepository,
-      this._iUserRepository,
-      this._sharedPreferencesManager,
-      this.lnm,
-      this._iRealTimeContainer);
+  HomeBloC(this._iHealthConceptRepository, this._iUserRepository,
+      this._sharedPreferencesManager, this.lnm, this._iRealTimeContainer);
 
   BehaviorSubject<List<HealthConceptModel>> _conceptController =
       new BehaviorSubject();
@@ -67,12 +63,24 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     isLoading = true;
     profileLoaded = false;
     conceptsLoaded = false;
+
+    ///This code can be removed for future versions
+    final reInitReminders = await _sharedPreferencesManager
+        .getBoolValue(SharedKey.reInitReminders, defValue: true);
+    if (reInitReminders) {
+      await lnm.cancelAll();
+      await lnm.initReminders();
+      await _sharedPreferencesManager.setBoolValue(
+          SharedKey.reInitReminders, false);
+    }
+
     final res = await _iUserRepository.getAppVersion();
-    if(res is ResultSuccess<AppVersionModel>){
+    if (res is ResultSuccess<AppVersionModel>) {
       PackageInfo packageInfo = await PackageInfo.fromPlatform();
       currentVersion = packageInfo.version;
       nextVersion = res.value.version;
-      needUpdateVersion = nextVersion != currentVersion && res.value.isMandatory;
+      needUpdateVersion =
+          nextVersion != currentVersion && res.value.isMandatory;
     }
     loadProfile();
     loadConcepts();
@@ -91,7 +99,9 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
       bool hasPlani = false;
 
       final plani = profileRes.value.subscriptions.firstWhere(
-          (element) => element.product == RemoteConstants.subscription_virtual_assessor, orElse: () {
+          (element) =>
+              element.product == RemoteConstants.subscription_virtual_assessor,
+          orElse: () {
         return null;
       });
       if (plani != null) {
@@ -101,9 +111,9 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
       await _sharedPreferencesManager.setBoolValue(
           SharedKey.hasPlaniVirtualAssesor, hasPlani);
       if (hasPlani) {
-        initLNM();
+        await lnm.initReminders();
       } else {
-        lnm.cancelAll();
+        await lnm.cancelAll();
       }
 
       await _sharedPreferencesManager.setStringValue(
@@ -129,18 +139,11 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
       _conceptController.sinkAddSafe(res.value);
     } else
       showErrorMessage(res);
-    final show =
-        await _sharedPreferencesManager.getBoolValue(SharedKey.launchNotiPoll);
-    if (show) {
-      await _sharedPreferencesManager.setBoolValue(
-          SharedKey.launchNotiPoll, false);
-      _launchNotiPollController.sinkAddSafe(true);
-    }
   }
 
   void launchFirstTime() async {
-    final value =
-        await _sharedPreferencesManager.getBoolValue(SharedKey.firstTimeInHome, defValue: true);
+    final value = await _sharedPreferencesManager
+        .getBoolValue(SharedKey.firstTimeInHome, defValue: true);
     _showFirstTimeController.sinkAddSafe(value);
   }
 
@@ -214,25 +217,6 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
       resDir = R.image.food_craving_home;
 
     return resDir;
-  }
-
-  void initLNM() async {
-    _configureDidReceiveLocalNotificationSubject();
-    _configureSelectNotificationSubject();
-    await lnm.initReminders();
-  }
-
-  void _configureDidReceiveLocalNotificationSubject() {
-//    didReceiveLocalNotificationSubject.stream
-//        .listen((ReceivedNotification receivedNotification) async {
-//      Fluttertoast.showToast(msg: jsonEncode(receivedNotification).toString());
-//    });
-  }
-
-  void _configureSelectNotificationSubject() {
-//    selectNotificationSubject.stream.listen((String payload) async {
-//      Fluttertoast.showToast(msg: payload);
-//    });
   }
 
   @override

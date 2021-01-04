@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedKey {
   static String firstUse = "firstUse1";
+  static String reInitReminders = "reInitReminders";
   static String accessToken = "accessToken";
   static String refreshToken = "refreshToken";
   static String userEmail = "userEmail";
@@ -45,7 +46,7 @@ class SharedKey {
   static String hasPlaniVirtualAssesor = "hasPlaniVirtualAssesor";
 
   static String showDailyPollNotification = "showDailyPollNotification";
-  static String launchNotiPoll = "launchNotiPoll";
+  // static String launchNotiPoll = "launchNotiPoll";
   static String firstTimeInHome = "firstTimeInHome";
   static String firstTimeInProfile = "firstTimeInProfile";
   static String firstTimeInMeasureHealth = "firstTimeInMeasureHealth";
@@ -84,11 +85,12 @@ class SharedPreferencesManager {
     await setIntValue(SharedKey.planiId, 1);
 
     await setBoolValue(SharedKey.firstUse, true);
+    await setBoolValue(SharedKey.reInitReminders, true);
 
     await setBoolValue(SharedKey.showDailyResume, true);
     await setBoolValue(SharedKey.kCalPercentageHide, false);
     await setBoolValue(SharedKey.nutriInfoExpanded, false);
-    await setBoolValue(SharedKey.launchNotiPoll, false);
+    // await setBoolValue(SharedKey.launchNotiPoll, false);
 
     await setBoolValue(SharedKey.showBreakFastTime, true);
     await setBoolValue(SharedKey.showSnack1Time, true);

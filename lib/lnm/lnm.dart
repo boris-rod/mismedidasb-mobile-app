@@ -40,13 +40,9 @@ class LNM implements ILNM {
 
   @override
   Future<void> setup() async {
-    var initializationSettingsAndroid = AndroidInitializationSettings('logo');
+    var initializationSettingsAndroid = AndroidInitializationSettings('@drawable/logo');
 
-    var initializationSettingsIOS = IOSInitializationSettings(
-      requestAlertPermission: false,
-      requestBadgePermission: false,
-      requestSoundPermission: false,
-    );
+    var initializationSettingsIOS = IOSInitializationSettings();
 
     var initializationSettings = InitializationSettings(
         android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
@@ -489,18 +485,18 @@ class LNM implements ILNM {
       Time time,
       NotificationDetails notificationDetails}) async {
     final nowDate = DateTime.now();
-    // await _flutterLocalNotificationsPlugin.zonedSchedule(
-    //     id,
-    //     title,
-    //     content,
-    //     tz.TZDateTime.local(nowDate.year, nowDate.month, nowDate.day, time.hour,
-    //             time.minute, time.second)
-    //         .add(Duration(days: 1)),
-    //     notificationDetails,
-    //     androidAllowWhileIdle: true,
-    //     uiLocalNotificationDateInterpretation:
-    //         UILocalNotificationDateInterpretation.absoluteTime,
-    //     matchDateTimeComponents: DateTimeComponents.time,
-    //     payload: '$id');
+    await Injector.instance.localNotificationInstance.zonedSchedule(
+        id,
+        title,
+        content,
+        tz.TZDateTime.local(nowDate.year, nowDate.month, nowDate.day, time.hour,
+                time.minute, time.second)
+            .add(Duration(days: 1)),
+        notificationDetails,
+        androidAllowWhileIdle: true,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+        matchDateTimeComponents: DateTimeComponents.time,
+        payload: '$id');
   }
 }

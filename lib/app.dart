@@ -143,7 +143,9 @@ class _MyMeasuresBState extends StateWithBloC<MyMeasuresBApp, AppBloC> with Widg
    _initLocalNotifications() async {
     var initializationSettingsAndroid =
     new AndroidInitializationSettings('@drawable/logo',);
+
     var initializationSettingsIOS = new IOSInitializationSettings();
+
     var initializationSettings = new InitializationSettings(
         android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
     Injector.instance.localNotificationInstance.initialize(initializationSettings,
@@ -155,6 +157,7 @@ class _MyMeasuresBState extends StateWithBloC<MyMeasuresBApp, AppBloC> with Widg
               launch(payload);
           }
         });
+
     Injector.instance.localNotificationInstance
         .resolvePlatformSpecificImplementation<
         IOSFlutterLocalNotificationsPlugin>()
@@ -163,8 +166,6 @@ class _MyMeasuresBState extends StateWithBloC<MyMeasuresBApp, AppBloC> with Widg
       badge: true,
       sound: true,
     );
-
-    // await _createNotificationChannel(LNM.fcmNoti.toString(), "planifive_channel", "planifive_channel");
   }
 
   _initFirebaseMessaging() async {
@@ -260,19 +261,5 @@ class _MyMeasuresBState extends StateWithBloC<MyMeasuresBApp, AppBloC> with Widg
       platformChannelSpecifics,
       payload: model.externalUrl,
     );
-  }
-
-  static Future<void> _createNotificationChannel(String id, String name,
-      String description) async {
-    final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-    var androidNotificationChannel = AndroidNotificationChannel(
-      "android_channel_id",
-      name,
-      description,
-    );
-    await flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>()
-        ?.createNotificationChannel(androidNotificationChannel);
   }
 }
