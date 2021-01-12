@@ -367,7 +367,7 @@ class Injector {
     container.registerFactory(
         (c) => PollNotificationBloC(c.resolve(), c.resolve(), c.resolve()));
     container.registerFactory((c) => ScoreBloC(c.resolve()));
-    container.registerFactory((c) => PlanifivePaymentBloC(c.resolve()));
+    container.registerFactory((c) => PlanifivePaymentBloC(c.resolve(), c.resolve()));
     container
         .registerFactory((c) => PlaniServiceBloC(c.resolve(), c.resolve()));
     container.registerFactory((c) => VideoBloC());

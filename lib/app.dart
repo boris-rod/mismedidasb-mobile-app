@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -38,16 +39,15 @@ class MyMeasuresBApp extends StatefulWidget {
   final IFCMFeature fcmFeature;
   final ILNM lnm;
 
-  const MyMeasuresBApp(
-      {Key key, this.initPage, this.fcmFeature, this.lnm})
+  const MyMeasuresBApp({Key key, this.initPage, this.fcmFeature, this.lnm})
       : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _MyMeasuresBState();
 }
 
-class _MyMeasuresBState extends StateWithBloC<MyMeasuresBApp, AppBloC> with WidgetsBindingObserver{
-
+class _MyMeasuresBState extends StateWithBloC<MyMeasuresBApp, AppBloC>
+    with WidgetsBindingObserver {
   final localizationDelegate = CustomLocalizationsDelegate();
   FirebaseAnalytics analytics = FirebaseAnalytics();
   FirebaseMessaging _fireBaseMessaging = FirebaseMessaging();
@@ -55,7 +55,7 @@ class _MyMeasuresBState extends StateWithBloC<MyMeasuresBApp, AppBloC> with Widg
   @override
   void initState() {
     super.initState();
-   WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
@@ -65,11 +65,11 @@ class _MyMeasuresBState extends StateWithBloC<MyMeasuresBApp, AppBloC> with Widg
     _initFirebaseMessaging();
   }
 
- @override
- void dispose() {
-   WidgetsBinding.instance.removeObserver(this);
-   super.dispose();
- }
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
 
 //  @override
 //  void didChangePlatformBrightness() {
@@ -77,7 +77,6 @@ class _MyMeasuresBState extends StateWithBloC<MyMeasuresBApp, AppBloC> with Widg
 //        WidgetsBinding.instance.window.platformBrightness;
 //    Injector.instance.darkTheme = brightness == Brightness.dark;
 //  }
-
 
   @override
   Widget buildWidget(BuildContext context) {
@@ -139,33 +138,32 @@ class _MyMeasuresBState extends StateWithBloC<MyMeasuresBApp, AppBloC> with Widg
     );
   }
 
-
-   _initLocalNotifications() async {
-    var initializationSettingsAndroid =
-    new AndroidInitializationSettings('@drawable/logo',);
+  _initLocalNotifications() async {
+    var initializationSettingsAndroid = new AndroidInitializationSettings(
+      '@drawable/logo',
+    );
 
     var initializationSettingsIOS = new IOSInitializationSettings();
 
     var initializationSettings = new InitializationSettings(
         android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
-    Injector.instance.localNotificationInstance.initialize(initializationSettings,
-        onSelectNotification: (payload) async {
-          if (payload == LNM.pollNotificationId.toString()) {
-            onPollNotificationLaunch.sinkAddSafe(true);
-          }else{
-            if(payload?.isNotEmpty == true)
-              launch(payload);
-          }
-        });
+    Injector.instance.localNotificationInstance.initialize(
+        initializationSettings, onSelectNotification: (payload) async {
+      if (payload == LNM.pollNotificationId.toString()) {
+        onPollNotificationLaunch.sinkAddSafe(true);
+      } else {
+        if (payload?.isNotEmpty == true) launch(payload);
+      }
+    });
 
     Injector.instance.localNotificationInstance
         .resolvePlatformSpecificImplementation<
-        IOSFlutterLocalNotificationsPlugin>()
+            IOSFlutterLocalNotificationsPlugin>()
         ?.requestPermissions(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
+          alert: true,
+          badge: true,
+          sound: true,
+        );
   }
 
   _initFirebaseMessaging() async {
@@ -184,8 +182,7 @@ class _MyMeasuresBState extends StateWithBloC<MyMeasuresBApp, AppBloC> with Widg
             : Map<String, dynamic>.from(fcmMessage["data"]);
         FCMMessageModel model = FCMMessageModel.fromString(data);
         final payload = model?.externalUrl ?? "";
-        if(payload?.isNotEmpty == true)
-          launch(payload);
+        if (payload?.isNotEmpty == true) launch(payload);
         return;
       },
       onLaunch: (Map<String, dynamic> fcmMessage) {
@@ -196,8 +193,7 @@ class _MyMeasuresBState extends StateWithBloC<MyMeasuresBApp, AppBloC> with Widg
             : Map<String, dynamic>.from(fcmMessage["data"]);
         FCMMessageModel model = FCMMessageModel.fromString(data);
         final payload = model?.externalUrl ?? "";
-        if(payload?.isNotEmpty == true)
-          launch(payload);
+        if (payload?.isNotEmpty == true) launch(payload);
         return;
       },
     );
@@ -242,8 +238,8 @@ class _MyMeasuresBState extends StateWithBloC<MyMeasuresBApp, AppBloC> with Widg
         htmlFormatContentTitle: true,
         summaryText: "Planifive",
         htmlFormatSummaryText: true);
-    var platformChannelSpecificsAndroid =
-    new AndroidNotificationDetails(LNM.fcmNoti.toString(), "planifive_channel", "planifive_channel",
+    var platformChannelSpecificsAndroid = new AndroidNotificationDetails(
+        LNM.fcmNoti.toString(), "planifive_channel", "planifive_channel",
         playSound: true,
         enableVibration: true,
         importance: Importance.max,

@@ -35,4 +35,6 @@ abstract class IUserApi {
 
   Future<List<SubscriptionModel>> getSubscriptions();
 
+  Future<List<OrderModel>> postPurchaseDetails(String verificationKey);
+
 }

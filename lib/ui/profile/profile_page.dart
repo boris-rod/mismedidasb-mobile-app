@@ -278,7 +278,6 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                               NavigationUtils.push(context, ScorePage());
                             },
                           ),
-                          Platform.isIOS ? Container() :
                           Column(
                             children: [
                               TXDividerWidget1(),

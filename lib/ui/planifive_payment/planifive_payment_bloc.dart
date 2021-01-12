@@ -1,7 +1,17 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_inapp_purchase/flutter_inapp_purchase.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:mismedidasb/data/_shared_prefs.dart';
 import 'package:mismedidasb/data/api/remote/remote_constanst.dart';
 import 'package:mismedidasb/data/api/remote/result.dart';
 import 'package:mismedidasb/domain/user/i_user_repository.dart';
 import 'package:mismedidasb/domain/user/user_model.dart';
+import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/bloc_base.dart';
 import 'package:mismedidasb/ui/_base/bloc_error_handler.dart';
 import 'package:mismedidasb/ui/_base/bloc_loading.dart';
@@ -11,8 +21,9 @@ import 'package:stripe_payment/stripe_payment.dart';
 
 class PlanifivePaymentBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   final IUserRepository _iUserRepository;
+  final SharedPreferencesManager _prefs;
 
-  PlanifivePaymentBloC(this._iUserRepository);
+  PlanifivePaymentBloC(this._iUserRepository, this._prefs);
 
   BehaviorSubject<List<PlanifiveProductsModel>> _productsController =
       new BehaviorSubject();
@@ -37,6 +48,14 @@ class PlanifivePaymentBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
   Stream<bool> get showSavedCardsResult => _showSavedCardsController.stream;
 
+  StreamSubscription _purchaseUpdatedSubscription;
+  StreamSubscription _purchaseErrorSubscription;
+  StreamSubscription _conectionSubscription;
+  final List<String> _productLists = ['p500', 'p2000', 'p3500'];
+  String _platformVersion = 'Unknown';
+  List<IAPItem> _items = [];
+  List<PurchasedItem> _purchases = [];
+
   bool productsLoaded = false;
   bool cardsLoaded = true;
 
@@ -48,29 +67,46 @@ class PlanifivePaymentBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     _showSaveCardController.close();
     _showSavedCardsController.close();
     _cardsController.close();
+    if (_conectionSubscription != null) {
+      _conectionSubscription.cancel();
+      _conectionSubscription = null;
+    }
+    if (_purchaseUpdatedSubscription != null) {
+      _purchaseUpdatedSubscription.cancel();
+      _purchaseUpdatedSubscription = null;
+    }
+    if (_purchaseErrorSubscription != null) {
+      _purchaseErrorSubscription.cancel();
+      _purchaseErrorSubscription = null;
+    }
+
   }
 
   void loadProducts() async {
     isLoading = true;
-    _iUserRepository.getPaymentMethods().then((res) {
-      _cardsController.sinkAddSafe((res as ResultSuccess).value);
-      cardsLoaded = true;
-      if (productsLoaded) isLoading = false;
-    }).catchError((err) {
-      cardsLoaded = true;
-      if (productsLoaded) isLoading = false;
-      showErrorMessage(err);
-    });
+    if (Platform.isAndroid) {
+      _iUserRepository.getPaymentMethods().then((res) {
+        _cardsController.sinkAddSafe((res as ResultSuccess).value);
+        cardsLoaded = true;
+        if (productsLoaded) isLoading = false;
+      }).catchError((err) {
+        cardsLoaded = true;
+        if (productsLoaded) isLoading = false;
+        showErrorMessage(err);
+      });
 
-    _iUserRepository.getPlanifiveProducts().then((res) {
-      _productsController.sinkAddSafe((res as ResultSuccess).value);
-      productsLoaded = true;
-      if (cardsLoaded) isLoading = false;
-    }).catchError((err) {
-      productsLoaded = true;
-      if (cardsLoaded) isLoading = false;
-      showErrorMessage(err);
-    });
+      _iUserRepository.getPlanifiveProducts().then((res) {
+        _productsController.sinkAddSafe((res as ResultSuccess).value);
+        productsLoaded = true;
+        if (cardsLoaded) isLoading = false;
+      }).catchError((err) {
+        productsLoaded = true;
+        if (cardsLoaded) isLoading = false;
+        showErrorMessage(err);
+      });
+    } else {
+      isLoading = false;
+    }
   }
 
   String _clientSecret = "";
@@ -79,9 +115,151 @@ class PlanifivePaymentBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   PaymentIntentResult _paymentIntent;
 
   void initPayment() async {
-    StripePayment.setOptions(StripeOptions(
-      publishableKey: RemoteConstants.stripe_public_key,
-    ));
+    if (Platform.isAndroid)
+      StripePayment.setOptions(StripeOptions(
+        publishableKey: RemoteConstants.stripe_public_key,
+      ));
+    else {
+      await initPlatformState();
+      // final Stream purchaseUpdates =
+      //     InAppPurchaseConnection.instance.purchaseUpdatedStream;
+      // _subscriptionPurchase = purchaseUpdates.listen((purchaseDetailsList) {
+      //   _listenToPurchaseUpdated(purchaseDetailsList);
+      // }, onDone: () {
+      //   _subscriptionPurchase.cancel();
+      // }, onError: (err) {
+      //   Fluttertoast.showToast(
+      //       msg:
+      //           "Ha ocurrido un error en el proceso de compra. Por favor inténtelo más tarde.",
+      //       backgroundColor: Colors.redAccent,
+      //       textColor: Colors.white,
+      //       toastLength: Toast.LENGTH_LONG);
+      // });
+      //
+      // final bool available =
+      //     await InAppPurchaseConnection.instance.isAvailable();
+      // if (!available) {
+      //   Fluttertoast.showToast(
+      //       msg: "No es posible realizar compras en este dispositivo.",
+      //       backgroundColor: Colors.redAccent,
+      //       textColor: Colors.white,
+      //       toastLength: Toast.LENGTH_LONG);
+      // } else {
+      //   const Set<String> _kIds = {'p500', 'p2000', 'p3500'};
+      //   final ProductDetailsResponse response =
+      //       await InAppPurchaseConnection.instance.queryProductDetails(_kIds);
+      //   if (response.notFoundIDs.isNotEmpty) {
+      //     Fluttertoast.showToast(
+      //         msg: "No hay productos disponibles en estos momentos",
+      //         backgroundColor: Colors.redAccent,
+      //         textColor: Colors.white,
+      //         toastLength: Toast.LENGTH_LONG);
+      //   } else {
+      //     List<ProductDetails> products = response.productDetails;
+      //     List<PlanifiveProductsModel> planiProduts = [];
+      //     products.forEach((element) {
+      //       planiProduts.add(PlanifiveProductsModel(
+      //           idStr: element.id,
+      //           name: element.title,
+      //           price: double.tryParse(element.skProduct.price),
+      //           description: element.description));
+      //     });
+      //     planiProduts.sort((a, b) => a.price.compareTo(b.price));
+      //     _productsController.sinkAddSafe(planiProduts);
+      //   }
+      // }
+    }
+  }
+
+  Future<void> initPlatformState() async {
+    isLoading = true;
+    FlutterInappPurchase.instance.initConnection;
+    String platformVersion;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      platformVersion = await FlutterInappPurchase.instance.platformVersion;
+    } on PlatformException {
+      platformVersion = 'Failed to get platform version.';
+    }
+
+    // prepare
+    var result = await FlutterInappPurchase.instance.initConnection;
+    print('result: $result');
+
+    _conectionSubscription =
+        FlutterInappPurchase.connectionUpdated.listen((connected) {
+      print('connected: $connected');
+    });
+
+    _purchaseUpdatedSubscription =
+        FlutterInappPurchase.purchaseUpdated.listen((productItem) async {
+      isLoading = true;
+      final List<PurchasedItem> pendings =
+          await FlutterInappPurchase.instance.getPendingTransactionsIOS();
+      if (pendings.isNotEmpty) {
+        await Future.forEach<PurchasedItem>(pendings, (pending) async {
+          final res = await _iUserRepository
+              .postPurchaseDetails(pending.transactionReceipt);
+          if (res is ResultSuccess<List<OrderModel>>) {
+            await FlutterInappPurchase.instance
+                .finishTransactionIOS(pending.transactionId);
+          }
+        });
+      }
+      if (productItem.transactionReceipt != null &&
+          productItem.transactionReceipt.isNotEmpty &&
+          productItem.transactionStateIOS.index == 1) {
+        await deliverProduct(productItem);
+      }
+      isLoading = false;
+    });
+
+    _purchaseErrorSubscription =
+        FlutterInappPurchase.purchaseError.listen((purchaseError) {
+      print('purchase-error: $purchaseError');
+    });
+    await _getProducts();
+    isLoading = false;
+  }
+
+  Future<void> _getProducts() async {
+    List<IAPItem> items =
+        await FlutterInappPurchase.instance.getProducts(_productLists);
+    List<PlanifiveProductsModel> planiProducts = [];
+    items.forEach((element) {
+      planiProducts.add(PlanifiveProductsModel(
+          idStr: element.productId,
+          name: element.title,
+          price: double.tryParse(element.price),
+          description: element.description));
+    });
+    planiProducts.sort((a, b) => a.price.compareTo(b.price));
+    _productsController.sinkAddSafe(planiProducts);
+  }
+
+  Future<void> deliverProduct(PurchasedItem purchasedItem) async {
+    isLoading = true;
+    final res = await _iUserRepository
+        .postPurchaseDetails(purchasedItem.transactionReceipt);
+    if (res is ResultSuccess<List<OrderModel>>) {
+      await FlutterInappPurchase.instance
+          .finishTransactionIOS(purchasedItem.transactionId);
+
+      _paymentController.sinkAddSafe(true);
+    } else
+      showErrorMessage(res);
+    isLoading = false;
+  }
+
+  void buyConsumableProduct(PlanifiveProductsModel model) async {
+    isLoading = true;
+    FlutterInappPurchase.instance.requestPurchase(model.idStr).then(
+        (value) => {
+              print(value.toString()),
+            }, onError: (err) {
+      print(err.toString());
+    });
+    isLoading = false;
   }
 
   void addPayment(int productId) async {
@@ -135,7 +313,7 @@ class PlanifivePaymentBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     final res = await _iUserRepository
         .deletePaymentMethod(creditCardModel.paymentMethodId);
     if (res is ResultSuccess<bool>) {
-        final savedCardsList = _cardsController?.value ?? [];
+      final savedCardsList = _cardsController?.value ?? [];
       savedCardsList.removeWhere((element) =>
           element.paymentMethodId == creditCardModel.paymentMethodId);
       _cardsController.sinkAddSafe(savedCardsList);
@@ -143,41 +321,4 @@ class PlanifivePaymentBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
       showErrorMessage(res);
     isLoading = false;
   }
-
-  void nativePay() async {
-    StripePayment.canMakeNativePayPayments([]);
-    StripePayment.paymentRequestWithNativePay(
-        androidPayOptions:
-            AndroidPayPaymentRequest(currencyCode: null, totalPrice: null),
-        applePayOptions: ApplePayPaymentOptions());
-  }
-
-// void payWithCardRequest(CreditCardModel creditCardModel) async {
-//   isLoading = true;
-//   CreditCard creditCard = CreditCard(
-//       cardId: creditCardModel.paymentMethodId,
-//       country: creditCardModel.country,
-//       expMonth: creditCardModel.expMonth,
-//       expYear: creditCardModel.expYear,
-//       funding: creditCardModel.funding,
-//       last4: creditCardModel.last4,
-//       number: "4242424242424242"
-//   );
-//   final PaymentMethodRequest paymentMethodRequest = PaymentMethodRequest(
-//       card: creditCard,
-//       token: Token(
-//           card: creditCard,
-//           tokenId: creditCardModel.paymentMethodId
-//       )
-//   );
-//   StripePayment.createPaymentMethod(paymentMethodRequest)
-//       .then((paymentMethod) async {
-//     _paymentMethod = paymentMethod;
-//     confirmPayment(true);
-//   }).catchError((err) {
-//     isLoading = false;
-//     print(err.toString());
-//   });
-// }
-
 }

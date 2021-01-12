@@ -21,4 +21,6 @@ abstract class IUserConverter {
       Map<String, dynamic> json);
 
   SoloQuestionStatsModel fromJsonSoloQuestionStats(Map<String, dynamic> json);
+
+  OrderModel fromJsonOrder(Map<String, dynamic> json);
 }

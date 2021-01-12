@@ -36,4 +36,7 @@ abstract class IUserRepository {
 
   Future<Result<List<SubscriptionModel>>> getSubscriptions();
 
+  Future<Result<List<OrderModel>>> postPurchaseDetails(String verificationKey);
+
+
 }

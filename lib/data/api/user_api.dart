@@ -200,4 +200,15 @@ class UserApi extends BaseApi implements IUserApi {
     }
     throw serverException(res);
   }
+
+  @override
+  Future<List<OrderModel>> postPurchaseDetails(String verificationKey) async {
+    final res = await _networkHandler.post(
+        path: Endpoint.verify_apple_purchase, body: "\"$verificationKey\"");
+    if (res.statusCode == RemoteConstants.code_success_created) {
+      Iterable l = jsonDecode(res.body)[RemoteConstants.result];
+      return l.map((model) => _iUserConverter.fromJsonOrder(model)).toList();
+    } else
+      throw serverException(res);
+  }
 }

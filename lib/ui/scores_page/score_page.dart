@@ -136,7 +136,7 @@ class _ScoreState extends StateWithBloC<ScorePage, ScoreBloC> {
                                       ),
                                       Expanded(
                                         flex: 1,
-                                        child: Platform.isIOS ? Container() : Column(
+                                        child: Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceEvenly,
                                           children: <Widget>[

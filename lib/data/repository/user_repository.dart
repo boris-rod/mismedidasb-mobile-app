@@ -163,4 +163,15 @@ class UserRepository extends BaseRepository implements IUserRepository {
       return resultError(ex);
     }
   }
+
+  @override
+  Future<Result<List<OrderModel>>> postPurchaseDetails(
+      String verificationKey) async {
+    try {
+      final result = await _iUserApi.postPurchaseDetails(verificationKey);
+      return Result.success(value: result);
+    } catch (ex) {
+      return resultError(ex);
+    }
+  }
 }

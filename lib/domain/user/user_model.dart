@@ -95,7 +95,7 @@ class SubscriptionModel {
       this.userId,
       this.userSubscriptionId,
       this.productId,
-        this.description,
+      this.description,
       this.valueCoins,
       this.product,
       this.name = "",
@@ -114,6 +114,7 @@ class UserCredentialsModel {
 
 class PlanifiveProductsModel {
   int id;
+  String idStr;
   int typeId;
   String type;
   String name;
@@ -129,6 +130,7 @@ class PlanifiveProductsModel {
 
   PlanifiveProductsModel(
       {this.id,
+      this.idStr,
       this.typeId,
       this.type,
       this.name,
@@ -139,6 +141,43 @@ class PlanifiveProductsModel {
       this.descriptionIT,
       this.value,
       this.price,
+      this.createdAt,
+      this.modifiedAt});
+}
+
+class OrderModel {
+  int id;
+  String externalId;
+  int userId;
+  String userEmail;
+  String userFullName;
+  int productId;
+  String productName;
+  String productDescription;
+  double amount;
+  int statusId;
+  String status;
+  String statusInformation;
+  int paymentMethodId;
+  String paymentMethod;
+  DateTime createdAt;
+  DateTime modifiedAt;
+
+  OrderModel(
+      {this.id,
+      this.externalId,
+      this.userId,
+      this.userEmail,
+      this.userFullName,
+      this.productId,
+      this.productName,
+      this.productDescription,
+      this.amount,
+      this.statusId,
+      this.status,
+      this.statusInformation,
+      this.paymentMethodId,
+      this.paymentMethod,
       this.createdAt,
       this.modifiedAt});
 }

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -70,7 +72,10 @@ class _PlanifivePaymentState
                         elevation: 2,
                         child: InkWell(
                           onTap: () {
-                            bloc.addPayment(model.id);
+                            if (Platform.isIOS)
+                              bloc.buyConsumableProduct(model);
+                            else
+                              bloc.addPayment(model.id);
                           },
                           child: Container(
                             padding: EdgeInsets.all(10),
@@ -101,7 +106,10 @@ class _PlanifivePaymentState
                                       fontWeight: FontWeight.bold,
                                       size: 18,
                                     ),
-                                    Icon(Icons.euro_symbol, size: 15,)
+                                    Icon(
+                                      Icons.euro_symbol,
+                                      size: 15,
+                                    )
                                   ],
                                 )
                               ],
@@ -249,7 +257,7 @@ class _PlanifivePaymentState
       builder: (BuildContext context) => TXCupertinoDialogWidget(
         title: "Tarjeta de pago",
         content:
-        "Desea usar la tarjeta **** **** **** ${card.last4} para realizar la compra de monedas?",
+            "Desea usar la tarjeta **** **** **** ${card.last4} para realizar la compra de monedas?",
         onOK: () {
           bloc.confirmPayment(true, paymentMethodId: card.paymentMethodId);
           Navigator.pop(context);

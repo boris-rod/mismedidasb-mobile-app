@@ -148,4 +148,35 @@ class UserConverter implements IUserConverter {
         last4: json["last4"]);
     return model;
   }
+
+  @override
+  OrderModel fromJsonOrder(Map<String, dynamic> json) {
+    OrderModel model = OrderModel(
+      id: json["id"],
+        externalId: json["externalId"],
+        userId: json["userId"],
+        userEmail: json["userEmail"],
+        userFullName: json["userFullName"],
+        productId: json["productId"],
+        productName: json["productName"],
+        productDescription: json["productDescription"],
+        amount: json["amount"],
+        statusId: json["statusId"],
+        status: json["status"],
+        statusInformation: json["statusInformation"],
+        paymentMethodId: json["paymentMethodId"],
+        paymentMethod: json["paymentMethod"],
+        createdAt: json["createdAt"] != null
+            ? DateTime.parse(
+          json["createdAt"],
+        ).toLocal()
+            : DateTime.now(),
+      modifiedAt: json["modifiedAt"] != null
+          ? DateTime.parse(
+        json["modifiedAt"],
+      ).toLocal()
+          : DateTime.now(),
+    );
+    return model;
+  }
 }
