@@ -145,11 +145,11 @@ class PlanifivePaymentBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
     // prepare
     var result = await FlutterInappPurchase.instance.initConnection;
-    print('result: $result');
+    // print('result: $result');
 
     _conectionSubscription =
         FlutterInappPurchase.connectionUpdated.listen((connected) {
-      print('connected: $connected');
+      // print('connected: $connected');
     });
 
     _purchaseUpdatedSubscription =
@@ -162,7 +162,6 @@ class PlanifivePaymentBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
           final res = await _iUserRepository
               .postPurchaseDetails(pending.transactionReceipt);
           if (res is ResultSuccess<List<OrderModel>>) {
-            print("Response orders ${res.value.length}");
             await FlutterInappPurchase.instance
                 .finishTransactionIOS(pending.transactionId);
           }
@@ -212,14 +211,15 @@ class PlanifivePaymentBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     final res = await _iUserRepository
         .postPurchaseDetails(purchasedItem.transactionReceipt);
     if (res is ResultSuccess<List<OrderModel>>) {
-      print("Response orders ${res.value.length}");
       await Future.forEach<OrderModel>(res.value, (element) async {
         await FlutterInappPurchase.instance
             .finishTransactionIOS(element.externalId);
       });
       _paymentController.sinkAddSafe(true);
-    } else
+    } else {
       showErrorMessage(res);
+      _paymentProgressController.sinkAddSafe(PaymentProgress.WAITING_ACTION);
+    }
     _paymentProgressController.sinkAddSafe(PaymentProgress.READY);
     isLoading = false;
   }
@@ -229,9 +229,14 @@ class PlanifivePaymentBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     isLoading = true;
     FlutterInappPurchase.instance.requestPurchase(model.idStr).then(
         (value) => {
-              print(value.toString()),
+              // print(value.toString()),
             }, onError: (err) {
-      print(err.toString());
+      Fluttertoast.showToast(
+        msg: err.toString(),
+        toastLength: Toast.LENGTH_LONG,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
     });
   }
 
@@ -253,7 +258,13 @@ class PlanifivePaymentBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
       _showSaveCardController.sinkAddSafe(true);
     }).catchError((err) {
       isLoading = false;
-      print(err.toString());
+      // print(err.toString());
+      Fluttertoast.showToast(
+        msg: err.toString(),
+        toastLength: Toast.LENGTH_LONG,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
     });
   }
 
@@ -274,7 +285,12 @@ class PlanifivePaymentBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
         _paymentController.sinkAddSafe(true);
         isLoading = false;
       }).catchError((err) {
-        print(err.toString());
+        Fluttertoast.showToast(
+          msg: err.toString(),
+          toastLength: Toast.LENGTH_LONG,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+        );
         isLoading = false;
       });
     } else
