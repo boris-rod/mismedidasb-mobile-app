@@ -9,6 +9,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mismedidasb/data/_shared_prefs.dart';
 import 'package:mismedidasb/data/api/remote/remote_constanst.dart';
 import 'package:mismedidasb/data/api/remote/result.dart';
+import 'package:mismedidasb/di/injector.dart';
 import 'package:mismedidasb/domain/user/i_user_repository.dart';
 import 'package:mismedidasb/domain/user/user_model.dart';
 import 'package:mismedidasb/res/R.dart';
@@ -123,11 +124,14 @@ class PlanifivePaymentBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   PaymentIntentResult _paymentIntent;
 
   void initPayment() async {
-    if (Platform.isAndroid)
+    if (Platform.isAndroid) {
+      final String stripeKey = Injector.instance.env == EnvironmentApp.Prod
+          ? RemoteConstants.stripe_public_key
+          : RemoteConstants.stripe_public_key_test;
       StripePayment.setOptions(StripeOptions(
-        publishableKey: RemoteConstants.stripe_public_key,
+        publishableKey: stripeKey,
       ));
-    else {
+    } else {
       await initPlatformState();
     }
   }
