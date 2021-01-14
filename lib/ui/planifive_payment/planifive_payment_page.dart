@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:mismedidasb/domain/user/user_model.dart';
+import 'package:mismedidasb/enums.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/bloc_state.dart';
 import 'package:mismedidasb/ui/_base/navigation_utils.dart';
@@ -62,62 +63,96 @@ class _PlanifivePaymentState
               stream: bloc.productsResult,
               initialData: [],
               builder: (ctx, snapshotProducts) {
-                return ListView.builder(
-                    physics: BouncingScrollPhysics(),
-                    padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-                    itemCount: snapshotProducts.data.length,
-                    itemBuilder: (ctx, index) {
-                      final model = snapshotProducts.data[index];
-                      return Card(
-                        elevation: 2,
-                        child: InkWell(
-                          onTap: () {
-                            if (Platform.isIOS)
-                              bloc.buyConsumableProduct(model);
-                            else
-                              bloc.addPayment(model.id);
-                          },
-                          child: Container(
-                            padding: EdgeInsets.all(10),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                    child: Column(
-                                  children: [
-                                    TXTextWidget(
-                                      text: model.name,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                      size: 16,
-                                    ),
-                                    TXTextWidget(
-                                      text: model.description,
-                                      color: R.color.gray,
-                                      size: 14,
-                                    ),
-                                  ],
+                return SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      ListView.builder(
+                        physics: BouncingScrollPhysics(),
+                        padding:
+                            EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+                        itemCount: snapshotProducts.data.length,
+                        itemBuilder: (ctx, index) {
+                          final model = snapshotProducts.data[index];
+                          return Card(
+                            elevation: 2,
+                            child: InkWell(
+                              onTap: () {
+                                if (Platform.isIOS)
+                                  bloc.buyConsumableProduct(model);
+                                else
+                                  bloc.addPayment(model.id);
+                              },
+                              child: Container(
+                                padding: EdgeInsets.all(10),
+                                child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                )),
-                                Row(
                                   children: [
-                                    TXTextWidget(
-                                      text: "${model.price.toString()}",
-                                      fontWeight: FontWeight.bold,
-                                      size: 18,
-                                    ),
-                                    Icon(
-                                      Icons.euro_symbol,
-                                      size: 15,
+                                    Expanded(
+                                        child: Column(
+                                      children: [
+                                        TXTextWidget(
+                                          text: model.name,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                          size: 16,
+                                        ),
+                                        TXTextWidget(
+                                          text: model.description,
+                                          color: R.color.gray,
+                                          size: 14,
+                                        ),
+                                      ],
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                    )),
+                                    Row(
+                                      children: [
+                                        TXTextWidget(
+                                          text: "${model.price.toString()}",
+                                          fontWeight: FontWeight.bold,
+                                          size: 18,
+                                        ),
+                                        Icon(
+                                          Icons.euro_symbol,
+                                          size: 15,
+                                        )
+                                      ],
                                     )
                                   ],
-                                )
-                              ],
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      );
-                    });
+                          );
+                        },
+                        shrinkWrap: true,
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      StreamBuilder<PaymentProgress>(
+                          initialData: PaymentProgress.WAITING_ACTION,
+                          stream: bloc.paymentProgressResult,
+                          builder: (context, snapshot) {
+                            final progress = snapshot.data;
+                            return TXTextWidget(
+                                color: R.color.food_blue_dark,
+                                fontWeight: FontWeight.bold,
+                                size: 18,
+                                text: progress == PaymentProgress.VERIFYING
+                                    ? "Verificando..."
+                                    : progress ==
+                                            PaymentProgress.GETTING_PRODUCTS
+                                        ? "Obteniendo productos..."
+                                        : progress == PaymentProgress.BUYING
+                                            ? "Comprando..."
+                                            : progress == PaymentProgress.READY
+                                                ? "Listo!"
+                                                : "");
+                          })
+                    ],
+                  ),
+                );
               },
             ),
           ),

@@ -1,4 +1,4 @@
-enum EnvironmentApp {Prod, Dev}
+enum EnvironmentApp { Prod, Dev }
 
 enum PopupActionKey {
   profile_settings,
@@ -14,6 +14,8 @@ enum PopupActionKey {
   show_kcal_percentage,
   daily_plan_instructions
 }
+
+enum PaymentProgress { GETTING_PRODUCTS, BUYING, VERIFYING, WAITING_ACTION, READY }
 
 enum FoodFilterMode { tags, dish_healthy }
 enum FoodHealthy {
