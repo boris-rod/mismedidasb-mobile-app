@@ -65,8 +65,9 @@ class PlaniServiceBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     }
   }
 
-  void buyOffer1() async {
+  Future<int> buyOffer1() async {
     isLoading = true;
+    int code = -1;
     final res = await _iUserRepository.buySubscriptionsOffer1();
     if (res is ResultSuccess<bool>) {
       final resProfile = await _iUserRepository.getProfile();
@@ -75,23 +76,27 @@ class PlaniServiceBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
         List<SubscriptionModel> list = updateSubscriptions(
             resProfile.value, _subscriptionsController?.value ?? []);
         _subscriptionsController.sinkAddSafe(list);
+        code = 1;
       } else
         showErrorMessage(resProfile);
     } else if (res is ResultError &&
         (res as ResultError).code == RemoteConstants.code_unprocessable) {
-      Fluttertoast.showToast(
-        msg: R.string.noEnoughCoinsToActivateService,
-        toastLength: Toast.LENGTH_LONG,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-      );
+      // Fluttertoast.showToast(
+      //   msg: R.string.noEnoughCoinsToActivateService,
+      //   toastLength: Toast.LENGTH_LONG,
+      //   backgroundColor: Colors.red,
+      //   textColor: Colors.white,
+      // );
+      code = 0;
     } else
       showErrorMessage(res);
     isLoading = false;
+    return code;
   }
 
-  void buySubscription(SubscriptionModel model) async {
+  Future<int> buySubscription(SubscriptionModel model) async {
     isLoading = true;
+    int code = -1;
     final res = await _iUserRepository.buySubscription(model.id);
     if (res is ResultSuccess<bool>) {
       loadCoins();
@@ -104,19 +109,22 @@ class PlaniServiceBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
         List<SubscriptionModel> list = updateSubscriptions(
             resProfile.value, _subscriptionsController?.value ?? []);
         _subscriptionsController.sinkAddSafe(list);
+        code = 1;
       } else
         showErrorMessage(resProfile);
     } else if (res is ResultError &&
         (res as ResultError).code == RemoteConstants.code_unprocessable) {
-      Fluttertoast.showToast(
-        msg: R.string.noEnoughCoinsToActivateService,
-        toastLength: Toast.LENGTH_LONG,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-      );
+      // Fluttertoast.showToast(
+      //   msg: R.string.noEnoughCoinsToActivateService,
+      //   toastLength: Toast.LENGTH_LONG,
+      //   backgroundColor: Colors.red,
+      //   textColor: Colors.white,
+      // );
+      code = 0;
     } else
       showErrorMessage(res);
     isLoading = false;
+    return code;
   }
 
   List<SubscriptionModel> updateSubscriptions(

@@ -144,7 +144,11 @@ class _PlaniServiceState
                                       serviceTitle: R.string.offert1Title,
                                       coins: 2500,
                                       onOK: () {
-                                        bloc.buyOffer1();
+                                        bloc.buyOffer1().then((value) {
+                                          if(value != null && value is int && value == 0) {
+                                            _showBuyMoreDialog();
+                                          }
+                                        });
                                       });
                                 },
                                 child: Container(
@@ -215,7 +219,11 @@ class _PlaniServiceState
                                       serviceTitle: model.name,
                                       coins: model.valueCoins,
                                       onOK: () {
-                                        bloc.buySubscription(model);
+                                        bloc.buySubscription(model).then((value) {
+                                          if(value != null && value is int && value == 0) {
+                                            _showBuyMoreDialog();
+                                          }
+                                        });
                                       });
                                 },
                                 child: Container(
@@ -288,6 +296,32 @@ class _PlaniServiceState
           loadingStream: bloc.isLoadingStream,
         )
       ],
+    );
+  }
+
+  void _showBuyMoreDialog() {
+    showCupertinoDialog<String>(
+      context: context,
+      builder: (BuildContext context) => TXCupertinoDialogWidget(
+        title: "Fondos insuficientes",
+        contentWidget: TXTextWidget(
+          text: R.string.noEnoughCoinsToActivateService,
+        ),
+        okText: R.string.continueAction,
+        onOK: () async {
+          Navigator.pop(context);
+          final res =
+          await NavigationUtils.push(
+              context,
+              PlanifivePaymentPage());
+          if (res ?? false) {
+            bloc.loadCoins();
+          }
+        },
+        onCancel: () {
+          Navigator.pop(context);
+        },
+      ),
     );
   }
 
