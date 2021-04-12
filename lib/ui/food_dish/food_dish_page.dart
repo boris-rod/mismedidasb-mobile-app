@@ -13,6 +13,7 @@ import 'package:mismedidasb/ui/_tx_widget/tx_checkbox_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_combo_progress_bar_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_cupertino_dialog_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_divider_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_expandable_fab.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_icon_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_icon_navigator_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';
@@ -112,6 +113,27 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
             backgroundColorAppBar: R.color.food_action_bar,
             titleFont: FontWeight.w300,
             title: R.string.foodDishes,
+            floatingActionButton: Container(
+              margin: EdgeInsets.only(bottom: 50),
+              child: TXExpandableFab(
+                separation: 30,
+                distance: 60,
+                children: [
+                  Card(
+                    elevation: 5,
+                    color: Colors.blue,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                    ),
+                    child: Container(
+                      padding: EdgeInsets.all(3)
+                          .copyWith(left: 5, right: 5),
+                      child: TXTextWidget(text: "Planes prediseñados"),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             leading: Container(
               margin: EdgeInsets.only(left: 10),
               child: TXIconNavigatorWidget(
