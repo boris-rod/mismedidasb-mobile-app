@@ -535,7 +535,7 @@ class StringsEs implements StringsBase {
   String get planiDescription => "Recordatorios y sugerencias de planificación de comidas.";
 
   @override
-  String get noEnoughCoinsToActivateService => "No tienes suficientes monedas para activar este servicio.";
+  String get noEnoughCoinsToActivateService => "No tienes suficientes monedas para activar este servicio. ¿Deseas comprar monedas?";
 
   @override
   String get coins => "Monedas";
