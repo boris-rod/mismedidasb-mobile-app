@@ -37,6 +37,7 @@ import 'package:mismedidasb/ui/login/login_page.dart';
 import 'package:mismedidasb/ui/measure_health/measure_health_page.dart';
 import 'package:mismedidasb/ui/measure_value/measure_value_page.dart';
 import 'package:mismedidasb/ui/measure_wellness/measure_wellness_page.dart';
+import 'package:mismedidasb/ui/plani_service/plani_service_page.dart';
 import 'package:mismedidasb/ui/poll_notification/poll_notification_page.dart';
 import 'package:mismedidasb/ui/profile/profile_page.dart';
 import 'package:mismedidasb/ui/settings/settings_page.dart';
@@ -87,6 +88,25 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
           showLeading: false,
           actionBarColor: R.color.home_color,
           actions: [
+            TXActionBarMenuWidget(
+              icon: Container(
+                padding: EdgeInsets.only(right: 5),
+                child: InkWell(
+                  child: Icon(
+                    Icons.cloud_done,
+                    size: 35,
+                    color: R.color.food_blue_dark,
+                  ),
+                  onTap: () async {
+                    NavigationUtils.push(
+                        context,
+                        PlaniServicePage(
+                          userModel: bloc.profile,
+                        )).then((value) => bloc.loadProfileInBackground());
+                  },
+                ),
+              ),
+            ),
             TXActionBarMenuWidget(
               icon: Image.asset(
                 R.image.settings,

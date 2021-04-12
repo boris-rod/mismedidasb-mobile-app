@@ -36,8 +36,19 @@ class PlaniServiceBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
   Stream<int> get coinsResult => _coinsController.stream;
 
-  void loadData(UserModel userModel) async {
+  void loadProfileFirst() async {
     isLoading = true;
+    final res = await _iUserRepository.getProfile();
+    if(res is ResultSuccess<UserModel>) {
+      loadData(res.value, startLoading: false);
+    } else {
+      showErrorMessage(res);
+      isLoading = false;
+    }
+  }
+
+  void loadData(UserModel userModel, {bool startLoading = true}) async {
+    if(startLoading) isLoading = true;
     final res = await _iUserRepository.getSubscriptions();
     if (res is ResultSuccess<List<SubscriptionModel>>) {
       List<SubscriptionModel> list = updateSubscriptions(userModel, res.value);

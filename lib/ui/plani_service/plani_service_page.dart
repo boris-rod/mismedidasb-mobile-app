@@ -11,6 +11,7 @@ import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_main_app_bar_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
 import 'package:mismedidasb/ui/plani_service/plani_service_bloc.dart';
+import 'package:mismedidasb/ui/planifive_payment/planifive_payment_page.dart';
 import 'package:mismedidasb/ui/profile/tx_plani_icon_widget.dart';
 import 'package:mismedidasb/utils/calendar_utils.dart';
 
@@ -28,7 +29,9 @@ class _PlaniServiceState
   @override
   void initState() {
     super.initState();
-    bloc.loadData(widget.userModel);
+    widget.userModel == null
+        ? bloc.loadProfileFirst()
+        : bloc.loadData(widget.userModel);
     bloc.loadCoins();
   }
 
@@ -44,6 +47,22 @@ class _PlaniServiceState
               NavigationUtils.pop(context);
             },
           ),
+          floatingActionButton: Container(
+            margin: EdgeInsets.only(bottom: 20),
+            child: FloatingActionButton(
+              backgroundColor: R.color.food_green,
+              child: Icon(Icons.add),
+              onPressed: () async {
+                final res =
+                await NavigationUtils.push(
+                    context,
+                    PlanifivePaymentPage());
+                if (res ?? false) {
+                  bloc.loadCoins();
+                }
+              },
+            ),
+          ),
           body: Container(
             child: StreamBuilder<List<SubscriptionModel>>(
               stream: bloc.subscriptionsResult,
@@ -57,19 +76,48 @@ class _PlaniServiceState
                         builder: (ctx, snapshotCoins) {
                           return Container(
                             width: double.infinity,
-                            margin: EdgeInsets.only(right: 20),
+                            margin: EdgeInsets.only(right: 20, top: 5),
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 TXTextWidget(text: "${R.string.coins}: "),
                                 TXTextWidget(
-                                  text:snapshotCoins.data.toString(),
+                                  text: snapshotCoins.data.toString(),
                                   color: R.color.food_blue_dark,
                                   fontWeight: FontWeight.bold,
                                   size: 20,
                                 ),
-                                Image.asset(R.image.coins, width: 20, height: 20,)
+                                Image.asset(
+                                  R.image.coins,
+                                  width: 20,
+                                  height: 20,
+                                ),
+                                // SizedBox(
+                                //   width: 5,
+                                // ),
+                                // InkWell(
+                                //   onTap: () async {
+                                //     final res =
+                                //         await NavigationUtils.push(
+                                //         context,
+                                //         PlanifivePaymentPage());
+                                //     if (res ?? false) {
+                                //       bloc.loadCoins();
+                                //     }
+                                //   },
+                                //   child: Container(
+                                //     // padding: EdgeInsets.all(3)
+                                //     //     .copyWith(left: 5, right: 5),
+                                //     // decoration: BoxDecoration(
+                                //     //   borderRadius:
+                                //     //       BorderRadius.all(Radius.circular(4)),
+                                //     //   border: Border.all(
+                                //     //       color: R.color.gray_darkest,
+                                //     //       width: 1),
+                                //     // ),
+                                //       child: Icon(Icons.add_circle,color: R.color.food_green, size: 21,)),
+                                // ),
                               ],
                             ),
                           );
@@ -130,7 +178,11 @@ class _PlaniServiceState
                                         text: "2500",
                                         color: Colors.white,
                                       ),
-                                      Image.asset(R.image.coins, width: 20, height: 20,)
+                                      Image.asset(
+                                        R.image.coins,
+                                        width: 20,
+                                        height: 20,
+                                      )
                                     ],
                                   ),
                                 ),
@@ -214,7 +266,11 @@ class _PlaniServiceState
                                       TXTextWidget(
                                         text: model.valueCoins.toString(),
                                       ),
-                                      Image.asset(R.image.coins, width: 20, height: 20,)
+                                      Image.asset(
+                                        R.image.coins,
+                                        width: 20,
+                                        height: 20,
+                                      )
                                     ],
                                   ),
                                 ),
