@@ -19,6 +19,8 @@ abstract class IDishApi {
   Future<List<DailyFoodModel>> getPlansMergedAPI(
       DateTime start, DateTime end);
 
+  Future<void> getCustomMenus();
+
   Future<bool> saveDailyFoodModel(CreateDailyPlanModel model);
 
   Future<DailyFoodPlanModel> planDailyParameters();

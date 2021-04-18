@@ -52,6 +52,15 @@ class DishApi extends BaseApi implements IDishApi {
   }
 
   @override
+  Future<void> getCustomMenus() async {
+    final res = await _networkHandler.get(path: Endpoint.custom_menus);
+    if(res.statusCode == RemoteConstants.code_success) {
+      return;
+    }
+    throw serverException(res);
+  }
+
+  @override
   Future<List<DailyFoodModel>> getPlansMergedAPI(
       DateTime start, DateTime end) async {
     final res = await _networkHandler.get(

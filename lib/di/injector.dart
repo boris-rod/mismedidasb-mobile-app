@@ -92,6 +92,7 @@ import 'package:mismedidasb/ui/contact_us/contact_us_bloc.dart';
 import 'package:mismedidasb/ui/food/food_bloc.dart';
 import 'package:mismedidasb/ui/food_add_edit/food_add_edit_bloc.dart';
 import 'package:mismedidasb/ui/food_craving/food_craving_bloc.dart';
+import 'package:mismedidasb/ui/food_custom_menus/custom_menus_bloc.dart';
 import 'package:mismedidasb/ui/food_dish/food_dish_bloc.dart';
 import 'package:mismedidasb/ui/food_search/food_search_bloc.dart';
 import 'package:mismedidasb/ui/habit/habit_bloc.dart';
@@ -371,6 +372,7 @@ class Injector {
     container
         .registerFactory((c) => PlaniServiceBloC(c.resolve(), c.resolve()));
     container.registerFactory((c) => VideoBloC());
+    container.registerFactory((c) => CustomMenusBloC(c.resolve(), c.resolve()));
   }
 
   _registerCommon() {

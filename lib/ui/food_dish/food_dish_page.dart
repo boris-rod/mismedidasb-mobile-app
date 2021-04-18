@@ -23,6 +23,7 @@ import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_textlink_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_video_intro_widet.dart';
 import 'package:mismedidasb/ui/food/food_page.dart';
+import 'package:mismedidasb/ui/food_custom_menus/custom_menus_page.dart';
 import 'package:mismedidasb/ui/food_dish/food_dish_bloc.dart';
 import 'package:mismedidasb/ui/food_dish/tx_bottom_resume_food_plan_widget.dart';
 import 'package:mismedidasb/ui/food_dish/tx_daily_nutritional_info_widget.dart';
@@ -119,16 +120,19 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                 separation: 30,
                 distance: 60,
                 children: [
-                  Card(
-                    elevation: 5,
-                    color: Colors.blue,
-                    shape: RoundedRectangleBorder(
+                  InkWell(
+                    onTap: () => NavigationUtils.push(context, CustomMenusPage()),
+                    child: Card(
+                      elevation: 5,
+                      color: Colors.blue,
+                      shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(18.0),
-                    ),
-                    child: Container(
-                      padding: EdgeInsets.all(3)
-                          .copyWith(left: 5, right: 5),
-                      child: TXTextWidget(text: "Planes prediseñados"),
+                      ),
+                      child: Container(
+                        padding: EdgeInsets.all(3)
+                            .copyWith(left: 5, right: 5),
+                        child: TXTextWidget(text: "Planes prediseñados"),
+                      ),
                     ),
                   ),
                 ],

@@ -128,6 +128,15 @@ class DishRepository extends BaseRepository implements IDishRepository {
   }
 
   @override
+  Future<void> getCustomMenus() async {
+    try {
+      final res = await _dishApi.getCustomMenus();
+    } catch (ex) {
+      //return resultError(ex);
+    }
+  }
+
+  @override
   Future<Result<Map<DateTime, DailyFoodModel>>> getPlansMergedAPI(
       DateTime start, DateTime end) async {
     try {

@@ -10,6 +10,8 @@ abstract class IDishRepository {
   //Save plan locally with "locallySaved" property in true
   Future<bool> savePlanLocal(DailyFoodModel dailyFoodModel);
 
+  Future<void> getCustomMenus();
+
   //Gets plans from API merge with local plans not saved and save local bulk
   Future<Result<Map<DateTime, DailyFoodModel>>> getPlansMergedAPI(
       DateTime start, DateTime end);
