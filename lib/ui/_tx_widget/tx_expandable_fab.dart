@@ -123,8 +123,8 @@ class _ExpandableFabState extends State<TXExpandableFab>
       child: AnimatedContainer(
         alignment: Alignment.bottomRight,
         transform: Matrix4.diagonal3Values(
-          _open ? 0.7 : 1.0,
-          _open ? 0.7 : 1.0,
+          _open ? 0.9 : 1.0,
+          _open ? 0.9 : 1.0,
           1.0,
         ),
         duration: const Duration(milliseconds: 250),
@@ -132,7 +132,7 @@ class _ExpandableFabState extends State<TXExpandableFab>
         child: AnimatedOpacity(
           opacity: _open ? 0.0 : 1.0,
           curve: const Interval(0.25, 1.0, curve: Curves.easeInOut),
-          duration: const Duration(milliseconds: 250),
+          duration: const Duration(milliseconds: 50),
           child: FloatingActionButton(
             onPressed: _toggle,
             child: widget.icon,

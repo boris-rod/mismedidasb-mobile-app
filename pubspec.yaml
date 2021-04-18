@@ -73,7 +73,6 @@ dependencies:
 #  firebase_crashlytics: ^0.1.2+4
 #  firebase_analytics: ^5.0.9
 #  google_fonts: ^0.3.2
-  flutter_speed_dial_material_design: ^2.0.0
 
 
 dev_dependencies:
