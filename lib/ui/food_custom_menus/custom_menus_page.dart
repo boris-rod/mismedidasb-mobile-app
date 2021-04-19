@@ -1,6 +1,7 @@
 
 
 import 'package:flutter/cupertino.dart';
+import 'package:mismedidasb/domain/menu/menu_model.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/bloc_state.dart';
 import 'package:mismedidasb/ui/_base/navigation_utils.dart';
@@ -44,7 +45,13 @@ class CustomMenusState extends StateWithBloC<CustomMenusPage, CustomMenusBloC> {
               },
             ),
           ),
-          body: Container(),
+          body: StreamBuilder<List<MenuModel>>(
+            stream: bloc.menusResult,
+            initialData: [],
+            builder: (context, snapshot) {
+              return Container();
+            },
+          ),
         ),
         TXLoadingWidget(loadingStream: bloc.isLoadingStream),
       ],

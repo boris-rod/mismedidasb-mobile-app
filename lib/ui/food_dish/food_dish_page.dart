@@ -121,7 +121,9 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                 distance: 60,
                 children: [
                   InkWell(
-                    onTap: () => NavigationUtils.push(context, CustomMenusPage()),
+                    onTap: () {
+                      NavigationUtils.push(context, CustomMenusPage());
+                    },
                     child: Card(
                       elevation: 5,
                       color: Colors.blue,
@@ -131,7 +133,7 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
                       child: Container(
                         padding: EdgeInsets.all(3)
                             .copyWith(left: 5, right: 5),
-                        child: TXTextWidget(text: "Planes prediseñados"),
+                        child: TXTextWidget(text: "Menus"),
                       ),
                     ),
                   ),

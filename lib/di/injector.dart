@@ -9,6 +9,7 @@ import 'package:mismedidasb/data/api/contact_us_api.dart';
 import 'package:mismedidasb/data/api/dish_api.dart';
 import 'package:mismedidasb/data/api/health_concept_api.dart';
 import 'package:mismedidasb/data/api/legacy_api.dart';
+import 'package:mismedidasb/data/api/menu_api.dart';
 import 'package:mismedidasb/data/api/personal_data_api.dart';
 import 'package:mismedidasb/data/api/poll_api.dart';
 import 'package:mismedidasb/data/api/question_api.dart';
@@ -21,6 +22,7 @@ import 'package:mismedidasb/data/converter/contact_us_converter.dart';
 import 'package:mismedidasb/data/converter/dish_converter.dart';
 import 'package:mismedidasb/data/converter/health_concept_converter.dart';
 import 'package:mismedidasb/data/converter/legacy_converter.dart';
+import 'package:mismedidasb/data/converter/menu_converter.dart';
 import 'package:mismedidasb/data/converter/personal_data_converter.dart';
 import 'package:mismedidasb/data/converter/poll_converter.dart';
 import 'package:mismedidasb/data/converter/question_converter.dart';
@@ -37,6 +39,7 @@ import 'package:mismedidasb/data/repository/contact_us_repository.dart';
 import 'package:mismedidasb/data/repository/dish_repository.dart';
 import 'package:mismedidasb/data/repository/health_concept_repository.dart';
 import 'package:mismedidasb/data/repository/legacy_repository.dart';
+import 'package:mismedidasb/data/repository/menu_repository.dart';
 import 'package:mismedidasb/data/repository/personal_data_repository.dart';
 import 'package:mismedidasb/data/repository/poll_repository.dart';
 import 'package:mismedidasb/data/repository/question_repository.dart';
@@ -63,6 +66,9 @@ import 'package:mismedidasb/domain/health_concept/i_health_concept_repository.da
 import 'package:mismedidasb/domain/legacy/i_legacy_api.dart';
 import 'package:mismedidasb/domain/legacy/i_legacy_converter.dart';
 import 'package:mismedidasb/domain/legacy/i_legacy_repository.dart';
+import 'package:mismedidasb/domain/menu/i_menu_api.dart';
+import 'package:mismedidasb/domain/menu/i_menu_converter.dart';
+import 'package:mismedidasb/domain/menu/i_menu_repository.dart';
 import 'package:mismedidasb/domain/personal_data/i_personal_data_api.dart';
 import 'package:mismedidasb/domain/personal_data/i_personal_data_converter.dart';
 import 'package:mismedidasb/domain/personal_data/i_personal_data_dao.dart';
@@ -227,6 +233,7 @@ class Injector {
 
     container.registerSingleton<IContactUsConverter, ContactUsConverter>(
         (c) => ContactUsConverter());
+    container.registerSingleton<IMenuConverter, MenuConverter>((c) => MenuConverter(container.resolve()));
   }
 
   _registerApiLayer() {
@@ -265,6 +272,7 @@ class Injector {
 
     container.registerSingleton<IContactUsApi, ContactUsApi>(
         (c) => ContactUsApi(container.resolve(), container.resolve()));
+    container.registerSingleton<IMenuApi, MenuApi>((c) => MenuApi(container.resolve(), container.resolve()));
   }
 
   _registerDaoLayer() {
@@ -321,6 +329,7 @@ class Injector {
 
     container.registerSingleton<IContactUsRepository, ContactUsRepository>(
         (c) => ContactUsRepository(container.resolve()));
+    container.registerSingleton<ICustomMenuRepository, CustomMenuRepository>((c) => CustomMenuRepository(container.resolve()));
   }
 
   _registerBloCs() {
