@@ -22,6 +22,15 @@ class ErrorHandlerBloC {
     );
   }
 
+  void showErrorMessageAsString(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_LONG,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+    );
+  }
+
   onError(dynamic error) {
     if (error != null)
       _errorMessageController.sinkAddSafe(getResponseError(error));

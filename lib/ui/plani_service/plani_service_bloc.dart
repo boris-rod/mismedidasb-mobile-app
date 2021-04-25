@@ -178,6 +178,22 @@ class PlaniServiceBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
             orElse: () {
           return null;
         })?.validAt;
+      } else if (element.product == RemoteConstants.subscription_menus) {
+        element.name = R.string.customMenusService;
+        element.description = R.string.customMenusDescription;
+        element.isActive = userModel.subscriptions.firstWhere(
+                (subs) =>
+            subs.product ==
+                RemoteConstants.subscription_menus, orElse: () {
+          return null;
+        })?.isActive ??
+            false;
+        element.validAt = userModel.subscriptions.firstWhere(
+                (subs) =>
+            subs.product == RemoteConstants.subscription_menus,
+            orElse: () {
+              return null;
+            })?.validAt;
       } else
         element.name = element.product;
     });

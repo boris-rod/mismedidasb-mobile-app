@@ -30,6 +30,7 @@ class RemoteConstants {
   static const subscription_virtual_assessor = 'VIRTUAL_ASESSOR';
   static const subscription_report_food = 'FOOD_REPORT';
   static const subscription_report_nutrition = 'NUTRITION_REPORT';
+  static const subscription_menus = 'MENUES';
 
 
   static const result = 'result';

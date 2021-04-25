@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mismedidasb/domain/user/user_model.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/bloc_state.dart';
@@ -17,8 +18,10 @@ import 'package:mismedidasb/utils/calendar_utils.dart';
 
 class PlaniServicePage extends StatefulWidget {
   final UserModel userModel;
+  final bool fromMenus;
 
-  const PlaniServicePage({Key key, this.userModel}) : super(key: key);
+  const PlaniServicePage({Key key, this.userModel, this.fromMenus = false})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _PlaniServiceState();
@@ -33,6 +36,9 @@ class _PlaniServiceState
         ? bloc.loadProfileFirst()
         : bloc.loadData(widget.userModel);
     bloc.loadCoins();
+    if(widget.fromMenus) {
+      Fluttertoast.showToast(msg: "Para acceder a los menús active el servicio.");
+    }
   }
 
   @override
@@ -54,9 +60,7 @@ class _PlaniServiceState
               child: Icon(Icons.add),
               onPressed: () async {
                 final res =
-                await NavigationUtils.push(
-                    context,
-                    PlanifivePaymentPage());
+                    await NavigationUtils.push(context, PlanifivePaymentPage());
                 if (res ?? false) {
                   bloc.loadCoins();
                 }
@@ -139,17 +143,27 @@ class _PlaniServiceState
                               color: R.color.food_green,
                               child: InkWell(
                                 onTap: () {
-                                  _showBuyResume(
-                                      context: context,
-                                      serviceTitle: R.string.offert1Title,
-                                      coins: 2500,
-                                      onOK: () {
-                                        bloc.buyOffer1().then((value) {
-                                          if(value != null && value is int && value == 0) {
-                                            _showBuyMoreDialog();
-                                          }
+                                  if (!_haveFullPackage(
+                                      snapshotSubscriptions.data)) {
+                                    _showBuyResume(
+                                        context: context,
+                                        serviceTitle: R.string.offert1Title,
+                                        coins: 3000,
+                                        onOK: () {
+                                          bloc.buyOffer1().then((value) {
+                                            if (value != null &&
+                                                value is int &&
+                                                value == 0) {
+                                              _showBuyMoreDialog();
+                                            }
+                                          });
                                         });
-                                      });
+                                  } else {
+                                    Fluttertoast.showToast(
+                                        msg:
+                                            "Todas sus suscripciones se encuentran activas",
+                                        toastLength: Toast.LENGTH_LONG);
+                                  }
                                 },
                                 child: Container(
                                   padding: EdgeInsets.all(10),
@@ -179,7 +193,7 @@ class _PlaniServiceState
                                         width: 5,
                                       ),
                                       TXTextWidget(
-                                        text: "2500",
+                                        text: "3000",
                                         color: Colors.white,
                                       ),
                                       Image.asset(
@@ -219,8 +233,12 @@ class _PlaniServiceState
                                       serviceTitle: model.name,
                                       coins: model.valueCoins,
                                       onOK: () {
-                                        bloc.buySubscription(model).then((value) {
-                                          if(value != null && value is int && value == 0) {
+                                        bloc
+                                            .buySubscription(model)
+                                            .then((value) {
+                                          if (value != null &&
+                                              value is int &&
+                                              value == 0) {
                                             _showBuyMoreDialog();
                                           }
                                         });
@@ -287,6 +305,7 @@ class _PlaniServiceState
                           })
                     ],
                   ),
+                  padding: EdgeInsets.only(bottom: 40),
                 );
               },
             ),
@@ -311,9 +330,7 @@ class _PlaniServiceState
         onOK: () async {
           Navigator.pop(context);
           final res =
-          await NavigationUtils.push(
-              context,
-              PlanifivePaymentPage());
+              await NavigationUtils.push(context, PlanifivePaymentPage());
           if (res ?? false) {
             bloc.loadCoins();
           }
@@ -366,5 +383,12 @@ class _PlaniServiceState
         },
       ),
     );
+  }
+
+  bool _haveFullPackage(List<SubscriptionModel> subscriptions) {
+    for (int i = 0; i < subscriptions.length; i++) {
+      if (!subscriptions[i].isActive) return false;
+    }
+    return true;
   }
 }

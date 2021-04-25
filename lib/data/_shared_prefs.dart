@@ -92,14 +92,14 @@ class SharedPreferencesManager {
     await setBoolValue(SharedKey.nutriInfoExpanded, false);
     // await setBoolValue(SharedKey.launchNotiPoll, false);
 
-    await setBoolValue(SharedKey.showBreakFastTime, true);
-    await setBoolValue(SharedKey.showSnack1Time, true);
-    await setBoolValue(SharedKey.showLunchTime, true);
-    await setBoolValue(SharedKey.showSnack2Time, true);
-    await setBoolValue(SharedKey.showDinnerTime, true);
+    await setBoolValue(SharedKey.showBreakFastTime, false);
+    await setBoolValue(SharedKey.showSnack1Time, false);
+    await setBoolValue(SharedKey.showLunchTime, false);
+    await setBoolValue(SharedKey.showSnack2Time, false);
+    await setBoolValue(SharedKey.showDinnerTime, false);
+    await setBoolValue(SharedKey.showPlanFoods, false);
+    await setBoolValue(SharedKey.showDrinkWater, false);
     await setBoolValue(SharedKey.showPhysicalExerciseTime, true);
-    await setBoolValue(SharedKey.showPlanFoods, true);
-    await setBoolValue(SharedKey.showDrinkWater, true);
 
     await setBoolValue(SharedKey.hasPlaniVirtualAssesor, false);
     await setBoolValue(SharedKey.showDailyPollNotification, true);

@@ -16,8 +16,8 @@ class MenuApi extends BaseApi implements IMenuApi{
   MenuApi(this._networkHandler, this._iMenuConverter);
 
   @override
-  Future<List<MenuModel>> getCustomMenus() async {
-    final res = await _networkHandler.get(path: Endpoint.custom_menus);
+  Future<List<MenuModel>> getCustomMenus({int page = 1, int perPage = 50}) async {
+    final res = await _networkHandler.get(path: "${Endpoint.custom_menus}?perPage=$perPage&page=$page");
     if(res.statusCode == RemoteConstants.code_success) {
       Iterable l = jsonDecode(res.body)[RemoteConstants.result];
       return l.map((e) => _iMenuConverter.fromJson(e)).toList();

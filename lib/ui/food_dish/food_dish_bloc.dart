@@ -159,7 +159,17 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   void setFoodList(DailyActivityFoodModel model) async {
     final rootModel = await dailyFoodResult.first;
     await _iDishRepository.savePlanLocal(rootModel);
-    _dailyFoodController.sink.add(rootModel);
+    _dailyFoodController.sinkAddSafe(rootModel);
+  }
+
+  void setFullDailyPlan(List<DailyActivityFoodModel> modelList) async {
+    final rootModel = await dailyFoodResult.first;
+    modelList.forEach((element) {
+      element.plan = rootModel.dailyFoodPlanModel;
+    });
+    rootModel.dailyActivityFoodModelList = modelList;
+    await _iDishRepository.savePlanLocal(rootModel);
+    _dailyFoodController.sinkAddSafe(rootModel);
   }
 
   void copyPlan(bool forceCopy, DateTime newSelectedDate) async {

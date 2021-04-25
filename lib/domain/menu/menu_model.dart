@@ -1,7 +1,7 @@
 import 'package:mismedidasb/domain/dish/dish_model.dart';
 
 class MenuModel {
-  String id;
+  int id;
   String name;
   String nameEn;
   String nameIt;
@@ -9,8 +9,8 @@ class MenuModel {
   String descriptionEn;
   String descriptionIt;
   bool active;
-  String groupId;
-  String createdById;
+  int groupId;
+  int createdById;
   DateTime createdAt;
   DateTime modifiedAt;
   double calories;

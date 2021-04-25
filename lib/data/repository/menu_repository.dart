@@ -11,9 +11,9 @@ class CustomMenuRepository extends BaseRepository implements ICustomMenuReposito
   CustomMenuRepository(this._iMenuApi);
 
   @override
-  Future<Result<List<MenuModel>>> getCustomMenus() async {
+  Future<Result<List<MenuModel>>> getCustomMenus({int page = 1, int perPage = 50}) async {
     try {
-      final res = await _iMenuApi.getCustomMenus();
+      final res = await _iMenuApi.getCustomMenus(page: page, perPage: perPage);
       return ResultSuccess(value: res);
     } catch (ex) {
       return resultError(ex);

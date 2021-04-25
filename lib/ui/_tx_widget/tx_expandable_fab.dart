@@ -1,6 +1,8 @@
 
+import 'dart:async';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:rxdart/rxdart.dart';
 
 @immutable
 class TXExpandableFab extends StatefulWidget {
@@ -9,11 +11,15 @@ class TXExpandableFab extends StatefulWidget {
   final double separation;
   final List<Widget> children;
   final Icon icon;
+  final ExpandableFABController controller;
+  final ValueChanged<bool> onChange;
 
   const TXExpandableFab({
     Key key,
     this.initialOpen = false,
     this.icon = const Icon(Icons.add),
+    this.controller,
+    this.onChange,
     @required this.distance,
     @required this.children,
     @required this.separation,
@@ -28,6 +34,7 @@ class _ExpandableFabState extends State<TXExpandableFab>
   AnimationController _controller;
   Animation<double> _expandAnimation;
   bool _open = false;
+  StreamSubscription _streamSubscriptionToggle;
 
   @override
   void initState() {
@@ -43,11 +50,18 @@ class _ExpandableFabState extends State<TXExpandableFab>
       reverseCurve: Curves.easeOutQuad,
       parent: _controller,
     );
+    _streamSubscriptionToggle = widget?.controller?.eventHandlerToggle?.listen((value) {
+      if(value ?? false) {
+        _toggle();
+      }
+    });
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    _streamSubscriptionToggle?.cancel();
+    widget?.controller?.dispose();
     super.dispose();
   }
 
@@ -60,6 +74,7 @@ class _ExpandableFabState extends State<TXExpandableFab>
         _controller.reverse();
       }
     });
+    widget?.onChange(_open);
   }
 
   @override
@@ -233,5 +248,21 @@ class FakeItem extends StatelessWidget {
         color: Colors.grey.shade300,
       ),
     );
+  }
+}
+
+class ExpandableFABController {
+  BehaviorSubject<bool> _toggleController;
+
+  ExpandableFABController() {
+   _toggleController = new BehaviorSubject();
+  }
+
+  Stream<bool> get eventHandlerToggle => _toggleController.stream;
+
+  void toggle() => _toggleController?.sink?.add(true);
+
+  void dispose() {
+    _toggleController.close();
   }
 }

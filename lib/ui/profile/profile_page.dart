@@ -285,11 +285,8 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                                 leading: Icons.cloud_done,
                                 optionName: "Servicios de Planifive",
                                 onOptionTap: () async {
-                                  final res = await NavigationUtils.push(
-                                      context,
-                                      PlaniServicePage(
-                                        userModel: snapshot.data,
-                                      ));
+                                  NavigationUtils.push(
+                                      context, PlaniServicePage());
                                 },
                               ),
                             ],

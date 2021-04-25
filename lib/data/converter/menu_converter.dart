@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:mismedidasb/domain/dish/i_dish_converter.dart';
 import 'package:mismedidasb/domain/menu/i_menu_converter.dart';
 import 'package:mismedidasb/domain/menu/menu_model.dart';
@@ -20,8 +21,8 @@ class MenuConverter implements IMenuConverter {
       active: json['active'],
       groupId: json['groupId'],
       createdById: json['createdById'],
-      createdAt: json['createdAt'],
-      modifiedAt: json['modifiedAt'],
+      createdAt: json.containsKey('createdAt') ? DateTime.tryParse(json['createdAt']).toLocal() : null,
+      modifiedAt: json.containsKey('modifiedAt') ? DateTime.tryParse(json['modifiedAt']).toLocal() : null,
       calories: json['calories'],
       proteins: json['proteins'],
       carbohydrates: json['carbohydrates'],

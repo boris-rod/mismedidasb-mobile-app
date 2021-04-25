@@ -381,7 +381,7 @@ class Injector {
     container
         .registerFactory((c) => PlaniServiceBloC(c.resolve(), c.resolve()));
     container.registerFactory((c) => VideoBloC());
-    container.registerFactory((c) => CustomMenusBloC(c.resolve(), c.resolve()));
+    container.registerFactory((c) => CustomMenusBloC(c.resolve(), c.resolve(), c.resolve(), c.resolve()));
   }
 
   _registerCommon() {
