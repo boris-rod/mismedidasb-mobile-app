@@ -2,6 +2,8 @@ class SettingModel {
   bool showResumeBeforeSave;
   int languageCodeId;
   String languageCode;
+  String heightUnit;
+  String weightUnit;
   bool isDarkMode;
   bool showBreakFastNoti;
   bool showSnack1Noti;
@@ -36,7 +38,9 @@ class SettingModel {
       this.planFoodsTime,
       this.lunchTime,
       this.snack2Time,
-      this.dinnerTime});
+      this.dinnerTime,
+      this.heightUnit,
+      this.weightUnit});
 }
 
 class SettingAPIModel {

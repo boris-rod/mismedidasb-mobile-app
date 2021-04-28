@@ -548,4 +548,16 @@ class StringsEs implements StringsBase {
 
   @override
   String get chooseYourPlan => "Elige tu plan";
+
+  @override
+  String get centimeter => "Centímetros";
+
+  @override
+  String get feet => "Pies";
+
+  @override
+  String get kilogram => "Kilogramos";
+
+  @override
+  String get pounds => "Libras";
 }

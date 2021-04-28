@@ -1,4 +1,5 @@
 import 'package:mismedidasb/domain/session/session_model.dart';
+import 'package:mismedidasb/enums.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedKey {
@@ -33,6 +34,9 @@ class SharedKey {
   static String showSnack2Time = "showSnack2Time";
   static String dinnerTime = "dinnerTime";
   static String showDinnerTime = "showDinnerTime";
+
+  static String heightUnit = "heightUnit";
+  static String weightUnit = "weightUnit";
 
   static String physicalExerciseTime = "physicalExerciseTime";
   static String showPhysicalExerciseTime = "showPhysicalExerciseTime";
@@ -103,6 +107,9 @@ class SharedPreferencesManager {
 
     await setBoolValue(SharedKey.hasPlaniVirtualAssesor, false);
     await setBoolValue(SharedKey.showDailyPollNotification, true);
+
+    await setStringValue(SharedKey.heightUnit, heightUnit.centimeter.toString().split('.').last);
+    await setStringValue(SharedKey.weightUnit, weightUnit.kilogram.toString().split('.').last);
 
     final now = DateTime.now();
     await setDateTimeValue(SharedKey.breakFastTime,
@@ -306,6 +313,34 @@ class SharedPreferencesManager {
   Future<bool> setUserEmail(String newValue) async {
     var res = (await SharedPreferences.getInstance())
         .setString(SharedKey.userEmail, newValue);
+    return res;
+  }
+
+  Future<String> getHeightUnit() async {
+    var value = (await SharedPreferences.getInstance()).getString(SharedKey.heightUnit);
+    if(value == null) {
+      value = heightUnit.centimeter.toString().split('.').last;
+      await setHeightUnit(value);
+    }
+    return value;
+  }
+
+  Future<bool> setHeightUnit(String unit) async {
+    var res = (await SharedPreferences.getInstance()).setString(SharedKey.heightUnit, unit);
+    return res;
+  }
+
+  Future<String> getWeightUnit() async {
+    var value = (await SharedPreferences.getInstance()).getString(SharedKey.weightUnit);
+    if(value == null) {
+      value = weightUnit.kilogram.toString().split('.').last;
+      await setHeightUnit(value);
+    }
+    return value;
+  }
+
+  Future<bool> setWeightUnit(String unit) async {
+    var res = (await SharedPreferences.getInstance()).setString(SharedKey.weightUnit, unit);
     return res;
   }
 

@@ -1,6 +1,7 @@
 import 'package:mismedidasb/domain/answer/answer_model.dart';
 
 class SingleSelectionModel {
+  String key;
   int index;
   int id;
   String displayName;
@@ -12,7 +13,8 @@ class SingleSelectionModel {
       this.id,
       this.displayName,
       this.isSelected,
-      this.partialValue});
+      this.partialValue,
+      this.key = ''});
 
 //  static List<SingleSelectionModel> getAgeRange() {
 //    List<SingleSelectionModel> list = [];
