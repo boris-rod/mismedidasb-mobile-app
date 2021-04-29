@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:mismedidasb/data/_shared_prefs.dart';
 import 'package:mismedidasb/data/api/remote/remote_constanst.dart';
 import 'package:mismedidasb/data/api/remote/result.dart';
 import 'package:mismedidasb/domain/user/i_user_repository.dart';
@@ -15,13 +16,15 @@ import 'package:mismedidasb/utils/extensions.dart';
 class PlaniServiceBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   final IUserRepository _iUserRepository;
   final ILNM _ilnm;
+  final SharedPreferencesManager _sharedPreferencesManager;
 
-  PlaniServiceBloC(this._iUserRepository, this._ilnm);
+  PlaniServiceBloC(this._iUserRepository, this._ilnm, this._sharedPreferencesManager);
 
   @override
   void dispose() {
     disposeLoadingBloC();
     disposeErrorHandlerBloC();
+    _showFirstTimeController.close();
     _subscriptionsController.close();
     _coinsController.close();
   }
@@ -35,6 +38,10 @@ class PlaniServiceBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   BehaviorSubject<int> _coinsController = new BehaviorSubject();
 
   Stream<int> get coinsResult => _coinsController.stream;
+
+  BehaviorSubject<bool> _showFirstTimeController = new BehaviorSubject();
+
+  Stream<bool> get showFirstTimeResult => _showFirstTimeController.stream;
 
   void loadProfileFirst() async {
     isLoading = true;
@@ -53,6 +60,7 @@ class PlaniServiceBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     if (res is ResultSuccess<List<SubscriptionModel>>) {
       List<SubscriptionModel> list = updateSubscriptions(userModel, res.value);
       _subscriptionsController.sinkAddSafe(list);
+      launchFirstTime();
     } else
       showErrorMessage(res);
     isLoading = false;
@@ -198,5 +206,17 @@ class PlaniServiceBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
         element.name = element.product;
     });
     return list;
+  }
+
+  void launchFirstTime() async {
+    final value =
+    await _sharedPreferencesManager.getBoolValue(SharedKey.firstTimeInServices, defValue: true);
+    _showFirstTimeController.sinkAddSafe(value);
+  }
+
+  void setNotFirstTime() async {
+    await _sharedPreferencesManager.setBoolValue(
+        SharedKey.firstTimeInServices, false);
+    _showFirstTimeController.sinkAddSafe(false);
   }
 }
