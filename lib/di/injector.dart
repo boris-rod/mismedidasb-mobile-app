@@ -379,7 +379,7 @@ class Injector {
     container.registerFactory((c) => ScoreBloC(c.resolve()));
     container.registerFactory((c) => PlanifivePaymentBloC(c.resolve(), c.resolve()));
     container
-        .registerFactory((c) => PlaniServiceBloC(c.resolve(), c.resolve()));
+        .registerFactory((c) => PlaniServiceBloC(c.resolve(), c.resolve(), c.resolve()));
     container.registerFactory((c) => VideoBloC());
     container.registerFactory((c) => CustomMenusBloC(c.resolve(), c.resolve(), c.resolve(), c.resolve()));
   }

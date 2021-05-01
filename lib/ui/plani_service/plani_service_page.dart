@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:mismedidasb/data/api/remote/endpoints.dart';
 import 'package:mismedidasb/domain/user/user_model.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/bloc_state.dart';
@@ -11,10 +12,12 @@ import 'package:mismedidasb/ui/_tx_widget/tx_icon_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_main_app_bar_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_video_intro_widet.dart';
 import 'package:mismedidasb/ui/plani_service/plani_service_bloc.dart';
 import 'package:mismedidasb/ui/planifive_payment/planifive_payment_page.dart';
 import 'package:mismedidasb/ui/profile/tx_plani_icon_widget.dart';
 import 'package:mismedidasb/utils/calendar_utils.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PlaniServicePage extends StatefulWidget {
   final UserModel userModel;
@@ -313,7 +316,25 @@ class _PlaniServiceState
         ),
         TXLoadingWidget(
           loadingStream: bloc.isLoadingStream,
-        )
+        ),
+        StreamBuilder<bool>(
+            stream: bloc.showFirstTimeResult,
+            initialData: false,
+            builder: (context, snapshotShow) {
+              return snapshotShow.data
+                  ? TXVideoIntroWidget(
+                title: R.string.nutritionalReport,
+                onSeeVideo: () {
+                  bloc.setNotFirstTime();
+                  launch(Endpoint.nutritionalReport);
+//                          FileManager.playVideo("profile_settings.mp4");
+                },
+                onSkip: () {
+                  bloc.setNotFirstTime();
+                },
+              )
+                  : Container();
+            }),
       ],
     );
   }

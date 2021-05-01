@@ -59,6 +59,7 @@ class SharedKey {
   static String firstTimeInFoodPortions = "firstTimeInFoodPortions";
   static String firstTimeInHabits = "firstTimeInHabits";
   static String firstTimeInCraving= "firstTimeInCraving";
+  static String firstTimeInServices = "firstTimeInServices";
 }
 
 class SharedPreferencesManager {
@@ -80,6 +81,7 @@ class SharedPreferencesManager {
     await setBoolValue(SharedKey.firstTimeInFoodPortions, true);
     await setBoolValue(SharedKey.firstTimeInHabits, true);
     await setBoolValue(SharedKey.firstTimeInCraving, true);
+    await setBoolValue(SharedKey.firstTimeInServices, true);
   }
 
 
