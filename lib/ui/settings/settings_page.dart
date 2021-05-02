@@ -175,7 +175,7 @@ class _SettingsState extends StateWithBloC<SettingsPage, SettingsBloC> {
 //                                    TXDividerWidget(),
                               ListTile(
                                 title: TXTextWidget(
-                                  text: "Unidad de medidad de altura",
+                                  text: "Unidad de medida de estatura",
                                 ),
                                 trailing: TXTextWidget(
                                     text: snapshot.data.heightUnit ==
@@ -192,7 +192,7 @@ class _SettingsState extends StateWithBloC<SettingsPage, SettingsBloC> {
                                   showTXModalBottomSheet(context: context, builder: (context) {
                                     return TXCupertinoPickerWidget(
                                       height: 200,
-                                      title: "Medidas de altura",
+                                      title: "Medidas de estatura",
                                       list: [
                                         ..._getHeightSelector(snapshot.data.heightUnit)
                                       ],
@@ -207,7 +207,7 @@ class _SettingsState extends StateWithBloC<SettingsPage, SettingsBloC> {
                               TXDividerWidget(),
                               ListTile(
                                 title: TXTextWidget(
-                                  text: "Unidad de medidad de peso",
+                                  text: "Unidad de medida de peso",
                                 ),
                                 trailing: TXTextWidget(
                                     text: snapshot.data.weightUnit ==
