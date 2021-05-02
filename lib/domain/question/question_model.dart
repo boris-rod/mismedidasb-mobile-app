@@ -29,7 +29,7 @@ class QuestionModel {
           displayName: forPounds
               ? (int.tryParse(answers[i].title) * 2.2).toStringAsFixed(0)
               : forFeet
-                  ? (int.tryParse(answers[i].title) * 0.0328084).toStringAsFixed(1)
+                  ? (int.tryParse(answers[i].title) * 0.0328084).toStringAsFixed(2)
                   : answers[i].title,
           isSelected: false));
     }
