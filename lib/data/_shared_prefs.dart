@@ -55,6 +55,9 @@ class SharedKey {
   static String firstTimeInFoodPortions = "firstTimeInFoodPortions";
   static String firstTimeInHabits = "firstTimeInHabits";
   static String firstTimeInCraving= "firstTimeInCraving";
+
+  //Watch
+  static String lastConnectedDevice= "last_connected_device";
 }
 
 class SharedPreferencesManager {
@@ -133,6 +136,9 @@ class SharedPreferencesManager {
         DateTime(now.year, now.month, now.day, 22, 00, 0));
 
     await setIntValue(SharedKey.activeAccount, ACCOUNT_STATUS.PENDING.index);
+
+
+    await setStringValue(SharedKey.lastConnectedDevice, "");
   }
 
   Future<bool> getBoolValue(String key, {bool defValue = false}) async {

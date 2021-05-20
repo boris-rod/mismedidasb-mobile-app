@@ -90,6 +90,8 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    implementation 'no.nordicsemi.android:dfu:1.6.1'
+    implementation files('libs/ute_sdk_v2.8.6.aar')
 //    implementation 'androidx.wear:wear:1.0.0'
 //    implementation 'com.google.android.support:wearable:2.6.0'
 //    compileOnly 'com.google.android.wearable:wearable:2.6.0'

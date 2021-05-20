@@ -103,6 +103,8 @@ import 'package:mismedidasb/ui/measure_health/measure_health_bloc.dart';
 import 'package:mismedidasb/ui/measure_value/measure_value_bloc.dart';
 import 'package:mismedidasb/ui/measure_wellness/measure_wellness_bloc.dart';
 import 'package:mismedidasb/ui/plani_service/plani_service_bloc.dart';
+import 'package:mismedidasb/ui/planifit/planifit_device/planifit_scan_bloc.dart';
+import 'package:mismedidasb/ui/planifit/planifit_home/planifit_home_bloc.dart';
 import 'package:mismedidasb/ui/planifive_payment/planifive_payment_bloc.dart';
 import 'package:mismedidasb/ui/poll_notification/poll_notification_bloc.dart';
 import 'package:mismedidasb/ui/profile/profile_bloc.dart';
@@ -371,6 +373,8 @@ class Injector {
     container
         .registerFactory((c) => PlaniServiceBloC(c.resolve(), c.resolve()));
     container.registerFactory((c) => VideoBloC());
+    container.registerFactory((c) => PlanifitScanBloC());
+    container.registerFactory((c) => PlanifitHomeBloC(c.resolve()));
   }
 
   _registerCommon() {

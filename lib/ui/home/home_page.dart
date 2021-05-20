@@ -37,6 +37,7 @@ import 'package:mismedidasb/ui/login/login_page.dart';
 import 'package:mismedidasb/ui/measure_health/measure_health_page.dart';
 import 'package:mismedidasb/ui/measure_value/measure_value_page.dart';
 import 'package:mismedidasb/ui/measure_wellness/measure_wellness_page.dart';
+import 'package:mismedidasb/ui/planifit/planifit_home/planifit_home_page.dart';
 import 'package:mismedidasb/ui/poll_notification/poll_notification_page.dart';
 import 'package:mismedidasb/ui/profile/profile_page.dart';
 import 'package:mismedidasb/ui/settings/settings_page.dart';
@@ -253,8 +254,7 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
                 conceptModel: model,
               );
             else if (model.codeName == RemoteConstants.concept_values_measure)
-              page = MeasureValuePage(
-                conceptModel: model,
+              page = PlanifitHomePage(
               );
             else if (model.codeName == RemoteConstants.concept_wellness_measure)
               page = MeasureWellnessPage(

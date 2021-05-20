@@ -15,7 +15,13 @@ enum PopupActionKey {
   daily_plan_instructions
 }
 
-enum PaymentProgress { GETTING_PRODUCTS, BUYING, VERIFYING, WAITING_ACTION, READY }
+enum PaymentProgress {
+  GETTING_PRODUCTS,
+  BUYING,
+  VERIFYING,
+  WAITING_ACTION,
+  READY
+}
 
 enum FoodFilterMode { tags, dish_healthy }
 enum FoodHealthy {
@@ -28,3 +34,5 @@ enum NotificationType { GENERAL, REMINDER, POLL, REWARD }
 enum Reminder { NONE, DRINK_WATER, PLAN_FOOD, MAKE_EXERCISE }
 enum SettingAction { logout, languageCodeChanged, removeAccount }
 enum FoodsTypeMark { favorites, lackSelfControl, all }
+enum WatchScanStatus { Stopped, Scanning, Discovered }
+enum WatchConnectedStatus { Connected, Disconnected }
