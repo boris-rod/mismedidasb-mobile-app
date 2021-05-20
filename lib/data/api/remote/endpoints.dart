@@ -79,6 +79,8 @@ class Endpoint {
   static const String plani_service_buy = "/api/subscriptions";
   static const String plani_services = "/api/subscriptions";
 
+  static const String custom_menus = "/api/menu";
+
 
   static const String planiIntroVideo = "https://youtu.be/flhvp9Zp-ak";
   static const String foodPlanVideo = "https://youtu.be/O5BrcOFpP5g";
@@ -88,4 +90,5 @@ class Endpoint {
   static const String whoIsPlaniVideo = "https://youtu.be/8q2bI-GY8s4";
   static const String planiHabitsVideo = "https://youtu.be/Fk7Ol4b-V6M";
   static const String planiCravingVideo = "https://youtu.be/KrY3ZW8G95w";
+  static const String nutritionalReport = "https://youtu.be/N6s718XlwsM";
 }

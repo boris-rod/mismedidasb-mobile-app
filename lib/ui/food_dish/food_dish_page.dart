@@ -13,6 +13,7 @@ import 'package:mismedidasb/ui/_tx_widget/tx_checkbox_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_combo_progress_bar_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_cupertino_dialog_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_divider_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_expandable_fab.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_icon_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_icon_navigator_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';
@@ -22,6 +23,7 @@ import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_textlink_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_video_intro_widet.dart';
 import 'package:mismedidasb/ui/food/food_page.dart';
+import 'package:mismedidasb/ui/food_custom_menus/custom_menus_page.dart';
 import 'package:mismedidasb/ui/food_dish/food_dish_bloc.dart';
 import 'package:mismedidasb/ui/food_dish/tx_bottom_resume_food_plan_widget.dart';
 import 'package:mismedidasb/ui/food_dish/tx_daily_nutritional_info_widget.dart';
@@ -49,9 +51,12 @@ class FoodDishPage extends StatefulWidget {
   State<StatefulWidget> createState() => _FoodDishState();
 }
 
-class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
+class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> with SingleTickerProviderStateMixin {
   PageController _pageController = PageController();
   CalendarController _calendarController = CalendarController();
+  ExpandableFABController _fabController = ExpandableFABController();
+  bool _fabIsOpen = false;
+  AnimationController _animationController;
 
   void _navBack() {
     if (widget.fromNotificationScope)
@@ -81,10 +86,22 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
   void initState() {
     super.initState();
     _calendarController = CalendarController();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: kThemeAnimationDuration,
+      value: 1, // initially visible
+    );
     bloc.pageResult.listen((onData) {
-      if (_pageController.page != onData)
+      if (_pageController.page != onData) {
+        if(onData == 0) {
+          _animationController?.forward();
+        } else {
+          if(_fabIsOpen) _fabController.toggle();
+          _animationController?.reverse();
+        }
         _pageController.animateToPage(onData,
             duration: Duration(milliseconds: 300), curve: Curves.linear);
+      }
     });
 
     bloc.copyPlanResult.listen((onData) {
@@ -112,6 +129,44 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
             backgroundColorAppBar: R.color.food_action_bar,
             titleFont: FontWeight.w300,
             title: R.string.foodDishes,
+            floatingActionButton: FadeTransition(
+              child: Container(
+                margin: EdgeInsets.only(bottom: 50),
+                child: TXExpandableFab(
+                  controller: _fabController,
+                  separation: 30,
+                  distance: 60,
+                  onChange: (value) {
+                    _fabIsOpen = value;
+                  },
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        if(_fabIsOpen) _fabController.toggle();
+                        NavigationUtils.push(context, CustomMenusPage()).then((value) {
+                          if(value != null && value is List<DailyActivityFoodModel>) {
+                            bloc.setFullDailyPlan(value);
+                          }
+                        });
+                      },
+                      child: Card(
+                        elevation: 5,
+                        color: Colors.blue,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0),
+                        ),
+                        child: Container(
+                          padding: EdgeInsets.all(3)
+                              .copyWith(left: 5, right: 5),
+                          child: TXTextWidget(text: R.string.chooseYourPlan),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              opacity: _animationController,
+            ),
             leading: Container(
               margin: EdgeInsets.only(left: 10),
               child: TXIconNavigatorWidget(
@@ -1014,6 +1069,7 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> {
   @override
   void dispose() {
     _calendarController.dispose();
+    _animationController?.dispose();
     super.dispose();
   }
 }

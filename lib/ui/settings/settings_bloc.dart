@@ -59,6 +59,11 @@ class SettingsBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
         await _sharedPreferencesManager.getShowDailyResume();
     settingModel.showResumeBeforeSave = showResumeBeforeSave;
 
+    final hUnit = await _sharedPreferencesManager.getHeightUnit();
+    final wUnit = await _sharedPreferencesManager.getWeightUnit();
+    settingModel.heightUnit = hUnit;
+    settingModel.weightUnit = wUnit;
+
     final DateTime breakFastTime = await _sharedPreferencesManager
         .getDateTimeValue(SharedKey.breakFastTime);
     final bool showBreakFastTime = await _sharedPreferencesManager
@@ -132,6 +137,20 @@ class SettingsBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     isLoading = false;
   }
 
+  void setHeight(String key) async {
+    final currentSetting = await settingsResult.first;
+    currentSetting.heightUnit = key;
+    await _sharedPreferencesManager.setHeightUnit(key);
+    _settingsController.sinkAddSafe(currentSetting);
+  }
+
+  void setWeight(String key) async {
+    final currentSetting = await settingsResult.first;
+    currentSetting.weightUnit = key;
+    await _sharedPreferencesManager.setWeightUnit(key);
+    _settingsController.sinkAddSafe(currentSetting);
+  }
+
   void setLanguageCode(String code) async {
     isLoading = true;
     final currentSetting = await settingsResult.first;
@@ -157,6 +176,8 @@ class SettingsBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     await _sharedPreferencesManager.setShowDailyResume(value);
     _settingsController.sinkAddSafe(currentSetting);
   }
+
+
 
   Future<void> activeReminder(String sharedKey, bool active) async {
     final currentSetting = await settingsResult.first;

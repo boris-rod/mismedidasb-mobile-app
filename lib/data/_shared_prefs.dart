@@ -1,4 +1,5 @@
 import 'package:mismedidasb/domain/session/session_model.dart';
+import 'package:mismedidasb/enums.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedKey {
@@ -34,6 +35,9 @@ class SharedKey {
   static String dinnerTime = "dinnerTime";
   static String showDinnerTime = "showDinnerTime";
 
+  static String heightUnit = "heightUnit";
+  static String weightUnit = "weightUnit";
+
   static String physicalExerciseTime = "physicalExerciseTime";
   static String showPhysicalExerciseTime = "showPhysicalExerciseTime";
   static String showPlanFoods = "showPlanFoods";
@@ -55,6 +59,7 @@ class SharedKey {
   static String firstTimeInFoodPortions = "firstTimeInFoodPortions";
   static String firstTimeInHabits = "firstTimeInHabits";
   static String firstTimeInCraving= "firstTimeInCraving";
+  static String firstTimeInServices = "firstTimeInServices";
 
   //Watch
   static String lastConnectedDevice= "last_connected_device";
@@ -79,6 +84,7 @@ class SharedPreferencesManager {
     await setBoolValue(SharedKey.firstTimeInFoodPortions, true);
     await setBoolValue(SharedKey.firstTimeInHabits, true);
     await setBoolValue(SharedKey.firstTimeInCraving, true);
+    await setBoolValue(SharedKey.firstTimeInServices, true);
   }
 
 
@@ -95,17 +101,20 @@ class SharedPreferencesManager {
     await setBoolValue(SharedKey.nutriInfoExpanded, false);
     // await setBoolValue(SharedKey.launchNotiPoll, false);
 
-    await setBoolValue(SharedKey.showBreakFastTime, true);
-    await setBoolValue(SharedKey.showSnack1Time, true);
-    await setBoolValue(SharedKey.showLunchTime, true);
-    await setBoolValue(SharedKey.showSnack2Time, true);
-    await setBoolValue(SharedKey.showDinnerTime, true);
+    await setBoolValue(SharedKey.showBreakFastTime, false);
+    await setBoolValue(SharedKey.showSnack1Time, false);
+    await setBoolValue(SharedKey.showLunchTime, false);
+    await setBoolValue(SharedKey.showSnack2Time, false);
+    await setBoolValue(SharedKey.showDinnerTime, false);
+    await setBoolValue(SharedKey.showPlanFoods, false);
+    await setBoolValue(SharedKey.showDrinkWater, false);
     await setBoolValue(SharedKey.showPhysicalExerciseTime, true);
-    await setBoolValue(SharedKey.showPlanFoods, true);
-    await setBoolValue(SharedKey.showDrinkWater, true);
 
     await setBoolValue(SharedKey.hasPlaniVirtualAssesor, false);
     await setBoolValue(SharedKey.showDailyPollNotification, true);
+
+    await setStringValue(SharedKey.heightUnit, heightUnit.centimeter.toString().split('.').last);
+    await setStringValue(SharedKey.weightUnit, weightUnit.kilogram.toString().split('.').last);
 
     final now = DateTime.now();
     await setDateTimeValue(SharedKey.breakFastTime,
@@ -312,6 +321,34 @@ class SharedPreferencesManager {
   Future<bool> setUserEmail(String newValue) async {
     var res = (await SharedPreferences.getInstance())
         .setString(SharedKey.userEmail, newValue);
+    return res;
+  }
+
+  Future<String> getHeightUnit() async {
+    var value = (await SharedPreferences.getInstance()).getString(SharedKey.heightUnit);
+    if(value == null) {
+      value = heightUnit.centimeter.toString().split('.').last;
+      await setHeightUnit(value);
+    }
+    return value;
+  }
+
+  Future<bool> setHeightUnit(String unit) async {
+    var res = (await SharedPreferences.getInstance()).setString(SharedKey.heightUnit, unit);
+    return res;
+  }
+
+  Future<String> getWeightUnit() async {
+    var value = (await SharedPreferences.getInstance()).getString(SharedKey.weightUnit);
+    if(value == null) {
+      value = weightUnit.kilogram.toString().split('.').last;
+      await setHeightUnit(value);
+    }
+    return value;
+  }
+
+  Future<bool> setWeightUnit(String unit) async {
+    var res = (await SharedPreferences.getInstance()).setString(SharedKey.weightUnit, unit);
     return res;
   }
 

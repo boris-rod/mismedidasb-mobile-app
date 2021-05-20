@@ -535,8 +535,29 @@ class StringsEs implements StringsBase {
   String get planiDescription => "Recordatorios y sugerencias de planificación de comidas.";
 
   @override
-  String get noEnoughCoinsToActivateService => "No tienes suficientes monedas para activar este servicio.";
+  String get customMenusService => "Menús Personalizados";
+
+  @override
+  String get customMenusDescription => "Sugerencias de menús para tu plan diario de comidas.";
+
+  @override
+  String get noEnoughCoinsToActivateService => "No tienes suficientes monedas para activar este servicio. ¿Deseas comprar monedas?";
 
   @override
   String get coins => "Monedas";
+
+  @override
+  String get chooseYourPlan => "Elige tu plan";
+
+  @override
+  String get centimeter => "Centímetros";
+
+  @override
+  String get feet => "Pies";
+
+  @override
+  String get kilogram => "Kilogramos";
+
+  @override
+  String get pounds => "Libras";
 }

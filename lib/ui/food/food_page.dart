@@ -489,7 +489,7 @@ class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
       builder: (ctx, snapshot) {
         return ListView.builder(
             physics: BouncingScrollPhysics(),
-            padding: EdgeInsets.only(top: 5, bottom: 30),
+            padding: EdgeInsets.only(top: 5, bottom: 70),
             itemCount: snapshot.data.length,
             itemBuilder: (context, index) {
               final model = snapshot.data[index];

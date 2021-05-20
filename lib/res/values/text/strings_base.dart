@@ -334,7 +334,21 @@ abstract class StringsBase implements WidgetsLocalizations {
 
   String get planiDescription;
 
+  String get customMenusService;
+
+  String get customMenusDescription;
+
   String get noEnoughCoinsToActivateService;
 
   String get coins;
+
+  String get chooseYourPlan;
+
+  String get feet;
+
+  String get pounds;
+
+  String get kilogram;
+
+  String get centimeter;
 }

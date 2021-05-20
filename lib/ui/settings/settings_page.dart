@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mismedidasb/data/_shared_prefs.dart';
+import 'package:mismedidasb/domain/question/question_model.dart';
 import 'package:mismedidasb/domain/setting/setting_model.dart';
+import 'package:mismedidasb/domain/single_selection_model.dart';
 import 'package:mismedidasb/enums.dart';
 import 'package:mismedidasb/lnm/lnm.dart';
 import 'package:mismedidasb/res/R.dart';
@@ -13,6 +15,7 @@ import 'package:mismedidasb/ui/_tx_widget/tx_button_selector_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_checkbox_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_cupertino_dialog_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_cupertino_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_divider_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_icon_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';
@@ -91,12 +94,9 @@ class _SettingsState extends StateWithBloC<SettingsPage, SettingsBloC> {
                                       LegacyPage(
                                         contentType: 0,
                                       ));
-                                }else if (key ==
-                                    PopupActionKey.references) {
+                                } else if (key == PopupActionKey.references) {
                                   NavigationUtils.push(
-                                      context,
-                                      ReferencesPage(
-                                      ));
+                                      context, ReferencesPage());
                                 } else if (key == PopupActionKey.logout) {
                                   _showDemoDialogLogout(context: context);
                                 } else if (key ==
@@ -175,6 +175,71 @@ class _SettingsState extends StateWithBloC<SettingsPage, SettingsBloC> {
 //                                    TXDividerWidget(),
                               ListTile(
                                 title: TXTextWidget(
+                                  text: "Unidad de medida de estatura",
+                                ),
+                                trailing: TXTextWidget(
+                                    text: snapshot.data.heightUnit ==
+                                            heightUnit.centimeter
+                                                .toString()
+                                                .split('.')
+                                                .last
+                                        ? R.string.centimeter
+                                        : R.string.feet,
+                                color: R.color.gray_darkest),
+                                contentPadding:
+                                    EdgeInsets.only(right: 5, left: 10),
+                                onTap: () {
+                                  showTXModalBottomSheet(context: context, builder: (context) {
+                                    return TXCupertinoPickerWidget(
+                                      height: 200,
+                                      title: "Medidas de estatura",
+                                      list: [
+                                        ..._getHeightSelector(snapshot.data.heightUnit)
+                                      ],
+                                      onItemSelected: (item) {
+                                        bloc.setHeight(item.key);
+                                      },
+                                      initialId: 0,
+                                    );
+                                  });
+                                },
+                              ),
+                              TXDividerWidget(),
+                              ListTile(
+                                title: TXTextWidget(
+                                  text: "Unidad de medida de peso",
+                                ),
+                                trailing: TXTextWidget(
+                                    text: snapshot.data.weightUnit ==
+                                        weightUnit.kilogram
+                                            .toString()
+                                            .split('.')
+                                            .last
+                                        ? R.string.kilogram
+                                        : R.string.pounds,
+                                  color: R.color.gray_darkest),
+                                contentPadding:
+                                EdgeInsets.only(right: 5, left: 10),
+                                onTap: () {
+                                  showTXModalBottomSheet(context: context, builder: (context) {
+                                    print(snapshot.data.heightUnit);
+                                    return TXCupertinoPickerWidget(
+                                      height: 200,
+                                      title: "Medidas de peso",
+                                      list: [
+                                        ..._getWeightSelector(snapshot.data.weightUnit)
+                                      ],
+                                      onItemSelected: (item) {
+                                        bloc.setWeight(item.key);
+                                      },
+                                      initialId: 0,
+                                    );
+                                  });
+                                },
+                              ),
+                              TXDividerWidget(),
+                              ListTile(
+                                title: TXTextWidget(
                                   text: R.string.showResumePlanBeforeSave,
                                 ),
                                 trailing: Checkbox(
@@ -185,7 +250,6 @@ class _SettingsState extends StateWithBloC<SettingsPage, SettingsBloC> {
                                 ),
                                 contentPadding:
                                     EdgeInsets.only(right: 0, left: 10),
-                                onTap: () {},
                               ),
 //                              Container(
 //                                child: TXCheckBoxWidget(
@@ -345,7 +409,8 @@ class _SettingsState extends StateWithBloC<SettingsPage, SettingsBloC> {
                               ),
                               TXDividerWidget(),
                               TXReminderSettingCellWidget(
-                                title: "Mostrar recordatorio para planificar comidas de mañana",
+                                title:
+                                    "Mostrar recordatorio para planificar comidas de mañana",
                                 time: snapshot.data.planFoodsTime,
                                 onActiveTap: () async {
                                   await bloc.activeReminder(
@@ -359,7 +424,7 @@ class _SettingsState extends StateWithBloC<SettingsPage, SettingsBloC> {
                                 isActive: snapshot.data.showPlanFoodsNoti,
                                 onDateSelected: (newDateTime) {
                                   if (newDateTime.hour !=
-                                      snapshot.data.planFoodsTime.hour ||
+                                          snapshot.data.planFoodsTime.hour ||
                                       newDateTime.minute !=
                                           snapshot.data.planFoodsTime.minute) {
                                     bloc.scheduleReminder(
@@ -601,5 +666,69 @@ class _SettingsState extends StateWithBloC<SettingsPage, SettingsBloC> {
         ),
       ),
     );
+  }
+
+  List<SingleSelectionModel> _getWeightSelector(String selected) {
+    final kgKey = weightUnit.kilogram.toString().split('.').last;
+    final poundKey = weightUnit.pound.toString().split('.').last;
+    return selected == kgKey ? [
+      SingleSelectionModel(
+        id: 0,
+        displayName: R.string.kilogram,
+        index: 0,
+        key: kgKey,
+      ),
+      SingleSelectionModel(
+        index: 1,
+        displayName: R.string.pounds,
+        id: 1,
+        key: poundKey,
+      ),
+    ] : [
+      SingleSelectionModel(
+        index: 0,
+        displayName: R.string.pounds,
+        id: 0,
+        key: poundKey,
+      ),
+      SingleSelectionModel(
+        id: 1,
+        displayName: R.string.kilogram,
+        index: 1,
+        key: kgKey,
+      ),
+    ];
+  }
+
+  List<SingleSelectionModel> _getHeightSelector(String selected) {
+    final feetKey = heightUnit.feet.toString().split('.').last;
+    final cmKey = heightUnit.centimeter.toString().split('.').last;
+    return selected == cmKey ? [
+      SingleSelectionModel(
+        id: 0,
+        displayName: R.string.centimeter,
+        index: 0,
+        key: cmKey,
+      ),
+      SingleSelectionModel(
+        index: 1,
+        displayName: R.string.feet,
+        id: 1,
+        key: feetKey,
+      ),
+    ] : [
+      SingleSelectionModel(
+        index: 0,
+        displayName: R.string.feet,
+        id: 0,
+        key: feetKey,
+      ),
+      SingleSelectionModel(
+        id: 1,
+        displayName: R.string.centimeter,
+        index: 1,
+        key: cmKey,
+      ),
+    ];
   }
 }

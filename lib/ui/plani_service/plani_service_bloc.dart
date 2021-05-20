@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:mismedidasb/data/_shared_prefs.dart';
 import 'package:mismedidasb/data/api/remote/remote_constanst.dart';
 import 'package:mismedidasb/data/api/remote/result.dart';
 import 'package:mismedidasb/domain/user/i_user_repository.dart';
@@ -15,13 +16,15 @@ import 'package:mismedidasb/utils/extensions.dart';
 class PlaniServiceBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   final IUserRepository _iUserRepository;
   final ILNM _ilnm;
+  final SharedPreferencesManager _sharedPreferencesManager;
 
-  PlaniServiceBloC(this._iUserRepository, this._ilnm);
+  PlaniServiceBloC(this._iUserRepository, this._ilnm, this._sharedPreferencesManager);
 
   @override
   void dispose() {
     disposeLoadingBloC();
     disposeErrorHandlerBloC();
+    _showFirstTimeController.close();
     _subscriptionsController.close();
     _coinsController.close();
   }
@@ -36,12 +39,28 @@ class PlaniServiceBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
   Stream<int> get coinsResult => _coinsController.stream;
 
-  void loadData(UserModel userModel) async {
+  BehaviorSubject<bool> _showFirstTimeController = new BehaviorSubject();
+
+  Stream<bool> get showFirstTimeResult => _showFirstTimeController.stream;
+
+  void loadProfileFirst() async {
     isLoading = true;
+    final res = await _iUserRepository.getProfile();
+    if(res is ResultSuccess<UserModel>) {
+      loadData(res.value, startLoading: false);
+    } else {
+      showErrorMessage(res);
+      isLoading = false;
+    }
+  }
+
+  void loadData(UserModel userModel, {bool startLoading = true}) async {
+    if(startLoading) isLoading = true;
     final res = await _iUserRepository.getSubscriptions();
     if (res is ResultSuccess<List<SubscriptionModel>>) {
       List<SubscriptionModel> list = updateSubscriptions(userModel, res.value);
       _subscriptionsController.sinkAddSafe(list);
+      launchFirstTime();
     } else
       showErrorMessage(res);
     isLoading = false;
@@ -54,8 +73,9 @@ class PlaniServiceBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     }
   }
 
-  void buyOffer1() async {
+  Future<int> buyOffer1() async {
     isLoading = true;
+    int code = -1;
     final res = await _iUserRepository.buySubscriptionsOffer1();
     if (res is ResultSuccess<bool>) {
       final resProfile = await _iUserRepository.getProfile();
@@ -64,23 +84,27 @@ class PlaniServiceBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
         List<SubscriptionModel> list = updateSubscriptions(
             resProfile.value, _subscriptionsController?.value ?? []);
         _subscriptionsController.sinkAddSafe(list);
+        code = 1;
       } else
         showErrorMessage(resProfile);
     } else if (res is ResultError &&
         (res as ResultError).code == RemoteConstants.code_unprocessable) {
-      Fluttertoast.showToast(
-        msg: R.string.noEnoughCoinsToActivateService,
-        toastLength: Toast.LENGTH_LONG,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-      );
+      // Fluttertoast.showToast(
+      //   msg: R.string.noEnoughCoinsToActivateService,
+      //   toastLength: Toast.LENGTH_LONG,
+      //   backgroundColor: Colors.red,
+      //   textColor: Colors.white,
+      // );
+      code = 0;
     } else
       showErrorMessage(res);
     isLoading = false;
+    return code;
   }
 
-  void buySubscription(SubscriptionModel model) async {
+  Future<int> buySubscription(SubscriptionModel model) async {
     isLoading = true;
+    int code = -1;
     final res = await _iUserRepository.buySubscription(model.id);
     if (res is ResultSuccess<bool>) {
       loadCoins();
@@ -93,19 +117,22 @@ class PlaniServiceBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
         List<SubscriptionModel> list = updateSubscriptions(
             resProfile.value, _subscriptionsController?.value ?? []);
         _subscriptionsController.sinkAddSafe(list);
+        code = 1;
       } else
         showErrorMessage(resProfile);
     } else if (res is ResultError &&
         (res as ResultError).code == RemoteConstants.code_unprocessable) {
-      Fluttertoast.showToast(
-        msg: R.string.noEnoughCoinsToActivateService,
-        toastLength: Toast.LENGTH_LONG,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-      );
+      // Fluttertoast.showToast(
+      //   msg: R.string.noEnoughCoinsToActivateService,
+      //   toastLength: Toast.LENGTH_LONG,
+      //   backgroundColor: Colors.red,
+      //   textColor: Colors.white,
+      // );
+      code = 0;
     } else
       showErrorMessage(res);
     isLoading = false;
+    return code;
   }
 
   List<SubscriptionModel> updateSubscriptions(
@@ -159,9 +186,37 @@ class PlaniServiceBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
             orElse: () {
           return null;
         })?.validAt;
+      } else if (element.product == RemoteConstants.subscription_menus) {
+        element.name = R.string.customMenusService;
+        element.description = R.string.customMenusDescription;
+        element.isActive = userModel.subscriptions.firstWhere(
+                (subs) =>
+            subs.product ==
+                RemoteConstants.subscription_menus, orElse: () {
+          return null;
+        })?.isActive ??
+            false;
+        element.validAt = userModel.subscriptions.firstWhere(
+                (subs) =>
+            subs.product == RemoteConstants.subscription_menus,
+            orElse: () {
+              return null;
+            })?.validAt;
       } else
         element.name = element.product;
     });
     return list;
+  }
+
+  void launchFirstTime() async {
+    final value =
+    await _sharedPreferencesManager.getBoolValue(SharedKey.firstTimeInServices, defValue: true);
+    _showFirstTimeController.sinkAddSafe(value);
+  }
+
+  void setNotFirstTime() async {
+    await _sharedPreferencesManager.setBoolValue(
+        SharedKey.firstTimeInServices, false);
+    _showFirstTimeController.sinkAddSafe(false);
   }
 }

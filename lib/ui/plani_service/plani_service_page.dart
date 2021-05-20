@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:mismedidasb/data/api/remote/endpoints.dart';
 import 'package:mismedidasb/domain/user/user_model.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/bloc_state.dart';
@@ -10,14 +12,19 @@ import 'package:mismedidasb/ui/_tx_widget/tx_icon_button_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_loading_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_main_app_bar_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_video_intro_widet.dart';
 import 'package:mismedidasb/ui/plani_service/plani_service_bloc.dart';
+import 'package:mismedidasb/ui/planifive_payment/planifive_payment_page.dart';
 import 'package:mismedidasb/ui/profile/tx_plani_icon_widget.dart';
 import 'package:mismedidasb/utils/calendar_utils.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PlaniServicePage extends StatefulWidget {
   final UserModel userModel;
+  final bool fromMenus;
 
-  const PlaniServicePage({Key key, this.userModel}) : super(key: key);
+  const PlaniServicePage({Key key, this.userModel, this.fromMenus = false})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _PlaniServiceState();
@@ -28,8 +35,13 @@ class _PlaniServiceState
   @override
   void initState() {
     super.initState();
-    bloc.loadData(widget.userModel);
+    widget.userModel == null
+        ? bloc.loadProfileFirst()
+        : bloc.loadData(widget.userModel);
     bloc.loadCoins();
+    if(widget.fromMenus) {
+      Fluttertoast.showToast(msg: "Para acceder a los menús active el servicio.");
+    }
   }
 
   @override
@@ -44,6 +56,20 @@ class _PlaniServiceState
               NavigationUtils.pop(context);
             },
           ),
+          floatingActionButton: Container(
+            margin: EdgeInsets.only(bottom: 20),
+            child: FloatingActionButton(
+              backgroundColor: R.color.food_green,
+              child: Icon(Icons.add),
+              onPressed: () async {
+                final res =
+                    await NavigationUtils.push(context, PlanifivePaymentPage());
+                if (res ?? false) {
+                  bloc.loadCoins();
+                }
+              },
+            ),
+          ),
           body: Container(
             child: StreamBuilder<List<SubscriptionModel>>(
               stream: bloc.subscriptionsResult,
@@ -57,19 +83,48 @@ class _PlaniServiceState
                         builder: (ctx, snapshotCoins) {
                           return Container(
                             width: double.infinity,
-                            margin: EdgeInsets.only(right: 20),
+                            margin: EdgeInsets.only(right: 20, top: 5),
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 TXTextWidget(text: "${R.string.coins}: "),
                                 TXTextWidget(
-                                  text:snapshotCoins.data.toString(),
+                                  text: snapshotCoins.data.toString(),
                                   color: R.color.food_blue_dark,
                                   fontWeight: FontWeight.bold,
                                   size: 20,
                                 ),
-                                Image.asset(R.image.coins, width: 20, height: 20,)
+                                Image.asset(
+                                  R.image.coins,
+                                  width: 20,
+                                  height: 20,
+                                ),
+                                // SizedBox(
+                                //   width: 5,
+                                // ),
+                                // InkWell(
+                                //   onTap: () async {
+                                //     final res =
+                                //         await NavigationUtils.push(
+                                //         context,
+                                //         PlanifivePaymentPage());
+                                //     if (res ?? false) {
+                                //       bloc.loadCoins();
+                                //     }
+                                //   },
+                                //   child: Container(
+                                //     // padding: EdgeInsets.all(3)
+                                //     //     .copyWith(left: 5, right: 5),
+                                //     // decoration: BoxDecoration(
+                                //     //   borderRadius:
+                                //     //       BorderRadius.all(Radius.circular(4)),
+                                //     //   border: Border.all(
+                                //     //       color: R.color.gray_darkest,
+                                //     //       width: 1),
+                                //     // ),
+                                //       child: Icon(Icons.add_circle,color: R.color.food_green, size: 21,)),
+                                // ),
                               ],
                             ),
                           );
@@ -91,13 +146,27 @@ class _PlaniServiceState
                               color: R.color.food_green,
                               child: InkWell(
                                 onTap: () {
-                                  _showBuyResume(
-                                      context: context,
-                                      serviceTitle: R.string.offert1Title,
-                                      coins: 2500,
-                                      onOK: () {
-                                        bloc.buyOffer1();
-                                      });
+                                  if (!_haveFullPackage(
+                                      snapshotSubscriptions.data)) {
+                                    _showBuyResume(
+                                        context: context,
+                                        serviceTitle: R.string.offert1Title,
+                                        coins: 3000,
+                                        onOK: () {
+                                          bloc.buyOffer1().then((value) {
+                                            if (value != null &&
+                                                value is int &&
+                                                value == 0) {
+                                              _showBuyMoreDialog();
+                                            }
+                                          });
+                                        });
+                                  } else {
+                                    Fluttertoast.showToast(
+                                        msg:
+                                            "Todas sus suscripciones se encuentran activas",
+                                        toastLength: Toast.LENGTH_LONG);
+                                  }
                                 },
                                 child: Container(
                                   padding: EdgeInsets.all(10),
@@ -127,10 +196,14 @@ class _PlaniServiceState
                                         width: 5,
                                       ),
                                       TXTextWidget(
-                                        text: "2500",
+                                        text: "3000",
                                         color: Colors.white,
                                       ),
-                                      Image.asset(R.image.coins, width: 20, height: 20,)
+                                      Image.asset(
+                                        R.image.coins,
+                                        width: 20,
+                                        height: 20,
+                                      )
                                     ],
                                   ),
                                 ),
@@ -163,7 +236,15 @@ class _PlaniServiceState
                                       serviceTitle: model.name,
                                       coins: model.valueCoins,
                                       onOK: () {
-                                        bloc.buySubscription(model);
+                                        bloc
+                                            .buySubscription(model)
+                                            .then((value) {
+                                          if (value != null &&
+                                              value is int &&
+                                              value == 0) {
+                                            _showBuyMoreDialog();
+                                          }
+                                        });
                                       });
                                 },
                                 child: Container(
@@ -214,7 +295,11 @@ class _PlaniServiceState
                                       TXTextWidget(
                                         text: model.valueCoins.toString(),
                                       ),
-                                      Image.asset(R.image.coins, width: 20, height: 20,)
+                                      Image.asset(
+                                        R.image.coins,
+                                        width: 20,
+                                        height: 20,
+                                      )
                                     ],
                                   ),
                                 ),
@@ -223,6 +308,7 @@ class _PlaniServiceState
                           })
                     ],
                   ),
+                  padding: EdgeInsets.only(bottom: 40),
                 );
               },
             ),
@@ -230,8 +316,50 @@ class _PlaniServiceState
         ),
         TXLoadingWidget(
           loadingStream: bloc.isLoadingStream,
-        )
+        ),
+        StreamBuilder<bool>(
+            stream: bloc.showFirstTimeResult,
+            initialData: false,
+            builder: (context, snapshotShow) {
+              return snapshotShow.data
+                  ? TXVideoIntroWidget(
+                title: R.string.nutritionalReport,
+                onSeeVideo: () {
+                  bloc.setNotFirstTime();
+                  launch(Endpoint.nutritionalReport);
+//                          FileManager.playVideo("profile_settings.mp4");
+                },
+                onSkip: () {
+                  bloc.setNotFirstTime();
+                },
+              )
+                  : Container();
+            }),
       ],
+    );
+  }
+
+  void _showBuyMoreDialog() {
+    showCupertinoDialog<String>(
+      context: context,
+      builder: (BuildContext context) => TXCupertinoDialogWidget(
+        title: "Fondos insuficientes",
+        contentWidget: TXTextWidget(
+          text: R.string.noEnoughCoinsToActivateService,
+        ),
+        okText: R.string.continueAction,
+        onOK: () async {
+          Navigator.pop(context);
+          final res =
+              await NavigationUtils.push(context, PlanifivePaymentPage());
+          if (res ?? false) {
+            bloc.loadCoins();
+          }
+        },
+        onCancel: () {
+          Navigator.pop(context);
+        },
+      ),
     );
   }
 
@@ -276,5 +404,12 @@ class _PlaniServiceState
         },
       ),
     );
+  }
+
+  bool _haveFullPackage(List<SubscriptionModel> subscriptions) {
+    for (int i = 0; i < subscriptions.length; i++) {
+      if (!subscriptions[i].isActive) return false;
+    }
+    return true;
   }
 }

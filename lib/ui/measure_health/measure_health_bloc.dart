@@ -50,15 +50,19 @@ class MeasureHealthBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   Stream<bool> get showFirstTimeResult => _showFirstTimeController.stream;
 
   int currentPage = 1;
-  HealthMeasureResultModel healthMeasureResultModel;
+  //HealthMeasureResultModel healthMeasureResultModel;
   PollResponseModel pollResponseModel;
   bool isFirstTime = false;
+  String hUnit;
+  String wUnit;
 
   String userName = "";
   void loadPolls(int conceptId) async {
     isLoading = true;
     isFirstTime = await _sharedPreferencesManager.getBoolValue(SharedKey.firstTimeInMeasureHealth, defValue: true);
     userName = await _sharedPreferencesManager.getStringValue(SharedKey.userName);
+    hUnit = await _sharedPreferencesManager.getHeightUnit();
+    wUnit = await _sharedPreferencesManager.getWeightUnit();
     final res = await _iPollRepository.getPollsByConcept(conceptId);
     if (res is ResultSuccess<List<PollModel>>) {
       _pollsController.sinkAddSafe(res.value);

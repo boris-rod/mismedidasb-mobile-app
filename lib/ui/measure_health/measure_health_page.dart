@@ -9,6 +9,8 @@ import 'dart:math' as math;
 import 'package:mismedidasb/domain/answer/answer_model.dart';
 import 'package:mismedidasb/domain/health_concept/health_concept.dart';
 import 'package:mismedidasb/domain/poll_model/poll_model.dart';
+import 'package:mismedidasb/enums.dart';
+import 'package:mismedidasb/global_regex.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/bloc_state.dart';
 import 'package:mismedidasb/ui/_base/navigation_utils.dart';
@@ -279,9 +281,9 @@ class _MeasureHealthState
       question.selectedAnswerId = question.lastAnswer != 0
           ? question.lastAnswer
           : question.selectedAnswerId;
-      final bool isHeightQuestion = question.order == 3;
-      if (isPersonalDataPoll &&
-          isHeightQuestion &&
+      final bool isWeightQuestion = isPersonalDataPoll && question.order == 2;
+      final bool isHeightQuestion = isPersonalDataPoll && question.order == 3;
+      if (isHeightQuestion &&
           question.selectedAnswerId <= 0) {
         final AnswerModel defH =
             question.answers.firstWhere((a) => a.title == "150", orElse: () {
@@ -292,16 +294,34 @@ class _MeasureHealthState
       final w = TXBottomSheetSelectorWidget(
 //        useDatePicker: pollIndex == 0 && i == 0,
         boxAnswerWidth: pollIndex == 0 ? 130 : 270,
-        list: question.convertAnswersToSelectionModel(),
+        list: question.convertAnswersToSelectionModel(
+            forFeet: isHeightQuestion &&
+                bloc.hUnit == heightUnit.feet.toString().split('.').last,
+            forPounds: isWeightQuestion &&
+                bloc.wUnit == weightUnit.pound.toString().split('.').last),
         onItemSelected: (value) {
           bloc.setAnswerValue(pollIndex, i, value.id);
         },
-        title: "${question.title}:",
+        title: isHeightQuestion &&
+                bloc.hUnit == heightUnit.feet.toString().split('.').last
+            ? "${_subsByFeet(question.title)}"
+            : isWeightQuestion &&
+                    bloc.wUnit == weightUnit.pound.toString().split('.').last
+                ? "${_subsByPound(question.title)}"
+                : "${question.title}:",
         initialId: question.selectedAnswerId,
       );
       list.add(w);
     }
 
     return list;
+  }
+
+  String _subsByPound(String text) {
+    return text.replaceAll(GlobalRegex.heightWeightUnitIndicatorText, "(${R.string.pounds})");
+  }
+
+  String _subsByFeet(String text) {
+    return text.replaceAll(GlobalRegex.heightWeightUnitIndicatorText, "(${R.string.feet})");
   }
 }

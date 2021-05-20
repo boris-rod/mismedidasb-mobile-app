@@ -37,6 +37,7 @@ import 'package:mismedidasb/ui/login/login_page.dart';
 import 'package:mismedidasb/ui/measure_health/measure_health_page.dart';
 import 'package:mismedidasb/ui/measure_value/measure_value_page.dart';
 import 'package:mismedidasb/ui/measure_wellness/measure_wellness_page.dart';
+import 'package:mismedidasb/ui/plani_service/plani_service_page.dart';
 import 'package:mismedidasb/ui/planifit/planifit_home/planifit_home_page.dart';
 import 'package:mismedidasb/ui/poll_notification/poll_notification_page.dart';
 import 'package:mismedidasb/ui/profile/profile_page.dart';
@@ -89,6 +90,21 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
           actionBarColor: R.color.home_color,
           actions: [
             TXActionBarMenuWidget(
+              icon: Container(
+                padding: EdgeInsets.only(right: 5),
+                child: InkWell(
+                  child: Icon(
+                    Icons.cloud_done,
+                    size: 35,
+                    color: R.color.food_blue_dark,
+                  ),
+                  onTap: () async {
+                    NavigationUtils.push(context, PlaniServicePage());
+                  },
+                ),
+              ),
+            ),
+            TXActionBarMenuWidget(
               icon: Image.asset(
                 R.image.settings,
                 height: 35,
@@ -110,7 +126,7 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
                   _showUpdateApp(context: context);
                 } else {
                   final res =
-                  await NavigationUtils.push(context, ProfilePage());
+                      await NavigationUtils.push(context, ProfilePage());
                   if (res is SettingAction) {
                     if (res == SettingAction.logout ||
                         res == SettingAction.removeAccount) {
@@ -210,16 +226,16 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
             builder: (context, snapshotShow) {
               return snapshotShow.data
                   ? TXVideoIntroWidget(
-                title: R.string.planiIntroHelper,
-                onSeeVideo: () {
-                  bloc.setNotFirstTime();
-                  launch(Endpoint.planiIntroVideo);
+                      title: R.string.planiIntroHelper,
+                      onSeeVideo: () {
+                        bloc.setNotFirstTime();
+                        launch(Endpoint.planiIntroVideo);
 //                          FileManager.playVideo("main_menu.mp4");
-                },
-                onSkip: () {
-                  bloc.setNotFirstTime();
-                },
-              )
+                      },
+                      onSkip: () {
+                        bloc.setNotFirstTime();
+                      },
+                    )
                   : Container();
             }),
 //          Container(
@@ -284,26 +300,26 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
                       );
                     });
               } else {
-                if(bloc.needUpdateVersion)
+                if (bloc.needUpdateVersion)
                   _showUpdateApp(context: context);
-                else{
+                else {
                   final res = await NavigationUtils.push(context, page);
                   if (res is PollResponseModel && res.reward.points > 0) {
                     if (page is MeasureHealthPage) {
                       _keyHome.currentState.showSnackBar(showSnackBar(
                           title: "${R.string.congratulations} ${bloc.userName}",
                           content:
-                          "${R.string.rewardGain} ${res.reward.points} ${R.string.rewardGainPoints}"));
+                              "${R.string.rewardGain} ${res.reward.points} ${R.string.rewardGainPoints}"));
                     } else if (page is MeasureValuePage) {
                       _keyHome.currentState.showSnackBar(showSnackBar(
                           title: "${R.string.congratulations} ${bloc.userName}",
                           content:
-                          "${R.string.rewardGain} ${res.reward.points} ${R.string.rewardGainPoints}"));
+                              "${R.string.rewardGain} ${res.reward.points} ${R.string.rewardGainPoints}"));
                     } else if (page is MeasureWellnessPage) {
                       _keyHome.currentState.showSnackBar(showSnackBar(
                           title: "${R.string.congratulations} ${bloc.userName}",
                           content:
-                          "${R.string.rewardGain} ${res.reward.points} ${R.string.rewardGainPoints}"));
+                              "${R.string.rewardGain} ${res.reward.points} ${R.string.rewardGainPoints}"));
                     }
                   }
                   Utils.setStatusBarColor(R.color.primary_dark_color);
@@ -375,12 +391,13 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
               ]),
         ),
         okText: "Actualizar",
-        onOK: () async{
+        onOK: () async {
           Navigator.pop(context);
 //          LaunchReview.launch(
 //              androidAppId: "com.metriri.mismedidasb", iOSAppId: "1506658015");
-          await launch(Platform.isIOS ? "https://itunes.apple.com/us/app/sutiawbapp/id1506658015?ls=1&mt=8" :
-          "https://play.google.com/store/apps/details?id=com.metriri.mismedidasb");
+          await launch(Platform.isIOS
+              ? "https://itunes.apple.com/us/app/sutiawbapp/id1506658015?ls=1&mt=8"
+              : "https://play.google.com/store/apps/details?id=com.metriri.mismedidasb");
         },
         onCancel: () {
           Navigator.pop(context, R.string.cancel);

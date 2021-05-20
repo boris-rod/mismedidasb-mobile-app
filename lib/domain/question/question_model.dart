@@ -19,13 +19,18 @@ class QuestionModel {
       this.lastAnswer,
       this.selectedAnswerId = -1});
 
-  List<SingleSelectionModel> convertAnswersToSelectionModel() {
+  List<SingleSelectionModel> convertAnswersToSelectionModel(
+      {bool forPounds = false, bool forFeet = false}) {
     List<SingleSelectionModel> list = [];
     for (int i = 0; i < answers.length; i++) {
       list.add(SingleSelectionModel(
           index: i,
           id: answers[i].id,
-          displayName: answers[i].title,
+          displayName: forPounds
+              ? (int.tryParse(answers[i].title) * 2.2).toStringAsFixed(0)
+              : forFeet
+                  ? (int.tryParse(answers[i].title) * 0.0328084).toStringAsFixed(2)
+                  : answers[i].title,
           isSelected: false));
     }
     return list;

@@ -127,6 +127,7 @@ class DishRepository extends BaseRepository implements IDishRepository {
     }
   }
 
+
   @override
   Future<Result<Map<DateTime, DailyFoodModel>>> getPlansMergedAPI(
       DateTime start, DateTime end) async {

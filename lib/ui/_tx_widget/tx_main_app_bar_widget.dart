@@ -5,6 +5,7 @@ import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
 
 class TXMainAppBarWidget extends StatelessWidget {
   final Widget body;
+  final Widget floatingActionButton;
   final String title;
   final bool centeredTitle;
   final Widget leading;
@@ -21,7 +22,7 @@ class TXMainAppBarWidget extends StatelessWidget {
       this.leading,
       this.actions = const [],
       this.scaffoldKey,
-      this.backgroundColorAppBar, this.titleFont})
+      this.backgroundColorAppBar, this.titleFont, this.floatingActionButton})
       : super(key: key);
 
   @override
@@ -29,6 +30,8 @@ class TXMainAppBarWidget extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       key: scaffoldKey,
+      floatingActionButton: floatingActionButton,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       appBar: AppBar(
         backgroundColor: backgroundColorAppBar,
         centerTitle: true,

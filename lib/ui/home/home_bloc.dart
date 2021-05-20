@@ -86,6 +86,14 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     loadConcepts();
   }
 
+  // void loadProfileInBackground() async {
+  //   profile = null;
+  //   final profileRes = await _iUserRepository.getProfile();
+  //   if(profileRes is ResultSuccess<UserModel>)
+  //     profile = profileRes.value;
+  // }
+  //
+  // UserModel profile;
   void loadProfile() async {
     final profileRes = await _iUserRepository.getProfile();
     profileLoaded = true;
@@ -94,6 +102,7 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
       launchFirstTime();
     }
     if (profileRes is ResultSuccess<UserModel>) {
+      //profile = profileRes.value;
       termsAccepted = profileRes.value.termsAndConditionsAccepted;
 
       bool hasPlani = false;
