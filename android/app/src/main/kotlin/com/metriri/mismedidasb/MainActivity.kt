@@ -13,15 +13,15 @@ import com.yc.pedometer.listener.RateCalibrationListener
 import com.yc.pedometer.listener.TemperatureListener
 import com.yc.pedometer.listener.TurnWristCalibrationListener
 import com.yc.pedometer.sdk.*
-import com.yc.pedometer.utils.GBUtils
 import com.yc.pedometer.utils.GlobalVariable
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.embedding.engine.FlutterEngineCache
+import io.flutter.embedding.engine.dart.DartExecutor
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.EventChannel.EventSink
 import io.flutter.plugin.common.EventChannel.StreamHandler
 import io.flutter.plugin.common.MethodChannel
-import java.lang.Exception
 
 class MainActivity : FlutterActivity(), ICallback, ServiceStatusCallback, OnServerCallbackListener, RateCalibrationListener, TurnWristCalibrationListener, TemperatureListener, DeviceScanInterfacer {
 
@@ -59,7 +59,7 @@ class MainActivity : FlutterActivity(), ICallback, ServiceStatusCallback, OnServ
         val STEP_CHANGE_CALLBACK = "mOnStepChangeListener"
     }
 
-    private var mContext: Context? = null
+    lateinit var mContext: Context
 
     private var mBLEServiceOperate: BLEServiceOperate? = null
     private var mBluetoothLeService: BluetoothLeService? = null
@@ -70,8 +70,9 @@ class MainActivity : FlutterActivity(), ICallback, ServiceStatusCallback, OnServ
 
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
+        Log.w("configureFlutterEngine", "configureFlutterEngine:MainActivity")
 
-        mContext = applicationContext;
+        mContext = applicationContext
 
         mBLEServiceOperate = BLEServiceOperate
                 .getInstance(mContext)
@@ -166,6 +167,7 @@ class MainActivity : FlutterActivity(), ICallback, ServiceStatusCallback, OnServ
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.w("onCreate", "onCreate:MainActivity")
     }
 
     override fun onPause() {
@@ -173,7 +175,7 @@ class MainActivity : FlutterActivity(), ICallback, ServiceStatusCallback, OnServ
         mBLEServiceOperate?.stopLeScan()
     }
 
-    override fun onDestroy() {
+    override fun onDestroy() { // unBindService
         super.onDestroy()
         mBLEServiceOperate!!.unBindService() // unBindService
     }
@@ -225,6 +227,7 @@ class MainActivity : FlutterActivity(), ICallback, ServiceStatusCallback, OnServ
 
     override fun LeScanCallback(device: BluetoothDevice?, rssi: Int, scanRecord: ByteArray?) {
         runOnUiThread(Runnable {
+            Log.w(TAG, "Scanning result: LeScanCallback ${eventSink != null}")
             if (device != null) {
                 if (TextUtils.isEmpty(device.name)) {
                     return@Runnable
@@ -236,7 +239,7 @@ class MainActivity : FlutterActivity(), ICallback, ServiceStatusCallback, OnServ
                 map["device_address"] = device.address
                 map["device_rssi"] = rssi
 
-                eventSink?.success(map)
+                eventSink!!.success(map)
             }
         })
     }
@@ -253,18 +256,18 @@ class MainActivity : FlutterActivity(), ICallback, ServiceStatusCallback, OnServ
                 stringBuilder.append(String.format("%02X", byteChar))
             }
             Log.i(TAG, "BLE---->APK data =$stringBuilder")
-            when (status) {
-                ICallbackStatus.OPEN_CHANNEL_OK -> mHandler.sendEmptyMessage(OPEN_CHANNEL_OK_MSG)
-                ICallbackStatus.CLOSE_CHANNEL_OK -> mHandler.sendEmptyMessage(CLOSE_CHANNEL_OK_MSG)
-                ICallbackStatus.BLE_DATA_BACK_OK -> mHandler.sendEmptyMessage(TEST_CHANNEL_OK_MSG)
-                ICallbackStatus.UNIVERSAL_INTERFACE_SDK_TO_BLE_SUCCESS -> mHandler.sendEmptyMessage(UNIVERSAL_INTERFACE_SDK_TO_BLE_SUCCESS_MSG)
-                ICallbackStatus.UNIVERSAL_INTERFACE_SDK_TO_BLE_FAIL -> mHandler.sendEmptyMessage(UNIVERSAL_INTERFACE_SDK_TO_BLE_FAIL_MSG)
-                ICallbackStatus.UNIVERSAL_INTERFACE_BLE_TO_SDK_SUCCESS -> mHandler.sendEmptyMessage(UNIVERSAL_INTERFACE_BLE_TO_SDK_SUCCESS_MSG)
-                ICallbackStatus.UNIVERSAL_INTERFACE_BLE_TO_SDK_FAIL -> mHandler.sendEmptyMessage(UNIVERSAL_INTERFACE_BLE_TO_SDK_SUCCESS_MSG)
-                ICallbackStatus.CUSTOMER_ID_OK -> if (result) {
-//                    Log.d(TAG, "客户ID = " + GBUtils.getInstance(mContext).customerIDAsciiByteToString(data))
-                }
-            }
+//            when (status) {
+//                ICallbackStatus.OPEN_CHANNEL_OK -> mHandler.sendEmptyMessage(OPEN_CHANNEL_OK_MSG)
+//                ICallbackStatus.CLOSE_CHANNEL_OK -> mHandler.sendEmptyMessage(CLOSE_CHANNEL_OK_MSG)
+//                ICallbackStatus.BLE_DATA_BACK_OK -> mHandler.sendEmptyMessage(TEST_CHANNEL_OK_MSG)
+//                ICallbackStatus.UNIVERSAL_INTERFACE_SDK_TO_BLE_SUCCESS -> mHandler.sendEmptyMessage(UNIVERSAL_INTERFACE_SDK_TO_BLE_SUCCESS_MSG)
+//                ICallbackStatus.UNIVERSAL_INTERFACE_SDK_TO_BLE_FAIL -> mHandler.sendEmptyMessage(UNIVERSAL_INTERFACE_SDK_TO_BLE_FAIL_MSG)
+//                ICallbackStatus.UNIVERSAL_INTERFACE_BLE_TO_SDK_SUCCESS -> mHandler.sendEmptyMessage(UNIVERSAL_INTERFACE_BLE_TO_SDK_SUCCESS_MSG)
+//                ICallbackStatus.UNIVERSAL_INTERFACE_BLE_TO_SDK_FAIL -> mHandler.sendEmptyMessage(UNIVERSAL_INTERFACE_BLE_TO_SDK_SUCCESS_MSG)
+//                ICallbackStatus.CUSTOMER_ID_OK -> if (result) {
+////                    Log.d(TAG, "客户ID = " + GBUtils.getInstance(mContext).customerIDAsciiByteToString(data))
+//                }
+//            }
         }
     }
 
@@ -272,8 +275,24 @@ class MainActivity : FlutterActivity(), ICallback, ServiceStatusCallback, OnServ
         TODO("onSportsTimeCallback: Not yet implemented")
     }
 
+    private var sportTimes = 0
     override fun OnResultSportsModes(result: Boolean, status: Int, switchStatus: Boolean, sportsModes: Int, info: SportsModesInfo?) {
-        TODO("OnResultSportsModes: Not yet implemented")
+        when (status) {
+            ICallbackStatus.CONTROL_MULTIPLE_SPORTS_MODES -> {
+            }
+            ICallbackStatus.INQUIRE_MULTIPLE_SPORTS_MODES -> {
+            }
+            ICallbackStatus.SYNC_MULTIPLE_SPORTS_MODES_START ->
+                sportTimes = sportsModes
+            ICallbackStatus.SYNC_MULTIPLE_SPORTS_MODES -> {
+                sportTimes--
+//                if (sportTimes == 0) {
+//                    Toast.makeText(mContext, "sportTimes==0，说明同步完成", Toast.LENGTH_SHORT).show()
+//                }
+            }
+            ICallbackStatus.MULTIPLE_SPORTS_MODES_REAL -> {
+            }
+        }
     }
 
     override fun OnResultHeartRateHeadset(result: Boolean, status: Int, sportStatus: Int, values: Int, info: HeartRateHeadsetSportModeInfo?) {

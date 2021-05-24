@@ -25,7 +25,7 @@ Future<bool> supportBLE() async {
   try {
     final result = await platform.invokeMethod(IS_SUPPORT_BLE);
     return result;
-  } on PlatformException catch (e) {
+  }  catch (e) {
     print("Failed to start scan: '${e.message}'.");
     return false;
   }
@@ -33,9 +33,9 @@ Future<bool> supportBLE() async {
 
 Future<bool> iSBLEEnabled() async {
   try {
-    final result = await platform.invokeMethod(IS_BLE_ENABLED);
+    final result = await platform.invokeMethod(IS_BLE_ENABLED, "enable");
     return result;
-  } on PlatformException catch (e) {
+  } catch (e) {
     print("Failed to start scan: '${e.message}'.");
     return false;
   }

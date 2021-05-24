@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mismedidasb/data/_shared_prefs.dart';
 import 'package:mismedidasb/domain/planifit/planifit_model.dart';
 import 'package:mismedidasb/ui/_base/bloc_base.dart';
@@ -30,33 +32,48 @@ class PlanifitHomeBloC extends BaseBloC {
 
   void init() async {
     final supported = await supportBLE();
-    final enabled = await iSBLEEnabled();
-
-    if (supported && enabled) {
-      connect();
-
-      planifitEventsStream = eventsStream.receiveBroadcastStream([]);
-
-      _eventsSubscription = planifitEventsStream.listen((eventData) {
-        final key = eventData[eventChannelSinkKey];
-        if (key == BLOOD_PRESSURE_CALLBACK) {
-          final model = BloodPressure.fromJson(eventData);
-          print("BLOOD PRESSURE HIGH ${model.highPressure.toString()}");
-        } else if (key == RATE_CALLBACK) {
-          final model = Rate.fromJson(eventData);
-          print("Rate ${model.tempRate.toString()}");
-        } else if (key == STEP_CHANGE_CALLBACK) {
-          final model = StepOneDayAllInfo.fromJson(eventData);
-          print("STEPS ${model.walkSteps.toString()}");
-        }
-      });
+    if (!supported) {
+      Fluttertoast.showToast(
+          msg: "BLE no soportado!",
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          toastLength: Toast.LENGTH_LONG);
+      return;
     }
+    final enabled = await iSBLEEnabled();
+    if (!enabled) {
+      Fluttertoast.showToast(
+          msg: "BLE no habilitado!",
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          toastLength: Toast.LENGTH_LONG);
+      return;
+    }
+
+    connect();
+
+    planifitEventsStream = eventsStream.receiveBroadcastStream([]);
+
+    _eventsSubscription = planifitEventsStream.listen((eventData) {
+      final key = eventData[eventChannelSinkKey];
+      if (key == BLOOD_PRESSURE_CALLBACK) {
+        final model = BloodPressure.fromJson(eventData);
+        print("BLOOD PRESSURE HIGH ${model.highPressure.toString()}");
+      } else if (key == RATE_CALLBACK) {
+        final model = Rate.fromJson(eventData);
+        print("Rate ${model.tempRate.toString()}");
+      } else if (key == STEP_CHANGE_CALLBACK) {
+        final model = StepOneDayAllInfo.fromJson(eventData);
+        print("STEPS ${model.walkSteps.toString()}");
+      }
+    });
   }
 
   void connect({String address}) async {
     try {
-      final lastConnectedDevice = address ?? await _sharedPreferencesManager
-          .getStringValue(SharedKey.lastConnectedDevice, defValue: "");
+      final lastConnectedDevice = address ??
+          await _sharedPreferencesManager
+              .getStringValue(SharedKey.lastConnectedDevice, defValue: "");
 
       if (lastConnectedDevice.isNotEmpty) {
         final result =
@@ -68,7 +85,7 @@ class PlanifitHomeBloC extends BaseBloC {
       } else {
         _connectController.sinkAddSafe(WatchConnectedStatus.Disconnected);
       }
-    } on PlatformException catch (e) {
+    } catch (e) {
       print("Failed to check if is scanning: '${e.message}'.");
       _connectController.sinkAddSafe(WatchConnectedStatus.Disconnected);
     }

@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mismedidasb/domain/planifit/planifit_model.dart';
 import 'package:mismedidasb/enums.dart';
 import 'package:mismedidasb/ui/_base/bloc_base.dart';
@@ -48,9 +50,9 @@ class PlanifitScanBloC extends BaseBloC {
 
   void connect(BleDevice device) async {
     try {
-      await platform.invokeMethod(CONNECT, device.address);
-      _connectController.sinkAddSafe(device);
-    } on PlatformException catch (e) {
+      final result = await platform.invokeMethod(CONNECT, device.address);
+      _connectController.sinkAddSafe(result == 200 ? device : null);
+    }  catch (e) {
       print("Failed to check if is scanning: '${e.message}'.");
       _connectController.sinkAddSafe(null);
     }
@@ -64,7 +66,7 @@ class PlanifitScanBloC extends BaseBloC {
       await Future.delayed(Duration(milliseconds: 10000), () async {
         await stopScan();
       });
-    } on PlatformException catch (e) {
+    } catch (e) {
       print("Failed to start scan: '${e.message}'.");
       _scanController.sinkAddSafe(WatchScanStatus.Stopped);
     }
@@ -74,8 +76,8 @@ class PlanifitScanBloC extends BaseBloC {
     if (_scanController.value == WatchScanStatus.Stopped) return;
 
     try {
-      await platform.invokeMethod(STOP_SCAN);
-    } on PlatformException catch (e) {
+      await platform.invokeMethod(STOP_SCAN, "stop");
+    } catch (e) {
       print("Failed to stop scan: '${e.message}'.");
     }
     final map = _devicesDataController.value ?? Map<String, BleDevice>();

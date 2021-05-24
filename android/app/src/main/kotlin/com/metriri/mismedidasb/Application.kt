@@ -10,19 +10,19 @@ import android.app.NotificationManager
 import android.app.NotificationChannel
 
 import android.os.Build
-
-
-
+import android.util.Log
 
 class Application : FlutterApplication(), PluginRegistrantCallback {
     override fun onCreate() {
         super.onCreate()
         this.createChannel();
         FlutterFirebaseMessagingService.setPluginRegistrant(this)
+        Log.w("Test", "onCreate:app")
     }
 
     override fun registerWith(registry: PluginRegistry) {
         FirebaseCloudMessagingPluginRegistrant.registerWith(registry)
+        Log.w("Test", "registerWith:app")
     }
 
     private fun createChannel() {

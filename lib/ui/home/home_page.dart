@@ -38,6 +38,7 @@ import 'package:mismedidasb/ui/measure_health/measure_health_page.dart';
 import 'package:mismedidasb/ui/measure_value/measure_value_page.dart';
 import 'package:mismedidasb/ui/measure_wellness/measure_wellness_page.dart';
 import 'package:mismedidasb/ui/plani_service/plani_service_page.dart';
+import 'package:mismedidasb/ui/planifit/planifit_device/planifit_scan_page.dart';
 import 'package:mismedidasb/ui/planifit/planifit_home/planifit_home_page.dart';
 import 'package:mismedidasb/ui/poll_notification/poll_notification_page.dart';
 import 'package:mismedidasb/ui/profile/profile_page.dart';
