@@ -24,7 +24,6 @@ import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_video_intro_widet.dart';
 import 'package:mismedidasb/ui/measure_health/measure_health_bloc.dart';
 import 'package:mismedidasb/ui/references/references_page.dart';
-import 'package:mismedidasb/utils/file_manager.dart';
 import 'package:mismedidasb/utils/utils.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -259,7 +258,7 @@ class _MeasureHealthState
   Widget _getPageView(BuildContext context, PollModel model, int pageIndex) {
     return TXBlurWidget(
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 15),
+        padding: EdgeInsets.symmetric(horizontal: 10),
         child: SingleChildScrollView(
           physics: BouncingScrollPhysics(),
           padding: EdgeInsets.only(bottom: 30),
@@ -283,8 +282,7 @@ class _MeasureHealthState
           : question.selectedAnswerId;
       final bool isWeightQuestion = isPersonalDataPoll && question.order == 2;
       final bool isHeightQuestion = isPersonalDataPoll && question.order == 3;
-      if (isHeightQuestion &&
-          question.selectedAnswerId <= 0) {
+      if (isHeightQuestion && question.selectedAnswerId <= 0) {
         final AnswerModel defH =
             question.answers.firstWhere((a) => a.title == "150", orElse: () {
           return null;
@@ -293,7 +291,7 @@ class _MeasureHealthState
       }
       final w = TXBottomSheetSelectorWidget(
 //        useDatePicker: pollIndex == 0 && i == 0,
-        boxAnswerWidth: pollIndex == 0 ? 130 : 270,
+        boxAnswerWidth: pollIndex == 0 ? 130 : 280,
         list: question.convertAnswersToSelectionModel(
             forFeet: isHeightQuestion &&
                 bloc.hUnit == heightUnit.feet.toString().split('.').last,
@@ -302,13 +300,18 @@ class _MeasureHealthState
         onItemSelected: (value) {
           bloc.setAnswerValue(pollIndex, i, value.id);
         },
-        title: isHeightQuestion &&
-                bloc.hUnit == heightUnit.feet.toString().split('.').last
-            ? "${_subsByFeet(question.title)}"
-            : isWeightQuestion &&
-                    bloc.wUnit == weightUnit.pound.toString().split('.').last
-                ? "${_subsByPound(question.title)}"
-                : "${question.title}:",
+        labelWidget: isHeightQuestion || isWeightQuestion
+            ? _weightHeightLabelWidget(question.title,
+                isHeight: isHeightQuestion)
+            : null,
+        // title: isHeightQuestion &&
+        //         bloc.hUnit == heightUnit.feet.toString().split('.').last
+        //     ? "${_subsByFeet(question.title)}"
+        //     : isWeightQuestion &&
+        //             bloc.wUnit == weightUnit.pound.toString().split('.').last
+        //         ? "${_subsByPound(question.title)}"
+        //         : "${question.title}:",
+        title: "${question.title}:",
         initialId: question.selectedAnswerId,
       );
       list.add(w);
@@ -317,11 +320,92 @@ class _MeasureHealthState
     return list;
   }
 
-  String _subsByPound(String text) {
-    return text.replaceAll(GlobalRegex.heightWeightUnitIndicatorText, "(${R.string.pounds})");
+  Widget _weightHeightLabelWidget(String text, {bool isHeight = false}) {
+    final isSelected = isHeight
+        ? [
+            bloc.hUnit == heightUnit.centimeter.toString().split('.').last,
+            bloc.hUnit == heightUnit.feet.toString().split('.').last
+          ]
+        : [
+            bloc.wUnit == weightUnit.kilogram.toString().split('.').last,
+            bloc.wUnit == weightUnit.pound.toString().split('.').last
+          ];
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: TXTextWidget(
+            text: _subsText(text),
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            textAlign: TextAlign.left,
+          ),
+        ),
+        Align(
+          alignment: Alignment.center,
+          child: ToggleButtons(
+            selectedBorderColor: Colors.transparent,
+            borderColor: Colors.transparent,
+            fillColor: R.color.food_red,
+            constraints: BoxConstraints(minHeight: 25, minWidth: 64),
+            children: isHeight
+                ? [
+                    TXTextWidget(
+                      text: "cm",
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      textAlign: TextAlign.left,
+                    ),
+                    TXTextWidget(
+                      text: "pies",
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      textAlign: TextAlign.left,
+                    )
+                  ]
+                : [
+                    TXTextWidget(
+                      text: "kg",
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      textAlign: TextAlign.left,
+                    ),
+                    TXTextWidget(
+                      text: "lb",
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      textAlign: TextAlign.left,
+                    )
+                  ],
+            isSelected: isSelected,
+            onPressed: (index) async {
+              var result = false;
+              if (isHeight)
+                result = await bloc.toggleHeight(
+                    index == 0 ? heightUnit.centimeter : heightUnit.feet);
+              else
+                result = await bloc.toggleWeight(
+                    index == 0 ? weightUnit.kilogram : weightUnit.pound);
+              if (result) setState(() {});
+            },
+          ),
+        ),
+      ],
+    );
   }
 
-  String _subsByFeet(String text) {
-    return text.replaceAll(GlobalRegex.heightWeightUnitIndicatorText, "(${R.string.feet})");
+  String _subsText(String text) {
+    return text.replaceAll(GlobalRegex.heightWeightUnitIndicatorText, "");
   }
+
+  // String _subsByPound(String text) {
+  //   return text.replaceAll(
+  //       GlobalRegex.heightWeightUnitIndicatorText, "(${R.string.pounds})");
+  // }
+  //
+  // String _subsByFeet(String text) {
+  //   return text.replaceAll(
+  //       GlobalRegex.heightWeightUnitIndicatorText, "(${R.string.feet})");
+  // }
 }

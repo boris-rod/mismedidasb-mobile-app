@@ -7,6 +7,7 @@ import 'package:mismedidasb/domain/poll_model/poll_model.dart';
 import 'package:mismedidasb/domain/question/question_model.dart';
 import 'package:mismedidasb/domain/user/i_user_repository.dart';
 import 'package:mismedidasb/domain/user/user_model.dart';
+import 'package:mismedidasb/enums.dart';
 import 'package:mismedidasb/ui/_base/bloc_base.dart';
 import 'package:mismedidasb/ui/_base/bloc_error_handler.dart';
 import 'package:mismedidasb/ui/_base/bloc_loading.dart';
@@ -116,6 +117,26 @@ class MeasureHealthBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     await _sharedPreferencesManager.setBoolValue(
         SharedKey.firstTimeInMeasureHealth, false);
     _showFirstTimeController.sinkAddSafe(false);
+  }
+
+  Future<bool> toggleHeight(heightUnit toChange) async {
+    final value = toChange.toString().split(".").last;
+    if(value != hUnit) {
+      await _sharedPreferencesManager.setStringValue(SharedKey.heightUnit, value);
+      hUnit = value;
+      return true;
+    }
+    return false;
+  }
+
+  Future<bool> toggleWeight(weightUnit toChange) async {
+    final value = toChange.toString().split(".").last;
+    if(value != wUnit) {
+      await _sharedPreferencesManager.setStringValue(SharedKey.weightUnit, value);
+      wUnit = value;
+      return true;
+    }
+    return false;
   }
 
   @override

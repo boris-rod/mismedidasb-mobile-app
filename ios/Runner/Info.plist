@@ -15,13 +15,35 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>$(FLUTTER_BUILD_NAME)</string>
+	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>FirebaseAppDelegateProxyEnabled</key>
+	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>PlaniFive solicita acceso a los archivos media para que pueda escoger su foto de perfil.</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>PlaniFive solicita acceso al calendario para apoyar la gestión de los platos</string>
+	<key>NSCameraUsageDescription</key>
+	<string>PlaniFive solicita acceso a la cámara para que pueda tomar fotos que le permitan actualizar su foto de perfil.</string>
+	<key>NSContactsUsageDescription</key>
+	<string>PlaniFive solicita acceso a los datos de contactos para apoyar el correcto funcionamiento.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>PlaniFive solicita acceso al sensor de reconocimiento facial para apoyar el correcto funcionamiento.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>PlaniFive solicita acceso a los datos de su GPS para apoyar el correcto funcionamiento.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>PlaniFive solicita acceso a los datos de su GPS para apoyar el correcto funcionamiento.</string>
+	<key>NSMotionUsageDescription</key>
+	<string>PlaniFive solicita acceso al sensor de movimiento para apoyar el correcto funcionamiento.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>PlaniFive solicita acceso a las fotos para que pueda escoger su foto de perfil.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>PlaniFive solicita acceso al reconocimiento de voz para apoyar el correcto funcionamiento.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
@@ -48,29 +70,7 @@
 	<false/>
 	<key>io.flutter.embedded_views_preview</key>
 	<true/>
-	<key>FirebaseAppDelegateProxyEnabled</key>
-	<false/>
-	<key>NSCalendarsUsageDescription</key>
-	<string>PlaniFive solicita acceso al calendario para apoyar la gestión de los platos</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>PlaniFive solicita acceso a las fotos para que pueda escoger su foto de perfil.</string>
-	<key>NSCameraUsageDescription</key>
-	<string>PlaniFive solicita acceso a la cámara para que pueda tomar fotos que le permitan actualizar su foto de perfil.</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>PlaniFive solicita acceso a los datos de su GPS para apoyar el correcto funcionamiento.</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>PlaniFive solicita acceso a los datos de su GPS para apoyar el correcto funcionamiento.</string>
-	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>PlaniFive solicita acceso al reconocimiento de voz para apoyar el correcto funcionamiento.</string>
-	<key>NSMotionUsageDescription</key>
-	<string>PlaniFive solicita acceso al sensor de movimiento para apoyar el correcto funcionamiento.</string>
 	<key>kTCCServiceMediaLibrary</key>
 	<string>PlaniFive solicita acceso a los archivos de audio para apoyar el correcto funcionamiento.</string>
-	<key>NSFaceIDUsageDescription</key>
-	<string>PlaniFive solicita acceso al sensor de reconocimiento facial para apoyar el correcto funcionamiento.</string>
-	<key>NSContactsUsageDescription</key>
-	<string>PlaniFive solicita acceso a los datos de contactos para apoyar el correcto funcionamiento.</string>
-	<key>NSAppleMusicUsageDescription</key>
-	<string>PlaniFive solicita acceso a los archivos media para que pueda escoger su foto de perfil.</string>
 </dict>
 </plist>
