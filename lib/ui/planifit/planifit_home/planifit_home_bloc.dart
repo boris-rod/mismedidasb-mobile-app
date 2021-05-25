@@ -6,7 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mismedidasb/data/_shared_prefs.dart';
 import 'package:mismedidasb/domain/planifit/planifit_model.dart';
 import 'package:mismedidasb/ui/_base/bloc_base.dart';
-import 'package:mismedidasb/ui/planifit/planifit_constanst.dart';
+import 'package:mismedidasb/ui/planifit/planifit_utils.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:mismedidasb/utils/extensions.dart';
 
@@ -50,10 +50,7 @@ class PlanifitHomeBloC extends BaseBloC {
       return;
     }
 
-    connect();
-
     planifitEventsStream = eventsStream.receiveBroadcastStream([]);
-
     _eventsSubscription = planifitEventsStream.listen((eventData) {
       final key = eventData[eventChannelSinkKey];
       if (key == BLOOD_PRESSURE_CALLBACK) {
@@ -67,6 +64,8 @@ class PlanifitHomeBloC extends BaseBloC {
         print("STEPS ${model.walkSteps.toString()}");
       }
     });
+
+    connect();
   }
 
   void connect({String address}) async {

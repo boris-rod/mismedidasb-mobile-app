@@ -33,7 +33,7 @@ Future<bool> supportBLE() async {
 
 Future<bool> iSBLEEnabled() async {
   try {
-    final result = await platform.invokeMethod(IS_BLE_ENABLED, "enable");
+    final result = await platform.invokeMethod(IS_BLE_ENABLED,);
     return result;
   } catch (e) {
     print("Failed to start scan: '${e.message}'.");

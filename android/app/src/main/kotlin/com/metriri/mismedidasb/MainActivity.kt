@@ -119,6 +119,7 @@ class MainActivity : FlutterActivity(), ICallback, ServiceStatusCallback, OnServ
                     try {
                         mBLEServiceOperate!!.startLeScan()
                         result.success(200)
+                        Log.w("START_SCAN", "START_SCAN:MainActivity")
                     } catch (e: Exception) {
                         result.error("500", e.message, e.localizedMessage)
                     }
@@ -154,11 +155,13 @@ class MainActivity : FlutterActivity(), ICallback, ServiceStatusCallback, OnServ
 
         EventChannel(flutterEngine.dartExecutor.binaryMessenger, ACTIONS_FROM_NATIVE).setStreamHandler(
                 object : StreamHandler {
-                    override fun onListen(args: Any, events: EventSink) {
+                    override fun onListen(args: Any?, events: EventSink) {
+                        Log.w("EventChannel", "onListen:MainActivity")
                         eventSink = events;
                     }
 
-                    override fun onCancel(args: Any) {
+                    override fun onCancel(args: Any?) {
+                        Log.w("EventChannel", "onCancel:MainActivity")
                         eventSink = null
                     }
                 }
