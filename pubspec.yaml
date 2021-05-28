@@ -74,7 +74,7 @@ dependencies:
 #  firebase_analytics: ^5.0.9
 #  google_fonts: ^0.3.2
   expansion_tile_card: ^1.1.0
-
+  flutter_blue: ^0.7.3
 
 dev_dependencies:
   flutter_test:

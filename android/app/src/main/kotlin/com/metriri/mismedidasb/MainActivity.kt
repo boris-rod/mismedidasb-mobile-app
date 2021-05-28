@@ -8,6 +8,7 @@ import android.util.Log
 import androidx.annotation.NonNull
 import com.yc.pedometer.info.HeartRateHeadsetSportModeInfo
 import com.yc.pedometer.info.SportsModesInfo
+import com.yc.pedometer.info.StepOneDayAllInfo
 import com.yc.pedometer.info.TemperatureInfo
 import com.yc.pedometer.listener.RateCalibrationListener
 import com.yc.pedometer.listener.TemperatureListener
@@ -26,23 +27,10 @@ import io.flutter.plugin.common.MethodChannel
 class MainActivity : FlutterActivity(), ICallback, ServiceStatusCallback, OnServerCallbackListener, RateCalibrationListener, TurnWristCalibrationListener, TemperatureListener, DeviceScanInterfacer {
 
     companion object {
-        val NEW_DAY_MSG = 3
-        val TAG = "MainActivity1"
+        val TAG = "MainActivity"
         val EVENT_CHANNEL_SINK_TYPE_KEY = "EVENT_CHANNEL_SINK_TYPE_KEY"
-
-        // caicai add for sdk
-        val EXTRAS_DEVICE_NAME = "device_name"
-        val EXTRAS_DEVICE_ADDRESS = "device_address"
-        val CONNECTED_DEVICE_CHANNEL = "connected_device_channel"
-        val FILE_SAVED_CHANNEL = "file_saved_channel"
-        val PROXIMITY_WARNINGS_CHANNEL = "proximity_warnings_channel"
-        val SHOW_SET_PASSWORD_MSG = 26
-        val SHOW_INPUT_PASSWORD_MSG = 27
-        val SHOW_INPUT_PASSWORD_AGAIN_MSG = 28
-        val ENABLED_NOTIFICATION_LISTENERS = "enabled_notification_listeners"
         val ACTIONS_FROM_FLUTTER = "watch.metriri.com/actions_from_flutter"
         val ACTIONS_FROM_NATIVE = "watch.metriri.com/actions_from_native"
-
 
         //Channel methods
         val START_SCAN = "start_scan"
@@ -57,9 +45,10 @@ class MainActivity : FlutterActivity(), ICallback, ServiceStatusCallback, OnServ
         val BLOOD_PRESSURE_CALLBACK = "mOnBloodPressureListener"
         val RATE_CALLBACK = "mOnRateListener"
         val STEP_CHANGE_CALLBACK = "mOnStepChangeListener"
+        val RATE24_CALLBACK = "mOnRateOf24HourListener"
     }
 
-    lateinit var mContext: Context
+    private lateinit var mContext: Context
 
     private var mBLEServiceOperate: BLEServiceOperate? = null
     private var mBluetoothLeService: BluetoothLeService? = null
@@ -72,7 +61,7 @@ class MainActivity : FlutterActivity(), ICallback, ServiceStatusCallback, OnServ
         super.configureFlutterEngine(flutterEngine)
         Log.w("configureFlutterEngine", "configureFlutterEngine:MainActivity")
 
-        mContext = applicationContext
+        mContext = this
 
         mBLEServiceOperate = BLEServiceOperate
                 .getInstance(mContext)
@@ -183,22 +172,22 @@ class MainActivity : FlutterActivity(), ICallback, ServiceStatusCallback, OnServ
         mBLEServiceOperate!!.unBindService() // unBindService
     }
 
-    private val mOnStepChangeListener: StepChangeListener = StepChangeListener { info ->
-        val map = emptyMap<String, String>().toMutableMap()
+    private val mOnStepChangeListener: StepChangeListener = StepChangeListener { info: StepOneDayAllInfo ->
+        val map = emptyMap<String, Any>().toMutableMap()
         map[EVENT_CHANNEL_SINK_TYPE_KEY] = STEP_CHANGE_CALLBACK
 
         map["calendar"] = info.calendar
-        map["step"] = info.step.toString()
-        map["distance"] = info.distance.toString()
-        map["calories"] = info.calories.toString()
-        map["run_steps"] = info.runSteps.toString()
-        map["run_calories"] = info.runCalories.toString()
-        map["run_distance"] = info.runDistance.toString()
-        map["run_duration_time"] = info.runDurationTime.toString()
-        map["walk_steps"] = info.walkSteps.toString()
-        map["walk_calories"] = info.walkCalories.toString()
-        map["walk_distance"] = info.walkDistance.toString()
-        map["walk_duration_time"] = info.walkDurationTime.toString()
+        map["step"] = info.step
+        map["distance"] = info.distance
+        map["calories"] = info.calories
+        map["run_steps"] = info.runSteps
+        map["run_calories"] = info.runCalories
+        map["run_distance"] = info.runDistance
+        map["run_duration_time"] = info.runDurationTime
+        map["walk_steps"] = info.walkSteps
+        map["walk_calories"] = info.walkCalories
+        map["walk_distance"] = info.walkDistance
+        map["walk_duration_time"] = info.walkDurationTime
 
         eventSink?.success(map)
     }
@@ -206,7 +195,7 @@ class MainActivity : FlutterActivity(), ICallback, ServiceStatusCallback, OnServ
     private val mOnSleepChangeListener: SleepChangeListener = SleepChangeListener {
         //update Sleep UI
     }
-    private val mOnRateListener: RateChangeListener = RateChangeListener { rate, status ->
+    private val mOnRateListener: RateChangeListener = RateChangeListener { rate: Int, status: Int ->
         val map = emptyMap<String, Any>().toMutableMap()
         map[EVENT_CHANNEL_SINK_TYPE_KEY] = RATE_CALLBACK
 
@@ -215,9 +204,19 @@ class MainActivity : FlutterActivity(), ICallback, ServiceStatusCallback, OnServ
 
         eventSink?.success(map)
     }
-    private val mOnRateOf24HourListener: RateOf24HourRealTimeListener = RateOf24HourRealTimeListener { maxHeartRateValue, minHeartRateValue, averageHeartRateValue, isRealTimeValue -> //监听24小时心率手环的最大、最小、平均值。需要手环端进入到心率测试界面（或者调用同步方法后）才会出值
+    private val mOnRateOf24HourListener: RateOf24HourRealTimeListener = RateOf24HourRealTimeListener { maxHeartRateValue: Int, minHeartRateValue: Int, averageHeartRateValue: Int, isRealTimeValue: Boolean ->
+        val map = emptyMap<String, Any>().toMutableMap()
+        map[EVENT_CHANNEL_SINK_TYPE_KEY] = RATE24_CALLBACK
+
+        map["max_heart_rate_value"] = maxHeartRateValue
+        map["min_heart_rate_value"] = minHeartRateValue
+        map["average_heart_rate_value"] = averageHeartRateValue
+        map["is_real_time_value"] = isRealTimeValue
+
+        eventSink?.success(map)
+
     }
-    private val mOnBloodPressureListener: BloodPressureChangeListener = BloodPressureChangeListener { highPressure, lowPressure, status ->
+    private val mOnBloodPressureListener: BloodPressureChangeListener = BloodPressureChangeListener { highPressure: Int, lowPressure: Int, status: Int ->
         val map = emptyMap<String, Any>().toMutableMap()
         map[EVENT_CHANNEL_SINK_TYPE_KEY] = BLOOD_PRESSURE_CALLBACK
 
@@ -227,7 +226,6 @@ class MainActivity : FlutterActivity(), ICallback, ServiceStatusCallback, OnServ
 
         eventSink?.success(map)
     }
-
     override fun LeScanCallback(device: BluetoothDevice?, rssi: Int, scanRecord: ByteArray?) {
         runOnUiThread(Runnable {
             Log.w(TAG, "Scanning result: LeScanCallback ${eventSink != null}")

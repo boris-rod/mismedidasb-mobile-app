@@ -25,10 +25,6 @@ class _PlanifitScanState
   @override
   void initState() {
     super.initState();
-    bloc.connectResult.listen((device) {
-      if (device != null && device is BleDevice)
-        NavigationUtils.pop(context, result: device);
-    });
     bloc.init();
   }
 
@@ -81,7 +77,7 @@ class _PlanifitScanState
               final model = map[index];
               return ListTile(
                 onTap: () {
-                  bloc.connect(model);
+                  NavigationUtils.pop(context, result: model);
                 },
                 title: TXTextWidget(
                   text: model.name,

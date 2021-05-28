@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mismedidasb/data/_shared_prefs.dart';
 import 'package:mismedidasb/domain/planifit/planifit_model.dart';
@@ -14,12 +13,14 @@ import '../../../enums.dart';
 
 class PlanifitHomeBloC extends BaseBloC {
   final SharedPreferencesManager _sharedPreferencesManager;
+  final PlanifitUtils planifitUtils;
 
-  PlanifitHomeBloC(this._sharedPreferencesManager);
+  PlanifitHomeBloC(this._sharedPreferencesManager, this.planifitUtils);
 
   @override
   void dispose() {
     _eventsSubscription.cancel();
+    planifitUtils.close();
     _connectController.close();
   }
 
@@ -31,7 +32,7 @@ class PlanifitHomeBloC extends BaseBloC {
   Stream<WatchConnectedStatus> get connectResult => _connectController.stream;
 
   void init() async {
-    final supported = await supportBLE();
+    final supported = await planifitUtils.supportBLE();
     if (!supported) {
       Fluttertoast.showToast(
           msg: "BLE no soportado!",
@@ -40,7 +41,7 @@ class PlanifitHomeBloC extends BaseBloC {
           toastLength: Toast.LENGTH_LONG);
       return;
     }
-    final enabled = await iSBLEEnabled();
+    final enabled = await planifitUtils.iSBLEEnabled();
     if (!enabled) {
       Fluttertoast.showToast(
           msg: "BLE no habilitado!",
@@ -50,19 +51,20 @@ class PlanifitHomeBloC extends BaseBloC {
       return;
     }
 
-    planifitEventsStream = eventsStream.receiveBroadcastStream([]);
-    _eventsSubscription = planifitEventsStream.listen((eventData) {
-      final key = eventData[eventChannelSinkKey];
-      if (key == BLOOD_PRESSURE_CALLBACK) {
-        final model = BloodPressure.fromJson(eventData);
-        print("BLOOD PRESSURE HIGH ${model.highPressure.toString()}");
-      } else if (key == RATE_CALLBACK) {
-        final model = Rate.fromJson(eventData);
-        print("Rate ${model.tempRate.toString()}");
-      } else if (key == STEP_CHANGE_CALLBACK) {
-        final model = StepOneDayAllInfo.fromJson(eventData);
-        print("STEPS ${model.walkSteps.toString()}");
-      }
+    planifitUtils.listenBloodPressure((BloodPressure model) {
+      print("BLOOD PRESSURE HIGH ${model.highPressure.toString()}");
+    });
+
+    planifitUtils.listenRate((Rate model) {
+      print("Rate ${model.tempRate.toString()}");
+    });
+
+    planifitUtils.listenStepOneDayAllInfo((StepOneDayAllInfo model) {
+      print("STEPS ${model.walkSteps.toString()}");
+    });
+
+    planifitUtils.listenRate24((Rate24 model) {
+      print("Rate24 ${model.maxHeartRateValue.toString()}");
     });
 
     connect();
@@ -75,11 +77,9 @@ class PlanifitHomeBloC extends BaseBloC {
               .getStringValue(SharedKey.lastConnectedDevice, defValue: "");
 
       if (lastConnectedDevice.isNotEmpty) {
-        final result =
-            await platform.invokeMethod(CONNECT, lastConnectedDevice);
-        _connectController.sinkAddSafe(result == 200
-            ? WatchConnectedStatus.Connected
-            : WatchConnectedStatus.Disconnected);
+        final WatchConnectedStatus result =
+            await planifitUtils.connect(address: lastConnectedDevice);
+        _connectController.sinkAddSafe(result);
         print("Connected: ${result.toString()}");
       } else {
         _connectController.sinkAddSafe(WatchConnectedStatus.Disconnected);

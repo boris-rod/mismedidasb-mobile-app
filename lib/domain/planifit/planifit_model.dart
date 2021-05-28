@@ -98,6 +98,37 @@ class Rate {
   }
 }
 
+class Rate24 {
+  int maxHeartRateValue;
+  int minHeartRateValue;
+  int averageHeartRateValue;
+  bool isRealTimeValue;
+
+  Rate24(
+      {this.maxHeartRateValue,
+      this.minHeartRateValue,
+      this.averageHeartRateValue,
+      this.isRealTimeValue});
+
+  factory Rate24.fromJson(Map<dynamic, dynamic> json) {
+    return Rate24(
+      maxHeartRateValue: json['max_heart_rate_value'],
+      minHeartRateValue: json['min_heart_rate_value'],
+      averageHeartRateValue: json['average_heart_rate_value'],
+      isRealTimeValue: json['is_real_time_value'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'max_heart_rate_value': maxHeartRateValue,
+      'min_heart_rate_value': minHeartRateValue,
+      'average_heart_rate_value': averageHeartRateValue,
+      'is_real_time_value': isRealTimeValue
+    };
+  }
+}
+
 class BloodPressure {
   int tempBloodPressureStatus;
   int highPressure;

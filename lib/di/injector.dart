@@ -112,6 +112,7 @@ import 'package:mismedidasb/ui/measure_wellness/measure_wellness_bloc.dart';
 import 'package:mismedidasb/ui/plani_service/plani_service_bloc.dart';
 import 'package:mismedidasb/ui/planifit/planifit_device/planifit_scan_bloc.dart';
 import 'package:mismedidasb/ui/planifit/planifit_home/planifit_home_bloc.dart';
+import 'package:mismedidasb/ui/planifit/planifit_utils.dart';
 import 'package:mismedidasb/ui/planifive_payment/planifive_payment_bloc.dart';
 import 'package:mismedidasb/ui/poll_notification/poll_notification_bloc.dart';
 import 'package:mismedidasb/ui/profile/profile_bloc.dart';
@@ -384,13 +385,14 @@ class Injector {
         .registerFactory((c) => PlaniServiceBloC(c.resolve(), c.resolve(), c.resolve()));
     container.registerFactory((c) => VideoBloC());
     container.registerFactory((c) => CustomMenusBloC(c.resolve(), c.resolve(), c.resolve(), c.resolve()));
-    container.registerFactory((c) => PlanifitScanBloC());
-    container.registerFactory((c) => PlanifitHomeBloC(c.resolve()));
+    container.registerFactory((c) => PlanifitScanBloC(c.resolve()));
+    container.registerFactory((c) => PlanifitHomeBloC(c.resolve(), c.resolve()));
   }
 
   _registerCommon() {
     container.registerSingleton<Logger, LoggerImpl>((c) => LoggerImpl());
     container.registerSingleton((c) => SharedPreferencesManager());
+    container.registerSingleton((c) => PlanifitUtils());
     container.registerSingleton(
       (c) => NetworkHandler(container.resolve(), container.resolve()),
     );
