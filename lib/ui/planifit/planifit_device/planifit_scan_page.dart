@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mismedidasb/domain/planifit/planifit_model.dart';
+import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/bloc_state.dart';
 import 'package:mismedidasb/ui/_base/navigation_utils.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_button_widget.dart';
@@ -31,7 +32,7 @@ class _PlanifitScanState
   @override
   Widget buildWidget(BuildContext context) {
     return TXMainAppBarWidget(
-        title: "Scan",
+        title: R.string.scan,
         body: StreamBuilder<WatchScanStatus>(
             stream: bloc.scanResult,
             initialData: WatchScanStatus.Scanning,

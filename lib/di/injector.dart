@@ -385,7 +385,7 @@ class Injector {
         .registerFactory((c) => PlaniServiceBloC(c.resolve(), c.resolve(), c.resolve()));
     container.registerFactory((c) => VideoBloC());
     container.registerFactory((c) => CustomMenusBloC(c.resolve(), c.resolve(), c.resolve(), c.resolve()));
-    container.registerFactory((c) => PlanifitScanBloC(c.resolve()));
+    container.registerFactory((c) => PlanifitScanBloC(c.resolve(), c.resolve()));
     container.registerFactory((c) => PlanifitHomeBloC(c.resolve(), c.resolve()));
   }
 

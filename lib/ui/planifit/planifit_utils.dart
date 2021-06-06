@@ -30,11 +30,11 @@ class PlanifitUtils {
   final RATE24_CALLBACK = "mOnRateOf24HourListener";
 
   PlanifitUtils() {
-    _platform = MethodChannel('watch.metriri.com/actions_from_flutter');
-    _eventsStream = EventChannel('watch.metriri.com/actions_from_native');
-    _planifitEventsStream = _eventsStream.receiveBroadcastStream([]);
-    _eventsSubscription = _planifitEventsStream.listen((eventData) {});
-    initListeners();
+    // _platform = MethodChannel('watch.metriri.com/actions_from_flutter');
+    // _eventsStream = EventChannel('watch.metriri.com/actions_from_native');
+    // _planifitEventsStream = _eventsStream.receiveBroadcastStream([]);
+    // _eventsSubscription = _planifitEventsStream.listen((eventData) {});
+    // initListeners();
   }
 
   void initListeners() {

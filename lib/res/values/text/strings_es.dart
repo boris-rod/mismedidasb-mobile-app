@@ -560,4 +560,49 @@ class StringsEs implements StringsBase {
 
   @override
   String get pounds => "Libras";
+
+  @override
+  String get device => "Reloj";
+
+  @override
+  String get home => "Principal";
+
+  @override
+  String get bloodPressure => "Presión arterial";
+
+  @override
+  String get bodyScore => "Medida corporal";
+
+  @override
+  String get distance => "Distancia";
+
+  @override
+  String get goal => "Meta";
+
+  @override
+  String get heartRate => "Ritmo cardiáco";
+
+  @override
+  String get score => "Puntos";
+
+  @override
+  String get sleep => "Sueño";
+
+  @override
+  String get steps => "Pasos";
+
+  @override
+  String get addNewDevice => "Adicionar nuevo reloj";
+
+  @override
+  String get unpair => "Desconectar";
+
+  @override
+  String get unpairAlert => "Esta seguro que desea desconectarse de este dipositivo?";
+
+  @override
+  String get scan => "Buscar";
+
+  @override
+  String get addDeviceInfo => "Por favor adiciona un reloj nuevo para recolectar los datos.";
 }

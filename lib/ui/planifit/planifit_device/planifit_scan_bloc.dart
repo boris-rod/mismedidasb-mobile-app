@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:mismedidasb/data/_shared_prefs.dart';
 import 'package:mismedidasb/domain/planifit/planifit_model.dart';
 import 'package:mismedidasb/enums.dart';
 import 'package:mismedidasb/ui/_base/bloc_base.dart';
@@ -9,14 +10,14 @@ import 'package:mismedidasb/utils/extensions.dart';
 
 class PlanifitScanBloC extends BaseBloC {
   final PlanifitUtils planifitUtils;
+  final SharedPreferencesManager _sharedPreferencesManager;
 
-  PlanifitScanBloC(this.planifitUtils);
+  PlanifitScanBloC(this.planifitUtils, this._sharedPreferencesManager);
 
   @override
   void dispose() {
     _scanController.close();
     _devicesDataController.close();
-    _eventsSubscription.cancel();
   }
 
   BehaviorSubject<WatchScanStatus> _scanController = new BehaviorSubject();
@@ -29,7 +30,10 @@ class PlanifitScanBloC extends BaseBloC {
   Stream<Map<String, BleDevice>> get devicesDataResult =>
       _devicesDataController.stream;
 
-  StreamSubscription _eventsSubscription;
+  BehaviorSubject<WatchConnectedStatus> _connectController =
+  new BehaviorSubject();
+
+  Stream<WatchConnectedStatus> get connectResult => _connectController.stream;
 
   void init() async {
     planifitUtils.listenScan((BleDevice model) {
@@ -47,4 +51,25 @@ class PlanifitScanBloC extends BaseBloC {
   }
 
   Future<void> stopScan() async => await planifitUtils.stopScan();
+
+  void connect({String address}) async {
+    try {
+      final lastConnectedDevice = address ??
+          await _sharedPreferencesManager
+              .getStringValue(SharedKey.lastConnectedDevice, defValue: "");
+
+      if (lastConnectedDevice.isNotEmpty) {
+        final WatchConnectedStatus result =
+        await planifitUtils.connect(address: lastConnectedDevice);
+        _connectController.sinkAddSafe(result);
+        print("Connected: ${result.toString()}");
+      } else {
+        _connectController.sinkAddSafe(WatchConnectedStatus.Disconnected);
+      }
+    } catch (e) {
+      print("Failed to check if is scanning: '${e.message}'.");
+      _connectController.sinkAddSafe(WatchConnectedStatus.Disconnected);
+    }
+  }
+
 }

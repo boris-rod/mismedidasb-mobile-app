@@ -351,4 +351,34 @@ abstract class StringsBase implements WidgetsLocalizations {
   String get kilogram;
 
   String get centimeter;
+
+  String get home;
+
+  String get device;
+
+  String get goal;
+
+  String get distance;
+
+  String get bodyScore;
+
+  String get score;
+
+  String get heartRate;
+
+  String get bloodPressure;
+
+  String get steps;
+
+  String get sleep;
+
+  String get unpair;
+
+  String get unpairAlert;
+
+  String get addNewDevice;
+
+  String get scan;
+
+  String get addDeviceInfo;
 }
