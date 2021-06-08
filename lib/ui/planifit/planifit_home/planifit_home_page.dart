@@ -17,7 +17,6 @@ class PlanifitHomePage extends StatefulWidget {
 }
 
 class _PlanifitState extends StateWithBloC<PlanifitHomePage, PlanifitHomeBloC> {
-  PageController _pageController = PageController(initialPage: 0);
 
   @override
   void initState() {
