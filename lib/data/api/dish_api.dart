@@ -77,6 +77,7 @@ class DishApi extends BaseApi implements IDishApi {
         final dailyFoodModel = DailyFoodModel(
           dateTime: planSummary.dateTime.toLocal(),
           dailyActivityFoodModelList: activities,
+          modifiedAt: activities[0].modifiedAt.toLocal(),
           dailyFoodPlanModel: planSummary.dailyFoodPlanModel,
         );
 

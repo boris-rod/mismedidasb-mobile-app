@@ -166,6 +166,7 @@ class DailyFoodModel {
   bool synced;
   bool headerExpanded;
   bool showKCalPercentages;
+  DateTime modifiedAt;
 
   double get currentCaloriesSum => dailyActivityFoodModelList.isEmpty
       ? 0.0
@@ -215,6 +216,7 @@ class DailyFoodModel {
   DailyFoodModel(
       {this.dateTime,
       this.synced = true,
+        this.modifiedAt,
       this.dailyActivityFoodModelList,
       this.dailyFoodPlanModel,
       this.headerExpanded = true,
@@ -243,6 +245,7 @@ class DailyActivityFoodModel {
   DailyFoodPlanModel plan;
   DateTime dateTime;
   bool isExpanded;
+  DateTime modifiedAt;
 
 //  double imc;
 //  double kCal;
@@ -346,6 +349,7 @@ class DailyActivityFoodModel {
       {this.id,
       this.type,
       this.foods,
+        this.modifiedAt,
 //      this.calories = 0,
 //      this.carbohydrates = 0,
 //      this.imc = 1,

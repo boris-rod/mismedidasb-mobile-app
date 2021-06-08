@@ -184,47 +184,38 @@ class DishRepository extends BaseRepository implements IDishRepository {
           return null;
         });
 
-        if (localObj != null) {
-//          if (localObj.dailyFoodPlanModel.imc <= 1)
-//            localObj.dailyFoodPlanModel.imc = imcLocal;
-//          if (localObj.dailyFoodPlanModel.dailyKCal <= 1)
-//            localObj.dailyFoodPlanModel.dailyKCal = kCalLocal;
-//          localObj.dailyActivityFoodModelList.forEach((activity) {
-//            if (activity.imc <= 1) activity.imc = imcLocal;
-//            if (activity.kCal <= 1) activity.kCal = kCalLocal;
-//            if (activity.plan.imc <= 1) activity.plan.imc = imcLocal;
-//            if (activity.plan.dailyKCal <= 1)
-//              activity.plan.dailyKCal = kCalLocal;
-//          });
-          if (apiObj != null) {
-            localObj.dailyActivityFoodModelList.forEach((element) {
-              element.plan = apiObj.dailyFoodPlanModel;
-            });
-          }
-
-          dailyMap[dateMapId] = localObj;
-        } else if (apiObj != null) {
-          apiObj.dailyActivityFoodModelList.forEach((element) {
-            if (element.plan == null) {
-              element.plan = dailyFoodPlanModel;
-            }
-          });
-          dailyMap[dateMapId] = apiObj;
-//          dailyMap[dateMapId] = DailyFoodModel(
-//              dateTime: initial,
-//              synced: true,
-//              dailyActivityFoodModelList: apiObj.dailyActivityFoodModelList,
-//              dailyFoodPlanModel: apiObj.dailyFoodPlanModel,
-//              planFoodParameterModel: apiObj.planFoodParameterModel);
-        } else {
-//          final plan = dailyFoodPlanModel;
+        if(localObj == null && apiObj == null){
           dailyMap[dateMapId] = DailyFoodModel(
-            dateTime: initial,
-            dailyActivityFoodModelList:
-                DailyActivityFoodModel.getDailyActivityFoodModelList(
-                    dailyFoodPlanModel, initial),
-            dailyFoodPlanModel: dailyFoodPlanModel,
+              dateTime: initial,
+              dailyActivityFoodModelList:
+              DailyActivityFoodModel.getDailyActivityFoodModelList(
+                  dailyFoodPlanModel, initial),
+              dailyFoodPlanModel: dailyFoodPlanModel,
+              modifiedAt: DateTime.now()
           );
+        }else if(localObj != null && apiObj != null){
+          final priorityObj = apiObj.modifiedAt.compareTo(localObj.modifiedAt) >= 0 ? apiObj : localObj;
+          priorityObj.dailyActivityFoodModelList.forEach((element) {
+            element.plan = apiObj.dailyFoodPlanModel;
+          });
+          dailyMap[dateMapId] = priorityObj;
+        }else{
+          if (localObj != null) {
+            if (apiObj != null) {
+              localObj.dailyActivityFoodModelList.forEach((element) {
+                element.plan = apiObj.dailyFoodPlanModel;
+              });
+            }
+
+            dailyMap[dateMapId] = localObj;
+          } else if (apiObj != null) {
+            apiObj.dailyActivityFoodModelList.forEach((element) {
+              if (element.plan == null) {
+                element.plan = dailyFoodPlanModel;
+              }
+            });
+            dailyMap[dateMapId] = apiObj;
+          }
         }
         //Adding daily plan merged
         resultMap[initial] = dailyMap[dateMapId];
