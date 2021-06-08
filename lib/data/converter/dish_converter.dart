@@ -9,6 +9,7 @@ class DishConverter extends IDishConverter {
   DailyFoodModel fromJsonDailyFoodModel(Map<String, dynamic> json) {
     return DailyFoodModel(
         dateTime: DateTime.parse(json["dateTime"]),
+        modifiedAt: DateTime.tryParse(json["modifiedAt"] ?? DateTime.now().toIso8601String()),
         synced: json["synced"],
         dailyFoodPlanModel: fromJsonDailyFoodPlan(json["dailyFoodPlanModel"]),
         dailyActivityFoodModelList:
@@ -22,6 +23,7 @@ class DishConverter extends IDishConverter {
   Map<String, dynamic> toJsonDailyFoodModel(DailyFoodModel model) {
     return {
       "dateTime": model.dateTime.toIso8601String(),
+      "modifiedAt": model.modifiedAt.toIso8601String(),
       "synced": model.synced,
       "dailyFoodPlanModel": toJsonDailyFoodPlan(model.dailyFoodPlanModel),
       "dailyActivityFoodModelList": model.dailyActivityFoodModelList
@@ -36,6 +38,7 @@ class DishConverter extends IDishConverter {
       {bool fromAPI = true}) {
     return DailyActivityFoodModel(
         id: json["eatTypeId"],
+        modifiedAt: DateTime.tryParse(json["modifiedAt"] ?? DateTime.now().toIso8601String()).toLocal(),
 //        name: json["name"],
 //        typeId: json["eatTypeId"],
         type: json["eatType"],
@@ -83,6 +86,7 @@ class DishConverter extends IDishConverter {
       DailyActivityFoodModel model) {
     return {
       "eatTypeId": model.id,
+      "modifiedAt": model.modifiedAt.toIso8601String(),
 //      "name": model.name,
       "eatType": model.type,
 //      "eatTypeId": model.typeId,
