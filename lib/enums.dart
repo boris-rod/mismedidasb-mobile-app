@@ -36,5 +36,5 @@ enum SettingAction { logout, languageCodeChanged, removeAccount }
 enum FoodsTypeMark { favorites, lackSelfControl, all }
 enum heightUnit { feet, centimeter }
 enum weightUnit { kilogram, pound }
-enum WatchScanStatus { Stopped, Scanning, Discovered }
+enum WatchScanStatus { Stopped, Scanning }
 enum WatchConnectedStatus { Connected, Disconnected }

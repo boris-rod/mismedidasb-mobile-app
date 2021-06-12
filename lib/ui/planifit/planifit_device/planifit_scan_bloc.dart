@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:mismedidasb/data/_shared_prefs.dart';
 import 'package:mismedidasb/domain/planifit/planifit_model.dart';
 import 'package:mismedidasb/enums.dart';
@@ -17,59 +18,51 @@ class PlanifitScanBloC extends BaseBloC {
   @override
   void dispose() {
     _scanController.close();
-    _devicesDataController.close();
   }
 
   BehaviorSubject<WatchScanStatus> _scanController = new BehaviorSubject();
 
   Stream<WatchScanStatus> get scanResult => _scanController.stream;
 
-  BehaviorSubject<Map<String, BleDevice>> _devicesDataController =
-      new BehaviorSubject();
-
-  Stream<Map<String, BleDevice>> get devicesDataResult =>
-      _devicesDataController.stream;
-
   BehaviorSubject<WatchConnectedStatus> _connectController =
-  new BehaviorSubject();
+      new BehaviorSubject();
 
   Stream<WatchConnectedStatus> get connectResult => _connectController.stream;
 
+  Map<String, BleDevice> bleMap = {};
+
   void init() async {
     planifitUtils.listenScan((BleDevice model) {
-      final map = _devicesDataController.value ?? Map<String, BleDevice>();
-      map[model.address] = model;
-      _devicesDataController.sinkAddSafe(map);
+      bleMap[model.address] = model;
     });
     scan();
   }
 
   void scan() async {
-    planifitUtils.scan(scanResult: (WatchScanStatus status) {
-      _scanController.sinkAddSafe(status);
+    planifitUtils.scan(isScanning: (bool scanning) {
+      _scanController.sinkAddSafe(WatchScanStatus.Scanning);
+      Future.delayed(Duration(seconds: 5), () async {
+        await stopScan();
+        _scanController.sinkAddSafe(WatchScanStatus.Stopped);
+      });
     });
+    _scanController.sinkAddSafe(WatchScanStatus.Scanning);
   }
 
   Future<void> stopScan() async => await planifitUtils.stopScan();
 
-  void connect({String address}) async {
+  Future<WatchConnectedStatus> connect({String address}) async {
     try {
-      final lastConnectedDevice = address ??
-          await _sharedPreferencesManager
-              .getStringValue(SharedKey.lastConnectedDevice, defValue: "");
+      final WatchConnectedStatus result =
+      await planifitUtils.connect(address: address);
 
-      if (lastConnectedDevice.isNotEmpty) {
-        final WatchConnectedStatus result =
-        await planifitUtils.connect(address: lastConnectedDevice);
-        _connectController.sinkAddSafe(result);
-        print("Connected: ${result.toString()}");
-      } else {
-        _connectController.sinkAddSafe(WatchConnectedStatus.Disconnected);
+      if(result == WatchConnectedStatus.Connected){
+        await _sharedPreferencesManager.setStringValue(SharedKey.lastConnectedDevice, address);
       }
+      return result;
     } catch (e) {
       print("Failed to check if is scanning: '${e.message}'.");
-      _connectController.sinkAddSafe(WatchConnectedStatus.Disconnected);
+      return WatchConnectedStatus.Disconnected;
     }
   }
-
 }

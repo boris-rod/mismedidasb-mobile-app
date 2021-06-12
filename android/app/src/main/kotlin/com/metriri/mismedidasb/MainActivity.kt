@@ -3,6 +3,8 @@ package com.metriri.mismedidasb
 import android.bluetooth.BluetoothDevice
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.TextUtils
 import android.util.Log
 import androidx.annotation.NonNull
@@ -14,11 +16,10 @@ import com.yc.pedometer.listener.RateCalibrationListener
 import com.yc.pedometer.listener.TemperatureListener
 import com.yc.pedometer.listener.TurnWristCalibrationListener
 import com.yc.pedometer.sdk.*
+import com.yc.pedometer.update.Updates
 import com.yc.pedometer.utils.GlobalVariable
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
-import io.flutter.embedding.engine.FlutterEngineCache
-import io.flutter.embedding.engine.dart.DartExecutor
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.EventChannel.EventSink
 import io.flutter.plugin.common.EventChannel.StreamHandler
@@ -46,6 +47,7 @@ class MainActivity : FlutterActivity(), ICallback, ServiceStatusCallback, OnServ
         val RATE_CALLBACK = "mOnRateListener"
         val STEP_CHANGE_CALLBACK = "mOnStepChangeListener"
         val RATE24_CALLBACK = "mOnRateOf24HourListener"
+        val RESULT_CALLBACK = "onResult"
     }
 
     private lateinit var mContext: Context
@@ -54,19 +56,26 @@ class MainActivity : FlutterActivity(), ICallback, ServiceStatusCallback, OnServ
     private var mBluetoothLeService: BluetoothLeService? = null
     private var mDataProcessing: DataProcessing? = null
     private var mWriteCommand: WriteCommandToBLE? = null
+    private var mySQLOperate: UTESQLOperate? = null
 
     private var eventSink: EventSink? = null
+
+    private lateinit var handler: Handler
 
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         Log.w("configureFlutterEngine", "configureFlutterEngine:MainActivity")
 
-        mContext = this
+        mContext = applicationContext
 
         mBLEServiceOperate = BLEServiceOperate
                 .getInstance(mContext)
+        mySQLOperate = UTESQLOperate.getInstance(mContext)
+        mWriteCommand = WriteCommandToBLE.getInstance(mContext)
+        mDataProcessing = DataProcessing.getInstance(mContext)
 
         mBLEServiceOperate!!.setDeviceScanListener(this)
+        mBLEServiceOperate!!.setServiceStatusCallback(this)
 
         mBluetoothLeService = mBLEServiceOperate!!.bleService
         if (mBluetoothLeService != null) {
@@ -75,9 +84,6 @@ class MainActivity : FlutterActivity(), ICallback, ServiceStatusCallback, OnServ
             mBluetoothLeService!!.setTurnWristCalibrationListener(this)
             mBluetoothLeService!!.setTemperatureListener(this)
         }
-
-        mWriteCommand = WriteCommandToBLE.getInstance(mContext)
-        mDataProcessing = DataProcessing.getInstance(mContext)
 
         mDataProcessing!!.setOnStepChangeListener(mOnStepChangeListener)
         mDataProcessing!!.setOnSleepChangeListener(mOnSleepChangeListener)
@@ -155,6 +161,8 @@ class MainActivity : FlutterActivity(), ICallback, ServiceStatusCallback, OnServ
                     }
                 }
         )
+
+        handler = Handler(Looper.getMainLooper());
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -189,20 +197,22 @@ class MainActivity : FlutterActivity(), ICallback, ServiceStatusCallback, OnServ
         map["walk_distance"] = info.walkDistance
         map["walk_duration_time"] = info.walkDurationTime
 
-        eventSink?.success(map)
+        postOnUIThread(map)
     }
 
     private val mOnSleepChangeListener: SleepChangeListener = SleepChangeListener {
         //update Sleep UI
     }
     private val mOnRateListener: RateChangeListener = RateChangeListener { rate: Int, status: Int ->
-        val map = emptyMap<String, Any>().toMutableMap()
-        map[EVENT_CHANNEL_SINK_TYPE_KEY] = RATE_CALLBACK
+        handler.post {
+            val map = emptyMap<String, Any>().toMutableMap()
+            map[EVENT_CHANNEL_SINK_TYPE_KEY] = RATE_CALLBACK
 
-        map["temp_rate"] = rate
-        map["temp_status"] = status
+            map["temp_rate"] = rate
+            map["temp_status"] = status
 
-        eventSink?.success(map)
+            postOnUIThread(map)
+        }
     }
     private val mOnRateOf24HourListener: RateOf24HourRealTimeListener = RateOf24HourRealTimeListener { maxHeartRateValue: Int, minHeartRateValue: Int, averageHeartRateValue: Int, isRealTimeValue: Boolean ->
         val map = emptyMap<String, Any>().toMutableMap()
@@ -213,8 +223,7 @@ class MainActivity : FlutterActivity(), ICallback, ServiceStatusCallback, OnServ
         map["average_heart_rate_value"] = averageHeartRateValue
         map["is_real_time_value"] = isRealTimeValue
 
-        eventSink?.success(map)
-
+        postOnUIThread(map)
     }
     private val mOnBloodPressureListener: BloodPressureChangeListener = BloodPressureChangeListener { highPressure: Int, lowPressure: Int, status: Int ->
         val map = emptyMap<String, Any>().toMutableMap()
@@ -223,12 +232,12 @@ class MainActivity : FlutterActivity(), ICallback, ServiceStatusCallback, OnServ
         map["temp_blood_pressure_status"] = status
         map["high_pressure"] = highPressure
         map["low_pressure"] = lowPressure
-
-        eventSink?.success(map)
+        postOnUIThread(map)
     }
+
     override fun LeScanCallback(device: BluetoothDevice?, rssi: Int, scanRecord: ByteArray?) {
         runOnUiThread(Runnable {
-            Log.w(TAG, "Scanning result: LeScanCallback ${eventSink != null}")
+//            Log.w(TAG, "Scanning result: LeScanCallback ${eventSink != null}")
             if (device != null) {
                 if (TextUtils.isEmpty(device.name)) {
                     return@Runnable
@@ -240,13 +249,19 @@ class MainActivity : FlutterActivity(), ICallback, ServiceStatusCallback, OnServ
                 map["device_address"] = device.address
                 map["device_rssi"] = rssi
 
-                eventSink!!.success(map)
+                postOnUIThread(map)
             }
         })
     }
 
     override fun OnResult(result: Boolean, status: Int) {
-        TODO("OnResult: Not yet implemented")
+        val map = emptyMap<String, Any>().toMutableMap()
+        map[EVENT_CHANNEL_SINK_TYPE_KEY] = RESULT_CALLBACK
+
+        map["status"] = status
+        map["result"] = result
+
+        postOnUIThread(map)
     }
 
     override fun OnDataResult(result: Boolean, status: Int, data: ByteArray?) {
@@ -481,4 +496,10 @@ class MainActivity : FlutterActivity(), ICallback, ServiceStatusCallback, OnServ
 //            FirebaseMessagingPlugin.registerWith(registry!!.registrarFor("io.flutter.plugins.firebasemessaging.FirebaseMessagingPlugin"));
 //        }
 //    }
+
+    fun postOnUIThread(map: Map<String, Any>) {
+        handler.post {
+            eventSink!!.success(map)
+        }
+    }
 }

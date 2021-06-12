@@ -152,3 +152,24 @@ class BloodPressure {
     };
   }
 }
+
+class Result{
+  int status;
+  bool result;
+
+  Result({this.status, this.result});
+
+  factory Result.fromJson(Map<dynamic, dynamic> json) {
+    return Result(
+      status: json['status'],
+      result: json['result'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'status': status,
+      'result': result,
+    };
+  }
+}

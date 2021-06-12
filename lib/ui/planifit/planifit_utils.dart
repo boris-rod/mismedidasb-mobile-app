@@ -28,6 +28,7 @@ class PlanifitUtils {
   final RATE_CALLBACK = "mOnRateListener";
   final STEP_CHANGE_CALLBACK = "mOnStepChangeListener";
   final RATE24_CALLBACK = "mOnRateOf24HourListener";
+  final RESULT_CALLBACK = "onResult";
 
   PlanifitUtils() {
     _platform = MethodChannel('watch.metriri.com/actions_from_flutter');
@@ -48,21 +49,26 @@ class PlanifitUtils {
           _bloodPressureCallBack != null) {
         final model = BloodPressure.fromJson(eventData);
         _bloodPressureCallBack(model);
-        print("BloodPressure ${model.highPressure.toString()}");
+        // print("BloodPressure ${model.highPressure.toString()}");
       } else if (key == RATE_CALLBACK && _rateCallBack != null) {
         final model = Rate.fromJson(eventData);
         _rateCallBack(model);
-        print("Rate ${model.tempRate.toString()}");
+        // print("Rate ${model.tempRate.toString()}");
       } else if (key == STEP_CHANGE_CALLBACK &&
           _stepOneDayAllInfoCallBack != null) {
         final model = StepOneDayAllInfo.fromJson(eventData);
         _stepOneDayAllInfoCallBack(model);
-        print("StepOneDayAllInfo ${model.walkSteps.toString()}");
+        // print("StepOneDayAllInfo ${model.walkSteps.toString()}");
       } else if (key == RATE24_CALLBACK && _rate24CallBack != null) {
         final model = Rate24.fromJson(eventData);
         _rate24CallBack(model);
-        print("Rate24 ${model.maxHeartRateValue.toString()}");
+        // print("Rate24 ${model.maxHeartRateValue.toString()}");
+      }else if (key == RESULT_CALLBACK && _resultCallBack != null) {
+        final model = Result.fromJson(eventData);
+        _resultCallBack(model);
+        // print("Result ${model.status?.toString()}");
       }
+
     });
   }
 
@@ -92,25 +98,18 @@ class PlanifitUtils {
     }
   }
 
-  Future<void> scan({ValueChanged<WatchScanStatus> scanResult}) async {
+  Future<void> scan({ValueChanged<bool> isScanning}) async {
     try {
-      scanResult(WatchScanStatus.Scanning);
-
       FlutterBlue flutterBlue = FlutterBlue.instance;
-      flutterBlue.startScan(timeout: Duration(seconds: 5));
+      flutterBlue.startScan(timeout: Duration(seconds: 2));
       flutterBlue.scanResults.listen((results) async {
         await flutterBlue.stopScan();
 
         final result = await _platform.invokeMethod(START_SCAN);
-        scanResult(
-            result == 200 ? WatchScanStatus.Scanning : WatchScanStatus.Stopped);
-        await Future.delayed(Duration(milliseconds: 10000), () async {
-          await stopScan();
-        });
+        isScanning(result == 200);
       });
     } catch (e) {
-      await stopScan();
-      scanResult(WatchScanStatus.Stopped);
+      isScanning(false);
     }
   }
 
@@ -150,6 +149,7 @@ class PlanifitUtils {
   ValueChanged<Rate> _rateCallBack;
   ValueChanged<Rate24> _rate24CallBack;
   ValueChanged<StepOneDayAllInfo> _stepOneDayAllInfoCallBack;
+  ValueChanged<Result> _resultCallBack;
 
   void listenScan(ValueChanged<BleDevice> callback) => _scanCallBack = callback;
 
@@ -163,4 +163,7 @@ class PlanifitUtils {
 
   void listenStepOneDayAllInfo(ValueChanged<StepOneDayAllInfo> callback) =>
       _stepOneDayAllInfoCallBack = callback;
+
+  void listenResult(ValueChanged<Result> callback) =>
+      _resultCallBack = callback;
 }

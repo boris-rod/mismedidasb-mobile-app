@@ -78,6 +78,10 @@ class PlanifitHomeBloC extends BaseBloC {
       print("Rate24 ${model.maxHeartRateValue.toString()}");
     });
 
+    planifitUtils.listenResult((Result model) {
+      print("Result ${model.status?.toString()}");
+    });
+
     refreshData;
   }
 
@@ -86,6 +90,9 @@ class PlanifitHomeBloC extends BaseBloC {
     planifitHomeModelUI.connectedStatus = result
         ? WatchConnectedStatus.Disconnected
         : WatchConnectedStatus.Connected;
+    if(planifitHomeModelUI.connectedStatus == WatchConnectedStatus.Disconnected)
+      await _sharedPreferencesManager.setStringValue(SharedKey.lastConnectedDevice, "");
+
     refreshData;
   }
 }
