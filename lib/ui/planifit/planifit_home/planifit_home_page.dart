@@ -17,7 +17,6 @@ class PlanifitHomePage extends StatefulWidget {
 }
 
 class _PlanifitState extends StateWithBloC<PlanifitHomePage, PlanifitHomeBloC> {
-  PageController _pageController = PageController(initialPage: 0);
 
   @override
   void initState() {
@@ -168,16 +167,18 @@ class _PlanifitState extends StateWithBloC<PlanifitHomePage, PlanifitHomeBloC> {
   }
 
   Widget _getDevicePagePaired(PlanifitHomeModelUI model) {
-    return Container(
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            TXButtonWidget(
-                onPressed: () {
-                  bloc.disconnect();
-                },
-                title: R.string.unpair)
-          ],
+    return SafeArea(
+      child: Container(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              TXButtonWidget(
+                  onPressed: () {
+                    bloc.disconnect();
+                  },
+                  title: R.string.unpair)
+            ],
+          ),
         ),
       ),
     );
@@ -209,6 +210,7 @@ class _PlanifitState extends StateWithBloC<PlanifitHomePage, PlanifitHomeBloC> {
                 if (result ?? false) {
                   bloc.planifitHomeModelUI.connectedStatus =
                       WatchConnectedStatus.Connected;
+                  bloc.planifitHomeModelUI.selectedTab = 0;
                   bloc.refreshData;
                 }
               },

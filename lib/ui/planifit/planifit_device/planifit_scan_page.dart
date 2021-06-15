@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mismedidasb/domain/planifit/planifit_model.dart';
 import 'package:mismedidasb/res/R.dart';
 import 'package:mismedidasb/ui/_base/bloc_state.dart';
 import 'package:mismedidasb/ui/_base/navigation_utils.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_button_widget.dart';
+import 'package:mismedidasb/ui/_tx_widget/tx_divider_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_main_app_bar_widget.dart';
 import 'package:mismedidasb/ui/_tx_widget/tx_text_widget.dart';
 import 'package:mismedidasb/ui/planifit/planifit_device/planifit_scan_bloc.dart';
@@ -39,11 +41,9 @@ class _PlanifitScanState
             builder: (context, snapshot) {
               final scanStatus = snapshot.data;
               return Container(
-                child: scanStatus == WatchScanStatus.Discovered
-                    ? _getDevicesListWidget(context)
-                    : scanStatus == WatchScanStatus.Scanning
-                        ? _getScanningWidget(context)
-                        : _getStartScanWidget(context),
+                child: scanStatus == WatchScanStatus.Scanning
+                    ? _getScanningWidget(context)
+                    : _getDevicesListWidget(context),
               );
             }));
   }
@@ -56,43 +56,37 @@ class _PlanifitScanState
     );
   }
 
-  Widget _getStartScanWidget(BuildContext context) {
-    return Center(
-      child: TXButtonWidget(
-        title: "Scan",
-        onPressed: () {
-          bloc.scan();
-        },
-      ),
-    );
-  }
-
   Widget _getDevicesListWidget(BuildContext context) {
-    return StreamBuilder<Map<String, BleDevice>>(
-        stream: bloc.devicesDataResult,
-        initialData: Map<String, BleDevice>(),
-        builder: (context, snapshot) {
-          final map = snapshot.data.values.toList();
-          return ListView.builder(
-            itemBuilder: (ctx, index) {
-              final model = map[index];
-              return ListTile(
-                onTap: () {
-                  NavigationUtils.pop(context, result: model);
-                },
-                title: TXTextWidget(
-                  text: model.name,
-                ),
-                subtitle: TXTextWidget(
-                  text: model.address,
-                ),
-                trailing: TXTextWidget(
-                  text: model.rssi.toString(),
-                ),
-              );
-            },
-            itemCount: map.length,
-          );
-        });
+    final List<BleDevice> list = bloc.bleMap.values.toList();
+    return ListView.builder(
+      itemBuilder: (ctx, index) {
+        final model = list[index];
+        return ListTile(
+          onTap: () async {
+            final status = await bloc.connect(address: model.address);
+            if (status == WatchConnectedStatus.Disconnected) {
+              Fluttertoast.showToast(
+                  msg: "BLE no conectado",
+                  backgroundColor: Colors.red,
+                  textColor: Colors.white,
+                  toastLength: Toast.LENGTH_LONG);
+            } else
+              NavigationUtils.pop(context, result: true);
+          },
+          title: TXTextWidget(
+            text: model.name,
+          ),
+          subtitle: TXTextWidget(
+            text: "MAC: ${model.address}",
+            color: R.color.gray,
+            size: 13,
+          ),
+          trailing: TXTextWidget(
+            text: model.rssi.toString(),
+          ),
+        );
+      },
+      itemCount: list.length,
+    );
   }
 }

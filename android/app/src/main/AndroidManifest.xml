@@ -66,10 +66,19 @@
         <meta-data
                 android:name="com.google.firebase.messaging.default_notification_channel_id"
                 android:value="@string/default_notification_channel_id"/>
+
+        <service
+            android:name="com.yc.pedometer.sdk.BluetoothLeService"
+            android:enabled="true"
+            android:theme="@style/PcmTextAppearance" />
+
+
         <service
             android:name="com.realsil.sdk.dfu.DfuService"
             android:enabled="true"
             android:exported="true"></service>
+
+
 
         <!-- Don't delete the meta-data below.x
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
