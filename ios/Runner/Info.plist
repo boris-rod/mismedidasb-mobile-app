@@ -44,6 +44,8 @@
 	<string>PlaniFive solicita acceso a las fotos para que pueda escoger su foto de perfil.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>PlaniFive solicita acceso al reconocimiento de voz para apoyar el correcto funcionamiento.</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Planifive necesita acceso al bluetooth para comunicarse con relojes y dispositivos de salud.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
