@@ -485,6 +485,9 @@ class LNM implements ILNM {
       Time time,
       NotificationDetails notificationDetails}) async {
     final nowDate = DateTime.now();
+    tz.initializeTimeZones();
+    _currentTimeZone = await FlutterNativeTimezone.getLocalTimezone();
+    tz.setLocalLocation(tz.getLocation(_currentTimeZone));
     await Injector.instance.localNotificationInstance.zonedSchedule(
         id,
         title,

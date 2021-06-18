@@ -25,22 +25,22 @@ class SharedKey {
   static String nutriInfoExpanded = "nutriInfoExpanded";
 
   static String breakFastTime = "breakFastTime";
-  static String showBreakFastTime = "showBreakFastTime";
+  static String showBreakFastTime = "showBreakFastTime1";
   static String snack1Time = "snack1Time";
-  static String showSnack1Time = "showSnack1Time";
+  static String showSnack1Time = "showSnack1Time1";
   static String lunchTime = "lunchTime";
-  static String showLunchTime = "showLunchTime";
+  static String showLunchTime = "showLunchTime1";
   static String snack2Time = "snack2Time";
-  static String showSnack2Time = "showSnack2Time";
+  static String showSnack2Time = "showSnack2Time1";
   static String dinnerTime = "dinnerTime";
-  static String showDinnerTime = "showDinnerTime";
+  static String showDinnerTime = "showDinnerTime1";
 
   static String heightUnit = "heightUnit";
   static String weightUnit = "weightUnit";
 
   static String physicalExerciseTime = "physicalExerciseTime";
-  static String showPhysicalExerciseTime = "showPhysicalExerciseTime";
-  static String showPlanFoods = "showPlanFoods";
+  static String showPhysicalExerciseTime = "showPhysicalExerciseTime1";
+  static String showPlanFoods = "showPlanFoods1";
   static String planFoodsTime = "planFoodsTime";
 
   static String showDrinkWater = "drinkWater";
@@ -105,7 +105,7 @@ class SharedPreferencesManager {
     await setBoolValue(SharedKey.showDinnerTime, false);
     await setBoolValue(SharedKey.showPlanFoods, false);
     await setBoolValue(SharedKey.showDrinkWater, false);
-    await setBoolValue(SharedKey.showPhysicalExerciseTime, true);
+    await setBoolValue(SharedKey.showPhysicalExerciseTime, false);
 
     await setBoolValue(SharedKey.hasPlaniVirtualAssesor, false);
     await setBoolValue(SharedKey.showDailyPollNotification, true);
