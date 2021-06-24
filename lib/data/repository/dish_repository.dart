@@ -194,7 +194,7 @@ class DishRepository extends BaseRepository implements IDishRepository {
               modifiedAt: DateTime.now()
           );
         }else if(localObj != null && apiObj != null){
-          final priorityObj = apiObj.modifiedAt.compareTo(localObj.modifiedAt) >= 0 ? apiObj : localObj;
+          final priorityObj = apiObj.modifiedAt.compareTo(localObj.modifiedAt) > 0 ? apiObj : localObj;
           priorityObj.dailyActivityFoodModelList.forEach((element) {
             element.plan = apiObj.dailyFoodPlanModel;
           });

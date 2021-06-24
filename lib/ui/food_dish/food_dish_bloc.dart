@@ -82,6 +82,7 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
   int currentCalendarPage = 0;
   Map<DateTime, DailyFoodModel> dailyFoodModelMap = {};
   DateTime selectedDate = DateTime.now();
+
 //  DateTime firstDate = DateTime.now();
 //  DateTime lastDate = DateTime.now();
   DateTime firstDateHealthResult = DateTime.now();
@@ -147,8 +148,10 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     final key = dailyFoodModelMap.keys.firstWhere(
         (d) => CalendarUtils.isSameDay(d, selectedDate), orElse: () {
       selectedDate = DateTime.now();
-      return dailyFoodModelMap.keys
-          ?.firstWhere((d) => CalendarUtils.isSameDay(d, selectedDate), orElse: (){return null;});
+      return dailyFoodModelMap.keys?.firstWhere(
+          (d) => CalendarUtils.isSameDay(d, selectedDate), orElse: () {
+        return null;
+      });
     });
     DailyFoodModel daily = dailyFoodModelMap[key];
 
@@ -158,6 +161,9 @@ class FoodDishBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
 
   void setFoodList(DailyActivityFoodModel model) async {
     final rootModel = await dailyFoodResult.first;
+    rootModel.dailyActivityFoodModelList.forEach((element) {
+      element.modifiedAt = rootModel.modifiedAt;
+    });
     await _iDishRepository.savePlanLocal(rootModel);
     _dailyFoodController.sinkAddSafe(rootModel);
   }
