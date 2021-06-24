@@ -78,7 +78,7 @@ class HomeBloC extends BaseBloC with LoadingBloC, ErrorHandlerBloC {
     if (res is ResultSuccess<AppVersionModel>) {
       PackageInfo packageInfo = await PackageInfo.fromPlatform();
       currentVersion = packageInfo.version;
-      nextVersion = "0.5.23";
+      nextVersion = res.value.version;
       needUpdateVersion =
           nextVersion != currentVersion && res.value.isMandatory;
     }
