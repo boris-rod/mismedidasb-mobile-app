@@ -459,7 +459,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 61;
+				CURRENT_PROJECT_VERSION = 62;
 				DEVELOPMENT_TEAM = VBX3Z599B8;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -472,7 +472,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 0.5.23;
+				MARKETING_VERSION = 0.5.24;
 				PRODUCT_BUNDLE_IDENTIFIER = com.metriri.mismedidas;
 				PRODUCT_NAME = Runner;
 				PROVISIONING_PROFILE_SPECIFIER = mismedidas_prov_pro;
@@ -597,7 +597,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 61;
+				CURRENT_PROJECT_VERSION = 62;
 				DEVELOPMENT_TEAM = VBX3Z599B8;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -610,7 +610,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 0.5.23;
+				MARKETING_VERSION = 0.5.24;
 				PRODUCT_BUNDLE_IDENTIFIER = com.metriri.mismedidas;
 				PRODUCT_NAME = Runner;
 				PROVISIONING_PROFILE_SPECIFIER = mismedidas_prov_pro_dev;
@@ -630,7 +630,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 61;
+				CURRENT_PROJECT_VERSION = 62;
 				DEVELOPMENT_TEAM = VBX3Z599B8;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -643,7 +643,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 0.5.23;
+				MARKETING_VERSION = 0.5.24;
 				PRODUCT_BUNDLE_IDENTIFIER = com.metriri.mismedidas;
 				PRODUCT_NAME = Runner;
 				PROVISIONING_PROFILE_SPECIFIER = mismedidas_prov_pro;
