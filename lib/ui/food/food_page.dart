@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -438,7 +440,7 @@ class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
                         title: R.string.portionFoodHelper,
                         onSeeVideo: () {
                           bloc.setNotFirstTime();
-                          launch(Endpoint.foodPortionsVideo);
+                          launch(Platform.isAndroid ? Endpoint.foodPortionsVideo: Endpoint.metririWeb);
 //                          FileManager.playVideo("portions_food_sizes.mp4");
                         },
                         onSkip: () {

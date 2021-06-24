@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
@@ -237,7 +238,7 @@ class _MeasureHealthState
                         title: R.string.planiHelper,
                         onSeeVideo: () async {
                           await bloc.setNotFirstTime();
-                          launch(Endpoint.whoIsPlaniVideo);
+                          launch(Platform.isAndroid ? Endpoint.whoIsPlaniVideo: Endpoint.metririWeb);
 //                          FileManager.playVideo("plani.mp4");
                           Future.delayed(Duration(seconds: 2), () {
                             _navBack();

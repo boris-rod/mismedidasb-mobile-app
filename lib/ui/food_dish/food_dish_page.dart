@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -318,7 +320,7 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> with Sing
                         title: R.string.foodPlanHelper,
                         onSeeVideo: () {
                           bloc.setNotFirstTimePlan();
-                          launch(Endpoint.foodPlanVideo);
+                          launch(Platform.isAndroid ? Endpoint.foodPlanVideo: Endpoint.metririWeb);
 //                          FileManager.playVideo("my_food_plan.mp4");
                         },
                         onSkip: () {
@@ -336,7 +338,7 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> with Sing
                         title: R.string.copyPlanHelper,
                         onSeeVideo: () {
                           bloc.setNotFirstTimePlanCopy();
-                          launch(Endpoint.copyPlanVideo);
+                          launch(Platform.isAndroid ? Endpoint.copyPlanVideo: Endpoint.metririWeb);
 //                          FileManager.playVideo("copy_food_plan.mp4");
                         },
                         onSkip: () {

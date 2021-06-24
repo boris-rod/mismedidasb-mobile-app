@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -120,7 +121,7 @@ class _HabitState extends StateWithBloC<HabitPage, HabitBloC> {
                 title: R.string.habitsHelper,
                 onSeeVideo: () {
                   bloc.setNotFirstTime();
-                  launch(Endpoint.planiHabitsVideo);
+                  launch(Platform.isAndroid ? Endpoint.planiHabitsVideo: Endpoint.metririWeb);
 //                          FileManager.playVideo("profile_settings.mp4");
                 },
                 onSkip: () {

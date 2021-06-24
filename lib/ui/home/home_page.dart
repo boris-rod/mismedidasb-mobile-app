@@ -228,7 +228,7 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
                       title: R.string.planiIntroHelper,
                       onSeeVideo: () {
                         bloc.setNotFirstTime();
-                        launch(Endpoint.planiIntroVideo);
+                        launch(Platform.isAndroid ? Endpoint.planiIntroVideo: Endpoint.metririWeb);
 //                          FileManager.playVideo("main_menu.mp4");
                       },
                       onSkip: () {

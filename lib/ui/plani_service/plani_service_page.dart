@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -326,7 +328,7 @@ class _PlaniServiceState
                 title: R.string.nutritionalReport,
                 onSeeVideo: () {
                   bloc.setNotFirstTime();
-                  launch(Endpoint.nutritionalReport);
+                  launch(Platform.isAndroid ? Endpoint.nutritionalReport: Endpoint.metririWeb);
 //                          FileManager.playVideo("profile_settings.mp4");
                 },
                 onSkip: () {

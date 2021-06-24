@@ -296,7 +296,9 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                             leading: Icons.video_library,
                             optionName: "Ver tutoriales",
                             onOptionTap: () {
-                              NavigationUtils.push(context, VideoPage());
+                              Platform.isAndroid
+                                  ? NavigationUtils.push(context, VideoPage())
+                                  : launch(Endpoint.metririWeb);
                             },
                           ),
                           TXDividerWidget1(),
@@ -558,7 +560,7 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                         title: R.string.profileSettingsHelper,
                         onSeeVideo: () {
                           bloc.setNotFirstTime();
-                          launch(Endpoint.profileSettingsVideo);
+                          launch(Platform.isAndroid ? Endpoint.profileSettingsVideo: Endpoint.metririWeb);
 //                          FileManager.playVideo("profile_settings.mp4");
                         },
                         onSkip: () {

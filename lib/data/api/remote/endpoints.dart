@@ -82,6 +82,7 @@ class Endpoint {
   static const String custom_menus = "/api/menu";
 
 
+  static const String metririWeb = "https://www.metriri.com";
   static const String planiIntroVideo = "https://youtu.be/flhvp9Zp-ak";
   static const String foodPlanVideo = "https://youtu.be/O5BrcOFpP5g";
   static const String copyPlanVideo = "https://youtu.be/csyl8IhRvjo";

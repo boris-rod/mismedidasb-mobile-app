@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mismedidasb/data/api/remote/endpoints.dart';
@@ -160,7 +162,7 @@ class _FoodCravingState
                 title: R.string.cravingHelper,
                 onSeeVideo: () {
                   bloc.setNotFirstTime();
-                  launch(Endpoint.planiCravingVideo);
+                  launch(Platform.isAndroid ? Endpoint.planiCravingVideo: Endpoint.metririWeb);
 //                          FileManager.playVideo("profile_settings.mp4");
                 },
                 onSkip: () {
