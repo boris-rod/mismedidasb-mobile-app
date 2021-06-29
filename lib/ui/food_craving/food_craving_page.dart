@@ -153,6 +153,7 @@ class _FoodCravingState
         TXLoadingWidget(
           loadingStream: bloc.isLoadingStream,
         ),
+        Platform.isAndroid ?
         StreamBuilder<bool>(
             stream: bloc.showFirstTimeResult,
             initialData: false,
@@ -170,7 +171,7 @@ class _FoodCravingState
                 },
               )
                   : Container();
-            })
+            }) : Container()
       ],
     );
   }

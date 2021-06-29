@@ -219,6 +219,7 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
         TXLoadingWidget(
           loadingStream: bloc.isLoadingStream,
         ),
+        Platform.isAndroid ?
         StreamBuilder<bool>(
             stream: bloc.showFirstTimeResult,
             initialData: false,
@@ -236,7 +237,7 @@ class _HomeState extends StateWithBloC<HomePage, HomeBloC> {
                       },
                     )
                   : Container();
-            }),
+            }) : Container(),
 //          Container(
 //            color: R.color.discover_background,
 //          ),

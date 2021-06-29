@@ -311,6 +311,7 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> with Sing
           TXLoadingWidget(
             loadingStream: bloc.isLoadingStream,
           ),
+          Platform.isAndroid ?
           StreamBuilder<bool>(
               stream: bloc.showFirstTimePlanResult,
               initialData: false,
@@ -328,7 +329,8 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> with Sing
                         },
                       )
                     : Container();
-              }),
+              }): Container(),
+          Platform.isAndroid ?
           StreamBuilder<bool>(
               stream: bloc.showFirstTimePlanCopyResult,
               initialData: false,
@@ -346,7 +348,7 @@ class _FoodDishState extends StateWithBloC<FoodDishPage, FoodDishBloC> with Sing
                         },
                       )
                     : Container();
-              }),
+              }): Container(),
         ],
       ),
     );

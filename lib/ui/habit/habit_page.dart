@@ -112,6 +112,7 @@ class _HabitState extends StateWithBloC<HabitPage, HabitBloC> {
         TXLoadingWidget(
           loadingStream: bloc.isLoadingStream,
         ),
+        Platform.isAndroid ?
         StreamBuilder<bool>(
             stream: bloc.showFirstTimeResult,
             initialData: false,
@@ -129,7 +130,7 @@ class _HabitState extends StateWithBloC<HabitPage, HabitBloC> {
                 },
               )
                   : Container();
-            })
+            }) : Container()
       ],
     );
   }

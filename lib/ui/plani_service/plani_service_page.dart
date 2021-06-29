@@ -319,6 +319,7 @@ class _PlaniServiceState
         TXLoadingWidget(
           loadingStream: bloc.isLoadingStream,
         ),
+        Platform.isAndroid ?
         StreamBuilder<bool>(
             stream: bloc.showFirstTimeResult,
             initialData: false,
@@ -336,7 +337,7 @@ class _PlaniServiceState
                 },
               )
                   : Container();
-            }),
+            }) : Container(),
       ],
     );
   }

@@ -431,6 +431,7 @@ class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
           TXLoadingWidget(
             loadingStream: bloc.isLoadingStream,
           ),
+          Platform.isAndroid ?
           StreamBuilder<bool>(
               stream: bloc.showFirstTimeResult,
               initialData: false,
@@ -448,7 +449,7 @@ class _FoodState extends StateWithBloC<FoodPage, FoodBloC> {
                         },
                       )
                     : Container();
-              }),
+              }): Container(),
         ],
       ),
     );

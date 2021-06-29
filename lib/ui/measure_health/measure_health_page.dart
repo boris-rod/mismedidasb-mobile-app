@@ -229,6 +229,7 @@ class _MeasureHealthState
           TXLoadingWidget(
             loadingStream: bloc.isLoadingStream,
           ),
+          Platform.isAndroid ?
           StreamBuilder<bool>(
               stream: bloc.showFirstTimeResult,
               initialData: false,
@@ -250,7 +251,7 @@ class _MeasureHealthState
                         },
                       )
                     : Container();
-              }),
+              }) : Container(),
         ],
       ),
     );

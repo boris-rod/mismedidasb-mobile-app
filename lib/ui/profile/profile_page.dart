@@ -291,7 +291,9 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                               ),
                             ],
                           ),
-                          TXDividerWidget1(),
+                          Platform.isAndroid ?
+                          TXDividerWidget1() : Container(),
+                          Platform.isAndroid ?
                           TXCellSelectionOptionWidget1(
                             leading: Icons.video_library,
                             optionName: "Ver tutoriales",
@@ -300,7 +302,7 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                                   ? NavigationUtils.push(context, VideoPage())
                                   : launch(Endpoint.metririWeb);
                             },
-                          ),
+                          ) : Container(),
                           TXDividerWidget1(),
                           SizedBox(
                             height: 10,
@@ -551,6 +553,7 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
           TXLoadingWidget(
             loadingStream: bloc.isLoadingStream,
           ),
+          Platform.isAndroid ?
           StreamBuilder<bool>(
               stream: bloc.showFirstTimeResult,
               initialData: false,
@@ -568,7 +571,7 @@ class _ProfileState extends StateWithBloC<ProfilePage, ProfileBloC> {
                         },
                       )
                     : Container();
-              }),
+              }) : Container(),
         ],
       ),
     );
