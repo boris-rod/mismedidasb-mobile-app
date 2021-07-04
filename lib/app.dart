@@ -28,6 +28,7 @@ import 'dart:ui' as ui;
 import 'package:mismedidasb/ui/_tx_widget/tx_button_widget.dart';
 import 'package:mismedidasb/ui/poll_notification/poll_notification_page.dart';
 import 'package:mismedidasb/ui/profile/profile_page.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:mismedidasb/utils/extensions.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -120,6 +121,7 @@ class _MyMeasuresBState extends StateWithBloC<MyMeasuresBApp, AppBloC>
               accentColor: R.color.accent_color),
           localizationsDelegates: [
             localizationDelegate,
+            RefreshLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate
