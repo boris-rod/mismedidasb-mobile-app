@@ -14,7 +14,7 @@ description: A new Flutter project.
 version: 0.5.20+58
 
 environment:
-  sdk: ">=2.8.0 <3.0.0"
+  sdk: ">=2.9.2 <3.0.0"
 
 dependencies:
   flutter:
@@ -75,6 +75,7 @@ dependencies:
 #  google_fonts: ^0.3.2
   expansion_tile_card: ^1.1.0
   flutter_blue: ^0.7.3
+  pull_to_refresh: 1.6.3
 
 dev_dependencies:
   flutter_test:
